@@ -16,10 +16,9 @@ public class AudioManager: MonoBehaviour
     public float pitch;
     public float source;
     public float arp;
-    public float noise;
+    public float thruster;
     public float ringmod;
 
-    //NOTE: ARPEGGIATOR IS BROKEN RIGHT NOW, IT WONT DO ANYTHING
 
     void Start()
     {
@@ -34,7 +33,7 @@ public class AudioManager: MonoBehaviour
         moduleInst.setParameterByName("pitch", pitch);
         moduleInst.setParameterByName("source", source);
         moduleInst.setParameterByName("arp", arp);
-        moduleInst.setParameterByName("noise", noise);
+        moduleInst.setParameterByName("thruster", thruster);
         moduleInst.setParameterByName("ringmod", ringmod);
     }
 }
