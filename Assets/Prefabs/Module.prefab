@@ -48,6 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087a7aaa397aa5945a5fa1fbbf69bbfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  previousModule: {fileID: 0}
+  nextModule: {fileID: 0}
+  sourceModule: {fileID: 0}
+  scriptComponent: {fileID: 0}
   inputJack: {fileID: 8759110253679641598}
   outputJack: {fileID: 4569915159045418546}
   wirePrefab: {fileID: 3834299262851421809, guid: 30fe35db45a847b4ca2ffa480ab3a66a, type: 3}
@@ -228,7 +232,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -352,7 +356,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
