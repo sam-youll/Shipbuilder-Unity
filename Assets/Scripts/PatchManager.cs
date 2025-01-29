@@ -36,10 +36,17 @@ public class PatchManager : MonoBehaviour
         List<GameObject> patch = new List<GameObject>();
         
         GameObject currentMod = patchSource;
-        while (currentMod.GetComponent<BaseModule>().nextModule != null)
+        int loopCount = 0;
+        while (currentMod.GetComponent<Module>().nextModule != null)
         {
             patch.Add(currentMod);
-            currentMod = currentMod.GetComponent<BaseModule>().nextModule;
+            currentMod = currentMod.GetComponent<Module>().nextModule;
+            
+            loopCount++;
+            if (loopCount > 100)
+            {
+                break;
+            }
         }
         patch.Add(currentMod);
 

@@ -21,7 +21,7 @@ public class Wire : MonoBehaviour
     {
         previousModuleJack = transform.parent.gameObject;
         previousModule = previousModuleJack.transform.parent.gameObject;
-        sourceModule = previousModule.GetComponent<BaseModule>().sourceModule;
+        sourceModule = previousModule.GetComponent<Module>().sourceModule;
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = points;
         for (int i = 0; i < points; i++)
@@ -42,18 +42,20 @@ public class Wire : MonoBehaviour
             {
                 nextModuleJack = hit.collider.gameObject;
                 nextModule = nextModuleJack.transform.parent.gameObject;
-                previousModule.GetComponent<BaseModule>().nextModule = nextModule;
+                previousModule.GetComponent<Module>().nextModule = nextModule;
+                nextModule.GetComponent<Module>().previousModule = previousModule;
                 connectedToModule = true;
                 PatchManager.Instance.UpdatePatch(sourceModule);
             }
             else
             {
-                previousModule.GetComponent<BaseModule>().nextModule = null;
-                PatchManager.Instance.UpdatePatch(sourceModule);
-                Destroy(gameObject);
+                DeleteSelf();
             }
         }
-        
+    }
+
+    private void FixedUpdate()
+    {
         UpdatePoints();
     }
 
@@ -83,7 +85,7 @@ public class Wire : MonoBehaviour
                 Vector2 pos = lineRenderer.GetPosition(i);
                 Vector2 targetPos = (lineRenderer.GetPosition(i + 1) + lineRenderer.GetPosition(i - 1))*.5f;
                 targetPos += .1f * Vector2.down;
-                pos = Vector2.Lerp(pos, targetPos, .2f);
+                pos = Vector2.Lerp(pos, targetPos, .6f);
                 targetPositions[i] = pos;
             }
         }
@@ -93,5 +95,16 @@ public class Wire : MonoBehaviour
         {
             lineRenderer.SetPosition(i, targetPositions[i]);
         }
+    }
+
+    public void DeleteSelf()
+    {
+        if (connectedToModule)
+        {
+            nextModule.GetComponent<Module>().previousModule = null;
+        }
+        previousModule.GetComponent<Module>().nextModule = null;
+        PatchManager.Instance.UpdatePatch(sourceModule);
+        Destroy(gameObject);
     }
 }

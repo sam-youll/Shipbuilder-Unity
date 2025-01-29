@@ -54,8 +54,9 @@ public class AudioManager: MonoBehaviour
     void Start()
     {
         testParams.Add("shipstate", 0);
+        testParams.Add("arpstart", 1);
         testParams.Add("pitch", 440);
-        testParams.Add("source", 1);
+        testParams.Add("source", 2);
         testParams.Add("arp", 0);
         testParams.Add("thruster", 0);
         testParams.Add("ringmod", 0);
@@ -84,8 +85,10 @@ public class AudioManager: MonoBehaviour
     {
         // Debug.Log(fmodEvents.Count);
         if (!fmodEvents[instanceIndex].isValid()) return;
-                
-        fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
+        
+        Debug.Log("setting parameters");
+        Debug.Log(parameters);
+        // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
         fmodEvents[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
         fmodEvents[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
         fmodEvents[instanceIndex].setParameterByName("source", parameters["source"]);
