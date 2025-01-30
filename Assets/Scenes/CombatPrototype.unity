@@ -845,15 +845,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Enemy
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1015,6 +1015,30 @@ MonoBehaviour:
       - m_Target: {fileID: 590500215}
         m_TargetAssemblyTypeName: CombatPrototypeAudioManager, Assembly-CSharp
         m_MethodName: ChangeSource
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1387,6 +1411,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetDefense
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &295195053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,6 +1648,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &327595380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1695,15 +1767,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Attack Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2263,6 +2335,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetEvasion
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &394323475
 GameObject:
   m_ObjectHideFlags: 0
@@ -2411,8 +2507,19 @@ MonoBehaviour:
   defense: 0
   evasion: 0
   accuracy: 0
-  source: 0
-  opponentSource: 0
+  attackSource: 0
+  defenseSource: 0
+  evasionSource: 0
+  accuracySource: 0
+  strongMultiplier: 2
+  weakMultiplier: 0.5
+  matchMultiplier: 2
+  nearMultiplier: 1.5
+  farMultiplier: 1
+  attackPitchType: 0
+  defensePitchType: 0
+  evasionPitchType: 0
+  accuracyPitchType: 0
 --- !u!1 &416980116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2844,6 +2951,30 @@ MonoBehaviour:
       - m_Target: {fileID: 590500215}
         m_TargetAssemblyTypeName: CombatPrototypeAudioManager, Assembly-CSharp
         m_MethodName: ChangeSource
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetEvasion
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3342,22 +3473,6 @@ MonoBehaviour:
   arp: 0
   thruster: 0
   ringmod: 0
-  shipAttackSlider: {fileID: 314836233}
-  shipDefenseSlider: {fileID: 995433574}
-  shipEvasionSlider: {fileID: 1351936302}
-  shipAccuracySlider: {fileID: 640843397}
-  enemyAttackSlider: {fileID: 1425488900}
-  enemyDefenseSlider: {fileID: 1890139396}
-  enemyEvasionSlider: {fileID: 391840971}
-  enemyAccuracySlider: {fileID: 1897974285}
-  shipAttackDropdown: {fileID: 0}
-  shipDefenseDropdown: {fileID: 0}
-  shipEvasionDropdown: {fileID: 0}
-  shipAccuracyDropdown: {fileID: 0}
-  enemyAttackDropdown: {fileID: 0}
-  enemyDefenseDropdown: {fileID: 0}
-  enemyEvasionDropdown: {fileID: 0}
-  enemyAccuracyDropdown: {fileID: 0}
 --- !u!4 &590500216
 Transform:
   m_ObjectHideFlags: 0
@@ -3432,15 +3547,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Evasion Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3677,6 +3792,30 @@ MonoBehaviour:
       - m_Target: {fileID: 590500215}
         m_TargetAssemblyTypeName: CombatPrototypeAudioManager, Assembly-CSharp
         m_MethodName: ChangePitch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAccuracy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4787,6 +4926,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetDefense
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1030582142
 GameObject:
   m_ObjectHideFlags: 0
@@ -5071,15 +5234,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Ship
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5207,15 +5370,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Defense Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5418,15 +5581,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Defense Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5848,15 +6011,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Accuracy Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6353,6 +6516,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetEvasion
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1374003021
 GameObject:
   m_ObjectHideFlags: 0
@@ -6446,6 +6633,30 @@ MonoBehaviour:
       - m_Target: {fileID: 590500215}
         m_TargetAssemblyTypeName: CombatPrototypeAudioManager, Assembly-CSharp
         m_MethodName: ChangeSource
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAccuracy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6920,6 +7131,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1458776369
 GameObject:
   m_ObjectHideFlags: 0
@@ -7013,6 +7248,30 @@ MonoBehaviour:
       - m_Target: {fileID: 590500215}
         m_TargetAssemblyTypeName: CombatPrototypeAudioManager, Assembly-CSharp
         m_MethodName: ChangeSource
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAccuracy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7160,6 +7419,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1556735960
 GameObject:
   m_ObjectHideFlags: 0
@@ -7255,15 +7538,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Evasion Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7685,6 +7968,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 399448896}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetDefense
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1595690452
 GameObject:
   m_ObjectHideFlags: 0
@@ -7780,15 +8087,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Accuracy Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7916,15 +8223,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Attack Module
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
+  m_sharedMaterial: {fileID: -6274999272419781375, guid: 2a65768a627115a4b90767fc60fac364, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8798,6 +9105,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetDefense
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1897222933
 GameObject:
   m_ObjectHideFlags: 0
@@ -8927,6 +9258,30 @@ MonoBehaviour:
       - m_Target: {fileID: 590500215}
         m_TargetAssemblyTypeName: CombatPrototypeAudioManager, Assembly-CSharp
         m_MethodName: ChangePitch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: PitchUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetAccuracy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9509,6 +9864,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SourceUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2102198972}
+        m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
+        m_MethodName: SetEvasion
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2102198969
 GameObject:
   m_ObjectHideFlags: 0
@@ -9621,8 +10000,19 @@ MonoBehaviour:
   defense: 0
   evasion: 0
   accuracy: 0
-  source: 0
-  opponentSource: 0
+  attackSource: 0
+  defenseSource: 0
+  evasionSource: 0
+  accuracySource: 0
+  strongMultiplier: 2
+  weakMultiplier: 0.5
+  matchMultiplier: 2
+  nearMultiplier: 1.5
+  farMultiplier: 1
+  attackPitchType: 0
+  defensePitchType: 0
+  evasionPitchType: 0
+  accuracyPitchType: 0
 --- !u!1 &2136134109
 GameObject:
   m_ObjectHideFlags: 0

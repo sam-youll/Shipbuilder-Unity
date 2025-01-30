@@ -4,6 +4,10 @@ using FMODUnity;
 using FMOD.Studio;
 using System.Runtime.CompilerServices;
 using System.IO;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using static ShipStats;
 
 public class ShipStats : MonoBehaviour
 {
@@ -22,30 +26,82 @@ public class ShipStats : MonoBehaviour
 
     //secondary combat stats
     //private float pitchType;
+    public float attackSource;
+    public float defenseSource;
+    public float evasionSource;
+    public float accuracySource;
+
     private float timbreMatch;
+
     private float ringmod;
-    private float pitch;
+
+    private float attackPitch;
+    private float defensePitch;
+    private float evasionPitch;
+    private float accuracyPitch;
 
     //multipliers
     private float typeMultiplier;
+    public float strongMultiplier;
+    public float weakMultiplier;
+    public float matchMultiplier;
+    public float nearMultiplier;
+    public float farMultiplier;
 
-    //utility variables lol
-    enum pitchTypes
+    //pitch type utility
+    public enum pitchTypes
     {
         high,
         med,
         low
     };
 
-    pitchTypes pitchType;
-    pitchTypes opponentPitchType;
-    public float source;
-    public float opponentSource;
+    public pitchTypes attackPitchType;
+    public pitchTypes defensePitchType;
+    public pitchTypes evasionPitchType;
+    public pitchTypes accuracyPitchType;
+
+    pitchTypes opponentAttackPitchType;
+    pitchTypes opponentDefensePitchType;
+    pitchTypes opponentEvasionPitchType;
+    pitchTypes opponentAccuracyPitchType;
+
+    private List<pitchTypes> pitchTypesList = new List<pitchTypes>();
+    private List<pitchTypes> opponentPitchTypesList = new List<pitchTypes>();
+
+    //source utility
+    private List<float> sourceList = new List<float>();
+    private List<float> opponentSourceList = new List<float>();
+
+    private float opponentAttackSource;
+    private float opponentDefenseSource;
+    private float opponentEvasionSource;
+    private float opponentAccuracySource;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       
+        //set pitchtype list
+        pitchTypesList.Add(attackPitchType);
+        pitchTypesList.Add(defensePitchType);
+        pitchTypesList.Add(evasionPitchType);
+        pitchTypesList.Add(accuracyPitchType);
+        //set opponent pitchtype list
+        opponentPitchTypesList.Add(opponentAttackPitchType);
+        opponentPitchTypesList.Add(opponentDefensePitchType);
+        opponentPitchTypesList.Add(opponentEvasionPitchType);
+        opponentPitchTypesList.Add(opponentAccuracyPitchType);
+
+        //set source list
+        sourceList.Add(attackSource);
+        sourceList.Add(defenseSource);
+        sourceList.Add(evasionSource);
+        sourceList.Add(accuracySource);
+        //set opponent source list
+        opponentSourceList.Add(opponentAttackSource);
+        opponentSourceList.Add(opponentDefenseSource);
+        opponentSourceList.Add(opponentEvasionSource);
+        opponentSourceList.Add(opponentAccuracySource);
 
     }
 
@@ -55,49 +111,163 @@ public class ShipStats : MonoBehaviour
         
     }
 
-    void PitchType()
+    public void PitchUpdate()
     {
-        //getting player pitch
+        var currentSlider = EventSystem.current.currentSelectedGameObject;
         if (CompareTag("Player"))
         {
-            pitch = audioManager.GetComponent<CombatPrototypeAudioManager>().pitch;
-        }
-        //getting enemy pitch
+            if (currentSlider.CompareTag("ShipAttack"))
+            {
+                attackPitch = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipDefense"))
+            {
+                defensePitch = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipEvasion"))
+            {
+                evasionPitch = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipAccuracy"))
+            {
+                accuracyPitch = currentSlider.GetComponent<Slider>().value;
+            }
+        } 
         else
         {
-            pitch = 440;
+            if (currentSlider.CompareTag("EnemyAttack"))
+            {
+                attackPitch = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("EnemyDefense"))
+            {
+                defensePitch = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("EnemyEvasion"))
+            {
+                evasionPitch = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("EnemyAccuracy"))
+            {
+                accuracyPitch = currentSlider.GetComponent<Slider>().value;
+            }
         }
+    }
 
-        //establishing low pitch
-        if (pitch < 130.81)
+    public void SourceUpdate()
+    {
+        var currentSlider = EventSystem.current.currentSelectedGameObject;
+        if (CompareTag("Player"))
         {
-            pitchType = pitchTypes.low;
+            if (currentSlider.CompareTag("ShipAttack"))
+            {
+                attackSource = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipDefense"))
+            {
+                defenseSource = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipEvasion"))
+            {
+                evasionSource = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipAccuracy"))
+            {
+                accuracySource = currentSlider.GetComponent<Slider>().value;
+            }
+        }
+        else
+        {
+            if (currentSlider.CompareTag("EnemyAttack"))
+            {
+                attackSource = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("EnemyDefense"))
+            {
+                defenseSource = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("EnemyEvasion"))
+            {
+                evasionSource = currentSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("EnemyAccuracy"))
+            {
+                accuracySource = currentSlider.GetComponent<Slider>().value;
+            }
+        }
+    }
+
+    void PitchType()
+    {
+        //ATTACK
+        //establishing low pitch
+        if (attackPitch < 130.81)
+        {
+            attackPitchType = pitchTypes.low;
         } 
         //establishing medium pitch
-        else if (pitch < 523.25)
+        else if (attackPitch < 523.25)
         {
-            pitchType = pitchTypes.med;
+            attackPitchType = pitchTypes.med;
         }
         //establishing high pitch
-        else if (pitch > 523.25)
+        else if (attackPitch > 523.25)
         {
-            pitchType = pitchTypes.high;
+            attackPitchType = pitchTypes.high;
         }
 
-    }
+        //DEFENSE
+        //establishing low pitch
+        if (defensePitch < 130.81)
+        {
+            defensePitchType = pitchTypes.low;
+        }
+        //establishing medium pitch
+        else if (defensePitch < 523.25)
+        {
+            defensePitchType = pitchTypes.med;
+        }
+        //establishing high pitch
+        else if (defensePitch > 523.25)
+        {
+            defensePitchType = pitchTypes.high;
+        }
 
-    void SetAccuracy()
-    {
-        RockPaperScissors();
-        TimbreMatch();
-        accuracy = typeMultiplier * timbreMatch * 100;
-    }
+        //EVASION
+        //establishing low pitch
+        if (evasionPitch < 130.81)
+        {
+            evasionPitchType = pitchTypes.low;
+        }
+        //establishing medium pitch
+        else if (evasionPitch < 523.25)
+        {
+            evasionPitchType = pitchTypes.med;
+        }
+        //establishing high pitch
+        else if (evasionPitch > 523.25)
+        {
+            evasionPitchType = pitchTypes.high;
+        }
 
-    void SetDefense()
-    {
-        RockPaperScissors();
-        TimbreMatch();
-        defense = typeMultiplier * timbreMatch * 100;
+
+        //ACCURACY
+        //establishing low pitch
+        if (accuracyPitch < 130.81)
+        {
+            accuracyPitchType = pitchTypes.low;
+        }
+        //establishing medium pitch
+        else if (accuracyPitch < 523.25)
+        {
+            accuracyPitchType = pitchTypes.med;
+        }
+        //establishing high pitch
+        else if (accuracyPitch > 523.25)
+        {
+            accuracyPitchType = pitchTypes.high;
+        }
+
     }
 
     //RPS function for use between stats
@@ -108,137 +278,180 @@ public class ShipStats : MonoBehaviour
         //so we do this for now and change it later 
         if (CompareTag("Player"))
         {
-            //then this type against enemy type
-            enemy.GetComponent<ShipStats>().pitchType = opponentPitchType;
-            //pitch 
-            if (pitchType == pitchTypes.low)
+            for (int i = 0; i < pitchTypesList.Count; i++)
             {
-                if (opponentPitchType == pitchTypes.low)
+                //then this type against enemy type
+                enemy.GetComponent<ShipStats>().pitchTypesList[i] = opponentPitchTypesList[i];
+
+                //pitch 
+                if (pitchTypesList[i] == pitchTypes.low)
                 {
-                    typeMultiplier = 1;
+                    if (opponentPitchTypesList[i] == pitchTypes.low)
+                    {
+                        typeMultiplier = 1;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.med)
+                    {
+                        typeMultiplier = weakMultiplier;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.high)
+                    {
+                        typeMultiplier = strongMultiplier;
+                    }
                 }
-                if (opponentPitchType == pitchTypes.med)
+
+                else if (pitchTypesList[i] == pitchTypes.med)
                 {
-                    typeMultiplier = 1;
+                    if (opponentPitchTypesList[i] == pitchTypes.high)
+                    {
+                        typeMultiplier = weakMultiplier;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.med)
+                    {
+                        typeMultiplier = 1;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.low)
+                    {
+                        typeMultiplier = strongMultiplier;
+                    }
                 }
-                if (opponentPitchType == pitchTypes.high)
+
+                else if (pitchTypesList[i] == pitchTypes.high)
                 {
-                    typeMultiplier = 2;
+                    if (opponentPitchTypesList[i] == pitchTypes.low)
+                    {
+                        typeMultiplier = weakMultiplier;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.high)
+                    {
+                        typeMultiplier = 1;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.med)
+                    {
+                        typeMultiplier = strongMultiplier;
+                    }
                 }
-            }
-            if (pitchType == pitchTypes.med)
-            {
-                if (opponentPitchType == pitchTypes.high)
-                {
-                    typeMultiplier = 1;
-                }
-                if (opponentPitchType == pitchTypes.med)
-                {
-                    typeMultiplier = 1;
-                }
-                if (opponentPitchType == pitchTypes.low)
-                {
-                    typeMultiplier = 2;
-                }
-            }
-            if (pitchType == pitchTypes.high)
-            {
-               if (opponentPitchType == pitchTypes.low)
-               {
-                   typeMultiplier = 1;
-               }
-               if (opponentPitchType == pitchTypes.high)
-               {
-                   typeMultiplier = 1;
-               }
-               if (opponentPitchType == pitchTypes.med)
-               {
-                   typeMultiplier = 2;
-               }
+
             }
         }
         else
         {
-            //then this type against player type
-            ship.GetComponent<ShipStats>().pitchType = opponentPitchType;
-            //pitch 
-            if (pitchType == pitchTypes.low)
+            for (int i = 0; i < pitchTypesList.Count; i++)
             {
-                if (opponentPitchType == pitchTypes.low)
+                //then this type against enemy type
+                ship.GetComponent<ShipStats>().pitchTypesList[i] = opponentPitchTypesList[i];
+
+                //pitch 
+                if (pitchTypesList[i] == pitchTypes.low)
                 {
-                    typeMultiplier = 1;
+                    if (opponentPitchTypesList[i] == pitchTypes.low)
+                    {
+                        typeMultiplier = 1;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.med)
+                    {
+                        typeMultiplier = weakMultiplier;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.high)
+                    {
+                        typeMultiplier = strongMultiplier;
+                    }
                 }
-                if (opponentPitchType == pitchTypes.med)
+
+                else if (pitchTypesList[i] == pitchTypes.med)
                 {
-                    typeMultiplier = 1;
+                    if (opponentPitchTypesList[i] == pitchTypes.high)
+                    {
+                        typeMultiplier = weakMultiplier;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.med)
+                    {
+                        typeMultiplier = 1;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.low)
+                    {
+                        typeMultiplier = strongMultiplier;
+                    }
                 }
-                if (opponentPitchType == pitchTypes.high)
+
+                else if (pitchTypesList[i] == pitchTypes.high)
                 {
-                    typeMultiplier = 2;
+                    if (opponentPitchTypesList[i] == pitchTypes.low)
+                    {
+                        typeMultiplier = weakMultiplier;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.high)
+                    {
+                        typeMultiplier = 1;
+                    }
+                    else if (opponentPitchTypesList[i] == pitchTypes.med)
+                    {
+                        typeMultiplier = strongMultiplier;
+                    }
                 }
-            }
-            if (pitchType == pitchTypes.med)
-            {
-                if (opponentPitchType == pitchTypes.high)
-                {
-                    typeMultiplier = 1;
-                }
-                if (opponentPitchType == pitchTypes.med)
-                {
-                    typeMultiplier = 1;
-                }
-                if (opponentPitchType == pitchTypes.low)
-                {
-                    typeMultiplier = 2;
-                }
-            }
-            if (pitchType == pitchTypes.high)
-            {
-                if (opponentPitchType == pitchTypes.low)
-                {
-                    typeMultiplier = 1;
-                }
-                if (opponentPitchType == pitchTypes.high)
-                {
-                    typeMultiplier = 1;
-                }
-                if (opponentPitchType == pitchTypes.med)
-                {
-                    typeMultiplier = 2;
-                }
+
             }
         }
     }
 
     void TimbreMatch()
     {
-        audioManager.GetComponent<CombatPrototypeAudioManager>().source = source;
         if (CompareTag("Player"))
         {
-            //get enemy ship source
-            enemy.GetComponent<ShipStats>().source = opponentSource;
-
-            if(source == opponentSource)
+            for (int i = 0; i < sourceList.Count; i++)
             {
-                timbreMatch = 2;
+                //get enemy ship source
+                enemy.GetComponent<ShipStats>().sourceList[i] = opponentSourceList[i];
+
+                //match 
+                if (sourceList[i] == opponentSourceList[i])
+                {
+                    timbreMatch = matchMultiplier;
+                }
+                //1 apart 
+                else if (Mathf.Abs(sourceList[i] - opponentSourceList[i]) == 1)
+                {
+                    timbreMatch = nearMultiplier;
+                }
+                //2 apart
+                else if (Mathf.Abs(sourceList[i] - opponentSourceList[i]) == 2)
+                {
+                    timbreMatch = farMultiplier;
+                }
             }
         }
         else
         {
-            //get player ship source
-            ship.GetComponent<ShipStats>().source = opponentSource;
-            if (source == opponentSource)
-            {
-                timbreMatch = 2;
-            }
-            if (Mathf.Abs(source - opponentSource) == 1)
-            {
-                timbreMatch = 1.5f;
-            }
-            if (Mathf.Abs(source - opponentSource) == 2)
-            {
-                timbreMatch = 1;
-            }
+            timbreMatch = 1;
         }
     }
+
+    public void SetAttack()
+    {
+        RockPaperScissors();
+        TimbreMatch();
+        attack = typeMultiplier * timbreMatch * 100;
+    }
+
+    public void SetDefense()
+    {
+        RockPaperScissors();
+        TimbreMatch();
+        defense = typeMultiplier * timbreMatch * 100;
+    }
+
+    public void SetEvasion()
+    {
+        RockPaperScissors();
+        TimbreMatch();
+        evasion = typeMultiplier * timbreMatch * 100;
+    }
+
+    public void SetAccuracy()
+    {
+        RockPaperScissors();
+        TimbreMatch();
+        accuracy = typeMultiplier * timbreMatch * 100;
+    }
+    
 }
