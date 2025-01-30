@@ -9,46 +9,73 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using static ShipStats;
 using TMPro;
+using System;
+using UnityEngine.Animations;
 
 public class ShipStats : MonoBehaviour
 {
+    [Header("Game Object References")]
     //audio manager reference
     public GameObject audioManager;
     //enemy reference
     public GameObject enemy;
     //ship reference
     public GameObject ship;
+    //Sliders Reference
+    public Slider shipAttackSourceSlider;
+    public Slider shipDefenseSourceSlider;
+    public Slider shipEvasionSourceSlider;
+    public Slider shipAccuracySourceSlider;
 
+    public Slider enemyAttackSourceSlider;
+    public Slider enemyDefenseSourceSlider;
+    public Slider enemyEvasionSourceSlider;
+    public Slider enemyAccuracySourceSlider;
+
+    //[Header("Stats")]
     //primary combat stats
     public float attack;
     public float defense;
     public float evasion;
     public float accuracy;
 
+
+    //[Header("Secondary Stats")]
     //secondary combat stats
     //private float pitchType;
     public float attackSource;
     public float defenseSource;
     public float evasionSource;
     public float accuracySource;
-
-    private float timbreMatch;
-
     private float ringmod;
+
 
     private float attackPitch;
     private float defensePitch;
     private float evasionPitch;
     private float accuracyPitch;
 
+    [Header("Multipliers")]
     //multipliers
-    private float typeMultiplier;
+    private float attackTypeMultiplier;
+    private float defenseTypeMultiplier;
+    private float evasionTypeMultiplier;
+    private float accuracyTypeMultiplier;
+
+    private float attackTimbreMatch;
+    private float defenseTimbreMatch;
+    private float evasionTimbreMatch;
+    private float accuracyTimbreMatch;
+
+    [Header("Multiplier Variables")]
     public float strongMultiplier;
     public float weakMultiplier;
     public float matchMultiplier;
     public float nearMultiplier;
     public float farMultiplier;
 
+
+    //[Header("Pitch Type Ultility")]
     //pitch type utility
     public enum pitchTypes
     {
@@ -69,16 +96,20 @@ public class ShipStats : MonoBehaviour
 
     private List<pitchTypes> pitchTypesList = new List<pitchTypes>();
     private List<pitchTypes> opponentPitchTypesList = new List<pitchTypes>();
+    public List<float> typeMultipliersList = new List<float>();
 
+    [Header("Source Utility")]
     //source utility
-    private List<float> sourceList = new List<float>();
-    private List<float> opponentSourceList = new List<float>();
+    public List<float> sourceList = new List<float>();
+    public List<float> opponentSourceList = new List<float>();
+    public List<float> timbreMatchMultipliersList = new List<float>();
 
     private float opponentAttackSource;
     private float opponentDefenseSource;
     private float opponentEvasionSource;
     private float opponentAccuracySource;
 
+    [Header("Display")]
     //display
     public TMP_Text displayText;
 
@@ -107,6 +138,17 @@ public class ShipStats : MonoBehaviour
         opponentSourceList.Add(opponentEvasionSource);
         opponentSourceList.Add(opponentAccuracySource);
 
+        //set pitchTypesMultipliers list 
+        typeMultipliersList.Add(attackTypeMultiplier);
+        typeMultipliersList.Add(defenseTypeMultiplier);
+        typeMultipliersList.Add(evasionTypeMultiplier);
+        typeMultipliersList.Add(accuracyTypeMultiplier);
+
+        //set timbreMatchMultipliers list
+        timbreMatchMultipliersList.Add(attackTimbreMatch);
+        timbreMatchMultipliersList.Add(defenseTimbreMatch);
+        timbreMatchMultipliersList.Add(evasionTimbreMatch);
+        timbreMatchMultipliersList.Add(accuracyTimbreMatch);
 
     }
 
@@ -117,6 +159,8 @@ public class ShipStats : MonoBehaviour
         SetDefense();
         SetEvasion();
         SetAccuracy();
+
+
 
         displayText.SetText("Attack: " + attack + "<br>Defense: " + defense +
                             "<br>Evasion: " + evasion + "<br>Accuracy: " + accuracy);
@@ -169,45 +213,103 @@ public class ShipStats : MonoBehaviour
     public void SourceUpdate()
     {
         var currentSlider = EventSystem.current.currentSelectedGameObject;
+
         if (CompareTag("Player"))
         {
-            if (currentSlider.CompareTag("ShipAttack"))
+            if (currentSlider.GetComponent<Slider>().transform.parent.CompareTag("Player"))
             {
-                attackSource = currentSlider.GetComponent<Slider>().value;
+                UnityEngine.Debug.Log("ship slider move");
+                //set self
+                if (currentSlider.CompareTag("ShipAttackSource"))
+                {
+                    sourceList[0] = shipAttackSourceSlider.GetComponent<Slider>().value;
+                }
+                if (currentSlider.CompareTag("ShipDefenseSource"))
+                {
+                    sourceList[1] = shipDefenseSourceSlider.GetComponent<Slider>().value;
+                }
+                if (currentSlider.CompareTag("ShipEvasionSource"))
+                {
+                    sourceList[2] = shipEvasionSourceSlider.GetComponent<Slider>().value;
+                }
+                if (currentSlider.CompareTag("ShipAccuracySource"))
+                {
+                    sourceList[3] = shipAccuracySourceSlider.GetComponent<Slider>().value;
+                }
             }
-            if (currentSlider.CompareTag("ShipDefense"))
+
+            //set opponent source
+            if (currentSlider.CompareTag("EnemyAttackSource"))
             {
-                defenseSource = currentSlider.GetComponent<Slider>().value;
+                opponentSourceList[0] = enemyAttackSourceSlider.GetComponent<Slider>().value;
             }
-            if (currentSlider.CompareTag("ShipEvasion"))
+            if (currentSlider.CompareTag("EnemyDefenseSource"))
             {
-                evasionSource = currentSlider.GetComponent<Slider>().value;
+                opponentSourceList[1] = enemyDefenseSourceSlider.GetComponent<Slider>().value;
             }
-            if (currentSlider.CompareTag("ShipAccuracy"))
+            if (currentSlider.CompareTag("EnemyEvasionSource"))
             {
-                accuracySource = currentSlider.GetComponent<Slider>().value;
+                opponentSourceList[2] = enemyEvasionSourceSlider.GetComponent<Slider>().value;
             }
-        }
-        else
-        {
-            if (currentSlider.CompareTag("EnemyAttack"))
+            if (currentSlider.CompareTag("EnemyAccuracySource"))
             {
-                attackSource = currentSlider.GetComponent<Slider>().value;
+                opponentSourceList[3] = enemyAccuracySourceSlider.GetComponent<Slider>().value;
             }
-            if (currentSlider.CompareTag("EnemyDefense"))
-            {
-                defenseSource = currentSlider.GetComponent<Slider>().value;
-            }
-            if (currentSlider.CompareTag("EnemyEvasion"))
-            {
-                evasionSource = currentSlider.GetComponent<Slider>().value;
-            }
-            if (currentSlider.CompareTag("EnemyAccuracy"))
-            {
-                accuracySource = currentSlider.GetComponent<Slider>().value;
-            }
+
         }
     }
+
+    public void EnemySourceUpdate()
+    {
+        var currentSlider = EventSystem.current.currentSelectedGameObject;
+
+        if (CompareTag("Enemy"))
+        {
+            if (currentSlider.GetComponent<Slider>().transform.parent.CompareTag("Enemy"))
+            {
+                UnityEngine.Debug.Log("EnemySliderMove");
+                //set self
+                if (currentSlider.CompareTag("EnemyAttackSource"))
+                {
+                    sourceList[0] = enemyAttackSourceSlider.GetComponent<Slider>().value;
+                    UnityEngine.Debug.Log(sourceList[0]);
+                }
+                if (currentSlider.CompareTag("EnemyDefenseSource"))
+                {
+                    sourceList[1] = enemyDefenseSourceSlider.GetComponent<Slider>().value;
+                }
+                if (currentSlider.CompareTag("EnemyEvasionSource"))
+                {
+                    sourceList[2] = enemyEvasionSourceSlider.GetComponent<Slider>().value;
+                }
+                if (currentSlider.CompareTag("EnemyAccuracySource"))
+                {
+                    sourceList[3] = enemyAccuracySourceSlider.GetComponent<Slider>().value;
+                }
+            }
+           
+
+            //set opponent source
+            if (currentSlider.CompareTag("ShipAttackSource"))
+            {
+                opponentSourceList[0] = shipAttackSourceSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipDefenseSource"))
+            {
+                opponentSourceList[1] = shipDefenseSourceSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipEvasionSource"))
+            {
+                opponentSourceList[2] = shipEvasionSourceSlider.GetComponent<Slider>().value;
+            }
+            if (currentSlider.CompareTag("ShipAccuracySource"))
+            {
+                opponentSourceList[3] = shipAccuracySourceSlider.GetComponent<Slider>().value;
+            }
+        }
+       
+    }
+
 
     void PitchType()
     {
@@ -300,15 +402,15 @@ public class ShipStats : MonoBehaviour
                 {
                     if (opponentPitchTypesList[i] == pitchTypes.low)
                     {
-                        typeMultiplier = 1;
+                        typeMultipliersList[i] = 1;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.med)
                     {
-                        typeMultiplier = weakMultiplier;
+                        typeMultipliersList[i] = weakMultiplier;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.high)
                     {
-                        typeMultiplier = strongMultiplier;
+                        typeMultipliersList[i] = strongMultiplier;
                     }
                 }
 
@@ -316,15 +418,15 @@ public class ShipStats : MonoBehaviour
                 {
                     if (opponentPitchTypesList[i] == pitchTypes.high)
                     {
-                        typeMultiplier = weakMultiplier;
+                        typeMultipliersList[i] = weakMultiplier;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.med)
                     {
-                        typeMultiplier = 1;
+                        typeMultipliersList[i] = 1;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.low)
                     {
-                        typeMultiplier = strongMultiplier;
+                        typeMultipliersList[i] = strongMultiplier;
                     }
                 }
 
@@ -332,15 +434,15 @@ public class ShipStats : MonoBehaviour
                 {
                     if (opponentPitchTypesList[i] == pitchTypes.low)
                     {
-                        typeMultiplier = weakMultiplier;
+                        typeMultipliersList[i] = weakMultiplier;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.high)
                     {
-                        typeMultiplier = 1;
+                        typeMultipliersList[i] = 1;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.med)
                     {
-                        typeMultiplier = strongMultiplier;
+                        typeMultipliersList[i] = strongMultiplier;
                     }
                 }
 
@@ -358,15 +460,15 @@ public class ShipStats : MonoBehaviour
                 {
                     if (opponentPitchTypesList[i] == pitchTypes.low)
                     {
-                        typeMultiplier = 1;
+                        typeMultipliersList[i] = 1;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.med)
                     {
-                        typeMultiplier = weakMultiplier;
+                        typeMultipliersList[i] = weakMultiplier;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.high)
                     {
-                        typeMultiplier = strongMultiplier;
+                        typeMultipliersList[i] = strongMultiplier;
                     }
                 }
 
@@ -374,15 +476,15 @@ public class ShipStats : MonoBehaviour
                 {
                     if (opponentPitchTypesList[i] == pitchTypes.high)
                     {
-                        typeMultiplier = weakMultiplier;
+                        typeMultipliersList[i] = weakMultiplier;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.med)
                     {
-                        typeMultiplier = 1;
+                        typeMultipliersList[i] = 1;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.low)
                     {
-                        typeMultiplier = strongMultiplier;
+                        typeMultipliersList[i] = strongMultiplier;
                     }
                 }
 
@@ -390,15 +492,15 @@ public class ShipStats : MonoBehaviour
                 {
                     if (opponentPitchTypesList[i] == pitchTypes.low)
                     {
-                        typeMultiplier = weakMultiplier;
+                        typeMultipliersList[i] = weakMultiplier;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.high)
                     {
-                        typeMultiplier = 1;
+                        typeMultipliersList[i] = 1;
                     }
                     else if (opponentPitchTypesList[i] == pitchTypes.med)
                     {
-                        typeMultiplier = strongMultiplier;
+                        typeMultipliersList[i] = strongMultiplier;
                     }
                 }
 
@@ -418,23 +520,27 @@ public class ShipStats : MonoBehaviour
                 //match 
                 if (sourceList[i] == opponentSourceList[i])
                 {
-                    timbreMatch = matchMultiplier;
+                    timbreMatchMultipliersList[i] = matchMultiplier;
                 }
                 //1 apart 
                 else if (Mathf.Abs(sourceList[i] - opponentSourceList[i]) == 1)
                 {
-                    timbreMatch = nearMultiplier;
+                    timbreMatchMultipliersList[i] = nearMultiplier;
                 }
                 //2 apart
                 else if (Mathf.Abs(sourceList[i] - opponentSourceList[i]) == 2)
                 {
-                    timbreMatch = farMultiplier;
+                    timbreMatchMultipliersList[i] = farMultiplier;
                 }
             }
         }
         else
         {
-            timbreMatch = 1;
+            for (int i = 0; i < sourceList.Count; i++)
+            {
+                timbreMatchMultipliersList[i] = 1;
+            }
+                
         }
     }
 
@@ -442,28 +548,28 @@ public class ShipStats : MonoBehaviour
     {
         RockPaperScissors();
         TimbreMatch();
-        attack = typeMultiplier * timbreMatch * 100;
+        attack = typeMultipliersList[0] * timbreMatchMultipliersList[0] * 100;
     }
 
     public void SetDefense()
     {
         RockPaperScissors();
         TimbreMatch();
-        defense = typeMultiplier * timbreMatch * 100;
+        defense = typeMultipliersList[1] * timbreMatchMultipliersList[1] * 100;
     }
 
     public void SetEvasion()
     {
         RockPaperScissors();
         TimbreMatch();
-        evasion = typeMultiplier * timbreMatch * 100;
+        evasion = typeMultipliersList[2] * typeMultipliersList[2] * 100;
     }
 
     public void SetAccuracy()
     {
         RockPaperScissors();
         TimbreMatch();
-        accuracy = typeMultiplier * timbreMatch * 100;
+        accuracy = typeMultipliersList[3] * typeMultipliersList[3] * 100;
     }
     
 }

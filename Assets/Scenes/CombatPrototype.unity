@@ -1070,7 +1070,7 @@ GameObject:
   - component: {fileID: 169038803}
   m_Layer: 5
   m_Name: EnemyAttackSourceSlider
-  m_TagString: EnemyAttack
+  m_TagString: EnemyAttackSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1162,7 +1162,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2102198972}
         m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
-        m_MethodName: SourceUpdate
+        m_MethodName: EnemySourceUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1593,7 +1593,7 @@ GameObject:
   - component: {fileID: 286077642}
   m_Layer: 5
   m_Name: EnemyDefenseSourceSlider
-  m_TagString: EnemyDefense
+  m_TagString: EnemyDefenseSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1685,7 +1685,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2102198972}
         m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
-        m_MethodName: SourceUpdate
+        m_MethodName: EnemySourceUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2163,7 +2163,7 @@ GameObject:
   - component: {fileID: 370976176}
   m_Layer: 5
   m_Name: EvasionModule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2776,14 +2776,22 @@ MonoBehaviour:
   audioManager: {fileID: 590500214}
   enemy: {fileID: 2102198969}
   ship: {fileID: 399448893}
+  shipAttackSourceSlider: {fileID: 1511334437}
+  shipDefenseSourceSlider: {fileID: 1594153561}
+  shipEvasionSourceSlider: {fileID: 485304824}
+  shipAccuracySourceSlider: {fileID: 1374003023}
+  enemyAttackSourceSlider: {fileID: 169038803}
+  enemyDefenseSourceSlider: {fileID: 286077642}
+  enemyEvasionSourceSlider: {fileID: 2095928451}
+  enemyAccuracySourceSlider: {fileID: 1458776371}
   attack: 0
   defense: 0
   evasion: 0
   accuracy: 0
-  attackSource: 0
-  defenseSource: 0
-  evasionSource: 0
-  accuracySource: 0
+  attackSource: 2
+  defenseSource: 2
+  evasionSource: 3
+  accuracySource: 1
   strongMultiplier: 2
   weakMultiplier: 0.5
   matchMultiplier: 2
@@ -2793,6 +2801,10 @@ MonoBehaviour:
   defensePitchType: 0
   evasionPitchType: 0
   accuracyPitchType: 0
+  typeMultipliersList: []
+  sourceList: []
+  opponentSourceList: []
+  timbreMatchMultipliersList: []
   displayText: {fileID: 275725286}
 --- !u!1 &416980116
 GameObject:
@@ -2955,7 +2967,7 @@ GameObject:
   - component: {fileID: 433626571}
   m_Layer: 5
   m_Name: Defense Module
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3246,7 +3258,7 @@ GameObject:
   - component: {fileID: 485304824}
   m_Layer: 5
   m_Name: ShipEvasionSourceSlider
-  m_TagString: ShipEvasion
+  m_TagString: ShipEvasionSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4548,7 +4560,7 @@ GameObject:
   - component: {fileID: 795718804}
   m_Layer: 5
   m_Name: EvasionModule
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4688,7 +4700,7 @@ GameObject:
   - component: {fileID: 886678319}
   m_Layer: 5
   m_Name: AttackModule
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5173,7 +5185,7 @@ GameObject:
   - component: {fileID: 994720976}
   m_Layer: 5
   m_Name: AccuracyModule
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6865,7 +6877,7 @@ GameObject:
   - component: {fileID: 1336676487}
   m_Layer: 5
   m_Name: AccuracyModule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7030,7 +7042,7 @@ GameObject:
   - component: {fileID: 1374003023}
   m_Layer: 5
   m_Name: ShipAccuracySourceSlider
-  m_TagString: ShipAccuracy
+  m_TagString: ShipAccuracySource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7645,7 +7657,7 @@ GameObject:
   - component: {fileID: 1458776371}
   m_Layer: 5
   m_Name: EnemyAccuracySourceSlider
-  m_TagString: EnemyAccuracy
+  m_TagString: EnemyAccuracySource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7737,7 +7749,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2102198972}
         m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
-        m_MethodName: SourceUpdate
+        m_MethodName: EnemySourceUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7807,7 +7819,7 @@ GameObject:
   - component: {fileID: 1511334437}
   m_Layer: 5
   m_Name: ShipAttackSourceSlider
-  m_TagString: ShipAttack
+  m_TagString: ShipAttackSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8317,7 +8329,7 @@ GameObject:
   - component: {fileID: 1591596587}
   m_Layer: 5
   m_Name: Defense Module
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8356,7 +8368,7 @@ GameObject:
   - component: {fileID: 1594153561}
   m_Layer: 5
   m_Name: ShipDefenseSourceSlider
-  m_TagString: ShipDefense
+  m_TagString: ShipDefenseSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9205,7 +9217,7 @@ GameObject:
   - component: {fileID: 1799174664}
   m_Layer: 5
   m_Name: AttackModule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10252,7 +10264,7 @@ GameObject:
   - component: {fileID: 2095928451}
   m_Layer: 5
   m_Name: EnemyEvasionSourceSlider
-  m_TagString: EnemyEvasion
+  m_TagString: EnemyEvasionSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10344,7 +10356,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2102198972}
         m_TargetAssemblyTypeName: ShipStats, Assembly-CSharp
-        m_MethodName: SourceUpdate
+        m_MethodName: EnemySourceUpdate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10379,7 +10391,7 @@ GameObject:
   - component: {fileID: 2102198972}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10475,14 +10487,22 @@ MonoBehaviour:
   audioManager: {fileID: 590500214}
   enemy: {fileID: 2102198969}
   ship: {fileID: 399448893}
+  shipAttackSourceSlider: {fileID: 1511334437}
+  shipDefenseSourceSlider: {fileID: 1594153561}
+  shipEvasionSourceSlider: {fileID: 485304824}
+  shipAccuracySourceSlider: {fileID: 1374003023}
+  enemyAttackSourceSlider: {fileID: 169038803}
+  enemyDefenseSourceSlider: {fileID: 286077642}
+  enemyEvasionSourceSlider: {fileID: 2095928451}
+  enemyAccuracySourceSlider: {fileID: 1458776371}
   attack: 0
   defense: 0
   evasion: 0
   accuracy: 0
-  attackSource: 0
-  defenseSource: 0
-  evasionSource: 0
-  accuracySource: 0
+  attackSource: 1
+  defenseSource: 1
+  evasionSource: 2
+  accuracySource: 3
   strongMultiplier: 2
   weakMultiplier: 0.5
   matchMultiplier: 2
@@ -10492,6 +10512,10 @@ MonoBehaviour:
   defensePitchType: 0
   evasionPitchType: 0
   accuracyPitchType: 0
+  typeMultipliersList: []
+  sourceList: []
+  opponentSourceList: []
+  timbreMatchMultipliersList: []
   displayText: {fileID: 60573092}
 --- !u!1 &2136134109
 GameObject:
