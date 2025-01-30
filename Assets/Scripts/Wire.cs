@@ -45,7 +45,7 @@ public class Wire : MonoBehaviour
                 previousModule.GetComponent<Module>().nextModule = nextModule;
                 nextModule.GetComponent<Module>().previousModule = previousModule;
                 connectedToModule = true;
-                PatchManager.Instance.UpdatePatch(sourceModule);
+                PatchManager.Instance.UpdateAllPatches();
             }
             else
             {
@@ -104,7 +104,7 @@ public class Wire : MonoBehaviour
             nextModule.GetComponent<Module>().previousModule = null;
         }
         previousModule.GetComponent<Module>().nextModule = null;
-        PatchManager.Instance.UpdatePatch(sourceModule);
+        PatchManager.Instance.UpdateAllPatches();
         Destroy(gameObject);
     }
 }

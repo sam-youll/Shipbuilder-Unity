@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Vector2 = UnityEngine.Vector2;
@@ -17,6 +18,14 @@ public class Module : MonoBehaviour
         Ringmod
     }
     public ModuleType moduleType = ModuleType.None;
+
+    [Header("Values")] 
+    public bool isSourceModule;
+    public bool isOutputModule;
+    public string parameter;
+    public float parameterValue;
+    public string stat;
+    public float statValue;
     
     [Header("Connections")]
     public GameObject previousModule;
@@ -40,7 +49,12 @@ public class Module : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        sourceModule = this.gameObject;
+        typeLabel.GetComponent<TextMeshPro>().text = gameObject.name;
+        
+        if (isSourceModule)
+        {
+            sourceModule = this.gameObject;
+        }
 
         if (transform.parent == ModuleRack.Instance.transform)
         {
@@ -105,6 +119,7 @@ public class Module : MonoBehaviour
                 {
                     isInInventory = true;
                     transform.SetParent(Inventory.Instance.transform);
+                    PatchManager.Instance.UpdateAllPatches();
                     if (previousModule != null)
                     {
                         previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
@@ -119,6 +134,7 @@ public class Module : MonoBehaviour
                 {
                     isInInventory = false;
                     transform.SetParent(ModuleRack.Instance.transform);
+                    PatchManager.Instance.UpdateAllPatches();
                 }
             }
         }

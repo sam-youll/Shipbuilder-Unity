@@ -35,33 +35,13 @@ public class AudioManager: MonoBehaviour
     public EventReference sfx_shipRef;
     public EventReference ui_pickupRef;
     public EventReference ui_putdownRef;
-
-    // //param variables 
-    // public float pitch;
-    // public float source;
-    // public float arp;
-    // public float thruster;
-    // public float ringmod;
-    // //shipstate: 0 not started, 1 started, 2 off
-    // public float shipstate;
     
-    public List<EventInstance> fmodEvents = new List<EventInstance>();
-    
-    // this is an example of how data is passed to FMOD instances
-    public Dictionary<string, float> testParams = new Dictionary<string, float>();
-
+    public List<EventInstance> moduleInstances = new List<EventInstance>();
 
     void Start()
     {
-        testParams.Add("shipstate", 0);
-        testParams.Add("arpstart", 1);
-        testParams.Add("pitch", 440);
-        testParams.Add("source", 2);
-        testParams.Add("arp", 0);
-        testParams.Add("thruster", 0);
-        testParams.Add("ringmod", 0);
-        
         moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        
         amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
         sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
         ui_pickupInst = FMODUnity.RuntimeManager.CreateInstance(ui_pickupRef);
@@ -71,9 +51,7 @@ public class AudioManager: MonoBehaviour
         moduleInst.start();
         amb_spaceInst.start();
 
-        fmodEvents.Add(moduleInst);
-        Debug.Log(fmodEvents.Count);
-        Debug.Log(fmodEvents[0]);
+        moduleInstances.Add(moduleInst);
     }
 
     void Update()
@@ -81,19 +59,21 @@ public class AudioManager: MonoBehaviour
         
     }
 
-    public void SetParameters(int instanceIndex, Dictionary<string, float> parameters)
+    public void SetParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
     {
-        // Debug.Log(fmodEvents.Count);
-        if (!fmodEvents[instanceIndex].isValid()) return;
+        if (instanceIndex >= moduleInstances.Count)
+        {
+            var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+            newInst.start();
+            moduleInstances.Add(newInst);
+        }
         
-        Debug.Log("setting parameters");
-        Debug.Log(parameters);
         // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
-        fmodEvents[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
-        fmodEvents[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
-        fmodEvents[instanceIndex].setParameterByName("source", parameters["source"]);
-        fmodEvents[instanceIndex].setParameterByName("arp", parameters["arp"]);
-        fmodEvents[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
-        fmodEvents[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]);
+        moduleInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
+        moduleInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
+        moduleInstances[instanceIndex].setParameterByName("source", parameters["source"]);
+        moduleInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
+        moduleInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
+        moduleInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]);
     }
 }
