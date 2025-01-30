@@ -39,25 +39,6 @@ public class CombatPrototypeAudioManager : MonoBehaviour
     public float thruster;
     public float ringmod;
 
-    //sliders 
-    public GameObject shipAttackSlider;
-    public GameObject shipDefenseSlider;
-    public GameObject shipEvasionSlider;
-    public GameObject shipAccuracySlider;
-    public GameObject enemyAttackSlider;
-    public GameObject enemyDefenseSlider;
-    public GameObject enemyEvasionSlider;
-    public GameObject enemyAccuracySlider;
-
-    //Dropdowns
-    public GameObject shipAttackDropdown;
-    public GameObject shipDefenseDropdown;
-    public GameObject shipEvasionDropdown;
-    public GameObject shipAccuracyDropdown;
-    public GameObject enemyAttackDropdown;
-    public GameObject enemyDefenseDropdown;
-    public GameObject enemyEvasionDropdown;
-    public GameObject enemyAccuracyDropdown;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
