@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using static ShipStats;
+using TMPro;
 
 public class ShipStats : MonoBehaviour
 {
@@ -78,6 +79,9 @@ public class ShipStats : MonoBehaviour
     private float opponentEvasionSource;
     private float opponentAccuracySource;
 
+    //display
+    public TMP_Text displayText;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -103,12 +107,20 @@ public class ShipStats : MonoBehaviour
         opponentSourceList.Add(opponentEvasionSource);
         opponentSourceList.Add(opponentAccuracySource);
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        SetAttack();
+        SetDefense();
+        SetEvasion();
+        SetAccuracy();
+
+        displayText.SetText("Attack: " + attack + "<br>Defense: " + defense +
+                            "<br>Evasion: " + evasion + "<br>Accuracy: " + accuracy);
+            
     }
 
     public void PitchUpdate()
