@@ -141,6 +141,7 @@ public class PatchManager : MonoBehaviour
                 paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
                 
                 // TODO: THIS IS A TEMPORARY FIX SO ON PATCH DOESN'T OVERRIDE ANOTHER
+                // TODO: I dn't think this works anyway
                 // if (mod.GetComponent<Module>().statValue > statDict[mod.GetComponent<Module>().stat])
                 // {
                     statDict[mod.GetComponent<Module>().stat] = mod.GetComponent<Module>().statValue;
