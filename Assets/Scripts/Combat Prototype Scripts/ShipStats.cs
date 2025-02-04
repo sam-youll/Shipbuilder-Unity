@@ -40,7 +40,7 @@ public class ShipStats : MonoBehaviour
     public float accuracy;
 
 
-    //[Header("Secondary Stats")]
+    [Header("Secondary Stats")]
     //secondary combat stats
     //private float pitchType;
     public float attackSource;

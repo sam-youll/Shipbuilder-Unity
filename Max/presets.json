@@ -3,28 +3,68 @@
     "name": "untitled",
     "preset": {
       "__sps": {
-        "phasor": {},
+        "arpeggiator": {},
+        "generator": {
+          "__sps": {
+            "phasor": {},
+            "sin": {},
+            "triangle": {}
+          }
+        },
         "ringmod": {
           "ringmod": {
             "value": 0
           }
         },
-        "sin": {},
-        "triangle": {}
+        "shields": {
+          "__sps": {
+            "generator": {
+              "__sps": {
+                "phasor": {},
+                "sin": {},
+                "triangle": {}
+              }
+            },
+            "generator[1]": {
+              "__sps": {
+                "phasor": {},
+                "sin": {},
+                "triangle": {}
+              }
+            },
+            "generator[2]": {
+              "__sps": {
+                "phasor": {},
+                "sin": {},
+                "triangle": {}
+              }
+            }
+          }
+        },
+        "thruster": {}
       },
       "arp": {
-        "value": 1
+        "value": 0
+      },
+      "arpspeed": {
+        "value": 826
       },
       "arpstart": {
         "value": 1
       },
       "pitch": {
-        "value": 523
+        "value": 391
       },
-      "source": {
+      "shields": {
         "value": 4
       },
+      "source": {
+        "value": 2.2
+      },
       "thruster": {
+        "value": 0
+      },
+      "thrusterspeed": {
         "value": 1
       }
     }

@@ -2014,7 +2014,7 @@ GameObject:
   m_Icon: {fileID: 2800000, guid: a7e06068a7215854a84bf5ed8280ed15, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &250102137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4273,6 +4273,71 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!1 &978327453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 978327455}
+  - component: {fileID: 978327454}
+  m_Layer: 0
+  m_Name: CombatManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &978327454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978327453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c0e6a5ce181d9c4fa034f902a4bf30e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attack: 0
+  defense: 0
+  evasion: 0
+  accuracy: 0
+  attackSource: 0
+  defenseSource: 0
+  evasionSource: 0
+  accuracySource: 0
+  strongMultiplier: 2
+  weakMultiplier: 0.5
+  matchMultiplier: 2
+  nearMultiplier: 1.5
+  farMultiplier: 1
+  attackPitchType: 0
+  defensePitchType: 0
+  evasionPitchType: 0
+  accuracyPitchType: 0
+  typeMultipliersList: []
+  sourceList: []
+  opponentSourceList: []
+  timbreMatchMultipliersList: []
+--- !u!4 &978327455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978327453}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.4256287, y: 1.8842156, z: -0.02348041}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &990678695
 GameObject:
   m_ObjectHideFlags: 0
@@ -8106,3 +8171,4 @@ SceneRoots:
   - {fileID: 1340600599}
   - {fileID: 165570122}
   - {fileID: 1538635252}
+  - {fileID: 978327455}
