@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{0cc14e9d-6bfa-48de-96ee-f05a9b305960}">
+		<property name="name">
+			<value>shields</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{be5b1b1b-31cf-4235-b4a8-89d2acfb73c9}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{be5b1b1b-31cf-4235-b4a8-89d2acfb73c9}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

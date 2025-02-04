@@ -73,7 +73,10 @@ public class AudioManager: MonoBehaviour
         moduleInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
         moduleInstances[instanceIndex].setParameterByName("source", parameters["source"]);
         moduleInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
+        moduleInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
         moduleInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
-        moduleInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]);
+        moduleInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
+        moduleInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
+        moduleInstances[instanceIndex].setParameterByName("shields", parameters["shield"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{7a0520ab-87e1-48a6-bb25-1ea12ad761e4}">
+		<property name="name">
+			<value>thrusterspeed</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{8d183a89-c878-4d5c-8177-37c1d9e665c7}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{8d183a89-c878-4d5c-8177-37c1d9e665c7}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>15</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

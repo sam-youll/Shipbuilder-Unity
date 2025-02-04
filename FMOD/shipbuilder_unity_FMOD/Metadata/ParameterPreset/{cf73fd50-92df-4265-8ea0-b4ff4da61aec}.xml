@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{cf73fd50-92df-4265-8ea0-b4ff4da61aec}">
+		<property name="name">
+			<value>arpspeed</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{3a767437-7479-4609-be81-573c8aeeff9f}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{3a767437-7479-4609-be81-573c8aeeff9f}">
+		<property name="minimum">
+			<value>50</value>
+		</property>
+		<property name="maximum">
+			<value>2000</value>
+		</property>
+		<property name="initialValue">
+			<value>1000</value>
+		</property>
+	</object>
+</objects>
