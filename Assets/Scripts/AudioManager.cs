@@ -27,14 +27,15 @@ public class AudioManager: MonoBehaviour
     private EventInstance moduleInst;
     private EventInstance amb_spaceInst;
     private EventInstance sfx_shipInst;
-    private EventInstance ui_pickupInst;
-    private EventInstance ui_putdownInst;
+
+
     //FMOD Event Reference 
     public EventReference moduleRef;
     public EventReference amb_spaceRef;
     public EventReference sfx_shipRef;
     public EventReference ui_pickupRef;
     public EventReference ui_putdownRef;
+    public EventReference test_enemySongRef;
     
     public List<EventInstance> moduleInstances = new List<EventInstance>();
 
@@ -44,8 +45,6 @@ public class AudioManager: MonoBehaviour
         
         amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
         sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
-        ui_pickupInst = FMODUnity.RuntimeManager.CreateInstance(ui_pickupRef);
-        ui_putdownInst = FMODUnity.RuntimeManager.CreateInstance(ui_putdownRef);
 
         //start events
         // moduleInst.start();
@@ -88,5 +87,10 @@ public class AudioManager: MonoBehaviour
     public void PutDownModuleSFX()
     {
         FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
+    }
+
+    public void PlayEnemySong()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(test_enemySongRef);
     }
 }

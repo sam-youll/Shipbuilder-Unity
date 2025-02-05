@@ -41,5 +41,6 @@ public class FakeButtonPress : MonoBehaviour
     {
         sr.color = pressedColor;
         currentColor = hoverColor;
+        AudioManager.Instance.PlayEnemySong();
     }
 }
