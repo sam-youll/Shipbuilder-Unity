@@ -81,9 +81,14 @@ public class CombatManager : MonoBehaviour
     private float opponentEvasionSource;
     private float opponentAccuracySource;
 
+    private bool inCombat = false;
+    public float tickLength = 2;
+    private float timer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        timer = tickLength;
+        
         //set pitchtype list
         pitchTypesList.Add(attackPitchType);
         pitchTypesList.Add(defensePitchType);
@@ -121,6 +126,31 @@ public class CombatManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (inCombat)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                timer = tickLength;
+                CombatTick();
+            }
+        }
+        
+    }
+
+    void StartCombat()
+    {
+        timer = tickLength;
+        inCombat = true;
+    }
+    
+    void CombatTick()
+    {
+        
+    }
+
+    void Damage(GameObject attacker, GameObject defender)
     {
         
     }

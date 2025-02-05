@@ -42,6 +42,7 @@ public class PatchManager : MonoBehaviour
 
     public void UpdateAllPatches()
     {
+        // add all source modules to list
         List<GameObject> sources = new List<GameObject>();
         for (int i = 0; i < moduleRack.transform.childCount; i++)
         {
@@ -64,7 +65,7 @@ public class PatchManager : MonoBehaviour
             {
                 patch.Add(currentMod);
                 currentMod = currentMod.GetComponent<Module>().nextModule;
-            
+
                 loopCount++;
                 if (loopCount > 100)
                 {
@@ -74,6 +75,24 @@ public class PatchManager : MonoBehaviour
             }
             patch.Add(currentMod);
 
+            if (!currentMod.GetComponent<Module>().isOutputModule)
+            {
+                // if the last module in the patch is not an output, the patch should not play
+                // if it was a patch playing audio, we need to check and delete the existing patch
+                foreach (var p in Patches.ToList())
+                {
+                    if (p[0] == patch[0])
+                    {
+                        Patches.Remove(p);
+                        AudioManager.Instance.moduleInstances[i].stop(STOP_MODE.IMMEDIATE);
+                        AudioManager.Instance.moduleInstances.RemoveAt(i);
+                    }
+                }
+
+                // loop to next source
+                continue;
+            }
+            
             // Check if patch exists in Patches master list
             // If it doesn't exist, add it
             int patchIndex = -1;
@@ -126,8 +145,11 @@ public class PatchManager : MonoBehaviour
                 { "pitch", 440 },
                 { "source", 2 },
                 { "arp", 0 },
+                { "arpspeed", 0 },
                 { "thruster", 0 },
-                { "ringmod", 0 }
+                { "thrusterspeed", 1 },
+                { "ringmod", 0 },
+                { "shields", 1 }
             };
             var statDict = new Dictionary<string, float>
             {

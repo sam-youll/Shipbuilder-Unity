@@ -40,7 +40,7 @@ public class AudioManager: MonoBehaviour
 
     void Start()
     {
-        moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        // moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
         
         amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
         sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
@@ -48,10 +48,10 @@ public class AudioManager: MonoBehaviour
         ui_putdownInst = FMODUnity.RuntimeManager.CreateInstance(ui_putdownRef);
 
         //start events
-        moduleInst.start();
+        // moduleInst.start();
         amb_spaceInst.start();
 
-        moduleInstances.Add(moduleInst);
+        // moduleInstances.Add(moduleInst);
     }
 
     void Update()
@@ -77,6 +77,6 @@ public class AudioManager: MonoBehaviour
         moduleInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
         moduleInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
         moduleInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
-        moduleInstances[instanceIndex].setParameterByName("shields", parameters["shield"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
+        moduleInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
     }
 }
