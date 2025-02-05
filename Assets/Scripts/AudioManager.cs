@@ -56,7 +56,7 @@ public class AudioManager: MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     public void SetParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
@@ -78,5 +78,15 @@ public class AudioManager: MonoBehaviour
         moduleInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
         moduleInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
         moduleInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
+    }
+
+    public void PickUpModuleSFX()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(ui_pickupRef);
+    }
+
+    public void PutDownModuleSFX()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
     }
 }

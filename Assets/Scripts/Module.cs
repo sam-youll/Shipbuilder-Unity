@@ -46,6 +46,7 @@ public class Module : MonoBehaviour
     private bool isInInventory;
     private bool isOverInventory;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -106,6 +107,8 @@ public class Module : MonoBehaviour
                 transform.position = snapSquare.transform.position;
                 snapSquare.SetActive(false);
                 dragOffset = Vector2.zero;
+
+                AudioManager.Instance.PutDownModuleSFX();
             
                 var adjPos = transform.position;
                 adjPos.z = 0;
@@ -166,6 +169,7 @@ public class Module : MonoBehaviour
                 var adjPos = transform.position;
                 adjPos.z = -1;
                 transform.position = adjPos;
+                AudioManager.Instance.PickUpModuleSFX();
             }
             // if clicking on the output jack, create a wire
             else if (objUnderMouse == outputJack && !isInInventory)
