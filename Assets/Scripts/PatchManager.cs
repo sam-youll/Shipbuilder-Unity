@@ -145,7 +145,7 @@ public class PatchManager : MonoBehaviour
                 { "pitch", 440 },
                 { "source", 2 },
                 { "arp", 0 },
-                { "arpspeed", 0 },
+                { "arpspeed", 1000 },
                 { "thruster", 0 },
                 { "thrusterspeed", 1 },
                 { "ringmod", 0 },
