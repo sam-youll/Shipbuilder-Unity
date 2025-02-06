@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{d6b3faa2-1c72-4cda-9178-3334dec8a56e}">
+		<property name="name">
+			<value>attackpitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{40d806c5-4c85-43a5-8b48-b8015c351c19}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{9688719c-4165-4368-8f7e-aeb3284edc3b}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{9688719c-4165-4368-8f7e-aeb3284edc3b}">
+		<property name="minimum">
+			<value>32.703000000000003</value>
+		</property>
+		<property name="maximum">
+			<value>2093</value>
+		</property>
+		<property name="isHeld">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>440</value>
+		</property>
+	</object>
+</objects>

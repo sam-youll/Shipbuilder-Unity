@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{c387af7d-22ba-4eed-9988-e6fc99a72fad}">
+		<property name="name">
+			<value>evasionsource</value>
+		</property>
+		<relationship name="folder">
+			<destination>{40d806c5-4c85-43a5-8b48-b8015c351c19}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{a901bb0e-02ec-4f5b-a548-ba31a9d120b3}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{a901bb0e-02ec-4f5b-a548-ba31a9d120b3}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

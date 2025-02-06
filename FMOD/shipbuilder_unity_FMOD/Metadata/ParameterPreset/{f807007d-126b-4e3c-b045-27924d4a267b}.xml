@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{f807007d-126b-4e3c-b045-27924d4a267b}">
+		<property name="name">
+			<value>accuracypitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{40d806c5-4c85-43a5-8b48-b8015c351c19}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{72d6d734-72c2-47e5-9b15-6579391625a2}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{72d6d734-72c2-47e5-9b15-6579391625a2}">
+		<property name="minimum">
+			<value>32.703000000000003</value>
+		</property>
+		<property name="maximum">
+			<value>2093</value>
+		</property>
+		<property name="isHeld">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>440</value>
+		</property>
+	</object>
+</objects>

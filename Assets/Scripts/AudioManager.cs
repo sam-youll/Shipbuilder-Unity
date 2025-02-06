@@ -6,6 +6,7 @@ using FMOD;
 using FMODUnity;
 using FMOD.Studio;
 using Debug = UnityEngine.Debug;
+using Unity.VisualScripting;
 
 public class AudioManager: MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class AudioManager: MonoBehaviour
     private EventInstance moduleInst;
     private EventInstance amb_spaceInst;
     private EventInstance sfx_shipInst;
+    private EventInstance enemySongInst;
 
 
     //FMOD Event Reference 
@@ -35,9 +37,31 @@ public class AudioManager: MonoBehaviour
     public EventReference sfx_shipRef;
     public EventReference ui_pickupRef;
     public EventReference ui_putdownRef;
-    public EventReference test_enemySongRef;
+    public EventReference enemySongRef;
+    public EventReference test_enemySong1Ref;
+    public EventReference test_enemySong2Ref;
+    public EventReference test_enemySong3Ref;
     
     public List<EventInstance> moduleInstances = new List<EventInstance>();
+    public List<EventReference> enemySongs = new List<EventReference>();
+    public List<EventReference> enemySongsPlayed = new List<EventReference>();
+
+    //im sure there's a better way
+    private float enemyArpSpeed;
+    private float enemyThrusterSpeed;
+    private float enemyRingmod;
+    private float enemyShields;
+    private float enemyAttackPitch;
+    private float enemyAttackSource;
+    private float enemyDefensePitch;
+    private float enemyDefenseSource;
+    private float enemyEvasionPitch;
+    private float enemyEvasionSource;
+    private float enemyAccuracyPitch;
+    private float enemyAccuracySource;
+
+    private int pickedInstanceRef;
+    private int mostRecent;
 
     void Start()
     {
@@ -51,6 +75,10 @@ public class AudioManager: MonoBehaviour
         amb_spaceInst.start();
 
         // moduleInstances.Add(moduleInst);
+
+        enemySongs.Add(test_enemySong1Ref);
+        enemySongs.Add(test_enemySong2Ref);
+        enemySongs.Add(test_enemySong3Ref);
     }
 
     void Update()
@@ -89,8 +117,85 @@ public class AudioManager: MonoBehaviour
         FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
     }
 
+    private EventReference EnemySongPicked()
+    {
+        pickedInstanceRef = UnityEngine.Random.Range(0, enemySongs.Count);
+
+        enemySongRef = enemySongs[pickedInstanceRef];
+
+        return enemySongRef;
+
+    }
+
     public void PlayEnemySong()
     {
-        FMODUnity.RuntimeManager.PlayOneShot(test_enemySongRef);
+        if (enemySongsPlayed.Count == 0)
+        {
+            //pick the new song from songs list
+            EnemySongPicked();
+            //create the instance
+            enemySongInst = FMODUnity.RuntimeManager.CreateInstance(enemySongRef);
+            //start the instance
+            enemySongInst.start();
+            //add it to the played song list
+            enemySongsPlayed.Add(enemySongRef);
+            //get the event's parameters 
+            GetEnemyParams(enemySongRef);
+            //delete it from the songs list so it doesn't get selected again
+            enemySongs.Remove(enemySongRef); 
+            //will need to remove song from played list whenever moving to next song
+        }
+        
     }
+
+    public void GetEnemyParams(EventReference enemySongRef)
+    {
+        //this is where shit gets unhinged this is NOT the way to do it im so so so sorry for the crimes i am committing here pls forgive, surely figuring out dicts will save me one day
+        if (enemySongRef.Guid == test_enemySong1Ref.Guid)
+        {
+            enemyArpSpeed = 226;
+            enemyThrusterSpeed = 5;
+            enemyRingmod = 1;
+            enemyShields = 3;
+            enemyAttackPitch = 174.6f;
+            enemyAttackSource = 2;
+            enemyDefensePitch = 349.2f;
+            enemyDefenseSource = 4;
+            enemyEvasionPitch = 43.65f;
+            enemyEvasionSource = 4;
+            enemyAccuracyPitch = 659.3f;
+            enemyAccuracySource = 2;
+        }
+        else if (enemySongRef.Guid == test_enemySong2Ref.Guid)
+        {
+            enemyArpSpeed = 82;
+            enemyThrusterSpeed = 2;
+            enemyRingmod = 1;
+            enemyShields = 3;
+            enemyAttackPitch = 932.3f;
+            enemyAttackSource = 4;
+            enemyDefensePitch = 116.5f;
+            enemyDefenseSource = 3;
+            enemyEvasionPitch = 349.2f;
+            enemyEvasionSource = 4;
+            enemyAccuracyPitch = 1397;
+            enemyAccuracySource = 2;
+        }
+        else if (enemySongRef.Guid == test_enemySong3Ref.Guid)
+        {
+            enemyArpSpeed = 2000;
+            enemyThrusterSpeed = 1;
+            enemyRingmod = 1;
+            enemyShields = 2;
+            enemyAttackPitch = 196;
+            enemyAttackSource = 4;
+            enemyDefensePitch = 246.9f;
+            enemyDefenseSource = 2;
+            enemyEvasionPitch = 73.41f;
+            enemyEvasionSource = 3;
+            enemyAccuracyPitch = 739.9f;
+            enemyAccuracySource = 2;
+        }
+    }
+
 }

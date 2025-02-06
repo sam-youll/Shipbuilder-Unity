@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{b073b94c-18ea-45c6-bb19-f22b0a59d066}">
+		<property name="name">
+			<value>evasionpitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{40d806c5-4c85-43a5-8b48-b8015c351c19}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{f670a65f-9b72-4550-8452-e0e0ea5486da}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{f670a65f-9b72-4550-8452-e0e0ea5486da}">
+		<property name="minimum">
+			<value>32.703000000000003</value>
+		</property>
+		<property name="maximum">
+			<value>2093</value>
+		</property>
+		<property name="initialValue">
+			<value>440</value>
+		</property>
+	</object>
+</objects>

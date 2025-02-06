@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{1c9c77ab-754d-450a-b883-0f016d357ff7}">
+		<property name="name">
+			<value>defensesource</value>
+		</property>
+		<relationship name="folder">
+			<destination>{40d806c5-4c85-43a5-8b48-b8015c351c19}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{04176021-5fed-4331-a024-0e8b53017dc6}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{04176021-5fed-4331-a024-0e8b53017dc6}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
