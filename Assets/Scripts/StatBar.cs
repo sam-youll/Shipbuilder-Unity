@@ -3,12 +3,25 @@ using UnityEngine;
 
 public class StatBar : MonoBehaviour
 {
-    public float value = .2f;
+    public float value = 1;
+
+    private Vector2 startPos;
+    private Vector2 startScale;
+
+    public enum Direction
+    {
+        Down,
+        Left,
+        Right,
+        Up
+    }
+    public Direction direction = Direction.Down;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        startPos = transform.localPosition;
+        startScale = transform.localScale;
     }
 
     // Update is called once per frame
@@ -20,11 +33,34 @@ public class StatBar : MonoBehaviour
     private void FixedUpdate()
     {
         var myScale = transform.localScale;
-        myScale.y = Mathf.Lerp(myScale.y, value, .1f);
-        transform.localScale = myScale;
         var myPos = transform.localPosition;
-        var offset = 1 - transform.localScale.y;
-        myPos.y = -(offset / 2);
+        float offset;
+        
+        switch (direction)
+        {
+            case Direction.Down:
+                myScale.y = Mathf.Lerp(myScale.y, startScale.y * value, .1f);
+                offset = startScale.y - myScale.y;
+                myPos.y = startPos.y - (offset / 2);
+                break;
+            case Direction.Left:
+                myScale.x = Mathf.Lerp(myScale.x, startScale.x * value, .1f);
+                offset = startScale.x - myScale.x;
+                myPos.x = startPos.x - (offset / 2);
+                break;
+            case Direction.Right:
+                myScale.x = Mathf.Lerp(myScale.x, startScale.x * value, .1f);
+                offset = startScale.x - myScale.x;
+                myPos.x = startPos.x + (offset / 2);
+                break;
+            case Direction.Up:
+                myScale.y = Mathf.Lerp(myScale.y, startScale.y * value, .1f);
+                offset = startScale.y - myScale.y;
+                myPos.y = startPos.y + (offset / 2);
+                break;
+        }
+        
+        transform.localScale = myScale;
         transform.localPosition = myPos;
     }
 }

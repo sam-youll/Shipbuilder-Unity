@@ -1,9 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    public static CombatManager Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     [Header("Primary Stats")]
     //primary combat stats
@@ -84,6 +97,13 @@ public class CombatManager : MonoBehaviour
     private bool inCombat = false;
     public float tickLength = 2;
     private float timer;
+
+    public StatBar playerHealthBar;
+    public StatBar enemyHealthBar;
+
+    public GameObject playerShip;
+    public GameObject enemyShip;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -139,7 +159,18 @@ public class CombatManager : MonoBehaviour
         
     }
 
-    void StartCombat()
+    private void FixedUpdate()
+    {
+        if (inCombat)
+        {
+            if (Camera.main.transform.position != new Vector3(18, 0, -10))
+            {
+                Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(18, 0, -10), .3f);
+            }
+        }
+    }
+
+    public void StartCombat()
     {
         timer = tickLength;
         inCombat = true;
@@ -147,17 +178,40 @@ public class CombatManager : MonoBehaviour
     
     void CombatTick()
     {
-        
+        playerHealthBar.value -= .1f;
+        playerHealthBar.value = Mathf.Clamp(playerHealthBar.value, 0, 1);
+        enemyHealthBar.value -= .1f;
+        enemyHealthBar.value = Mathf.Clamp(playerHealthBar.value, 0, 1);
     }
 
-    void Damage(GameObject attacker, GameObject defender)
+    float AttackMod()
     {
-        
+        return 1;
+    }
+    
+    float ModifiedPlayerAttack()
+    {
+        return 0;
+    }
+
+    float ModifiedPlayerDefense()
+    {
+        return 0;
+    }
+
+    float ModifiedEnemyAttack()
+    {
+        return 0;
+    }
+
+    float ModifiedEnemyDefense()
+    {
+        return 0;
     }
 
     public void SetStatsByDict()
     {
-
+        return;
     }
 
     public float ModifyAttack()
