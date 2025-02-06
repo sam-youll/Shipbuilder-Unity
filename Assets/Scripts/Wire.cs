@@ -43,6 +43,10 @@ public class Wire : MonoBehaviour
                 nextModuleJack = hit.collider.gameObject;
                 nextModule = nextModuleJack.transform.parent.gameObject;
                 previousModule.GetComponent<Module>().nextModule = nextModule;
+                if (nextModule.GetComponent<Module>().previousModule != null)
+                {
+                    nextModule.GetComponent<Module>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                }
                 nextModule.GetComponent<Module>().previousModule = previousModule;
                 connectedToModule = true;
                 PatchManager.Instance.UpdateAllPatches();

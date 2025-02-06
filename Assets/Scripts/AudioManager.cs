@@ -95,6 +95,12 @@ public class AudioManager: MonoBehaviour
             newInst.start();
             moduleInstances.Add(newInst);
         }
+
+        foreach (var pair in parameters)
+        {
+            Debug.Log(pair.Key + " " + pair.Value);
+        }
+        
         
         // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
         moduleInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
