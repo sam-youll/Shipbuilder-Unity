@@ -41,12 +41,7 @@ public class StartCombatButton : MonoBehaviour
         sr.color = pressedColor;
         currentColor = hoverColor;
 
-        StartCombat();
-    }
-
-    void StartCombat()
-    {
-        Camera.main.transform.position = new Vector3(18, 0, -10);
+        CombatManager.Instance.StartCombat();
     }
 }
 
