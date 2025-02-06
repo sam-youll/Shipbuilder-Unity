@@ -151,13 +151,12 @@ public class AudioManager: MonoBehaviour
             //delete it from the songs list so it doesn't get selected again
             enemySongs.Remove(enemySongRef);
 
-            Debug.Log(enemySongRef.Guid);
-            //will need to remove song from played list whenever moving to next song
+            //Debug.Log(enemySongRef.Guid);
         }
         else
         {
             enemySongInst.start();
-            Debug.Log(enemySongRef.Guid);
+            //Debug.Log(enemySongRef.Guid);
         }
         
     }
