@@ -174,6 +174,8 @@ public class CombatManager : MonoBehaviour
     {
         timer = tickLength;
         inCombat = true;
+
+        AudioManager.Instance.ResetPlayedList();
     }
     
     void CombatTick()

@@ -42,6 +42,7 @@ public class StartCombatButton : MonoBehaviour
         currentColor = hoverColor;
 
         CombatManager.Instance.StartCombat();
+        CombatManager.Instance.StartCombat();
     }
 }
 

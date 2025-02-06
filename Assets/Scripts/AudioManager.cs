@@ -142,8 +142,15 @@ public class AudioManager: MonoBehaviour
             //get the event's parameters 
             GetEnemyParams(enemySongRef);
             //delete it from the songs list so it doesn't get selected again
-            enemySongs.Remove(enemySongRef); 
+            enemySongs.Remove(enemySongRef);
+
+            Debug.Log(enemySongRef.Guid);
             //will need to remove song from played list whenever moving to next song
+        }
+        else
+        {
+            enemySongInst.start();
+            Debug.Log(enemySongRef.Guid);
         }
         
     }
@@ -151,6 +158,7 @@ public class AudioManager: MonoBehaviour
     public void GetEnemyParams(EventReference enemySongRef)
     {
         //this is where shit gets unhinged this is NOT the way to do it im so so so sorry for the crimes i am committing here pls forgive, surely figuring out dicts will save me one day
+        //just setting the things u need to calculate the stats based on which event is playing
         if (enemySongRef.Guid == test_enemySong1Ref.Guid)
         {
             enemyArpSpeed = 226;
@@ -196,6 +204,11 @@ public class AudioManager: MonoBehaviour
             enemyAccuracyPitch = 739.9f;
             enemyAccuracySource = 2;
         }
+    }
+
+    public void ResetPlayedList()
+    {
+        enemySongsPlayed.Remove(enemySongsPlayed[0]);
     }
 
 }
