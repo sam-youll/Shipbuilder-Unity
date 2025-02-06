@@ -84,11 +84,14 @@ public class PatchManager : MonoBehaviour
                     if (p[0] == patch[0])
                     {
                         Patches.Remove(p);
-                        AudioManager.Instance.moduleInstances[i].stop(STOP_MODE.IMMEDIATE);
-                        AudioManager.Instance.moduleInstances.RemoveAt(i);
+                        if (i < AudioManager.Instance.moduleInstances.Count)
+                        {
+                            AudioManager.Instance.moduleInstances[i].stop(STOP_MODE.IMMEDIATE);
+                            AudioManager.Instance.moduleInstances.RemoveAt(i);
+                        }
                     }
                 }
-
+    
                 // loop to next source
                 continue;
             }
@@ -153,28 +156,60 @@ public class PatchManager : MonoBehaviour
             };
             var statDict = new Dictionary<string, float>
             {
-                { "atk", .1f },
-                { "def", .9f },
-                { "acc", .1f },
-                { "eva", .1f }
+                { "", 0 },
+                { "extraHealth", 0 },
+                { "incomingDamageMult", 0 },
+                { "damage", 0 },
+                { "attackSpeed", 1 },
+                { "accuracy", 0 },
+                { "evasion", 0 },
+                { "izki", 0 },
+                { "aubo", 0 },
+                { "dwth", 0 }
             };
+
+            Module.OutputType outputType = Module.OutputType.None;
             foreach (var mod in p)
             {
                 paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
-                
-                // TODO: THIS IS A TEMPORARY FIX SO ON PATCH DOESN'T OVERRIDE ANOTHER
-                // TODO: I dn't think this works anyway
-                // if (mod.GetComponent<Module>().statValue > statDict[mod.GetComponent<Module>().stat])
+                statDict[mod.GetComponent<Module>().stat] += mod.GetComponent<Module>().statValue;
+                statDict["izki"] += mod.GetComponent<Module>().izki;
+                statDict["aubo"] += mod.GetComponent<Module>().aubo;
+                statDict["dwth"] += mod.GetComponent<Module>().dwth;
+                if (mod.GetComponent<Module>().isOutputModule)
+                {
+                    outputType = mod.GetComponent<Module>().outputType;
+                }
+                // // statDict[mod.GetComponent<Module>().stat] = mod.GetComponent<Module>().statValue;
+                // var stat = mod.GetComponent<Module>().stat;
+                // var val = mod.GetComponent<Module>().statValue;
+                // switch (stat)
                 // {
-                    statDict[mod.GetComponent<Module>().stat] = mod.GetComponent<Module>().statValue;
+                //     case "extraHealth":
+                //         CombatManager.Instance.playerHealth += val;
+                //         break;
+                //     case "attackSpeed":
+                //         break;
+                //     case "incomingDamageMult":
+                //         break;
+                //     case "accuracy":
+                //         break;
+                //     case "izki":
+                //         break;
+                //     case "aubo":
+                //         break;
+                //     case "dwth":
+                //         break;
+                //     
                 // }
             }
             AudioManager.Instance.SetParametersByDict(i, paramDict);
+            CombatManager.Instance.SetStatsByDict(i, outputType, statDict);
 
-            atkBar.GetComponent<StatBar>().value = statDict["atk"];
-            defBar.GetComponent<StatBar>().value = statDict["def"];
-            accBar.GetComponent<StatBar>().value = statDict["acc"];
-            evaBar.GetComponent<StatBar>().value = statDict["eva"];
+            // atkBar.GetComponent<StatBar>().value = statDict["atk"];
+            // defBar.GetComponent<StatBar>().value = statDict["def"];
+            // accBar.GetComponent<StatBar>().value = statDict["acc"];
+            // evaBar.GetComponent<StatBar>().value = statDict["eva"];
         }
     }
 }

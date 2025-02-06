@@ -126,7 +126,8 @@ public class AudioManager: MonoBehaviour
 
     private EventReference EnemySongPicked()
     {
-        pickedInstanceRef = UnityEngine.Random.Range(0, enemySongs.Count);
+        // pickedInstanceRef = UnityEngine.Random.Range(0, enemySongs.Count);
+        pickedInstanceRef = 0;
 
         enemySongRef = enemySongs[pickedInstanceRef];
 
@@ -215,7 +216,10 @@ public class AudioManager: MonoBehaviour
 
     public void ResetPlayedList()
     {
-        enemySongsPlayed.Remove(enemySongsPlayed[0]);
+        if (enemySongsPlayed.Count > 0)
+        {
+            enemySongsPlayed.RemoveAt(0);
+        }
     }
 
     public void StopEnemySong()

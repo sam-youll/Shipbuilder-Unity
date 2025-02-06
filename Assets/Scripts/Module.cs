@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using TMPro;
 using UnityEngine;
@@ -6,6 +7,11 @@ using UnityEngine.Serialization;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
+[Serializable] public class Stat
+{
+    public string name;
+    public float value;
+}
 public class Module : MonoBehaviour
 {
     public enum ModuleType
@@ -20,6 +26,24 @@ public class Module : MonoBehaviour
     }
     public ModuleType moduleType = ModuleType.None;
 
+    public enum OutputType
+    {
+        None = 0,
+        Weapon = 1,
+        Shield = 2,
+        Thruster = 3,
+        Sensor = 4
+    }
+    public OutputType outputType;
+
+    public enum SoundType
+    {
+        None,
+        Izki,
+        Aubo,
+        Dwth
+    }
+    
     [Header("Values")] 
     public bool isSourceModule;
     public bool isOutputModule;
@@ -27,6 +51,10 @@ public class Module : MonoBehaviour
     public float parameterValue;
     public string stat;
     public float statValue;
+    // public List<Stat> stats = new List<Stat>();
+    public float izki;
+    public float aubo;
+    public float dwth;
     
     [Header("Connections")]
     public GameObject previousModule;
