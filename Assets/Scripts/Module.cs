@@ -15,7 +15,8 @@ public class Module : MonoBehaviour
         Pitch,
         Arpeggio,
         Thruster,
-        Ringmod
+        Ringmod,
+        Pads
     }
     public ModuleType moduleType = ModuleType.None;
 

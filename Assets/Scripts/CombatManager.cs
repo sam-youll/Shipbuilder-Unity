@@ -176,6 +176,7 @@ public class CombatManager : MonoBehaviour
         inCombat = true;
 
         AudioManager.Instance.ResetPlayedList();
+        AudioManager.Instance.StopEnemySong();
     }
     
     void CombatTick()

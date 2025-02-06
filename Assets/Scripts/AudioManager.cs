@@ -7,6 +7,7 @@ using FMODUnity;
 using FMOD.Studio;
 using Debug = UnityEngine.Debug;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
 public class AudioManager: MonoBehaviour
 {
@@ -209,6 +210,11 @@ public class AudioManager: MonoBehaviour
     public void ResetPlayedList()
     {
         enemySongsPlayed.Remove(enemySongsPlayed[0]);
+    }
+
+    public void StopEnemySong()
+    {
+        enemySongInst.stop(0);
     }
 
 }
