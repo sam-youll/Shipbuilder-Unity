@@ -173,9 +173,21 @@ public class PatchManager : MonoBehaviour
             {
                 paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
                 statDict[mod.GetComponent<Module>().stat] += mod.GetComponent<Module>().statValue;
-                statDict["izki"] += mod.GetComponent<Module>().izki;
-                statDict["aubo"] += mod.GetComponent<Module>().aubo;
-                statDict["dwth"] += mod.GetComponent<Module>().dwth;
+                // statDict["soundType"] = (float)mod.GetComponent<Module>().soundType;
+                switch (mod.GetComponent<Module>().soundType)
+                {
+                    case Module.SoundType.None:
+                        break;
+                    case Module.SoundType.Izki:
+                        statDict["izki"]++;
+                        break;
+                    case Module.SoundType.Aubo:
+                        statDict["aubo"]++;
+                        break;
+                    case Module.SoundType.Dwth:
+                        statDict["dwth"]++;
+                        break;
+                }
                 if (mod.GetComponent<Module>().isOutputModule)
                 {
                     outputType = mod.GetComponent<Module>().outputType;

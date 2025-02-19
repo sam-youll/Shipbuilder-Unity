@@ -52,9 +52,10 @@ public class Module : MonoBehaviour
     public string stat;
     public float statValue;
     // public List<Stat> stats = new List<Stat>();
-    public float izki;
-    public float aubo;
-    public float dwth;
+    public SoundType soundType;
+    // public float izki;
+    // public float aubo;
+    // public float dwth;
     
     [Header("Connections")]
     public GameObject previousModule;
@@ -79,6 +80,19 @@ public class Module : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        switch (soundType)
+        {
+            case SoundType.Izki:
+                GetComponent<SpriteRenderer>().color = Color.yellow;
+                break;
+            case SoundType.Aubo:
+                GetComponent<SpriteRenderer>().color = Color.cyan;
+                break;
+            case SoundType.Dwth:
+                GetComponent<SpriteRenderer>().color = Color.magenta;
+                break;
+        }
+        
         typeLabel.GetComponent<TextMeshPro>().text = gameObject.name;
         
         if (isSourceModule)
