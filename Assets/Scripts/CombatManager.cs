@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TMPro;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
@@ -104,6 +105,8 @@ public class CombatManager : MonoBehaviour
 
     public GameObject playerShip;
     public GameObject enemyShip;
+    
+    public GameObject floatingDamageNumberPrefab;
     
     [Header("Player Ship Stats")]
     public float playerHealth;
@@ -212,8 +215,16 @@ public class CombatManager : MonoBehaviour
     void CombatTick()
     {
         playerHealthBar.value -= EnemyAttackDamage();
+        var playerHitNumber = Instantiate(floatingDamageNumberPrefab, playerShip.transform.position, Quaternion.identity);
+        playerHitNumber.GetComponent<TextMeshPro>().text = EnemyAttackDamage().ToString();
+        playerHitNumber.transform.SetParent(playerShip.transform);
+        Debug.Log(playerHitNumber);
         playerHealthBar.value = Mathf.Clamp(playerHealthBar.value, 0, 1);
         enemyHealthBar.value -= PlayerAttackDamage();
+        var enemyHitNumber = Instantiate(floatingDamageNumberPrefab, enemyShip.transform.position, Quaternion.identity);
+        enemyHitNumber.GetComponent<TextMeshPro>().text = PlayerAttackDamage().ToString();
+        enemyHitNumber.transform.SetParent(enemyShip.transform);
+        Debug.Log(enemyHitNumber);
         enemyHealthBar.value = Mathf.Clamp(enemyHealthBar.value, 0, 1);
         
         currentTick++;

@@ -37,14 +37,14 @@ public class FakeButtonPress : MonoBehaviour
 
     private void Update()
     {
-        if (timerRunning)
-        {
-          targetTime -= Time.deltaTime;
-        }
-        if (targetTime < 0)
-        {
-            timerEnded();
-        }
+        // if (timerRunning)
+        // {
+        //   targetTime -= Time.deltaTime;
+        // }
+        // if (targetTime < 0)
+        // {
+        //     timerEnded();
+        // }
     }
 
     private void OnMouseEnter()
@@ -65,8 +65,8 @@ public class FakeButtonPress : MonoBehaviour
         currentColor = hoverColor;
         AudioManager.Instance.PlayEnemySong();
 
-        if (!timerRunning)
-        {
+        // if (!timerRunning)
+        // {
             if (isPlaying)
             {
                 sr.sprite = triangle;
@@ -78,22 +78,22 @@ public class FakeButtonPress : MonoBehaviour
             else
             {
                 //a smol timer so it doesnt just spam play/pause while the mouse is held down
-                timerStart();
+                // timerStart();
                 sr.sprite = square;
                 otherTriangle.GetComponent<SpriteRenderer>().sprite = square;
                 Debug.Log("starting");
                 isPlaying = true;
             }
-        }
+        // }
     }
 
-    void timerStart()
-    {
-        targetTime = 1;
-        timerRunning = true;
-    }
-    void timerEnded()
-    {
-        timerRunning = false;
-    }
+    // void timerStart()
+    // {
+    //     targetTime = 1;
+    //     timerRunning = true;
+    // }
+    // void timerEnded()
+    // {
+    //     timerRunning = false;
+    // }
 }

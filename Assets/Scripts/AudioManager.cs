@@ -85,7 +85,7 @@ public class AudioManager: MonoBehaviour
         enemySongs.Add(test_enemySong3Ref);
 
         playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
-        moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event://Module");
+        moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event:/Module");
     }
 
     void Update()

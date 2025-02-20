@@ -165,7 +165,7 @@ public class Module : MonoBehaviour
                 {
                     isInInventory = true;
                     transform.SetParent(Inventory.Instance.transform);
-                    PatchManager.Instance.UpdateAllPatches();
+                    // PatchManager.Instance.UpdateAllPatches();
                     if (previousModule != null)
                     {
                         previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
@@ -180,7 +180,7 @@ public class Module : MonoBehaviour
                 {
                     isInInventory = false;
                     transform.SetParent(ModuleRack.Instance.transform);
-                    PatchManager.Instance.UpdateAllPatches();
+                    // PatchManager.Instance.UpdateAllPatches();
                 }
             }
         }
