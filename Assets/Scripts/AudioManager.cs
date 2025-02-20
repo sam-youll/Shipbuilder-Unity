@@ -65,6 +65,7 @@ public class AudioManager: MonoBehaviour
     private int mostRecent;
 
     private VCA playerVCA;
+    private EventDescription moduleDescription;
 
     void Start()
     {
@@ -84,11 +85,12 @@ public class AudioManager: MonoBehaviour
         enemySongs.Add(test_enemySong3Ref);
 
         playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
+        moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event://Module");
     }
 
     void Update()
     {
-
+        
     }
 
     public void SetParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
@@ -240,4 +242,8 @@ public class AudioManager: MonoBehaviour
         playerVCA.setVolume(1);
     }
 
+    public void ResetModuleInstances()
+    {
+        moduleDescription.releaseAllInstances();    
+    }
 }
