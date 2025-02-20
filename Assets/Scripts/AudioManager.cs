@@ -64,6 +64,8 @@ public class AudioManager: MonoBehaviour
     private int pickedInstanceRef;
     private int mostRecent;
 
+    private VCA playerVCA;
+
     void Start()
     {
         // moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
@@ -80,6 +82,8 @@ public class AudioManager: MonoBehaviour
         enemySongs.Add(test_enemySong1Ref);
         enemySongs.Add(test_enemySong2Ref);
         enemySongs.Add(test_enemySong3Ref);
+
+        playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
     }
 
     void Update()
@@ -224,6 +228,16 @@ public class AudioManager: MonoBehaviour
     public void StopEnemySong()
     {
         enemySongInst.stop(0);
+    }
+
+    public void MutePlayerVolume()
+    {
+        playerVCA.setVolume(0);
+    }
+
+    public void UnmutePlayerVolume()
+    {
+        playerVCA.setVolume(1);
     }
 
 }
