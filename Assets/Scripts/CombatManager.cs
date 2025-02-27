@@ -259,6 +259,7 @@ public class CombatManager : MonoBehaviour
             result *= shield["incomingDamageMult"];
             result *= RPS(enemyWeaponSoundType, GetShieldType(shield));
         }
+        // Debug.Log("Player shield is type " + GetWeaponType(playerShields[0]) + ". Enemy weapon is type " + enemyWeaponSoundType);
         return result;
     }
 

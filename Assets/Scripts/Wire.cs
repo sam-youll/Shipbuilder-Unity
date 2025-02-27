@@ -40,16 +40,67 @@ public class Wire : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, LayerMask.GetMask("Jacks"));
             if (hit)
             {
-                nextModuleJack = hit.collider.gameObject;
-                nextModule = nextModuleJack.transform.parent.gameObject;
-                previousModule.GetComponent<Module>().nextModule = nextModule;
-                if (nextModule.GetComponent<Module>().previousModule != null)
+                if (hit.collider.gameObject.transform.parent.gameObject.CompareTag("OutputRack"))
                 {
-                    nextModule.GetComponent<Module>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                    var outputRack = hit.collider.gameObject.transform.parent.gameObject.GetComponent<OutputRack>();
+                    int index = -1;
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (hit.collider.gameObject == outputRack.weaponOutputs[i])
+                        {
+                            index = i;
+                        }
+                    }
+                    for (int i = 6; i < 12; i++)
+                    {
+                        if (hit.collider.gameObject == outputRack.shieldOutputs[i-6])
+                        {
+                            index = i;
+                        }
+                    }
+                    nextModuleJack = hit.collider.gameObject;
+                    nextModule = nextModuleJack.transform.parent.gameObject;
+                    previousModule.GetComponent<Module>().nextModule = nextModule;
+                    if (index == -1)
+                    {
+                        Debug.Log("Couldn't find output.");
+                    }
+                    else if (index < 6 && outputRack.previousModsWeapons[index] != null)
+                    {
+                        outputRack.previousModsWeapons[index].GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                    }
+                    else if (index >= 6 && outputRack.previousModsShields[index-6] != null)
+                    {
+                        outputRack.previousModsShields[index-6].GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                    }
+                    else if (index < 6)
+                    {
+                        outputRack.previousModsWeapons[index] = previousModule;
+                    }
+                    else if (index < 12)
+                    {
+                        outputRack.previousModsShields[index-6] = previousModule;
+                    }
+                    connectedToModule = true;
+                    PatchManager.Instance.UpdateAllPatches();
                 }
-                nextModule.GetComponent<Module>().previousModule = previousModule;
-                connectedToModule = true;
-                PatchManager.Instance.UpdateAllPatches();
+                else if (hit.collider.gameObject.CompareTag("InputJack"))
+                {
+                    nextModuleJack = hit.collider.gameObject;
+                    nextModule = nextModuleJack.transform.parent.gameObject;
+                    previousModule.GetComponent<Module>().nextModule = nextModule;
+                    if (nextModule.GetComponent<Module>().previousModule != null)
+                    {
+                        nextModule.GetComponent<Module>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                    }
+                    nextModule.GetComponent<Module>().previousModule = previousModule;
+                    connectedToModule = true;
+                    PatchManager.Instance.UpdateAllPatches();
+                }
+                else
+                {
+                    DeleteSelf();
+                }
             }
             else
             {
@@ -105,7 +156,28 @@ public class Wire : MonoBehaviour
     {
         if (connectedToModule)
         {
-            nextModule.GetComponent<Module>().previousModule = null;
+            if (nextModule.CompareTag("OutputRack"))
+            {
+                var outputRack = nextModule.GetComponent<OutputRack>();
+                for (int i = 0; i < 6; i++)
+                {
+                    if (previousModule == outputRack.previousModsWeapons[i])
+                    {
+                        outputRack.previousModsWeapons[i] = null;
+                    }
+                }
+                for (int i = 6; i < 12; i++)
+                {
+                    if (previousModule == outputRack.previousModsShields[i-6])
+                    {
+                        outputRack.previousModsShields[i-6] = null;
+                    }
+                }
+            }
+            else
+            {
+                nextModule.GetComponent<Module>().previousModule = null;
+            }
         }
         previousModule.GetComponent<Module>().nextModule = null;
         PatchManager.Instance.UpdateAllPatches();

@@ -43,7 +43,7 @@ public class AudioManager: MonoBehaviour
     public EventReference test_enemySong2Ref;
     public EventReference test_enemySong3Ref;
     
-    public List<EventInstance> moduleInstances = new List<EventInstance>();
+    public EventInstance[] patchInstances = new EventInstance[12];
     public List<EventReference> enemySongs = new List<EventReference>();
     public List<EventReference> enemySongsPlayed = new List<EventReference>();
 
@@ -73,12 +73,13 @@ public class AudioManager: MonoBehaviour
         
         amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
         sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
+        for (int i = 0; i < 12; i++)
+        {
+            patchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        }
 
         //start events
-        // moduleInst.start();
         amb_spaceInst.start();
-
-        // moduleInstances.Add(moduleInst);
 
         enemySongs.Add(test_enemySong1Ref);
         enemySongs.Add(test_enemySong2Ref);
@@ -95,29 +96,32 @@ public class AudioManager: MonoBehaviour
 
     public void SetParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
     {
-        if (instanceIndex >= moduleInstances.Count)
+        if (instanceIndex >= patchInstances.Length)
         {
-            var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-            newInst.start();
-            moduleInstances.Add(newInst);
+            Debug.Log("Parameter index is out of range of patchInstances.");
+            // var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+            // newInst.start();
+            // patchInstances.Add(newInst);
         }
 
-        foreach (var pair in parameters)
-        {
-            Debug.Log(pair.Key + " " + pair.Value);
-        }
+        // foreach (var pair in parameters)
+        // {
+        //     Debug.Log(pair.Key + " " + pair.Value);
+        // }
         
         
         // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
-        moduleInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
-        moduleInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
-        moduleInstances[instanceIndex].setParameterByName("source", parameters["source"]);
-        moduleInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
-        moduleInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
-        moduleInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
-        moduleInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
-        moduleInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
-        moduleInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
+        patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
+        patchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
+        patchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
+        patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
+        patchInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
+        patchInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
+        patchInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
+        patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
+        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
+
+        patchInstances[instanceIndex].start();
     }
 
     public void PickUpModuleSFX()
