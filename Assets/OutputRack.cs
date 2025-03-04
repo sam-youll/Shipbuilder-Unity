@@ -102,7 +102,7 @@ public class OutputRack : MonoBehaviour
         {
             mod = mod.nextModule.GetComponent<Module>();
         }
-        var jack = mod.transform.Find("Wire").GetComponent<Wire>().nextModuleJack;
+        var jack = mod.transform.Find("Output Jack").Find("Wire(Clone)").GetComponent<Wire>().nextModuleJack;
         
         if (Array.Exists(weaponOutputs, element => element == jack))
         {
