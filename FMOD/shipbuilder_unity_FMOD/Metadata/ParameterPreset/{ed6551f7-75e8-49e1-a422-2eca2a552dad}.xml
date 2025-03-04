@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{ed6551f7-75e8-49e1-a422-2eca2a552dad}">
+		<property name="name">
+			<value>FMAMfreq</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{5c00764f-23a8-4c1a-b884-62e1af5bce5a}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{5c00764f-23a8-4c1a-b884-62e1af5bce5a}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>20</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

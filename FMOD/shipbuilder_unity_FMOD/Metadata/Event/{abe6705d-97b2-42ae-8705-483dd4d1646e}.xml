@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{abe6705d-97b2-42ae-8705-483dd4d1646e}">
 		<property name="name">
 			<value>TestEnemy1</value>
@@ -30,10 +30,6 @@
 		</relationship>
 		<relationship name="parameters">
 			<destination>{d7c46222-32f9-488f-b5fc-83da75295215}</destination>
-			<destination>{d5199ed1-6841-4870-bf8e-6378e2c42000}</destination>
-			<destination>{c02872f4-38be-4419-a8e1-663fe1ff10b8}</destination>
-			<destination>{8623bafc-b998-48a2-88ed-76a120bd973e}</destination>
-			<destination>{9060b20a-2dd8-48ec-b6e6-af61570ab7f2}</destination>
 			<destination>{7f5d1195-99bb-4e9c-9226-ab29dc867325}</destination>
 			<destination>{fe7508b1-e350-4ae9-9518-2c8d0a6db276}</destination>
 			<destination>{909acd24-7fbf-4951-82ed-0ba5d57dcd7e}</destination>
@@ -85,26 +81,6 @@
 	<object class="ActionSheet" id="{d7c46222-32f9-488f-b5fc-83da75295215}">
 		<relationship name="modules">
 			<destination>{6d7a3d89-a571-4a12-9c0c-1cb3d7271f90}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{d5199ed1-6841-4870-bf8e-6378e2c42000}">
-		<relationship name="preset">
-			<destination>{3a767437-7479-4609-be81-573c8aeeff9f}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{c02872f4-38be-4419-a8e1-663fe1ff10b8}">
-		<relationship name="preset">
-			<destination>{a2422bb8-4fb8-4a0d-8d46-c1ea0824a899}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{8623bafc-b998-48a2-88ed-76a120bd973e}">
-		<relationship name="preset">
-			<destination>{be5b1b1b-31cf-4235-b4a8-89d2acfb73c9}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{9060b20a-2dd8-48ec-b6e6-af61570ab7f2}">
-		<relationship name="preset">
-			<destination>{8d183a89-c878-4d5c-8177-37c1d9e665c7}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{7f5d1195-99bb-4e9c-9226-ab29dc867325}">

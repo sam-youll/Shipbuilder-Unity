@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{6096526f-e24d-4e95-9041-06a145301ad3}">
+		<property name="name">
+			<value>FM2depth</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{430f0e68-954a-4956-8001-9ec4fef0d00a}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{430f0e68-954a-4956-8001-9ec4fef0d00a}">
+		<property name="minimum">
+			<value>10</value>
+		</property>
+		<property name="maximum">
+			<value>500</value>
+		</property>
+		<property name="initialValue">
+			<value>10</value>
+		</property>
+	</object>
+</objects>

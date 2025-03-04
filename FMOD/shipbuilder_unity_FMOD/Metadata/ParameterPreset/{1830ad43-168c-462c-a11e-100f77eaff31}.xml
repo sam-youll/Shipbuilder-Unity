@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{1830ad43-168c-462c-a11e-100f77eaff31}">
+		<property name="name">
+			<value>AMFMfreq</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{351cb32f-fa24-42bc-bcd8-dd17bd444f9f}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{351cb32f-fa24-42bc-bcd8-dd17bd444f9f}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>20</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

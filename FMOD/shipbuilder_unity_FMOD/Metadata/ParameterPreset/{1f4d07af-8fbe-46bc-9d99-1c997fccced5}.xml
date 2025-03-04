@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{1f4d07af-8fbe-46bc-9d99-1c997fccced5}">
+		<property name="name">
+			<value>FMsource</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{badfa37e-6df3-476a-b294-5601cff46d47}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{badfa37e-6df3-476a-b294-5601cff46d47}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

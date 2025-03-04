@@ -111,15 +111,51 @@ public class AudioManager: MonoBehaviour
         
         
         // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
-        patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
+        
+        //source params
         patchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
         patchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
-        patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
+        patchInstances[instanceIndex].setParameterByName("wiresplitter", parameters["wiresplitter"]);
+        //AM params
+        patchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
+        patchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
+        patchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
+        patchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdept"]);
+        //FM params
+        patchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
+        patchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
+        patchInstances[instanceIndex].setParameterByName("FMfreq", parameters["FMfreq"]);
+        patchInstances[instanceIndex].setParameterByName("FMdepth", parameters["FMdepth"]);
+        //AM on AM params
+        patchInstances[instanceIndex].setParameterByName("AM2", parameters["AM2"]);
+        patchInstances[instanceIndex].setParameterByName("AM2source", parameters["AM2source"]);
+        patchInstances[instanceIndex].setParameterByName("AM2freq", parameters["AM2freq"]);
+        patchInstances[instanceIndex].setParameterByName("AM2depth", parameters["AM2depth"]);
+        //FM on FM params - broken rn, wasn't before
+        patchInstances[instanceIndex].setParameterByName("FM2", parameters["FM2"]);
+        patchInstances[instanceIndex].setParameterByName("FM2source", parameters["FM2source"]);
+        patchInstances[instanceIndex].setParameterByName("FM2freq", parameters["FM2freq"]);
+        patchInstances[instanceIndex].setParameterByName("FM2depth", parameters["FM2depth"]);
+        //AM on FM params - this doesn't work right now
+        patchInstances[instanceIndex].setParameterByName("FMAM", parameters["FMAM"]);
+        patchInstances[instanceIndex].setParameterByName("FMAMsource", parameters["FMAMsource"]);
+        patchInstances[instanceIndex].setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
+        patchInstances[instanceIndex].setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
+        //FM on AM params - this doesn't work right now
+        patchInstances[instanceIndex].setParameterByName("AMFM", parameters["AMFM"]);
+        patchInstances[instanceIndex].setParameterByName("AMFMsource", parameters["AMFMsource"]);
+        patchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
+        patchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
+
+
+        //OLD PARAMS - just holding this in case shit breaks at a bad time
+        //patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
+        /*patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
         patchInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
         patchInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
         patchInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
         patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
-        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. 
+        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. */
 
         patchInstances[instanceIndex].start();
     }

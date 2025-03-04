@@ -121,15 +121,49 @@ public class PatchManager : MonoBehaviour
         var paramDict = new Dictionary<string, float>
         {
             { "shipstate", 0 },
-            { "arpstart", 1 },
+            //source params
             { "pitch", 440 },
             { "source", 2 },
+            { "wiresplitter", 0 },
+            //AM params
+            { "AM", 0 },
+            { "AMsource", 1 },
+            { "AMfreq", 1 },
+            { "AMdepth", 1 },
+            //FM params
+            { "FM", 0 },
+            { "FMsource", 1 },
+            { "FMfreq", 1 },
+            { "FMdepth", 100 },
+            //AM2 params
+            { "AM2", 0 },
+            { "AM2source", 1 },
+            { "AM2freq", 1 },
+            { "AM2depth", 1 },
+            //FM2 params
+            { "FM2", 0 },
+            { "FM2source", 1 },
+            { "FM2freq", 1 },
+            { "FM2depth", 100 },
+            //AM on FM params 
+            { "FMAM", 0 },
+            { "FMAMsource", 1 },
+            { "FMAMfreq", 1 },
+            { "FMAMdepth", 1 },
+            //FM on AM params
+            { "AMFM", 0 },
+            { "AMFMsource", 1 },
+            { "AMFMfreq", 1 },
+            { "AMFMdepth", 100 }
+            
+            //old ones, just keeping them here in case there's a last minute crisis
+            /*{ "arpstart", 1 },
             { "arp", 0 },
             { "arpspeed", 1000 },
             { "thruster", 0 },
             { "thrusterspeed", 1 },
             { "ringmod", 0 },
-            { "shields", 1 }
+            { "shields", 1 }*/
         };
         var statDict = new Dictionary<string, float>
         {

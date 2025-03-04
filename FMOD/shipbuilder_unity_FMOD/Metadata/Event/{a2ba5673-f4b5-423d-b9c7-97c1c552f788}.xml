@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{a2ba5673-f4b5-423d-b9c7-97c1c552f788}">
 		<property name="name">
 			<value>TestEnemy2</value>
@@ -30,10 +30,6 @@
 		</relationship>
 		<relationship name="parameters">
 			<destination>{22afd9d3-9905-4f1a-a4d8-de673b7c79a9}</destination>
-			<destination>{eb31603a-0d9b-45cb-ab39-b5fe5fc1f4f6}</destination>
-			<destination>{73276893-c1d5-40d3-9c62-c9c5781c7672}</destination>
-			<destination>{e3b680bf-63e8-4038-902d-282f438d90ba}</destination>
-			<destination>{f022baf2-8d2a-449a-b829-45c050748d86}</destination>
 			<destination>{8e512927-8cdf-41e5-a3a1-1fe985921fdf}</destination>
 			<destination>{b849be38-0917-4057-bd22-08a453fb6314}</destination>
 			<destination>{604eaa54-8178-40dd-9c7d-8e9c02ca68bd}</destination>
@@ -85,26 +81,6 @@
 	<object class="ActionSheet" id="{22afd9d3-9905-4f1a-a4d8-de673b7c79a9}">
 		<relationship name="modules">
 			<destination>{81124e48-db56-45cd-8ed8-799aef60b686}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{eb31603a-0d9b-45cb-ab39-b5fe5fc1f4f6}">
-		<relationship name="preset">
-			<destination>{8d183a89-c878-4d5c-8177-37c1d9e665c7}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{73276893-c1d5-40d3-9c62-c9c5781c7672}">
-		<relationship name="preset">
-			<destination>{3a767437-7479-4609-be81-573c8aeeff9f}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{e3b680bf-63e8-4038-902d-282f438d90ba}">
-		<relationship name="preset">
-			<destination>{a2422bb8-4fb8-4a0d-8d46-c1ea0824a899}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterProxy" id="{f022baf2-8d2a-449a-b829-45c050748d86}">
-		<relationship name="preset">
-			<destination>{be5b1b1b-31cf-4235-b4a8-89d2acfb73c9}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{8e512927-8cdf-41e5-a3a1-1fe985921fdf}">

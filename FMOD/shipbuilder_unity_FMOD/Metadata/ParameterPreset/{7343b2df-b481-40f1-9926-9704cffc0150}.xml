@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{7343b2df-b481-40f1-9926-9704cffc0150}">
+		<property name="name">
+			<value>AMFMdepth</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{0e89288e-1b66-47bf-a2f5-c4c60375ae8d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{0e89288e-1b66-47bf-a2f5-c4c60375ae8d}">
+		<property name="minimum">
+			<value>10</value>
+		</property>
+		<property name="maximum">
+			<value>500</value>
+		</property>
+		<property name="initialValue">
+			<value>10</value>
+		</property>
+	</object>
+</objects>
