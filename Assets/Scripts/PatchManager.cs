@@ -145,7 +145,6 @@ public class PatchManager : MonoBehaviour
             { "dwth", 0 }
         };
 
-        Module.OutputType outputType = Module.OutputType.None;
         foreach (var mod in p)
         {
             paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
@@ -165,12 +164,8 @@ public class PatchManager : MonoBehaviour
                     statDict["dwth"]++;
                     break;
             }
-            if (mod.GetComponent<Module>().isOutputModule)
-            {
-                outputType = mod.GetComponent<Module>().outputType;
-            }
         }
         AudioManager.Instance.SetParametersByDict(i, paramDict);
-        CombatManager.Instance.SetStatsByDict(i, outputType, statDict);
+        CombatManager.Instance.SetStatsByDict(i, OutputRack.Instance.ModuleOutputType(patch[0].GetComponent<Module>()), statDict);
     }
 }

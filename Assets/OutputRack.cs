@@ -1,8 +1,30 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class OutputRack : MonoBehaviour
 {
+    public static OutputRack Instance;
+    
+    public enum Type
+    {
+        None = 0,
+        Weapon = 1,
+        Shield = 2
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     [Header("Weapon Outputs")]
     public GameObject[] weaponOutputs = new GameObject[6];
     public GameObject[] previousModsWeapons = new GameObject[6];
@@ -51,5 +73,47 @@ public class OutputRack : MonoBehaviour
         {
             objUnderMouse = null;
         }
+    }
+
+    public int ModuleOutputIndex(Module mod)
+    {
+        while (mod.nextModule != null)
+        {
+            mod = mod.nextModule.GetComponent<Module>();
+        }
+        var jack = mod.transform.Find("Wire").GetComponent<Wire>().nextModuleJack;
+        
+        if (Array.Exists(weaponOutputs, element => element == jack))
+        {
+            return Array.FindIndex(weaponOutputs, element => element == jack);
+        }
+        
+        if (Array.Exists(shieldOutputs, element => element == jack))
+        {
+            return Array.FindIndex(shieldOutputs, element => element == jack);
+        }
+
+        return -1;
+    }
+
+    public Type ModuleOutputType(Module mod)
+    {
+        while (mod.nextModule.GetComponent<Module>() != null)
+        {
+            mod = mod.nextModule.GetComponent<Module>();
+        }
+        var jack = mod.transform.Find("Wire").GetComponent<Wire>().nextModuleJack;
+        
+        if (Array.Exists(weaponOutputs, element => element == jack))
+        {
+            return Type.Weapon;
+        }
+        
+        if (Array.Exists(shieldOutputs, element => element == jack))
+        {
+            return Type.Shield;
+        }
+
+        return Type.None;
     }
 }

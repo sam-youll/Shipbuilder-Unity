@@ -6,10 +6,10 @@ public class Wire : MonoBehaviour
 {
     public int points = 7;
 
-    private GameObject previousModule;
-    private GameObject previousModuleJack;
-    private GameObject nextModule;
-    private GameObject nextModuleJack;
+    public GameObject previousModule;
+    public GameObject previousModuleJack;
+    public GameObject nextModule;
+    public GameObject nextModuleJack;
     private GameObject sourceModule;
     
     private LineRenderer lineRenderer;

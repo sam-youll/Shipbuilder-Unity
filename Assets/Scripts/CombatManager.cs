@@ -411,13 +411,13 @@ public class CombatManager : MonoBehaviour
         return 0;
     }
 
-    public void SetStatsByDict(int index, Module.OutputType outputType, Dictionary<string, float> stats)
+    public void SetStatsByDict(int index, OutputRack.Type outputType, Dictionary<string, float> stats)
     {
         switch (outputType)
         {
-            case Module.OutputType.None:
+            case OutputRack.Type.None:
                 break;
-            case Module.OutputType.Weapon:
+            case OutputRack.Type.Weapon:
                 if (index >= playerWeapons.Count)
                 {
                     var newWeapon = new Dictionary<string, float>()
@@ -433,7 +433,7 @@ public class CombatManager : MonoBehaviour
                 }
                 playerWeapons[index] = stats;
                 break;
-            case Module.OutputType.Shield:
+            case OutputRack.Type.Shield:
                 if (index >= playerShields.Count)
                 {
                     var newShield = new Dictionary<string, float>()
@@ -451,22 +451,22 @@ public class CombatManager : MonoBehaviour
                 }
                 playerShields[index] = stats;
                 break;
-            case Module.OutputType.Thruster:
-                if (index >= playerThrusters.Count)
-                {
-                    var newThruster = new Dictionary<string, float>()
-                    {
-                        { "evasion", 1 },
-                        { "izki", 0 },
-                        { "aubo", 0 },
-                        { "dwth", 0 }
-                    };
-                    playerThrusters.Add(newThruster);
-                }
-                playerThrusters[index] = stats;
-                break;
-            case Module.OutputType.Sensor:
-                break;
+            // case Module.OutputType.Thruster:
+            //     if (index >= playerThrusters.Count)
+            //     {
+            //         var newThruster = new Dictionary<string, float>()
+            //         {
+            //             { "evasion", 1 },
+            //             { "izki", 0 },
+            //             { "aubo", 0 },
+            //             { "dwth", 0 }
+            //         };
+            //         playerThrusters.Add(newThruster);
+            //     }
+            //     playerThrusters[index] = stats;
+            //     break;
+            // case Module.OutputType.Sensor:
+            //     break;
         }
         // if (index >= playerPatches.Count)
         // {

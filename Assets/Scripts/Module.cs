@@ -14,28 +14,6 @@ using Vector3 = UnityEngine.Vector3;
 }
 public class Module : MonoBehaviour
 {
-    public enum ModuleType
-    {
-        None,
-        Source,
-        Pitch,
-        Arpeggio,
-        Thruster,
-        Ringmod,
-        Pads
-    }
-    public ModuleType moduleType = ModuleType.None;
-
-    public enum OutputType
-    {
-        None = 0,
-        Weapon = 1,
-        Shield = 2,
-        Thruster = 3,
-        Sensor = 4
-    }
-    public OutputType outputType;
-
     public enum SoundType
     {
         None,
@@ -46,16 +24,11 @@ public class Module : MonoBehaviour
     
     [Header("Values")] 
     public bool isSourceModule;
-    public bool isOutputModule;
     public string parameter;
     public float parameterValue;
     public string stat;
     public float statValue;
-    // public List<Stat> stats = new List<Stat>();
     public SoundType soundType;
-    // public float izki;
-    // public float aubo;
-    // public float dwth;
     
     [Header("Connections")]
     public GameObject previousModule;
@@ -69,7 +42,7 @@ public class Module : MonoBehaviour
     public GameObject typeLabel;
     public GameObject snapSquare;
 
-    public GameObject objUnderMouse;
+    private GameObject objUnderMouse;
     private bool isMouseDragging;
     private Vector2 dragOffset;
 
@@ -80,6 +53,7 @@ public class Module : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Set color of module based on type
         switch (soundType)
         {
             case SoundType.Izki:
