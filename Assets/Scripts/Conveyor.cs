@@ -19,6 +19,7 @@ public class Conveyor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // move the module attached
         if (moduleAttached != null)
         {
             var pos = moduleAttached.transform.position;
