@@ -229,7 +229,7 @@ public class Module : MonoBehaviour
                     };
                     var conveyor = OverlapCheck(snappedPos, new Vector2(.5f, .5f));
                     onConveyor = false;
-                    transform.SetParent(Inventory.Instance.transform);
+                    transform.SetParent(ModuleRack.Instance.transform);
                     conveyor.GetComponent<Conveyor>().OnModuleDetached(this);
                 }
             }
