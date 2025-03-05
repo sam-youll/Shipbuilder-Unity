@@ -6,6 +6,7 @@ public class MuteButton : MonoBehaviour
     public Color defaultColor;
     public Color hoverColor;
     public Color pressedColor;
+    public Color mutedColor;
     private Color currentColor;
 
     public bool isMuted = false;
@@ -39,6 +40,12 @@ public class MuteButton : MonoBehaviour
         if (targetTime < 0)
         {
             timerEnded();
+        }
+
+        if (isMuted)
+        {
+            sr.color = mutedColor;
+            currentColor = mutedColor;
         }
     }
 
