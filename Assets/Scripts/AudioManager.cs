@@ -147,6 +147,26 @@ public class AudioManager: MonoBehaviour
         patchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
         patchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
 
+        //Arp params
+        patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]); //should always be 1, starts metro
+        patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]); //0 for no arp, 1 for arp
+        //arp rhythm params 
+        patchInstances[instanceIndex].setParameterByName("metro", parameters["metro"]); //time between arp events in ms, 51-5000
+        patchInstances[instanceIndex].setParameterByName("note1", parameters["note1"]); //whether the first note in the arp is on/off, 0-1
+        patchInstances[instanceIndex].setParameterByName("note2", parameters["note2"]); //logic from note1 follows for note 2 etc
+        patchInstances[instanceIndex].setParameterByName("note3", parameters["note3"]);
+        patchInstances[instanceIndex].setParameterByName("note4", parameters["note4"]);
+        //arp adsr params
+        patchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
+        patchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
+        patchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
+        patchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+        //Arp pitch params
+        patchInstances[instanceIndex].setParameterByName("apitch1", parameters["apitch1"]); //frequency of the first note in the arpeggiator
+        patchInstances[instanceIndex].setParameterByName("apitch2", parameters["apitch2"]); //logic follows from first note to second
+        patchInstances[instanceIndex].setParameterByName("apitch3", parameters["apitch3"]);
+        patchInstances[instanceIndex].setParameterByName("apitch4", parameters["apitch4"]);
+
 
         //OLD PARAMS - just holding this in case shit breaks at a bad time
         //patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);

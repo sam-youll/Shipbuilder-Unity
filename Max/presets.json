@@ -2,21 +2,80 @@
   {
     "name": "untitled",
     "preset": {
+      "AM": {
+        "value": 0
+      },
+      "AM2": {
+        "value": 0
+      },
+      "AM2depth": {
+        "value": 1
+      },
+      "AM2freq": {
+        "value": 1
+      },
+      "AM2source": {
+        "value": 1
+      },
+      "AMFM": {
+        "value": 0
+      },
+      "AMFMdepth": {
+        "value": 10
+      },
+      "AMFMfreq": {
+        "value": 1
+      },
+      "AMFMsource": {
+        "value": 1
+      },
+      "AMdepth": {
+        "value": 1
+      },
+      "AMfreq": {
+        "value": 1
+      },
+      "AMsource": {
+        "value": 1
+      },
+      "FM": {
+        "value": 1
+      },
+      "FM2": {
+        "value": 0
+      },
+      "FM2Depth": {
+        "value": 10
+      },
+      "FM2freq": {
+        "value": 1
+      },
+      "FM2source": {
+        "value": 1
+      },
+      "FMAM": {
+        "value": 0
+      },
+      "FMAMdepth": {
+        "value": 1
+      },
+      "FMAMfreq": {
+        "value": 1
+      },
+      "FMAMsource": {
+        "value": 1
+      },
+      "FMDepth": {
+        "value": 387
+      },
+      "FMfreq": {
+        "value": 3.873000000000001
+      },
+      "FMsource": {
+        "value": 3.2900000000000005
+      },
       "__sps": {
-        "arpeggiator": {},
-        "generator": {
-          "__sps": {
-            "phasor": {},
-            "sin": {},
-            "triangle": {}
-          }
-        },
-        "ringmod": {
-          "ringmod": {
-            "value": 0
-          }
-        },
-        "shields": {
+        "AM[1]": {
           "__sps": {
             "generator": {
               "__sps": {
@@ -27,45 +86,250 @@
             },
             "generator[1]": {
               "__sps": {
-                "phasor": {},
-                "sin": {},
-                "triangle": {}
-              }
-            },
-            "generator[2]": {
-              "__sps": {
-                "phasor": {},
-                "sin": {},
-                "triangle": {}
+                "phasor": {
+                  "__sps": {
+                    "freq": {
+                      "__sps": {
+                        "FMLFO": {
+                          "__sps": {
+                            "generator": {
+                              "__sps": {
+                                "phasor": {},
+                                "sin": {},
+                                "triangle": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "sin": {
+                  "__sps": {
+                    "freq": {
+                      "__sps": {
+                        "FMLFO": {
+                          "__sps": {
+                            "generator": {
+                              "__sps": {
+                                "phasor": {},
+                                "sin": {},
+                                "triangle": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "triangle": {
+                  "__sps": {
+                    "freq": {
+                      "__sps": {
+                        "FMLFO": {
+                          "__sps": {
+                            "generator": {
+                              "__sps": {
+                                "phasor": {},
+                                "sin": {},
+                                "triangle": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         },
-        "thruster": {}
+        "arp[1]": {},
+        "generator": {
+          "__sps": {
+            "phasor": {
+              "__sps": {
+                "freq": {
+                  "__sps": {
+                    "AM": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    },
+                    "FMLFO": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    },
+                    "FMLFO[1]": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "sin": {
+              "__sps": {
+                "freq": {
+                  "__sps": {
+                    "AM": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    },
+                    "FMLFO": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    },
+                    "FMLFO[1]": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "triangle": {
+              "__sps": {
+                "freq": {
+                  "__sps": {
+                    "AM": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    },
+                    "FMLFO": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    },
+                    "FMLFO[1]": {
+                      "__sps": {
+                        "generator": {
+                          "__sps": {
+                            "phasor": {},
+                            "sin": {},
+                            "triangle": {}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "wiresplitter": {}
+      },
+      "apitch1": {
+        "value": 440
+      },
+      "apitch2": {
+        "value": 505
+      },
+      "apitch3": {
+        "value": 601
+      },
+      "apitch4": {
+        "value": 880
       },
       "arp": {
-        "value": 0
-      },
-      "arpspeed": {
-        "value": 826
+        "value": 1
       },
       "arpstart": {
         "value": 1
       },
-      "pitch": {
-        "value": 391
+      "attack": {
+        "value": 136
       },
-      "shields": {
-        "value": 4
+      "decay": {
+        "value": 72
       },
-      "source": {
-        "value": 2.2
+      "metro": {
+        "value": 132
       },
-      "thruster": {
+      "note1": {
+        "value": 1
+      },
+      "note2": {
         "value": 0
       },
-      "thrusterspeed": {
+      "note3": {
         "value": 1
+      },
+      "note4": {
+        "value": 1
+      },
+      "pitch": {
+        "value": 429
+      },
+      "release": {
+        "value": 1114
+      },
+      "source": {
+        "value": 2
+      },
+      "splitter": {
+        "value": 0
+      },
+      "sustain": {
+        "value": 0
       }
     }
   }

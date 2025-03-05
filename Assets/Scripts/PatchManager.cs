@@ -154,8 +154,29 @@ public class PatchManager : MonoBehaviour
             { "AMFM", 0 },
             { "AMFMsource", 1 },
             { "AMFMfreq", 1 },
-            { "AMFMdepth", 100 }
-            
+            { "AMFMdepth", 100 },
+
+            //arp params 
+            { "arpstart", 1 },
+            { "arp", 0 },
+            //arp rhythm params
+            { "metro", 500 },
+            { "note1", 1 },
+            { "note2", 1 },
+            { "note3", 1 },
+            { "note4", 1 },
+            //arp adsr params
+            { "attack", 100 },
+            { "decay", 70 },
+            { "sustain", 0 },
+            { "release", 1000 },
+            //arp pitch params
+            { "apitch1", 440 },
+            { "apitch2", 554.37f },
+            { "apitch3", 659.26f },
+            { "apitch4", 880 }
+
+
             //old ones, just keeping them here in case there's a last minute crisis
             /*{ "arpstart", 1 },
             { "arp", 0 },
