@@ -7,11 +7,6 @@ using UnityEngine.Serialization;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-[Serializable] public class Stat
-{
-    public string name;
-    public float value;
-}
 public class Module : MonoBehaviour
 {
     public enum SoundType
@@ -29,11 +24,14 @@ public class Module : MonoBehaviour
     public string stat;
     public float statValue;
     public SoundType soundType;
+    public Dictionary<string, float> parameters = new();
+    public Dictionary<string, float> stats = new();
     
     [Header("Connections")]
     public GameObject previousModule;
     public GameObject nextModule;
     public GameObject sourceModule;
+    public bool onConveyor;
 
     [Header("Module Components")]
     public GameObject inputJack;
@@ -48,11 +46,19 @@ public class Module : MonoBehaviour
 
     private bool isInInventory;
     private bool isOverInventory;
+    private bool isOverConveyor;
 
+    private Vector3 lastPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        parameters.Add(parameter, parameterValue);
+        stats.Add(stat, statValue);
+        
+        // set onLFO to true if parent has LFO component
+        onConveyor = transform.GetComponentInParent<Conveyor>() != null;
+        
         // Set color of module based on type
         switch (soundType)
         {
@@ -91,6 +97,7 @@ public class Module : MonoBehaviour
         // convert mouse position to world coordinates
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         
+        // mouse movement
         if (isMouseDragging)
         {
             // add offset from center of module to mouse position
@@ -103,20 +110,35 @@ public class Module : MonoBehaviour
             }
             transform.position = myPos;
 
+            // set position of snap square
             var snappedPos = new Vector2
             {
                 x = Mathf.Round(mousePos.x),
                 y = Mathf.Round(mousePos.y)
             };
-            while (OverlapCheck(snappedPos, new Vector2(.5f, .5f))) // THIS IS PROBABLY A BAD IDEA
+            while (IsOverlapping(snappedPos, new Vector2(.5f, .5f))) // THIS IS PROBABLY A BAD IDEA
             {
+                if (OverlapCheck(snappedPos, new Vector2(.5f, .5f)).GetComponent<Conveyor>() != null)
+                {
+                    isOverConveyor = true;
+                    break;
+                }
+                isOverConveyor = false;
+                
                 var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
                 snappedPos += dir;
             }
+
+            if (!IsOverlapping(snappedPos, new Vector2(.5f, .5f)))
+            {
+                isOverConveyor = false;
+            }
+            
             snapSquare.transform.position = snappedPos;
             
             HoverInventory(); // open or close inventory based on dragging module over
             
+            // drop module
             if (Input.GetMouseButtonUp(0))
             {
                 // reset mouse drag
@@ -134,6 +156,14 @@ public class Module : MonoBehaviour
                     adjPos.z -= 3;
                 }
                 transform.position = adjPos;
+
+                if (isOverConveyor)
+                {
+                    var conveyor = OverlapCheck(snappedPos, new Vector2(.5f, .5f));
+                    onConveyor = true;
+                    transform.SetParent(conveyor.transform);
+                    conveyor.GetComponent<Conveyor>().OnModuleAttached(this);
+                }
                 
                 if (!isInInventory && isOverInventory)
                 {
@@ -159,6 +189,7 @@ public class Module : MonoBehaviour
             }
         }
         
+        // set objUnderMouse
         RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, LayerMask.GetMask("Jacks"));
         RaycastHit2D bodyHit = Physics2D.Raycast(mousePos, Vector2.zero);
         // Debug.Log(hit.collider + " : " + hit.distance + " : " + hit.collider.gameObject.name);
@@ -173,6 +204,7 @@ public class Module : MonoBehaviour
         }
         // Debug.Log(objUnderMouse);
 
+        // left click handles turning on dragging and creating wires
         if (Input.GetMouseButtonDown(0))
         {
             // only drag if over module body and not a jack
@@ -187,6 +219,19 @@ public class Module : MonoBehaviour
                 adjPos.z = -1;
                 transform.position = adjPos;
                 AudioManager.Instance.PickUpModuleSFX();
+                
+                if (onConveyor)
+                {
+                    var snappedPos = new Vector2
+                    {
+                        x = Mathf.Round(mousePos.x),
+                        y = Mathf.Round(mousePos.y)
+                    };
+                    var conveyor = OverlapCheck(snappedPos, new Vector2(.5f, .5f));
+                    onConveyor = false;
+                    transform.SetParent(Inventory.Instance.transform);
+                    conveyor.GetComponent<Conveyor>().OnModuleDetached(this);
+                }
             }
             // if clicking on the output jack, create a wire
             else if (objUnderMouse == outputJack && !isInInventory)
@@ -205,9 +250,22 @@ public class Module : MonoBehaviour
                 // Debug.Log("nothing happened and now we're here");
             }
         }
+        
+        // UpdatePosParameter();
+        // lastPos = transform.position;
     }
 
-    private bool OverlapCheck(Vector2 pos, Vector2 size)
+    private void UpdatePosParameter()
+    {
+        if (transform.position == lastPos)
+        {
+            return;
+        }
+        
+        statValue = transform.position.y;
+    }
+
+    private bool IsOverlapping(Vector2 pos, Vector2 size)
     {
         var overlap = Physics2D.OverlapBoxAll(pos, size, 0, LayerMask.GetMask("Module Bodies"));
         foreach (var coll in overlap)
@@ -218,6 +276,19 @@ public class Module : MonoBehaviour
         }
 
         return false;
+    }
+
+    private GameObject OverlapCheck(Vector2 pos, Vector2 size)
+    {
+        var overlap = Physics2D.OverlapBoxAll(pos, size, 0, LayerMask.GetMask("Module Bodies"));
+        foreach (var coll in overlap)
+        {
+            if (coll.gameObject == gameObject)
+                continue;
+            return coll.gameObject;
+        }
+
+        return null;
     }
 
     void HoverInventory()

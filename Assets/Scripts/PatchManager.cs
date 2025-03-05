@@ -181,8 +181,17 @@ public class PatchManager : MonoBehaviour
 
         foreach (var mod in p)
         {
-            paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
-            statDict[mod.GetComponent<Module>().stat] += mod.GetComponent<Module>().statValue;
+            foreach (var param in mod.GetComponent<Module>().parameters)
+            {
+                paramDict[param.Key] = param.Value;
+            }
+
+            foreach (var stat in mod.GetComponent<Module>().stats)
+            {
+                statDict[stat.Key] = stat.Value;
+            }
+            // paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
+            // statDict[mod.GetComponent<Module>().stat] += mod.GetComponent<Module>().statValue;
             // statDict["soundType"] = (float)mod.GetComponent<Module>().soundType;
             switch (mod.GetComponent<Module>().soundType)
             {

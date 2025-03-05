@@ -120,7 +120,7 @@ public class AudioManager: MonoBehaviour
         patchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
         patchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
         patchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
-        patchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdept"]);
+        patchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdepth"]);
         //FM params
         patchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
         patchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
