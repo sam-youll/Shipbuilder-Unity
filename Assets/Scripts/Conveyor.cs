@@ -23,7 +23,7 @@ public class Conveyor : MonoBehaviour
         if (moduleAttached != null)
         {
             var pos = moduleAttached.transform.position;
-            pos.y = Mathf.Sin(Time.time) + transform.position.y;
+            pos.y = Mathf.Sin(Time.time*6.5f) + transform.position.y;
             pos.z = transform.position.z - .2f;
             moduleAttached.transform.position = pos;
         }
@@ -72,12 +72,20 @@ public class Conveyor : MonoBehaviour
     {
         moduleAttached = mod.gameObject;
         moduleAttached.GetComponent<Module>().parameters.Add("FM", 1);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMsource", 2);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", 1);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", 300);
+        PatchManager.Instance.UpdateAllPatches();
     }
 
     public void OnModuleDetached(Module mod)
     {
         moduleAttached.GetComponent<Module>().parameters.Remove("FM");
+        moduleAttached.GetComponent<Module>().parameters.Remove("FMsource");
+        moduleAttached.GetComponent<Module>().parameters.Remove("FMfreq");
+        moduleAttached.GetComponent<Module>().parameters.Remove("FMdepth");
         moduleAttached = null;
+        PatchManager.Instance.UpdateAllPatches();
     }
     
     private bool OverlapCheck(Vector2 pos, Vector2 size)
