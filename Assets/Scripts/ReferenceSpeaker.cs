@@ -7,9 +7,9 @@ using Unity.VisualScripting;
 public class ReferenceSpeaker : MonoBehaviour
 {
     private float speakerType;
-    private bool isPlaying;
+    public bool isPlaying;
     public EventReference speakerRef;
-    private EventInstance speakerInst;
+    public EventInstance speakerInst;
     private bool timerRunning;
     private float targetTime;
 
@@ -51,11 +51,26 @@ public class ReferenceSpeaker : MonoBehaviour
                 isPlaying = false;
             }
         }
+        if (isPlaying)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                speakerInst.stop(0);
+                isPlaying = false;
+            }
+        }
+
 
 
         if (targetTime < 0)
         {
             timerEnded();
+        }
+
+        if (gameObject.activeSelf == false)
+        {
+            speakerInst.stop(0);
+            isPlaying = false;
         }
 
     }
@@ -77,6 +92,7 @@ public class ReferenceSpeaker : MonoBehaviour
             {
                 speakerInst.stop(0);
                 isPlaying = false;
+
             }
         }
     }
@@ -89,6 +105,8 @@ public class ReferenceSpeaker : MonoBehaviour
     void timerEnded()
     {
         timerRunning = false;
+        speakerInst.stop(0);
+        isPlaying = false;
     }
 
 }

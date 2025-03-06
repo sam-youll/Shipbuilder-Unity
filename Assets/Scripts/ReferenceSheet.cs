@@ -13,7 +13,7 @@ public class ReferenceSheet : MonoBehaviour
     private float defaultXPos = -4.99f;
     private float defaultYPos = -9.66f;
     //whether she is open
-    private bool isOpen;
+    public bool isOpen;
 
 
 
@@ -46,6 +46,16 @@ public class ReferenceSheet : MonoBehaviour
             {
                 //if she's open, close her when you click
                 ////NOTE : maybe we should find a way to do this when mouse is off of the paper too? idk
+                position.x = defaultXPos;
+                position.y = defaultYPos;
+                transform.position = position;
+                isOpen = false;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isOpen)
+            {
                 position.x = defaultXPos;
                 position.y = defaultYPos;
                 transform.position = position;

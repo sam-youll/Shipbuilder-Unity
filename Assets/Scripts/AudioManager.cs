@@ -42,6 +42,7 @@ public class AudioManager: MonoBehaviour
     //sfx
     [Header("SFX Reference")]
     public EventReference sfx_shipRef;
+    public EventReference sfx_paperRef;
     //ui
     [Header("UI References")]
     public EventReference ui_pickupRef;
@@ -322,5 +323,10 @@ public class AudioManager: MonoBehaviour
     public void PlayDialogueSound()
     {
         FMODUnity.RuntimeManager.PlayOneShot(ui_dialogueRef);
+    }
+
+    public void PlayPaperSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_paperRef);
     }
 }
