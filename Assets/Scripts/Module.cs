@@ -146,6 +146,7 @@ public class Module : MonoBehaviour
                 transform.position = snapSquare.transform.position;
                 snapSquare.SetActive(false);
                 dragOffset = Vector2.zero;
+                UpdatePosParameter();
 
                 AudioManager.Instance.PutDownModuleSFX();
             
@@ -250,19 +251,18 @@ public class Module : MonoBehaviour
                 // Debug.Log("nothing happened and now we're here");
             }
         }
-        
-        // UpdatePosParameter();
-        // lastPos = transform.position;
     }
 
     private void UpdatePosParameter()
     {
-        if (transform.position == lastPos)
+        if (parameter == "pitch")
         {
-            return;
+            // y values go from -3 to 3
+            int interval = (int)transform.position.y + 3; // normalize to 1-7
+            
+            parameters["pitch"] = Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval);
+            PatchManager.Instance.UpdateAllPatches();
         }
-        
-        statValue = transform.position.y;
     }
 
     private bool IsOverlapping(Vector2 pos, Vector2 size)

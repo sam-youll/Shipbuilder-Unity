@@ -73,8 +73,8 @@ public class Conveyor : MonoBehaviour
         moduleAttached = mod.gameObject;
         moduleAttached.GetComponent<Module>().parameters.Add("FM", 1);
         moduleAttached.GetComponent<Module>().parameters.Add("FMsource", 2);
-        moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", 1);
-        moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", 300);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", 8);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", 20);
         PatchManager.Instance.UpdateAllPatches();
     }
 
