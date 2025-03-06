@@ -193,7 +193,7 @@ public class EarTrainingTutorial : MonoBehaviour
         }
         if (currentStep == 13)
         {
-            dialogueText.text = "If you ever need help remembering this, you can use my old reference sheet.";
+            dialogueText.text = "If you ever need help remembering this, you can use my old cheat sheet.";
             referenceSheet.SetActive(true);
             referenceSheet.GetComponent<ReferenceSheet>().isOpen = true;
             if (!papersfxPlayed)
@@ -290,6 +290,7 @@ public class EarTrainingTutorial : MonoBehaviour
         if (currentStep == 22)
         {
             dialogueText.text = "Give it a try -- show me which one is the weapon.";
+            directionText.text = "Click and drag.";
 
             weaponModule.SetActive(true);
             shieldModule.SetActive(true);
@@ -310,6 +311,7 @@ public class EarTrainingTutorial : MonoBehaviour
                 }
 
                 dialogueText.text = "Great. You'll be fine. Now let's get you to the module rack.";
+                directionText.text = "Press space to continue.";
                 stepComplete = true;
             }
         }
