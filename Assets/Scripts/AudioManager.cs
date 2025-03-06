@@ -33,15 +33,27 @@ public class AudioManager: MonoBehaviour
 
 
     //FMOD Event Reference 
+    //module
+    [Header("Module Reference")]
     public EventReference moduleRef;
+    //ambience
+    [Header("Space Reference")]
     public EventReference amb_spaceRef;
+    //sfx
+    [Header("SFX Reference")]
     public EventReference sfx_shipRef;
+    //ui
+    [Header("UI References")]
     public EventReference ui_pickupRef;
     public EventReference ui_putdownRef;
+    public EventReference ui_dialogueRef;
+    //enemy songs
+    [Header("Enemy References")]
     public EventReference enemySongRef;
     public EventReference test_enemySong1Ref;
     public EventReference test_enemySong2Ref;
     public EventReference test_enemySong3Ref;
+    
     
     public EventInstance[] patchInstances = new EventInstance[12];
     public List<EventReference> enemySongs = new List<EventReference>();
@@ -305,5 +317,10 @@ public class AudioManager: MonoBehaviour
     public void ResetModuleInstances()
     {
         moduleDescription.releaseAllInstances();    
+    }
+
+    public void PlayDialogueSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(ui_dialogueRef);
     }
 }
