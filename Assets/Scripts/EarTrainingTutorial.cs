@@ -9,12 +9,13 @@ public class EarTrainingTutorial : MonoBehaviour
     public TMP_Text directionText;
 
     //completion
-    public bool stepComplete;
-    public bool pitchAnswered;
-    public bool pitchCorrect;
-    public bool izkiCorrect;
-    public bool auboCorrect;
-    public bool dwthCorrect;
+    public bool stepComplete = false;
+    public bool pitchAnswered = false;
+    public bool pitchCorrect = false;
+    public bool izkiCorrect = false;
+    public bool auboCorrect = false;
+    public bool dwthCorrect = false;
+    public bool weaponCorrect = false;
 
     public bool papersfxPlayed = false;
     private bool dialogueSoundPlayed = false;
@@ -42,6 +43,12 @@ public class EarTrainingTutorial : MonoBehaviour
     public GameObject izkiAnswer;
     public GameObject auboAnswer;
     public GameObject dwthAnswer;
+    //weapon test
+    public GameObject weaponModule;
+    public GameObject shieldModule;
+
+    private Vector3 weaponPos;
+    private Vector3 shieldPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -49,6 +56,9 @@ public class EarTrainingTutorial : MonoBehaviour
         currentStep = 0;
         higherPitch.SetActive(false);
         lowerPitch.SetActive(false);
+
+        weaponPos = weaponModule.transform.position;
+        shieldPos = shieldModule.transform.position;
     }
 
     // Update is called once per frame
@@ -212,6 +222,13 @@ public class EarTrainingTutorial : MonoBehaviour
                     AudioManager.Instance.PlayDialogueSound();
                     dialogueSoundPlayed = true;
                 }
+                testSquare.SetActive(false);
+                izkiModule.SetActive(false);
+                auboModule.SetActive(false);
+                dwthModule.SetActive(false);
+                izkiAnswer.SetActive(false);
+                auboAnswer.SetActive(false);
+                dwthAnswer.SetActive(false);
                 dialogueText.text = "Awesome, you got it. One last step before you can start flying.";
                 stepComplete = true;
             }
@@ -224,12 +241,82 @@ public class EarTrainingTutorial : MonoBehaviour
         if (currentStep == 16)
         {
             dialogueText.text = "Shields are usually a constant sound, like this.";
+            shieldModule.SetActive(true);
             stepComplete = true;
         }
         if (currentStep == 17)
         {
             dialogueText.text = "Weapons usually are sequenced -- they'll change pitch and can turn on and off.";
+            if (shieldModule.GetComponent<WeaponTutorial>().isPlaying)
+            {
+                shieldModule.GetComponent<WeaponTutorial>().moduleInst.stop(0);
+                shieldModule.GetComponent<WeaponTutorial>().isPlaying = false;
+            }
+            shieldModule.SetActive(false);
+            weaponModule.SetActive(true);
             stepComplete = true;
+        }
+        if (currentStep == 18)
+        {
+            weaponModule.SetActive(true);
+            dialogueText.text = "I'm going to give you two modules.";
+            stepComplete = true;
+        }
+        if (currentStep == 19)
+        {
+            weaponModule.SetActive(false);
+            if (weaponModule.GetComponent<WeaponTutorial>().isPlaying)
+            {
+                weaponModule.GetComponent<WeaponTutorial>().moduleInst.stop(0);
+                weaponModule.GetComponent <WeaponTutorial>().isPlaying = false;
+            }
+            dialogueText.text = "One will act like shields, the other will act like a weapon.";
+            stepComplete = true;
+        }
+        if (currentStep == 20)
+        {
+            dialogueText.text = "To tell which one is which, try moving it up and down on the screen to change the pitch.";
+            stepComplete = true;
+        }
+        if (currentStep == 21)
+        {
+            weaponPos.x = 0;
+            weaponModule.transform.position = weaponPos;
+            shieldPos.x = -5;
+            shieldModule.transform.position = shieldPos;
+            dialogueText.text = "Listening for the one that's changing will help you tell them apart";
+            stepComplete = true;
+        }
+        if (currentStep == 22)
+        {
+            dialogueText.text = "Give it a try -- show me which one is the weapon.";
+
+            weaponModule.SetActive(true);
+            shieldModule.SetActive(true);
+
+
+            answerSquare.SetActive(true);
+
+            stepComplete = false;
+
+            if (weaponCorrect)
+            {
+                weaponModule.SetActive(false);
+                shieldModule.SetActive(false);
+                answerSquare.SetActive(false);
+                if (!dialogueSoundPlayed)
+                {
+                    AudioManager.Instance.PlayDialogueSound();
+                }
+
+                dialogueText.text = "Great. You'll be fine. Now let's get you to the module rack.";
+                stepComplete = true;
+            }
+        }
+
+        if (currentStep == 23)
+        {
+            //go to next scene
         }
     }
 
