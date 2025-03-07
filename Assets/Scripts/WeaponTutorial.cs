@@ -64,6 +64,7 @@ public class WeaponTutorial : MonoBehaviour
                 isPlaying = true;
             }
         }
+        
 
         if (gameObject.GetComponent<Module>().snapSquare.active == false)
         {
