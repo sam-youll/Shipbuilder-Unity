@@ -17,6 +17,8 @@ public class GameplayTutorial : MonoBehaviour
     public GameObject sequencer;
     //envelope
     public GameObject envelopeModule;
+    //buttons 
+    public GameObject enemyPlayButton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -97,6 +99,10 @@ public class GameplayTutorial : MonoBehaviour
                 dialogueText.text = "Beautiful. Now you have some defense.";
                 stepComplete = true;
             }
+            if (outputModule.GetComponent<OutputRack>().previousModsWeapons[0] != null) 
+            {
+                dialogueText.text = "Careful! You plugged it into your weapons. Try plugging it into your shields.";
+            }
         }
         if (currentStep == 10)
         {
@@ -123,7 +129,7 @@ public class GameplayTutorial : MonoBehaviour
         if (currentStep == 13)
         {
             stepComplete = false;
-            dialogueText.text = "To plug it in, connect the blue trigger output of the envelope into the red trigger input of the sequencer.";
+            dialogueText.text = "To plug it in, connect the red output of the sequencer into the blue input of the envelope module.";
             if (envelopeModule.GetComponent<Envelope>().sequencerAttached)
             {
                 dialogueText.text = "Yep, just like that.";
@@ -139,6 +145,22 @@ public class GameplayTutorial : MonoBehaviour
                 dialogueText.text = "Perfect. Now you're ready for battle.";
                 stepComplete = true;
             }
+        }
+        if (currentStep == 15) 
+        {
+            dialogueText.text = "Now let's look at how to fight.";
+            stepComplete = true;
+        }
+        if (currentStep == 16)
+        {
+            dialogueText.text = "This button lets you access your sensor to listen in on your enemy.";
+            enemyPlayButton.SetActive(true);
+            stepComplete = true;
+        }
+        if (currentStep == 17)
+        {
+            dialogueText.text = "Click it now and listen to your enemy's shield";
+            stepComplete = true;
         }
     }
 

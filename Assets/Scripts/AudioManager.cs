@@ -30,6 +30,8 @@ public class AudioManager: MonoBehaviour
     private EventInstance amb_spaceInst;
     private EventInstance sfx_shipInst;
     private EventInstance enemySongInst;
+    private EventInstance tutorialEnemyShieldInst;
+    private EventInstance tutorialEnemyWeaponInst;
 
 
     //FMOD Event Reference 
@@ -86,6 +88,10 @@ public class AudioManager: MonoBehaviour
         
         amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
         sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
+
+        tutorialEnemyShieldInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        tutorialEnemyWeaponInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+
         for (int i = 0; i < 12; i++)
         {
             patchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
@@ -329,4 +335,33 @@ public class AudioManager: MonoBehaviour
     {
         FMODUnity.RuntimeManager.PlayOneShot(sfx_paperRef);
     }
+
+    public void PlayTutEnemyShields()
+    {
+        tutorialEnemyShieldInst.setParameterByName("source", 2);
+        tutorialEnemyShieldInst.setParameterByName("pitch", 164.81f);
+        tutorialEnemyShieldInst.start();
+    }
+
+    public void PlayTutEnemyWeapon()
+    {
+        tutorialEnemyWeaponInst.setParameterByName("source", 3);
+        tutorialEnemyWeaponInst.setParameterByName("pitch", 440);
+        tutorialEnemyWeaponInst.setParameterByName("arpstart", 1);
+        tutorialEnemyWeaponInst.setParameterByName("arp", 1);
+        tutorialEnemyWeaponInst.setParameterByName("apitch1", 587.33f);
+        tutorialEnemyWeaponInst.setParameterByName("apitch2", 739.99f);
+        tutorialEnemyWeaponInst.setParameterByName("apitch3", 880);
+        tutorialEnemyWeaponInst.setParameterByName("apitch4", 1108.7f);
+        tutorialEnemyWeaponInst.setParameterByName("note1", 1);
+        tutorialEnemyWeaponInst.setParameterByName("note2", 1);
+        tutorialEnemyWeaponInst.setParameterByName("note3", 1);
+        tutorialEnemyWeaponInst.setParameterByName("note4", 1);
+        tutorialEnemyWeaponInst.setParameterByName("attack", 10);
+        tutorialEnemyWeaponInst.setParameterByName("decay", 10);
+        tutorialEnemyWeaponInst.setParameterByName("sustain", 0);
+        tutorialEnemyWeaponInst.setParameterByName("release", 20);
+        tutorialEnemyWeaponInst.start();
+    }
+
 }
