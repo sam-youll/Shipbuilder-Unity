@@ -8,6 +8,7 @@ using FMOD.Studio;
 using Debug = UnityEngine.Debug;
 using Unity.VisualScripting;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class AudioManager: MonoBehaviour
 {
@@ -222,7 +223,12 @@ public class AudioManager: MonoBehaviour
 
     public void PlayEnemySong()
     {
-        if (enemySongsPlayed.Count == 0)
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Gameplay Tutorial"))
+        {
+            PlayTutEnemyShields();
+            Debug.Log("In the right scene");
+        }
+        else if (enemySongsPlayed.Count == 0)
         {
             //pick the new song from songs list
             EnemySongPicked();
@@ -309,6 +315,8 @@ public class AudioManager: MonoBehaviour
     public void StopEnemySong()
     {
         enemySongInst.stop(0);
+        tutorialEnemyShieldInst.stop(0);
+        tutorialEnemyWeaponInst.stop(0);
     }
 
     public void MutePlayerVolume()
@@ -323,7 +331,7 @@ public class AudioManager: MonoBehaviour
 
     public void ResetModuleInstances()
     {
-        moduleDescription.releaseAllInstances();    
+        moduleDescription.releaseAllInstances();
     }
 
     public void PlayDialogueSound()
@@ -341,6 +349,7 @@ public class AudioManager: MonoBehaviour
         tutorialEnemyShieldInst.setParameterByName("source", 2);
         tutorialEnemyShieldInst.setParameterByName("pitch", 164.81f);
         tutorialEnemyShieldInst.start();
+        Debug.Log("Playing tut enemy shield");
     }
 
     public void PlayTutEnemyWeapon()
