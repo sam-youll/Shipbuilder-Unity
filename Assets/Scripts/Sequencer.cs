@@ -6,6 +6,14 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Sequencer : MonoBehaviour
 {
+    [Header("Params")]
+    public float metro = 200;
+    public float attack = 60;
+    public float decay = 30;
+    public float sustain = 0;
+    public float release = 8;
+    
+    
     private bool isMouseDragging = false;
     private Vector2 dragOffset;
     
@@ -36,7 +44,6 @@ public class Sequencer : MonoBehaviour
         false
     };
     private float[] pitches = new float[4];
-    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -80,7 +87,7 @@ public class Sequencer : MonoBehaviour
                     pitchSquaresDragOffset[i] = Vector2.zero;
                     AudioManager.Instance.PutDownModuleSFX();
                     int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
-                    pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval);
+                    pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.IONIAN, interval);
                     if (moduleAttached != null)
                         UpdatePitches();
                 }
@@ -251,11 +258,11 @@ public class Sequencer : MonoBehaviour
         moduleAttached = mod.gameObject;
         moduleAttached.GetComponent<Module>().parameters.Add("arpstart", 1);
         moduleAttached.GetComponent<Module>().parameters.Add("arp", 1);
-        moduleAttached.GetComponent<Module>().parameters.Add("metro", 500);
-        moduleAttached.GetComponent<Module>().parameters.Add("attack", 200);
-        moduleAttached.GetComponent<Module>().parameters.Add("decay", 200);
-        moduleAttached.GetComponent<Module>().parameters.Add("sustain", .2f);
-        moduleAttached.GetComponent<Module>().parameters.Add("release", 500);
+        moduleAttached.GetComponent<Module>().parameters.Add("metro", metro);
+        moduleAttached.GetComponent<Module>().parameters.Add("attack", attack);
+        moduleAttached.GetComponent<Module>().parameters.Add("decay", decay);
+        moduleAttached.GetComponent<Module>().parameters.Add("sustain", sustain);
+        moduleAttached.GetComponent<Module>().parameters.Add("release", release);
         moduleAttached.GetComponent<Module>().parameters.Add("apitch1", pitches[0]);
         moduleAttached.GetComponent<Module>().parameters.Add("apitch2", pitches[1]);
         moduleAttached.GetComponent<Module>().parameters.Add("apitch3", pitches[2]);

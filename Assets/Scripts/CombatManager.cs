@@ -449,7 +449,7 @@ public class CombatManager : MonoBehaviour
                     };
                     playerShields.Add(newShield);
                 }
-                playerShields[index] = stats;
+                playerShields[index-6] = stats;
                 break;
             // case Module.OutputType.Thruster:
             //     if (index >= playerThrusters.Count)

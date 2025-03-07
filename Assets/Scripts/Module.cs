@@ -260,7 +260,7 @@ public class Module : MonoBehaviour
             // y values go from -3 to 3
             int interval = (int)transform.position.y + 3; // normalize to 1-7
             
-            parameters["pitch"] = Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval);
+            parameters["pitch"] = Notes.GetPitch(Notes.C, Notes.MODE.IONIAN, interval);
             PatchManager.Instance.UpdateAllPatches();
         }
     }

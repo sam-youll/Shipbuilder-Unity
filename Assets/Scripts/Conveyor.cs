@@ -9,6 +9,10 @@ public class Conveyor : MonoBehaviour
     private Vector2 dragOffset;
 
     public GameObject snapSquare;
+
+    public float source = 2;
+    public float freq = 8;
+    public float depth = 20;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -72,9 +76,9 @@ public class Conveyor : MonoBehaviour
     {
         moduleAttached = mod.gameObject;
         moduleAttached.GetComponent<Module>().parameters.Add("FM", 1);
-        moduleAttached.GetComponent<Module>().parameters.Add("FMsource", 2);
-        moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", 8);
-        moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", 20);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMsource", source);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", freq);
+        moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", depth);
         PatchManager.Instance.UpdateAllPatches();
     }
 
