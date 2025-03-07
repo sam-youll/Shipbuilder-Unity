@@ -25,22 +25,68 @@ public class Sequencer : MonoBehaviour
     public Color offCol;
 
     public GameObject[] pitchSquares;
-    public Vector3[] pitchSquareLastPositions;
-    bool pitchOneDragging = false;
-    bool pitchTwoDragging = false;
-    bool pitchThreeDragging = false;
-    bool pitchFourDragging = false;
+    public GameObject[] pitchSnapSquares;
+    private Vector3[] pitchSquareLastPositions = new Vector3[4];
+    private Vector2[] pitchSquaresDragOffset = new Vector2[4];
+    private bool[] pitchSquaresDragged =
+    {
+        false,
+        false,
+        false,
+        false
+    };
+    private float[] pitches = new float[4];
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        for (int i = 0; i < pitchSquares.Length; i++)
+        {
+            pitchSquareLastPositions[i] = pitchSquares[i].transform.position;
+            int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
+            pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        
+        
+        for (var i = 0; i < pitchSquares.Length; i++)
+        {
+            pitchSquares[i].transform.position = pitchSquareLastPositions[i];
+            if (pitchSquaresDragged[i])
+            {
+                pitchSquares[i].transform.position = mousePos + pitchSquaresDragOffset[i];
+                var snappedPos = new Vector2
+                {
+                    x = Mathf.Round(mousePos.x),
+                    y = Mathf.Round(mousePos.y)
+                };
+                while (IsOverlapping(pitchSquares[i], snappedPos, new Vector2(.5f, .5f))) // THIS IS PROBABLY A BAD IDEA
+                {
+                    var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
+                    snappedPos += dir;
+                }
+                pitchSnapSquares[i].transform.position = snappedPos;
+                // drop module
+                if (Input.GetMouseButtonUp(0))
+                {
+                    pitchSquaresDragged[i] = false;
+                    pitchSquares[i].transform.position = pitchSnapSquares[i].transform.position;
+                    pitchSnapSquares[i].SetActive(false);
+                    pitchSquaresDragOffset[i] = Vector2.zero;
+                    AudioManager.Instance.PutDownModuleSFX();
+                    int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
+                    pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval);
+                    if (moduleAttached != null)
+                        UpdatePitches();
+                }
+            }
+            pitchSquareLastPositions[i] = pitchSquares[i].transform.position;
+        }
         
         // mouse movement
         if (isMouseDragging)
@@ -55,9 +101,9 @@ public class Sequencer : MonoBehaviour
             var snappedPos = new Vector2
             {
                 x = Mathf.Round(mousePos.x),
-                y = Mathf.Round(mousePos.y)
+                y = Mathf.Floor(mousePos.y)+.5f
             };
-            while (IsOverlapping(snappedPos, new Vector2(3, .5f))) // THIS IS PROBABLY A BAD IDEA
+            while (IsOverlapping(gameObject, snappedPos, new Vector2(3, 1f))) // THIS IS PROBABLY A BAD IDEA
             {
                 var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
                 snappedPos += dir;
@@ -82,9 +128,6 @@ public class Sequencer : MonoBehaviour
             var hit = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.GetMask("Sequencer Buttons"));
             var jackHit = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.GetMask("Jacks"));
             var bodyHit = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.GetMask("Module Bodies"));
-            Debug.Log(hit);
-            Debug.Log(jackHit);
-            Debug.Log(bodyHit);
             if (hit)
             {
                 if (hit.collider.gameObject == buttonOne)
@@ -162,16 +205,27 @@ public class Sequencer : MonoBehaviour
                     isMouseDragging = true;
                     snapSquare.SetActive(true);
                 }
+
+                for (var i = 0; i < pitchSquares.Length; i++)
+                {
+                    var body = pitchSquares[i];
+                    if (bodyHit.collider.gameObject == body)
+                    {
+                        pitchSquaresDragged[i] = true;
+                        pitchSnapSquares[i].SetActive(true);
+                        pitchSquaresDragOffset[i] = body.transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    }
+                }
             }
         }
     }
     
-    private bool IsOverlapping(Vector2 pos, Vector2 size)
+    private bool IsOverlapping(GameObject ignore, Vector2 pos, Vector2 size)
     {
         var overlap = Physics2D.OverlapBoxAll(pos, size, 0, LayerMask.GetMask("Module Bodies"));
         foreach (var coll in overlap)
         {
-            if (coll.gameObject == gameObject)
+            if (coll.gameObject == ignore)
                 continue;
             return true;
         }
@@ -202,10 +256,10 @@ public class Sequencer : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Add("decay", 200);
         moduleAttached.GetComponent<Module>().parameters.Add("sustain", .2f);
         moduleAttached.GetComponent<Module>().parameters.Add("release", 500);
-        moduleAttached.GetComponent<Module>().parameters.Add("apitch1", 440);
-        moduleAttached.GetComponent<Module>().parameters.Add("apitch2", 554.27f);
-        moduleAttached.GetComponent<Module>().parameters.Add("apitch3", 659.26f);
-        moduleAttached.GetComponent<Module>().parameters.Add("apitch4", 880);
+        moduleAttached.GetComponent<Module>().parameters.Add("apitch1", pitches[0]);
+        moduleAttached.GetComponent<Module>().parameters.Add("apitch2", pitches[1]);
+        moduleAttached.GetComponent<Module>().parameters.Add("apitch3", pitches[2]);
+        moduleAttached.GetComponent<Module>().parameters.Add("apitch4", pitches[3]);
         UpdateSequence();
     }
 
@@ -241,5 +295,14 @@ public class Sequencer : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters["note4"] = Convert.ToInt32(buttonFourPressed);
         PatchManager.Instance.UpdateAllPatches();
         
+    }
+
+    void UpdatePitches()
+    {
+        moduleAttached.GetComponent<Module>().parameters["apitch1"] = pitches[0];
+        moduleAttached.GetComponent<Module>().parameters["apitch2"] = pitches[1];
+        moduleAttached.GetComponent<Module>().parameters["apitch3"] = pitches[2];
+        moduleAttached.GetComponent<Module>().parameters["apitch4"] = pitches[3];
+        PatchManager.Instance.UpdateAllPatches();
     }
 }
