@@ -160,6 +160,34 @@ public class CombatManager : MonoBehaviour
         timbreMatchMultipliersList.Add(defenseTimbreMatch);
         timbreMatchMultipliersList.Add(evasionTimbreMatch);
         timbreMatchMultipliersList.Add(accuracyTimbreMatch);
+
+        for (var i = 0; i < playerWeapons.Length; i++)
+        {
+            playerWeapons[i] = new Dictionary<string, float>()
+            {
+                { "damage", 0 },
+                { "attackSpeed", 1 },
+                { "accuracy", 1 },
+                { "izki", 0 },
+                { "aubo", 0 },
+                { "dwth", 0 }
+            };
+        }
+
+        for (var i = 0; i < playerShields.Length; i++)
+        {
+            playerShields[i] = new Dictionary<string, float>()
+            {
+                { "extraHealth", 0 },
+                { "incomingDamageMult", 1 },
+                { "damage", 1 },
+                { "attackSpeed", 1 },
+                { "accuracy", 1 },
+                { "izki", 1 },
+                { "aubo", 1 },
+                { "dwth", 1 }
+            };
+        }
     }
 
     // Update is called once per frame
@@ -235,6 +263,8 @@ public class CombatManager : MonoBehaviour
         float result = 0;
         foreach (var weapon in playerWeapons)
         {
+            if (weapon == null)
+                continue;
             float dmg = 0;
             if (currentTick % weapon["attackSpeed"] == 0)
             {
@@ -256,10 +286,13 @@ public class CombatManager : MonoBehaviour
         float result = enemyWeaponDamage;
         foreach (var shield in playerShields)
         {
+            if (shield == null)
+                continue;
             result *= shield["incomingDamageMult"];
             result *= RPS(enemyWeaponSoundType, GetShieldType(shield));
         }
-        // Debug.Log("Player shield is type " + GetWeaponType(playerShields[0]) + ". Enemy weapon is type " + enemyWeaponSoundType);
+        Debug.Log("Player shield is type " + GetWeaponType(playerShields[0]) + ". Enemy weapon is type " + enemyWeaponSoundType);
+        Debug.LogFormat("Enemy did " + result + " damage! RPS result: " + RPS(enemyWeaponSoundType, GetShieldType(playerShields[0])));
         return result;
     }
 

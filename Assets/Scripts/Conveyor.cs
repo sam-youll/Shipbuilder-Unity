@@ -8,6 +8,10 @@ public class Conveyor : MonoBehaviour
     private bool isMouseDragging;
     private Vector2 dragOffset;
 
+    [Header("Combat Stats")] 
+    public float speed = 1;
+    public float damage = 1;
+
     public GameObject snapSquare;
 
     public float source = 2;
@@ -79,6 +83,8 @@ public class Conveyor : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Add("FMsource", source);
         moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", freq);
         moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", depth);
+        moduleAttached.GetComponent<Module>().stats.Add("damage", damage);
+        moduleAttached.GetComponent<Module>().stats.Add("speed", speed);
         PatchManager.Instance.UpdateAllPatches();
     }
 
@@ -88,6 +94,8 @@ public class Conveyor : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Remove("FMsource");
         moduleAttached.GetComponent<Module>().parameters.Remove("FMfreq");
         moduleAttached.GetComponent<Module>().parameters.Remove("FMdepth");
+        moduleAttached.GetComponent<Module>().stats.Remove("damage");
+        moduleAttached.GetComponent<Module>().stats.Remove("speed");
         moduleAttached = null;
         PatchManager.Instance.UpdateAllPatches();
     }

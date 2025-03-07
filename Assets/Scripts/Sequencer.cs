@@ -13,6 +13,10 @@ public class Sequencer : MonoBehaviour
     public float sustain = 0;
     public float release = 8;
     
+    [Header("Combat Stats")]
+    public float speed = 1;
+    public float damage = 1;
+    
     
     private bool isMouseDragging = false;
     private Vector2 dragOffset;
@@ -267,6 +271,8 @@ public class Sequencer : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Add("apitch2", pitches[1]);
         moduleAttached.GetComponent<Module>().parameters.Add("apitch3", pitches[2]);
         moduleAttached.GetComponent<Module>().parameters.Add("apitch4", pitches[3]);
+        moduleAttached.GetComponent<Module>().stats.Add("damage", damage);
+        moduleAttached.GetComponent<Module>().stats.Add("speed", speed);
         UpdateSequence();
     }
 
@@ -287,10 +293,12 @@ public class Sequencer : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Remove("note2");
         moduleAttached.GetComponent<Module>().parameters.Remove("note3");
         moduleAttached.GetComponent<Module>().parameters.Remove("note4");
-        moduleAttached.GetComponent<Module>().parameters.Add("note1", Convert.ToInt32(buttonOnePressed));
-        moduleAttached.GetComponent<Module>().parameters.Add("note2", Convert.ToInt32(buttonTwoPressed));
-        moduleAttached.GetComponent<Module>().parameters.Add("note3", Convert.ToInt32(buttonThreePressed));
-        moduleAttached.GetComponent<Module>().parameters.Add("note4", Convert.ToInt32(buttonFourPressed));
+        moduleAttached.GetComponent<Module>().parameters.Remove("note1");
+        moduleAttached.GetComponent<Module>().parameters.Remove("note2");
+        moduleAttached.GetComponent<Module>().parameters.Remove("note3");
+        moduleAttached.GetComponent<Module>().parameters.Remove("note4");
+        moduleAttached.GetComponent<Module>().stats.Remove("damage");
+        moduleAttached.GetComponent<Module>().stats.Remove("speed");
         PatchManager.Instance.UpdateAllPatches();
     }
 
