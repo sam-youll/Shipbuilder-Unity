@@ -244,13 +244,13 @@ public class CombatManager : MonoBehaviour
     {
         playerHealthBar.value -= EnemyAttackDamage();
         var playerHitNumber = Instantiate(floatingDamageNumberPrefab, playerShip.transform.position, Quaternion.identity);
-        playerHitNumber.GetComponent<TextMeshPro>().text = EnemyAttackDamage().ToString();
+        playerHitNumber.GetComponent<TextMeshPro>().text = Mathf.Floor(EnemyAttackDamage()*100).ToString();
         playerHitNumber.transform.SetParent(playerShip.transform);
         Debug.Log(playerHitNumber);
         playerHealthBar.value = Mathf.Clamp(playerHealthBar.value, 0, 1);
         enemyHealthBar.value -= PlayerAttackDamage();
         var enemyHitNumber = Instantiate(floatingDamageNumberPrefab, enemyShip.transform.position, Quaternion.identity);
-        enemyHitNumber.GetComponent<TextMeshPro>().text = PlayerAttackDamage().ToString();
+        enemyHitNumber.GetComponent<TextMeshPro>().text = Mathf.Floor(PlayerAttackDamage()*100).ToString();
         enemyHitNumber.transform.SetParent(enemyShip.transform);
         Debug.Log(enemyHitNumber);
         enemyHealthBar.value = Mathf.Clamp(enemyHealthBar.value, 0, 1);
