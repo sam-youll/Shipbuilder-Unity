@@ -1,5 +1,7 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayTutorial : MonoBehaviour
 {
@@ -15,10 +17,13 @@ public class GameplayTutorial : MonoBehaviour
     public GameObject outputModule;
     //sequencer 
     public GameObject sequencer;
+    public GameObject sequencer2;
     //envelope
     public GameObject envelopeModule;
+    public GameObject envelopeModule2;
     //buttons 
     public GameObject enemyPlayButton;
+    public GameObject startCombatButton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -60,7 +65,7 @@ public class GameplayTutorial : MonoBehaviour
         {
             stepComplete = false;
             dialogueText.text = "Try pulling it open and placing one of the colorful modules onto the rack.";
-            if (ModuleRack.Instance.transform.childCount > 1)
+            if (ModuleRack.Instance.transform.childCount > 3)
             {
                 dialogueText.text = "Great. Next, we'll look at plugging them in.";
                 stepComplete = true;
@@ -108,7 +113,7 @@ public class GameplayTutorial : MonoBehaviour
         {
             stepComplete = false;
             dialogueText.text = "Now, pull down another generator module.";
-            if (ModuleRack.Instance.transform.childCount > 2)
+            if (ModuleRack.Instance.transform.childCount > 4)
             {
                 dialogueText.text = "Nice. This one is going to be our weapon, and we need to plug it into the sequencer.";
                 stepComplete = true;
@@ -149,6 +154,14 @@ public class GameplayTutorial : MonoBehaviour
         if (currentStep == 15) 
         {
             dialogueText.text = "Now let's look at how to fight.";
+            for (var i = 0; i < ModuleRack.Instance.transform.childCount; i++)
+            {
+                if (!ModuleRack.Instance.transform.GetChild(i).CompareTag("OutputRack"))
+                {
+                    Destroy(ModuleRack.Instance.transform.GetChild(i).GameObject());
+                }
+            }
+            PatchManager.Instance.UpdateAllPatches();
             stepComplete = true;
         }
         if (currentStep == 16)
@@ -161,6 +174,39 @@ public class GameplayTutorial : MonoBehaviour
         {
             dialogueText.text = "Click it now and listen to your enemy's shield";
             stepComplete = true;
+        }
+        if (currentStep == 18)
+        {
+            dialogueText.text = "Try to see if you can determine the enemy's shield type by listening.";
+            stepComplete = true;
+        }
+        if (currentStep == 19)
+        {
+            dialogueText.text = "Use the reference sheet I gave you if you need help.";
+            stepComplete = true;
+        }
+        if (currentStep == 20)
+        {
+            stepComplete = false;
+            sequencer2.SetActive(true);
+            envelopeModule2.SetActive(true);
+            dialogueText.text = "Using what you've learned, build a weapon you think will beat the enemy's shield";
+            if (envelopeModule2.GetComponent<Module>().previousModule != null && outputModule.GetComponent<OutputRack>().previousModsWeapons[0] != null)
+            {
+                startCombatButton.SetActive(true);
+                dialogueText.text = "Okay! Let's see how it works. Press Start Combat when you're ready.";
+                stepComplete = true;
+            }
+        }
+        if (currentStep == 21)
+        {
+            dialogueText.text = "Great job. Time to go try your hand at the real thing. Good luck!";
+            stepComplete = true;
+            AudioManager.Instance.ResetModuleInstances();
+        }
+        if (currentStep == 22)
+        {
+            SceneManager.LoadScene("SampleScene");
         }
     }
 
