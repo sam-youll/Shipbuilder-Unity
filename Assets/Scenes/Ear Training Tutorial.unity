@@ -688,6 +688,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 476463537}
     m_Modifications:
+    - target: {fileID: 1854261811825303778, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966741798830088193, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3232918526076758534, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
@@ -733,6 +741,10 @@ PrefabInstance:
       value: Weapon
       objectReference: {fileID: 0}
     - target: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -740,9 +752,17 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Aubo
       objectReference: {fileID: 0}
+    - target: {fileID: 4383492420560635914, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4823838910257429433, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5508883631943058339, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: parameter
-      value: 
+      value: pitch
       objectReference: {fileID: 0}
     - target: {fileID: 5508883631943058339, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: isSourceModule
@@ -752,6 +772,14 @@ PrefabInstance:
       propertyPath: parameterValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7021749252212997280, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021749252212997280, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -759,6 +787,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1317144729}
+    - targetCorrespondingSourceObject: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1317144733}
   m_SourcePrefab: {fileID: 100100000, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
 --- !u!1 &49444666
 GameObject:
@@ -2904,6 +2935,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 476463537}
     m_Modifications:
+    - target: {fileID: 1854261811825303778, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966741798830088193, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3232918526076758534, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
@@ -2949,12 +2988,40 @@ PrefabInstance:
       value: Shield
       objectReference: {fileID: 0}
     - target: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       propertyPath: m_TagString
       value: Aubo
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383492420560635914, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4823838910257429433, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508883631943058339, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: parameter
+      value: pitch
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508883631943058339, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: isSourceModule
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021749252212997280, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021749252212997280, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2963,6 +3030,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 874328943}
+    - targetCorrespondingSourceObject: {fileID: 4102973714987628602, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 874328947}
   m_SourcePrefab: {fileID: 100100000, guid: 63adb3b6425c6e744a9901d6a7e9769e, type: 3}
 --- !u!1 &370399813
 GameObject:
@@ -6490,6 +6560,8 @@ MonoBehaviour:
   auboModule: {fileID: 0}
   dwthModule: {fileID: 0}
   etTutorialManager: {fileID: 1495436738}
+  weaponModule: {fileID: 1317144724}
+  shieldModule: {fileID: 874328938}
 --- !u!1 &744658751
 GameObject:
   m_ObjectHideFlags: 0
@@ -6733,6 +6805,8 @@ MonoBehaviour:
   auboModule: {fileID: 1956805659}
   dwthModule: {fileID: 273548768}
   etTutorialManager: {fileID: 1495436738}
+  weaponModule: {fileID: 0}
+  shieldModule: {fileID: 0}
 --- !u!212 &754128511
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7789,6 +7863,8 @@ MonoBehaviour:
       Data3: 1382857615
       Data4: -1353940399
     Path: event:/Module
+  weaponModule: {fileID: 1317144724}
+  shieldModule: {fileID: 874328938}
   source: 2
   arp: 0
   apitch1: 0
@@ -7805,6 +7881,33 @@ MonoBehaviour:
   note4: 0
   metro: 0
   isPlaying: 0
+--- !u!50 &874328947
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874328938}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &919357964
 GameObject:
   m_ObjectHideFlags: 0
@@ -9130,6 +9233,8 @@ MonoBehaviour:
   auboModule: {fileID: 1956805659}
   dwthModule: {fileID: 273548768}
   etTutorialManager: {fileID: 1495436738}
+  weaponModule: {fileID: 0}
+  shieldModule: {fileID: 0}
 --- !u!212 &1058648685
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10379,6 +10484,8 @@ MonoBehaviour:
       Data3: 1382857615
       Data4: -1353940399
     Path: event:/Module
+  weaponModule: {fileID: 1317144724}
+  shieldModule: {fileID: 874328938}
   source: 3
   arp: 1
   apitch1: 440
@@ -10395,6 +10502,33 @@ MonoBehaviour:
   note4: 1
   metro: 500
   isPlaying: 0
+--- !u!50 &1317144733
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317144724}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1340600597
 GameObject:
   m_ObjectHideFlags: 0
@@ -13742,6 +13876,8 @@ MonoBehaviour:
   auboModule: {fileID: 1956805659}
   dwthModule: {fileID: 273548768}
   etTutorialManager: {fileID: 1495436738}
+  weaponModule: {fileID: 0}
+  shieldModule: {fileID: 0}
 --- !u!212 &1979554169
 SpriteRenderer:
   m_ObjectHideFlags: 0

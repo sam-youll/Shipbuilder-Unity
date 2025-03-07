@@ -7,6 +7,9 @@ public class WeaponTutorial : MonoBehaviour
     public EventReference moduleRef;
     public EventInstance moduleInst;
 
+    public GameObject weaponModule;
+    public GameObject shieldModule;
+
     public float source;
     public float arp;
     public float apitch1;
@@ -29,11 +32,6 @@ public class WeaponTutorial : MonoBehaviour
     void Start()
     {
         moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
         moduleInst.setParameterByName("source", source);
         moduleInst.setParameterByName("arpstart", 1);
@@ -51,7 +49,11 @@ public class WeaponTutorial : MonoBehaviour
         moduleInst.setParameterByName("note3", note3);
         moduleInst.setParameterByName("note4", note4);
         moduleInst.setParameterByName("metro", metro);
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
 
         if (gameObject.activeSelf)
         {
@@ -63,5 +65,28 @@ public class WeaponTutorial : MonoBehaviour
             }
         }
 
+        if (gameObject.GetComponent<Module>().snapSquare.active == false)
+        {
+            UpdatePosParameter();
+        }
+
+    }
+
+    private void UpdatePosParameter()
+    {
+            // y values go from -3 to 3
+        int interval = (int)transform.position.y + 3; // normalize to 1-7
+        if (gameObject == shieldModule)
+        {
+            moduleInst.setParameterByName("pitch", Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval));
+        }
+        if (gameObject == weaponModule)
+        {
+            moduleInst.setParameterByName("pitch", Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval));
+            moduleInst.setParameterByName("apitch1", Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval));
+            moduleInst.setParameterByName("apitch2", Notes.GetPitch(Notes.E, Notes.MODE.LYDIAN, interval));
+            moduleInst.setParameterByName("apitch3", Notes.GetPitch(Notes.G, Notes.MODE.LYDIAN, interval));
+            moduleInst.setParameterByName("apitch4", Notes.GetPitch(Notes.C * 2, Notes.MODE.LYDIAN, interval));
+        }
     }
 }

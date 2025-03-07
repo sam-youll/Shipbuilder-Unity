@@ -9,6 +9,9 @@ public class EarTrainingAnswer : MonoBehaviour
     public GameObject auboModule;
     public GameObject dwthModule;
     public GameObject etTutorialManager;
+    public GameObject weaponModule;
+    public GameObject shieldModule;
+
 
     private bool dialogueSoundPlayed = false;
 
@@ -36,6 +39,16 @@ public class EarTrainingAnswer : MonoBehaviour
                 etTutorialManager.GetComponent<EarTrainingTutorial>().pitchAnswered = true;
                 etTutorialManager.GetComponent<EarTrainingTutorial>().pitchCorrect = false;
             }
+
+            if (coll.gameObject == weaponModule)
+            {
+                etTutorialManager.GetComponent<EarTrainingTutorial>().weaponCorrect = true;
+            }
+            if(coll.gameObject == shieldModule)
+            {
+                etTutorialManager.GetComponent<EarTrainingTutorial>().dialogueText.text = "Nope. Try again";
+            }
+
             if (CompareTag("Izki"))
             {
                 if (coll.gameObject == izkiModule)

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EarTrainingTutorial : MonoBehaviour
 {
@@ -308,6 +309,7 @@ public class EarTrainingTutorial : MonoBehaviour
                 if (!dialogueSoundPlayed)
                 {
                     AudioManager.Instance.PlayDialogueSound();
+                    dialogueSoundPlayed = true;
                 }
 
                 dialogueText.text = "Great. You'll be fine. Now let's get you to the module rack.";
@@ -318,7 +320,7 @@ public class EarTrainingTutorial : MonoBehaviour
 
         if (currentStep == 23)
         {
-            //go to next scene
+            SceneManager.LoadScene("Gameplay Tutorial");
         }
     }
 
