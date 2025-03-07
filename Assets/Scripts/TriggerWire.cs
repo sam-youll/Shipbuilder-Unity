@@ -113,6 +113,7 @@ public class TriggerWire : MonoBehaviour
         if (connectedToModule)
         {
             previousModule.GetComponent<Sequencer>().OnModuleDetached(nextModule.GetComponent<Module>());
+            nextModule.GetComponent<Envelope>().sequencerAttached = null;
         }
         PatchManager.Instance.UpdateAllPatches();
         Destroy(gameObject);
