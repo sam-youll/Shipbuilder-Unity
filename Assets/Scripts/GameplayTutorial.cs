@@ -13,6 +13,12 @@ public class GameplayTutorial : MonoBehaviour
     public TextMeshPro dialogueText;
     //Output Module
     public GameObject outputModule;
+    //sequencer 
+    public GameObject sequencer;
+    //envelope
+    public GameObject envelopeModule;
+    //buttons 
+    public GameObject enemyPlayButton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -93,10 +99,68 @@ public class GameplayTutorial : MonoBehaviour
                 dialogueText.text = "Beautiful. Now you have some defense.";
                 stepComplete = true;
             }
+            if (outputModule.GetComponent<OutputRack>().previousModsWeapons[0] != null) 
+            {
+                dialogueText.text = "Careful! You plugged it into your weapons. Try plugging it into your shields.";
+            }
         }
         if (currentStep == 10)
         {
-            dialogueText.text = "bottom text";
+            stepComplete = false;
+            dialogueText.text = "Now, pull down another generator module.";
+            if (ModuleRack.Instance.transform.childCount > 2)
+            {
+                dialogueText.text = "Nice. This one is going to be our weapon, and we need to plug it into the sequencer.";
+                stepComplete = true;
+            }
+        }
+        if (currentStep == 11)
+        {
+            dialogueText.text = "This is a sequencer. It will let you change the pitch and rhythm you attack with.";
+            sequencer.SetActive(true);
+            stepComplete = true;
+        }
+        if (currentStep == 12)
+        {
+            dialogueText.text = "It needs to be triggered with this envelope module. It will determine how sharp or flowing your attack is.";
+            envelopeModule.SetActive(true);
+            stepComplete = true;
+        }
+        if (currentStep == 13)
+        {
+            stepComplete = false;
+            dialogueText.text = "To plug it in, connect the red output of the sequencer into the blue input of the envelope module.";
+            if (envelopeModule.GetComponent<Envelope>().sequencerAttached)
+            {
+                dialogueText.text = "Yep, just like that.";
+                stepComplete = true;
+            }
+        }
+        if (currentStep == 14)
+        {
+            stepComplete = false;
+            dialogueText.text = "Next, plug your source into the envelope module, and the envelope module into your weapon output.";
+            if (envelopeModule.GetComponent<Module>().previousModule != null && outputModule.GetComponent<OutputRack>().previousModsWeapons[0] != null)
+            {
+                dialogueText.text = "Perfect. Now you're ready for battle.";
+                stepComplete = true;
+            }
+        }
+        if (currentStep == 15) 
+        {
+            dialogueText.text = "Now let's look at how to fight.";
+            stepComplete = true;
+        }
+        if (currentStep == 16)
+        {
+            dialogueText.text = "This button lets you access your sensor to listen in on your enemy.";
+            enemyPlayButton.SetActive(true);
+            stepComplete = true;
+        }
+        if (currentStep == 17)
+        {
+            dialogueText.text = "Click it now and listen to your enemy's shield";
+            stepComplete = true;
         }
     }
 
