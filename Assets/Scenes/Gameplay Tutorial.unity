@@ -6570,6 +6570,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moduleAttached: {fileID: 0}
+  speed: 1
+  damage: 1
   snapSquare: {fileID: 0}
   source: 2
   freq: 8
@@ -6744,9 +6746,9 @@ MonoBehaviour:
   playerEvasion: 0
   enemyHealth: 1
   enemyShieldMod: 0.9
-  enemyWeaponDamage: 0.1
+  enemyWeaponDamage: 0.02
   enemyWeaponSoundType: 2
-  enemyShieldSoundType: 1
+  enemyShieldSoundType: 2
 --- !u!4 &978327455
 Transform:
   m_ObjectHideFlags: 0

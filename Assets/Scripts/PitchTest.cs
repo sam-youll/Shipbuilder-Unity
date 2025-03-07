@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using FMOD.Studio;
 using FMODUnity;
-using static UnityEditor.PlayerSettings;
 using System.Drawing;
 
 public class PitchTest : MonoBehaviour

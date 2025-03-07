@@ -720,6 +720,7 @@
 		<relationship name="automationCurves">
 			<destination>{4056ac6f-90ba-4567-927b-d4e72b539bd7}</destination>
 			<destination>{3a27b36b-eb2e-446d-b728-8c0e46761497}</destination>
+			<destination>{ceeecb91-b3b2-46f9-866c-a4f8833a3f82}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{3d2bf1c2-5be3-4339-8f29-a8b9424e7834}">
@@ -1338,6 +1339,16 @@
 			<destination>{247dfb36-e45b-4d51-91c2-1ecbcdceb73b}</destination>
 		</relationship>
 	</object>
+	<object class="AutomationCurve" id="{ceeecb91-b3b2-46f9-866c-a4f8833a3f82}">
+		<relationship name="parameter">
+			<destination>{0b4a5e72-1c6c-49eb-a444-f6c4102999aa}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{c6b950f2-5796-4156-8498-482cd02b28d6}</destination>
+			<destination>{8a253da0-9e05-4f0b-918e-e0d25d509506}</destination>
+			<destination>{5002badb-2089-4c08-8330-de7ddf47fe90}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{033dbf62-a323-47bc-b4f4-24b300130a75}" />
 	<object class="Automator" id="{49663bea-b87f-4f64-a4c5-6152bfb2fa59}">
 		<property name="nameOfPropertyBeingAutomated">
@@ -1732,6 +1743,30 @@
 		</property>
 		<property name="value">
 			<value>-14.1999998</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{c6b950f2-5796-4156-8498-482cd02b28d6}">
+		<property name="position">
+			<value>0.0027100271002710027</value>
+		</property>
+		<property name="value">
+			<value>-0.712646484</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{8a253da0-9e05-4f0b-918e-e0d25d509506}">
+		<property name="position">
+			<value>0.95663956639566394</value>
+		</property>
+		<property name="value">
+			<value>-0.712646484</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{5002badb-2089-4c08-8330-de7ddf47fe90}">
+		<property name="position">
+			<value>1</value>
+		</property>
+		<property name="value">
+			<value>2.4000001</value>
 		</property>
 	</object>
 	<object class="AutomationCurve" id="{307793ae-cc9a-4b0c-b747-9489f449733f}">

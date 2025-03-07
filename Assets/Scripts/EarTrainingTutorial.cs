@@ -320,6 +320,7 @@ public class EarTrainingTutorial : MonoBehaviour
 
         if (currentStep == 23)
         {
+            AudioManager.Instance.ResetModuleInstances();
             SceneManager.LoadScene("Gameplay Tutorial");
         }
     }
