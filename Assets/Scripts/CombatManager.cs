@@ -111,8 +111,8 @@ public class CombatManager : MonoBehaviour
     [Header("Player Ship Stats")]
     public float playerHealth;
     public float playerEvasion;
-    private List<Dictionary<string, float>> playerShields = new List<Dictionary<string, float>>();
-    private List<Dictionary<string, float>> playerWeapons = new List<Dictionary<string, float>>();
+    private Dictionary<string, float>[] playerShields = new Dictionary<string, float>[6];
+    private Dictionary<string, float>[] playerWeapons = new Dictionary<string, float>[6];
     private List<Dictionary<string, float>> playerThrusters = new List<Dictionary<string, float>>();
 
     [Header("Enemy Ship Stats")] 
@@ -418,37 +418,37 @@ public class CombatManager : MonoBehaviour
             case OutputRack.Type.None:
                 break;
             case OutputRack.Type.Weapon:
-                if (index >= playerWeapons.Count)
-                {
-                    var newWeapon = new Dictionary<string, float>()
-                    {
-                        { "damage", 1 },
-                        { "attackSpeed", 1 },
-                        { "accuracy", 1 },
-                        { "izki", 0 },
-                        { "aubo", 0 },
-                        { "dwth", 0 }
-                    };
-                    playerWeapons.Add(newWeapon);
-                }
+                // if (index >= playerWeapons.Length)
+                // {
+                //     var newWeapon = new Dictionary<string, float>()
+                //     {
+                //         { "damage", 1 },
+                //         { "attackSpeed", 1 },
+                //         { "accuracy", 1 },
+                //         { "izki", 0 },
+                //         { "aubo", 0 },
+                //         { "dwth", 0 }
+                //     };
+                //     playerWeapons.Add(newWeapon);
+                // }
                 playerWeapons[index] = stats;
                 break;
             case OutputRack.Type.Shield:
-                if (index >= playerShields.Count)
-                {
-                    var newShield = new Dictionary<string, float>()
-                    {
-                        { "extraHealth", 0 },
-                        { "incomingDamageMult", 1 },
-                        { "damage", 1 },
-                        { "attackSpeed", 1 },
-                        { "accuracy", 1 },
-                        { "izki", 1 },
-                        { "aubo", 1 },
-                        { "dwth", 1 }
-                    };
-                    playerShields.Add(newShield);
-                }
+                // if (index >= playerShields.Count)
+                // {
+                    // var newShield = new Dictionary<string, float>()
+                    // {
+                    //     { "extraHealth", 0 },
+                    //     { "incomingDamageMult", 1 },
+                    //     { "damage", 1 },
+                    //     { "attackSpeed", 1 },
+                    //     { "accuracy", 1 },
+                    //     { "izki", 1 },
+                    //     { "aubo", 1 },
+                    //     { "dwth", 1 }
+                    // };
+                //     playerShields.Add(newShield);
+                // }
                 playerShields[index-6] = stats;
                 break;
             // case Module.OutputType.Thruster:
