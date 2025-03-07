@@ -190,7 +190,7 @@ public class PatchManager : MonoBehaviour
         {
             { "", 0 },
             { "extraHealth", 0 },
-            { "incomingDamageMult", 0 },
+            { "incomingDamageMult", 1 },
             { "damage", 0 },
             { "attackSpeed", 1 },
             { "accuracy", 0 },
