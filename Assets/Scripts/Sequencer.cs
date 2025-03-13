@@ -201,7 +201,7 @@ public class Sequencer : MonoBehaviour
                     if (outputJack.transform.childCount > 0)
                     {
                         // get rid of it
-                        outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                        outputJack.transform.GetChild(0).gameObject.GetComponent<TriggerWire>().DeleteSelf();
                     }
                     // make a new wire
                     GameObject newWire = Instantiate(wirePrefab, outputJack.transform);

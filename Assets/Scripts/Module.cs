@@ -37,7 +37,6 @@ public class Module : MonoBehaviour
     public GameObject inputJack;
     public GameObject outputJack;
     public GameObject wirePrefab;
-    public GameObject typeLabel;
     public GameObject snapSquare;
 
     private GameObject objUnderMouse;
@@ -72,8 +71,6 @@ public class Module : MonoBehaviour
                 GetComponent<SpriteRenderer>().color = Color.magenta;
                 break;
         }
-        
-        typeLabel.GetComponent<TextMeshPro>().text = gameObject.name;
         
         if (isSourceModule)
         {
@@ -258,7 +255,8 @@ public class Module : MonoBehaviour
         if (parameter == "pitch")
         {
             // y values go from -3 to 3
-            int interval = (int)transform.position.y + 3; // normalize to 1-7
+            int interval = (int)transform.position.y + 4; // normalize to 1-7
+            interval = Mathf.Clamp(interval, 0, 7);
             
             parameters["pitch"] = Notes.GetPitch(Notes.C, Notes.MODE.IONIAN, interval);
             PatchManager.Instance.UpdateAllPatches();

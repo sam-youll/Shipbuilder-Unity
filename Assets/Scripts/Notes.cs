@@ -15,7 +15,7 @@ public static class Notes
     public const float MAJOR_SIXTH = 1.681793f;
     public const float MINOR_SEVENTH = 1.781797f;
     public const float MAJOR_SEVENTH = 1.887749f;
-    public const float OCTAVE = 1.887749f;
+    public const float OCTAVE = 2f;
 
     public const float C = 261.63f;
     public const float C_SHARP = 277.18f;

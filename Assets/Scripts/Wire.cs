@@ -145,10 +145,17 @@ public class Wire : MonoBehaviour
             }
         }
 
+        Vector3[] adjTargetPositions = new Vector3[points];
+        for (int i = 0; i < points; i++)
+        {
+            adjTargetPositions[i] = targetPositions[i];
+            adjTargetPositions[i].z = -.2f;
+        }
+
         // apply points
         for (int i = 0; i < points; i++)
         {
-            lineRenderer.SetPosition(i, targetPositions[i]);
+            lineRenderer.SetPosition(i, adjTargetPositions[i]);
         }
     }
 
