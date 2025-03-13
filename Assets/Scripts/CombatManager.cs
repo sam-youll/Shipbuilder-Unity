@@ -36,10 +36,7 @@ public class CombatManager : MonoBehaviour
     private float ringmod;
 
 
-    private float attackPitch;
-    private float defensePitch;
-    private float evasionPitch;
-    private float accuracyPitch;
+
 
     [Header("Multipliers")]
     //multipliers

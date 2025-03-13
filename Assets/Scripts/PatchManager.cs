@@ -176,15 +176,6 @@ public class PatchManager : MonoBehaviour
             { "apitch3", 659.26f },
             { "apitch4", 880 }
 
-
-            //old ones, just keeping them here in case there's a last minute crisis
-            /*{ "arpstart", 1 },
-            { "arp", 0 },
-            { "arpspeed", 1000 },
-            { "thruster", 0 },
-            { "thrusterspeed", 1 },
-            { "ringmod", 0 },
-            { "shields", 1 }*/
         };
         var statDict = new Dictionary<string, float>
         {
