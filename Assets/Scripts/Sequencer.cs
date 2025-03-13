@@ -64,41 +64,6 @@ public class Sequencer : MonoBehaviour
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         
-        
-        for (var i = 0; i < pitchSquares.Length; i++)
-        {
-            pitchSquares[i].transform.position = pitchSquareLastPositions[i];
-            if (pitchSquaresDragged[i])
-            {
-                pitchSquares[i].transform.position = mousePos + pitchSquaresDragOffset[i];
-                var snappedPos = new Vector2
-                {
-                    x = Mathf.Round(mousePos.x),
-                    y = Mathf.Round(mousePos.y)
-                };
-                while (IsOverlapping(pitchSquares[i], snappedPos, new Vector2(.5f, .5f))) // THIS IS PROBABLY A BAD IDEA
-                {
-                    var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
-                    snappedPos += dir;
-                }
-                pitchSnapSquares[i].transform.position = snappedPos;
-                // drop module
-                if (Input.GetMouseButtonUp(0))
-                {
-                    pitchSquaresDragged[i] = false;
-                    pitchSquares[i].transform.position = pitchSnapSquares[i].transform.position;
-                    pitchSnapSquares[i].SetActive(false);
-                    pitchSquaresDragOffset[i] = Vector2.zero;
-                    AudioManager.Instance.PutDownModuleSFX();
-                    int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
-                    pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.IONIAN, interval);
-                    if (moduleAttached != null)
-                        UpdatePitches();
-                }
-            }
-            pitchSquareLastPositions[i] = pitchSquares[i].transform.position;
-        }
-        
         // mouse movement
         if (isMouseDragging)
         {
@@ -134,6 +99,40 @@ public class Sequencer : MonoBehaviour
                 AudioManager.Instance.PutDownModuleSFX();
             }
         }
+        for (var i = 0; i < pitchSquares.Length; i++)
+        {
+            pitchSquares[i].transform.position = pitchSquareLastPositions[i];
+            if (pitchSquaresDragged[i])
+            {
+                pitchSquares[i].transform.position = mousePos + pitchSquaresDragOffset[i];
+                var snappedPos = new Vector2
+                {
+                    x = Mathf.Round(mousePos.x),
+                    y = Mathf.Round(mousePos.y)
+                };
+                while (IsOverlapping(pitchSquares[i], snappedPos, new Vector2(.5f, .5f))) // THIS IS PROBABLY A BAD IDEA
+                {
+                    var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
+                    snappedPos += dir;
+                }
+                pitchSnapSquares[i].transform.position = snappedPos;
+                // drop module
+                if (Input.GetMouseButtonUp(0))
+                {
+                    pitchSquaresDragged[i] = false;
+                    pitchSquares[i].transform.position = pitchSnapSquares[i].transform.position;
+                    pitchSnapSquares[i].SetActive(false);
+                    pitchSquaresDragOffset[i] = Vector2.zero;
+                    AudioManager.Instance.PutDownModuleSFX();
+                    int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
+                    pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.IONIAN, interval);
+                    if (moduleAttached != null)
+                        UpdatePitches();
+                }
+            }
+            pitchSquareLastPositions[i] = pitchSquares[i].transform.position;
+        }
+        
         if (Input.GetMouseButtonDown(0))
         {
             var hit = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.GetMask("Sequencer Buttons"));

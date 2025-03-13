@@ -20,6 +20,11 @@ public class Button2D : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (currentColor == Color.clear)
+        {
+            currentColor = sr.color;
+        }
+        
         var col = sr.color;
         col = Color.Lerp(col, currentColor, .1f);
         sr.color = col;
