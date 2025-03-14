@@ -60,6 +60,7 @@ public class AudioManager: MonoBehaviour
     
     
     public EventInstance[] patchInstances = new EventInstance[12];
+    public EventInstance[] enemyPatchInstances = new EventInstance[12];
     public List<EventReference> enemySongs = new List<EventReference>();
     public List<EventReference> enemySongsPlayed = new List<EventReference>();
 
@@ -96,6 +97,7 @@ public class AudioManager: MonoBehaviour
         for (int i = 0; i < 12; i++)
         {
             patchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+            enemyPatchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
         }
 
         //start events
@@ -197,7 +199,96 @@ public class AudioManager: MonoBehaviour
         patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
         patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. */
 
-        patchInstances[instanceIndex].start();
+        if (!IsPlaying(patchInstances[instanceIndex]))
+        {
+            patchInstances[instanceIndex].start();
+        }
+    }
+    
+    public void SetEnemyParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
+    {
+        if (instanceIndex >= patchInstances.Length)
+        {
+            Debug.Log("Parameter index is out of range of patchInstances.");
+            // var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+            // newInst.start();
+            // patchInstances.Add(newInst);
+        }
+
+        // foreach (var pair in parameters)
+        // {
+        //     Debug.Log(pair.Key + " " + pair.Value);
+        // }
+        
+        
+        // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
+        
+        //source params
+        enemyPatchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("wiresplitter", parameters["wiresplitter"]);
+        //AM params
+        enemyPatchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdepth"]);
+        //FM params
+        enemyPatchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FMfreq", parameters["FMfreq"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FMdepth", parameters["FMdepth"]);
+        //AM on AM params
+        enemyPatchInstances[instanceIndex].setParameterByName("AM2", parameters["AM2"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AM2source", parameters["AM2source"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AM2freq", parameters["AM2freq"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AM2depth", parameters["AM2depth"]);
+        //FM on FM params - broken rn, wasn't before
+        enemyPatchInstances[instanceIndex].setParameterByName("FM2", parameters["FM2"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FM2source", parameters["FM2source"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FM2freq", parameters["FM2freq"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FM2depth", parameters["FM2depth"]);
+        //AM on FM params - this doesn't work right now
+        enemyPatchInstances[instanceIndex].setParameterByName("FMAM", parameters["FMAM"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FMAMsource", parameters["FMAMsource"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
+        //FM on AM params - this doesn't work right now
+        enemyPatchInstances[instanceIndex].setParameterByName("AMFM", parameters["AMFM"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AMFMsource", parameters["AMFMsource"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
+
+        //Arp params
+        enemyPatchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]); //should always be 1, starts metro
+        enemyPatchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]); //0 for no arp, 1 for arp
+        //arp rhythm params 
+        enemyPatchInstances[instanceIndex].setParameterByName("metro", parameters["metro"]); //time between arp events in ms, 51-5000
+        enemyPatchInstances[instanceIndex].setParameterByName("note1", parameters["note1"]); //whether the first note in the arp is on/off, 0-1
+        enemyPatchInstances[instanceIndex].setParameterByName("note2", parameters["note2"]); //logic from note1 follows for note 2 etc
+        enemyPatchInstances[instanceIndex].setParameterByName("note3", parameters["note3"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("note4", parameters["note4"]);
+        //arp adsr params
+        enemyPatchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
+        enemyPatchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
+        enemyPatchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
+        enemyPatchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+        //Arp pitch params
+        enemyPatchInstances[instanceIndex].setParameterByName("apitch1", parameters["apitch1"]); //frequency of the first note in the arpeggiator
+        enemyPatchInstances[instanceIndex].setParameterByName("apitch2", parameters["apitch2"]); //logic follows from first note to second
+        enemyPatchInstances[instanceIndex].setParameterByName("apitch3", parameters["apitch3"]);
+        enemyPatchInstances[instanceIndex].setParameterByName("apitch4", parameters["apitch4"]);
+
+
+        //OLD PARAMS - just holding this in case shit breaks at a bad time
+        //patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
+        /*patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
+        patchInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
+        patchInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
+        patchInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
+        patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
+        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. */
+
+        enemyPatchInstances[instanceIndex].start();
     }
 
     public void PickUpModuleSFX()
@@ -371,6 +462,12 @@ public class AudioManager: MonoBehaviour
         tutorialEnemyWeaponInst.setParameterByName("sustain", 0);
         tutorialEnemyWeaponInst.setParameterByName("release", 20);
         tutorialEnemyWeaponInst.start();
+    }
+    
+    bool IsPlaying(FMOD.Studio.EventInstance instance) {
+        FMOD.Studio.PLAYBACK_STATE state;   
+        instance.getPlaybackState(out state);
+        return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
     }
 
 }
