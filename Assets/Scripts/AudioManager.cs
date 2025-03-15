@@ -219,9 +219,7 @@ public class AudioManager: MonoBehaviour
         // {
         //     Debug.Log(pair.Key + " " + pair.Value);
         // }
-        
-        
-        // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
+
         
         //source params
         enemyPatchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
@@ -277,16 +275,6 @@ public class AudioManager: MonoBehaviour
         enemyPatchInstances[instanceIndex].setParameterByName("apitch2", parameters["apitch2"]); //logic follows from first note to second
         enemyPatchInstances[instanceIndex].setParameterByName("apitch3", parameters["apitch3"]);
         enemyPatchInstances[instanceIndex].setParameterByName("apitch4", parameters["apitch4"]);
-
-
-        //OLD PARAMS - just holding this in case shit breaks at a bad time
-        //patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
-        /*patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
-        patchInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
-        patchInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
-        patchInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
-        patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
-        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. */
 
         enemyPatchInstances[instanceIndex].start();
     }

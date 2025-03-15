@@ -105,7 +105,7 @@ public class EnemyPatch : MonoBehaviour
             { "dwth", enemyWeapon.dwth }
         };
             enemyWeapon.enemyWeaponInst = FMODUnity.RuntimeManager.CreateInstance(enemyWeapon.moduleRef);
-            AudioManager.Instance.SetParametersByDict(i, enemyWeaponParamDict);
+            AudioManager.Instance.SetEnemyParametersByDict();
         }
 
         foreach (var enemyShield in enemyShields)
