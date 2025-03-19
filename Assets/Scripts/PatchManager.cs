@@ -205,19 +205,22 @@ public class PatchManager : MonoBehaviour
             // paramDict[mod.GetComponent<Module>().parameter] = mod.GetComponent<Module>().parameterValue;
             // statDict[mod.GetComponent<Module>().stat] += mod.GetComponent<Module>().statValue;
             // statDict["soundType"] = (float)mod.GetComponent<Module>().soundType;
-            switch (mod.GetComponent<Module>().soundType)
+            foreach (var type in mod.GetComponent<Module>().soundType)
             {
-                case Module.SoundType.None:
-                    break;
-                case Module.SoundType.Izki:
-                    statDict["izki"]++;
-                    break;
-                case Module.SoundType.Aubo:
-                    statDict["aubo"]++;
-                    break;
-                case Module.SoundType.Dwth:
-                    statDict["dwth"]++;
-                    break;
+                switch (type.Key)
+                {
+                    case Module.SoundType.None:
+                        break;
+                    case Module.SoundType.Izki:
+                        statDict["izki"] += type.Value;
+                        break;
+                    case Module.SoundType.Aubo:
+                        statDict["aubo"] += type.Value;
+                        break;
+                    case Module.SoundType.Dwth:
+                        statDict["dwth"] += type.Value;
+                        break;
+                }
             }
         }
         AudioManager.Instance.SetParametersByDict(i, paramDict);

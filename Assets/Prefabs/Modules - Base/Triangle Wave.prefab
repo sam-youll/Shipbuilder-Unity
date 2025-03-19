@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8321469981353697878
+--- !u!1 &6094297480147923936
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4923840019241609003}
-  - component: {fileID: 4616105316035875414}
+  - component: {fileID: 1713662832086556560}
+  - component: {fileID: 9027671981495521004}
   m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
@@ -17,13 +17,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4923840019241609003
+--- !u!4 &1713662832086556560
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8321469981353697878}
+  m_GameObject: {fileID: 6094297480147923936}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.2, z: -0.099999905}
@@ -32,13 +32,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3232918526076758534}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &4616105316035875414
+--- !u!212 &9027671981495521004
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8321469981353697878}
+  m_GameObject: {fileID: 6094297480147923936}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -137,10 +137,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2170875819057116906, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_Name
-      value: Sine Wave
+      value: Triangle Wave
       objectReference: {fileID: 0}
     - target: {fileID: 2170875819057116906, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222285233077605555, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222285233077605555, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222285233077605555, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7215196763641197929, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
@@ -148,7 +160,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7684069695608474995, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
-      propertyPath: aubo
+      propertyPath: dwth
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7684069695608474995, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
@@ -157,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7684069695608474995, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: soundType
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7684069695608474995, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: typeLabel
@@ -173,7 +185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7684069695608474995, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: parameterValue
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8759110253679641598, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_IsActive
@@ -185,7 +197,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 724396268766225622, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4923840019241609003}
+      addedObject: {fileID: 1713662832086556560}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
 --- !u!4 &3232918526076758534 stripped

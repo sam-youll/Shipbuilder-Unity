@@ -42,6 +42,7 @@ public class Wire : MonoBehaviour
             {
                 if (hit.collider.gameObject.transform.parent.gameObject.CompareTag("OutputRack"))
                 {
+                    Debug.Log("Connected to OutputRack");
                     var outputRack = hit.collider.gameObject.transform.parent.gameObject.GetComponent<OutputRack>();
                     int index = -1;
                     for (int i = 0; i < 6; i++)
@@ -149,7 +150,7 @@ public class Wire : MonoBehaviour
         for (int i = 0; i < points; i++)
         {
             adjTargetPositions[i] = targetPositions[i];
-            adjTargetPositions[i].z = -.2f;
+            adjTargetPositions[i].z = previousModule.transform.position.z -.2f;
         }
 
         // apply points

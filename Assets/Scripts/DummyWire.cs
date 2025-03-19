@@ -58,7 +58,7 @@ public class DummyWire : MonoBehaviour
         for (int i = 0; i < points; i++)
         {
             adjTargetPositions[i] = targetPositions[i];
-            adjTargetPositions[i].z = -.2f;
+            adjTargetPositions[i].z = start.transform.position.z -.2f;
         }
 
         // apply points

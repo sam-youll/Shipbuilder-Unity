@@ -23,7 +23,16 @@ public class Module : MonoBehaviour
     public float parameterValue;
     public string stat;
     public float statValue;
-    public SoundType soundType;
+    public float izki;
+    public float aubo;
+    public float dwth;
+    public Dictionary<SoundType, float> soundType = new Dictionary<SoundType, float>
+    {
+        { SoundType.None, 0 },
+        { SoundType.Izki, 0 },
+        { SoundType.Aubo, 0 },
+        { SoundType.Dwth, 0 },
+    };
     public Dictionary<string, float> parameters = new();
     public Dictionary<string, float> stats = new();
     
@@ -52,6 +61,10 @@ public class Module : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        soundType[SoundType.Izki] = izki;
+        soundType[SoundType.Aubo] = aubo;
+        soundType[SoundType.Dwth] = dwth;
+        
         parameters.Add(parameter, parameterValue);
         stats.Add(stat, statValue);
         
@@ -59,18 +72,18 @@ public class Module : MonoBehaviour
         onConveyor = transform.GetComponentInParent<Conveyor>() != null;
         
         // Set color of module based on type
-        switch (soundType)
-        {
-            case SoundType.Izki:
-                GetComponent<SpriteRenderer>().color = Color.yellow;
-                break;
-            case SoundType.Aubo:
-                GetComponent<SpriteRenderer>().color = Color.cyan;
-                break;
-            case SoundType.Dwth:
-                GetComponent<SpriteRenderer>().color = Color.magenta;
-                break;
-        }
+        // switch (soundType)
+        // {
+        //     case SoundType.Izki:
+        //         GetComponent<SpriteRenderer>().color = Color.yellow;
+        //         break;
+        //     case SoundType.Aubo:
+        //         GetComponent<SpriteRenderer>().color = Color.cyan;
+        //         break;
+        //     case SoundType.Dwth:
+        //         GetComponent<SpriteRenderer>().color = Color.magenta;
+        //         break;
+        // }
         
         if (isSourceModule)
         {

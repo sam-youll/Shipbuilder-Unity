@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -16,7 +17,16 @@ public class Sequencer : MonoBehaviour
     [Header("Combat Stats")]
     public float speed = 1;
     public float damage = 1;
-    
+    public float izki;
+    public float aubo;
+    public float dwth;
+    public Dictionary<Module.SoundType, float> soundType = new Dictionary<Module.SoundType, float>
+    {
+        { Module.SoundType.None, 0 },
+        { Module.SoundType.Izki, 0 },
+        { Module.SoundType.Aubo, 0 },
+        { Module.SoundType.Dwth, 0 },
+    };
     
     private bool isMouseDragging = false;
     private Vector2 dragOffset;
@@ -51,10 +61,14 @@ public class Sequencer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        soundType[Module.SoundType.Izki] = izki;
+        soundType[Module.SoundType.Aubo] = aubo;
+        soundType[Module.SoundType.Dwth] = dwth;
+        
         for (int i = 0; i < pitchSquares.Length; i++)
         {
             pitchSquareLastPositions[i] = pitchSquares[i].transform.position;
-            int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
+            int interval = (int)pitchSquares[i].transform.position.y + 4; // normalize to 1-7
             pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.LYDIAN, interval);
         }
     }
@@ -124,7 +138,7 @@ public class Sequencer : MonoBehaviour
                     pitchSnapSquares[i].SetActive(false);
                     pitchSquaresDragOffset[i] = Vector2.zero;
                     AudioManager.Instance.PutDownModuleSFX();
-                    int interval = (int)pitchSquares[i].transform.position.y + 3; // normalize to 1-7
+                    int interval = (int)pitchSquares[i].transform.position.y + 4; // normalize to 1-7
                     pitches[i] = Notes.GetPitch(Notes.C, Notes.MODE.IONIAN, interval);
                     if (moduleAttached != null)
                         UpdatePitches();
@@ -272,6 +286,10 @@ public class Sequencer : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Add("apitch4", pitches[3]);
         moduleAttached.GetComponent<Module>().stats.Add("damage", damage);
         moduleAttached.GetComponent<Module>().stats.Add("speed", speed);
+        foreach (var type in soundType)
+        {
+            mod.soundType[type.Key] += type.Value;
+        }
         UpdateSequence();
     }
 
@@ -298,11 +316,18 @@ public class Sequencer : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Remove("note4");
         moduleAttached.GetComponent<Module>().stats.Remove("damage");
         moduleAttached.GetComponent<Module>().stats.Remove("speed");
+        foreach (var type in soundType)
+        {
+            mod.soundType[type.Key] -= type.Value;
+        }
         PatchManager.Instance.UpdateAllPatches();
     }
 
     void UpdateSequence()
     {
+        if (moduleAttached == null)
+            return;
+        
         moduleAttached.GetComponent<Module>().parameters["note1"] = Convert.ToInt32(buttonOnePressed);
         moduleAttached.GetComponent<Module>().parameters["note2"] = Convert.ToInt32(buttonTwoPressed);
         moduleAttached.GetComponent<Module>().parameters["note3"] = Convert.ToInt32(buttonThreePressed);
@@ -313,6 +338,9 @@ public class Sequencer : MonoBehaviour
 
     void UpdatePitches()
     {
+        if (moduleAttached == null)
+            return;
+        
         moduleAttached.GetComponent<Module>().parameters["apitch1"] = pitches[0];
         moduleAttached.GetComponent<Module>().parameters["apitch2"] = pitches[1];
         moduleAttached.GetComponent<Module>().parameters["apitch3"] = pitches[2];

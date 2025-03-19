@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Conveyor : MonoBehaviour
@@ -18,10 +19,23 @@ public class Conveyor : MonoBehaviour
     public float freq = 8;
     public float depth = 20;
     
+    public float izki;
+    public float aubo;
+    public float dwth;
+    public Dictionary<Module.SoundType, float> soundType = new Dictionary<Module.SoundType, float>
+    {
+        { Module.SoundType.None, 0 },
+        { Module.SoundType.Izki, 0 },
+        { Module.SoundType.Aubo, 0 },
+        { Module.SoundType.Dwth, 0 },
+    };
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        soundType[Module.SoundType.Izki] = izki;
+        soundType[Module.SoundType.Aubo] = aubo;
+        soundType[Module.SoundType.Dwth] = dwth;
     }
 
     // Update is called once per frame
@@ -83,8 +97,12 @@ public class Conveyor : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Add("FMsource", source);
         moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", freq);
         moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", depth);
-        moduleAttached.GetComponent<Module>().stats.Add("damage", damage);
-        moduleAttached.GetComponent<Module>().stats.Add("speed", speed);
+        // moduleAttached.GetComponent<Module>().stats.Add("damage", damage);
+        // moduleAttached.GetComponent<Module>().stats.Add("speed", speed);
+        foreach (var type in soundType)
+        {
+            mod.soundType[type.Key] += type.Value;
+        }
         PatchManager.Instance.UpdateAllPatches();
     }
 
@@ -94,9 +112,13 @@ public class Conveyor : MonoBehaviour
         moduleAttached.GetComponent<Module>().parameters.Remove("FMsource");
         moduleAttached.GetComponent<Module>().parameters.Remove("FMfreq");
         moduleAttached.GetComponent<Module>().parameters.Remove("FMdepth");
-        moduleAttached.GetComponent<Module>().stats.Remove("damage");
-        moduleAttached.GetComponent<Module>().stats.Remove("speed");
+        // moduleAttached.GetComponent<Module>().stats.Remove("damage");
+        // moduleAttached.GetComponent<Module>().stats.Remove("speed");
         moduleAttached = null;
+        foreach (var type in soundType)
+        {
+            mod.soundType[type.Key] -= type.Value;
+        }
         PatchManager.Instance.UpdateAllPatches();
     }
     

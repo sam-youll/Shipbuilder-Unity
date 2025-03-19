@@ -3,9 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyPatchContainer", menuName = "Scriptable Objects/EnemyPatchContainer")]
 public class EnemyPatchContainer : ScriptableObject
 {
-    public ScriptableObject weapon1;
-    public ScriptableObject weapon2;
-    public ScriptableObject shield1;
-    public ScriptableObject shield2;
+    [Header("Weapons")]
+    public EnemyWeapon[] weapons = new EnemyWeapon[6];
+    
+    [Header("Shields")]
+    public EnemyShield[] shields = new EnemyShield[6];
 
 }
