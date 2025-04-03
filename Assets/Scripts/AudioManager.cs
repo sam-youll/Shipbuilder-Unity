@@ -64,6 +64,8 @@ public class AudioManager: MonoBehaviour
     public List<EventReference> enemySongs = new List<EventReference>();
     public List<EventReference> enemySongsPlayed = new List<EventReference>();
 
+    public List<GameObject> weapons = new List<GameObject>();
+
     //im sure there's a better way
     private float enemyArpSpeed;
     private float enemyThrusterSpeed;
@@ -137,7 +139,6 @@ public class AudioManager: MonoBehaviour
         //source params
         patchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
         patchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
-        patchInstances[instanceIndex].setParameterByName("wiresplitter", parameters["wiresplitter"]);
         //AM params
         patchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
         patchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
@@ -169,25 +170,12 @@ public class AudioManager: MonoBehaviour
         patchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
         patchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
 
-        //Arp params
-        patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]); //should always be 1, starts metro
-        patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]); //0 for no arp, 1 for arp
-        //arp rhythm params 
-        patchInstances[instanceIndex].setParameterByName("metro", parameters["metro"]); //time between arp events in ms, 51-5000
-        patchInstances[instanceIndex].setParameterByName("note1", parameters["note1"]); //whether the first note in the arp is on/off, 0-1
-        patchInstances[instanceIndex].setParameterByName("note2", parameters["note2"]); //logic from note1 follows for note 2 etc
-        patchInstances[instanceIndex].setParameterByName("note3", parameters["note3"]);
-        patchInstances[instanceIndex].setParameterByName("note4", parameters["note4"]);
-        //arp adsr params
+        //adsr params
+        patchInstances[instanceIndex].setParameterByName("adsr", parameters["adsr"]);
         patchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
         patchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
         patchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
         patchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
-        //Arp pitch params
-        patchInstances[instanceIndex].setParameterByName("apitch1", parameters["apitch1"]); //frequency of the first note in the arpeggiator
-        patchInstances[instanceIndex].setParameterByName("apitch2", parameters["apitch2"]); //logic follows from first note to second
-        patchInstances[instanceIndex].setParameterByName("apitch3", parameters["apitch3"]);
-        patchInstances[instanceIndex].setParameterByName("apitch4", parameters["apitch4"]);
 
 
         //OLD PARAMS - just holding this in case shit breaks at a bad time
@@ -224,7 +212,6 @@ public class AudioManager: MonoBehaviour
         //source params
         enemyPatchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
         enemyPatchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("wiresplitter", parameters["wiresplitter"]);
         //AM params
         enemyPatchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
         enemyPatchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
@@ -256,25 +243,12 @@ public class AudioManager: MonoBehaviour
         enemyPatchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
         enemyPatchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
 
-        //Arp params
-        enemyPatchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]); //should always be 1, starts metro
-        enemyPatchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]); //0 for no arp, 1 for arp
-        //arp rhythm params 
-        enemyPatchInstances[instanceIndex].setParameterByName("metro", parameters["metro"]); //time between arp events in ms, 51-5000
-        enemyPatchInstances[instanceIndex].setParameterByName("note1", parameters["note1"]); //whether the first note in the arp is on/off, 0-1
-        enemyPatchInstances[instanceIndex].setParameterByName("note2", parameters["note2"]); //logic from note1 follows for note 2 etc
-        enemyPatchInstances[instanceIndex].setParameterByName("note3", parameters["note3"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("note4", parameters["note4"]);
-        //arp adsr params
+        //adsr params
+        enemyPatchInstances[instanceIndex].setParameterByName("adsr", parameters["adsr"]);
         enemyPatchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
         enemyPatchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
         enemyPatchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
         enemyPatchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
-        //Arp pitch params
-        enemyPatchInstances[instanceIndex].setParameterByName("apitch1", parameters["apitch1"]); //frequency of the first note in the arpeggiator
-        enemyPatchInstances[instanceIndex].setParameterByName("apitch2", parameters["apitch2"]); //logic follows from first note to second
-        enemyPatchInstances[instanceIndex].setParameterByName("apitch3", parameters["apitch3"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("apitch4", parameters["apitch4"]);
 
         enemyPatchInstances[instanceIndex].start();
     }
@@ -456,6 +430,43 @@ public class AudioManager: MonoBehaviour
         FMOD.Studio.PLAYBACK_STATE state;   
         instance.getPlaybackState(out state);
         return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
+    }
+
+    void PlayNote(GameObject weapon)
+    {
+        var weaponExists = -1;
+
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            if (weapon == weapons[i])
+            {
+                weaponExists = i;
+                break;
+            }
+        }
+
+        if (weaponExists == -1)
+        {
+            weapons.Add(weapon);
+            //add patch instance
+        }
+        else
+        {
+            patchInstances[weaponExists].setParameterByName("adsr", 1);
+            StartCoroutine(TurnNoteOff(weaponExists));
+        }
+    }
+
+    IEnumerator TurnNoteOff(int index)
+    {
+        var doneWaiting = false;
+        while (!doneWaiting)
+        {
+            doneWaiting = true;
+            yield return new WaitForSeconds(1);
+        }
+
+        patchInstances[index].setParameterByName("adsr", 0);
     }
 
 }

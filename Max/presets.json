@@ -3,7 +3,7 @@
     "name": "untitled",
     "preset": {
       "AM": {
-        "value": 0
+        "value": 0.010000000000000002
       },
       "AM2": {
         "value": 0
@@ -17,18 +17,6 @@
       "AM2source": {
         "value": 1
       },
-      "AMFM": {
-        "value": 0
-      },
-      "AMFMdepth": {
-        "value": 10
-      },
-      "AMFMfreq": {
-        "value": 1
-      },
-      "AMFMsource": {
-        "value": 1
-      },
       "AMdepth": {
         "value": 1
       },
@@ -39,7 +27,7 @@
         "value": 1
       },
       "FM": {
-        "value": 1
+        "value": 0
       },
       "FM2": {
         "value": 0
@@ -53,26 +41,14 @@
       "FM2source": {
         "value": 1
       },
-      "FMAM": {
-        "value": 0
-      },
-      "FMAMdepth": {
-        "value": 1
-      },
-      "FMAMfreq": {
-        "value": 1
-      },
-      "FMAMsource": {
-        "value": 1
-      },
       "FMDepth": {
-        "value": 387
+        "value": 10
       },
       "FMfreq": {
-        "value": 3.873000000000001
+        "value": 1
       },
       "FMsource": {
-        "value": 3.2900000000000005
+        "value": 1
       },
       "__sps": {
         "AM[1]": {
@@ -147,24 +123,13 @@
             }
           }
         },
-        "arp[1]": {},
+        "env": {},
         "generator": {
           "__sps": {
             "phasor": {
               "__sps": {
                 "freq": {
                   "__sps": {
-                    "AM": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
                     "FMLFO": {
                       "__sps": {
                         "generator": {
@@ -195,17 +160,6 @@
               "__sps": {
                 "freq": {
                   "__sps": {
-                    "AM": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
                     "FMLFO": {
                       "__sps": {
                         "generator": {
@@ -236,17 +190,6 @@
               "__sps": {
                 "freq": {
                   "__sps": {
-                    "AM": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
                     "FMLFO": {
                       "__sps": {
                         "generator": {
@@ -274,59 +217,25 @@
               }
             }
           }
-        },
-        "wiresplitter": {}
+        }
       },
-      "apitch1": {
-        "value": 440
-      },
-      "apitch2": {
-        "value": 505
-      },
-      "apitch3": {
-        "value": 601
-      },
-      "apitch4": {
-        "value": 880
-      },
-      "arp": {
-        "value": 1
-      },
-      "arpstart": {
+      "adsr": {
         "value": 1
       },
       "attack": {
-        "value": 136
+        "value": 5
       },
       "decay": {
-        "value": 72
-      },
-      "metro": {
-        "value": 132
-      },
-      "note1": {
-        "value": 1
-      },
-      "note2": {
-        "value": 0
-      },
-      "note3": {
-        "value": 1
-      },
-      "note4": {
-        "value": 1
+        "value": 127
       },
       "pitch": {
-        "value": 429
+        "value": 741
       },
       "release": {
-        "value": 1114
+        "value": 532
       },
       "source": {
-        "value": 2
-      },
-      "splitter": {
-        "value": 0
+        "value": 2.6
       },
       "sustain": {
         "value": 0
