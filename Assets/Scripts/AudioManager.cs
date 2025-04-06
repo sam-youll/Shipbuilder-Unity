@@ -465,7 +465,7 @@ public class AudioManager: MonoBehaviour
                 weaponsEventInstances[weaponIndex].start();
             }
 
-            patchInstances[weaponIndex].setParameterByName("adsr", 1);
+            weaponsEventInstances[weaponIndex].setParameterByName("adsr", 1);
 
             started = true;
             yield return new WaitForSeconds(noteInfo["length"]);
@@ -513,6 +513,7 @@ public class AudioManager: MonoBehaviour
             { "AMFMfreq", 1 },
             { "AMFMdepth", 100 },
             //arp adsr params
+            { "adsr", 0 },
             { "attack", 100 },
             { "decay", 70 },
             { "sustain", 0 },
