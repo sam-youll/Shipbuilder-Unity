@@ -194,7 +194,7 @@ public class GameplayTutorial : MonoBehaviour
             if (envelopeModule2.GetComponent<Module>().previousModule != null && outputModule.GetComponent<OutputRack>().previousModsWeapons[0] != null)
             {
                 startCombatButton.SetActive(true);
-                dialogueText.text = "Okay! Let's see how it works. Press Start Combat when you're ready.";
+                dialogueText.text = "Okay! Let's see how it works. Press Start Combat when you're ready. Feel free to move on when you feel satisfied with your performance!";
                 stepComplete = true;
             }
         }

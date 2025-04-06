@@ -83,14 +83,12 @@ public static class Notes
         {
             case MODE.IONIAN:
                 return IONIAN[interval]*root;
-                break;
             case MODE.DORIAN:
                 break;
             case MODE.PHRYGIAN:
                 break;
             case MODE.LYDIAN:
                 return LYDIAN[interval]*root;
-                break;
             case MODE.MIXOLYDIAN:
                 break;
             case MODE.AEOLIAN:

@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class RestartButton2D : Button2D
+public class LoadSceneButton2D : Button2D
 {
+    public bool loadThisScene = false;
+    public string sceneToLoad;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,6 +22,11 @@ public class RestartButton2D : Button2D
         base.OnClick();
         Debug.Log("RestartButton2D.OnClick");
         AudioManager.Instance.ResetModuleInstances();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (loadThisScene)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        else
+        {
+            SceneManager.LoadScene(sceneToLoad);
+        }
     }
 }

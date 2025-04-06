@@ -64,7 +64,8 @@ public class AudioManager: MonoBehaviour
     public List<EventReference> enemySongs = new List<EventReference>();
     public List<EventReference> enemySongsPlayed = new List<EventReference>();
 
-    public List<GameObject> weapons = new List<GameObject>();
+    private List<GameObject> weapons = new List<GameObject>();
+    private List<EventInstance> weaponsEventInstances = new List<EventInstance>();
 
     //im sure there's a better way
     private float enemyArpSpeed;
@@ -432,41 +433,141 @@ public class AudioManager: MonoBehaviour
         return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
     }
 
-    void PlayNote(GameObject weapon)
+    public void PlayNote(GameObject weapon, Dictionary<string, float> noteInfo)
     {
-        var weaponExists = -1;
+        StartCoroutine(PlayNoteCoroutine(weapon, noteInfo));
+    }
 
-        for (int i = 0; i < weapons.Count; i++)
+    IEnumerator PlayNoteCoroutine(GameObject weapon, Dictionary<string, float> noteInfo)
+    {
+        var started = false;
+        var weaponIndex = -1;
+        
+        if (!started)
         {
-            if (weapon == weapons[i])
+            // compare weapon against all existing weapons
+            for (int i = 0; i < weapons.Count; i++)
             {
-                weaponExists = i;
-                break;
+                if (weapon == weapons[i])
+                {
+                    weaponIndex = i;
+                    break;
+                }
             }
-        }
 
-        if (weaponExists == -1)
-        {
-            weapons.Add(weapon);
-            //add patch instance
+            // if weapon doesn't match any existing weapons, make new weapon
+            if (weaponIndex == -1)
+            {
+                weapons.Add(weapon);
+                weaponsEventInstances.Add(RuntimeManager.CreateInstance(moduleRef));
+                weaponIndex = weapons.Count - 1;
+                SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], DefaultNoteInfo());
+                weaponsEventInstances[weaponIndex].start();
+            }
+
+            patchInstances[weaponIndex].setParameterByName("adsr", 1);
+
+            started = true;
+            yield return new WaitForSeconds(noteInfo["length"]);
         }
-        else
-        {
-            patchInstances[weaponExists].setParameterByName("adsr", 1);
-            StartCoroutine(TurnNoteOff(weaponExists));
-        }
+        Debug.Log(weaponIndex);
+        weaponsEventInstances[weaponIndex].setParameterByName("adsr", 0);
     }
 
-    IEnumerator TurnNoteOff(int index)
+    Dictionary<string, float> DefaultNoteInfo()
     {
-        var doneWaiting = false;
-        while (!doneWaiting)
+        return new Dictionary<string, float>
         {
-            doneWaiting = true;
-            yield return new WaitForSeconds(1);
-        }
+            { "shipstate", 0 },
+            //source params
+            { "pitch", 440 },
+            { "source", 2 },
+            //AM params
+            { "AM", 0 },
+            { "AMsource", 1 },
+            { "AMfreq", 1 },
+            { "AMdepth", 1 },
+            //FM params
+            { "FM", 0 },
+            { "FMsource", 1 },
+            { "FMfreq", 1 },
+            { "FMdepth", 100 },
+            //AM2 params
+            { "AM2", 0 },
+            { "AM2source", 1 },
+            { "AM2freq", 1 },
+            { "AM2depth", 1 },
+            //FM2 params
+            { "FM2", 0 },
+            { "FM2source", 1 },
+            { "FM2freq", 1 },
+            { "FM2depth", 100 },
+            //AM on FM params 
+            { "FMAM", 0 },
+            { "FMAMsource", 1 },
+            { "FMAMfreq", 1 },
+            { "FMAMdepth", 1 },
+            //FM on AM params
+            { "AMFM", 0 },
+            { "AMFMsource", 1 },
+            { "AMFMfreq", 1 },
+            { "AMFMdepth", 100 },
+            //arp adsr params
+            { "attack", 100 },
+            { "decay", 70 },
+            { "sustain", 0 },
+            { "release", 1000 },
+            // length should be the sum of adsr params divided by 1000
+            { "length", 1.17f },
+            //arp pitch params
+            { "apitch1", 440 },
+            { "apitch2", 554.37f },
+            { "apitch3", 659.26f },
+            { "apitch4", 880 }
 
-        patchInstances[index].setParameterByName("adsr", 0);
+        };
     }
 
+    void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)
+    {
+        inst.setParameterByName("pitch", parameters["pitch"]);
+        inst.setParameterByName("source", parameters["source"]);
+        //AM params
+        inst.setParameterByName("AM", parameters["AM"]);
+        inst.setParameterByName("AMsource", parameters["AMsource"]);
+        inst.setParameterByName("AMfreq", parameters["AMfreq"]);
+        inst.setParameterByName("AMdepth", parameters["AMdepth"]);
+        //FM params
+        inst.setParameterByName("FM", parameters["FM"]);
+        inst.setParameterByName("FMsource", parameters["FMsource"]);
+        inst.setParameterByName("FMfreq", parameters["FMfreq"]);
+        inst.setParameterByName("FMdepth", parameters["FMdepth"]);
+        //AM on AM params
+        inst.setParameterByName("AM2", parameters["AM2"]);
+        inst.setParameterByName("AM2source", parameters["AM2source"]);
+        inst.setParameterByName("AM2freq", parameters["AM2freq"]);
+        inst.setParameterByName("AM2depth", parameters["AM2depth"]);
+        //FM on FM params - broken rn, wasn't before
+        inst.setParameterByName("FM2", parameters["FM2"]);
+        inst.setParameterByName("FM2source", parameters["FM2source"]);
+        inst.setParameterByName("FM2freq", parameters["FM2freq"]);
+        inst.setParameterByName("FM2depth", parameters["FM2depth"]);
+        //AM on FM params - this doesn't work right now
+        inst.setParameterByName("FMAM", parameters["FMAM"]);
+        inst.setParameterByName("FMAMsource", parameters["FMAMsource"]);
+        inst.setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
+        inst.setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
+        //FM on AM params - this doesn't work right now
+        inst.setParameterByName("AMFM", parameters["AMFM"]);
+        inst.setParameterByName("AMFMsource", parameters["AMFMsource"]);
+        inst.setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
+        inst.setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
+
+        //adsr params
+        inst.setParameterByName("adsr", parameters["adsr"]);
+        inst.setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
+        inst.setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
+        inst.setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
+        inst.setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+    }
 }

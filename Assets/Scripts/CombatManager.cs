@@ -19,55 +19,17 @@ public class CombatManager : MonoBehaviour
             Instance = this;
         }
     }
-    //
-    // [Header("Primary Stats")]
-    // //primary combat stats
-    // public float attack;
-    // public float defense;
-    // public float evasion;
-    // public float accuracy;
-    //
-    // [Header("Secondary Stats")]
-    // //secondary combat stats
-    // //private float pitchType;
-    // public float attackSource;
-    // public float defenseSource;
-    // public float evasionSource;
-    // public float accuracySource;
-    // private float ringmod;
-    //
-    //
-    //
-    //
-    // [Header("Multipliers")]
-    // //multipliers
-    // private float attackTypeMultiplier;
-    // private float defenseTypeMultiplier;
-    // private float evasionTypeMultiplier;
-    // private float accuracyTypeMultiplier;
-    //
-    // private float attackTimbreMatch;
-    // private float defenseTimbreMatch;
-    // private float evasionTimbreMatch;
-    // private float accuracyTimbreMatch;
-    //
-    // [Header("Multiplier Variables")]
-    // public float strongMultiplier;
-    // public float weakMultiplier;
-    // public float matchMultiplier;
-    // public float nearMultiplier;
-    // public float farMultiplier;
 
-
-    //pitch type utility
-    public enum pitchTypes
+    public enum State
     {
-        high,
-        med,
-        low
-    };
+        outOfCombat,
+        inCombat,
+        endScreen
+    }
 
-    private bool inCombat = false;
+    private State state = State.outOfCombat;
+    public GameObject endScreen;
+    private float endScreenTimer = 3f;
     public float tickLength = 2;
     private float timer;
     private int currentTick = 0;
@@ -130,7 +92,7 @@ public class CombatManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inCombat)
+        if (state == State.inCombat)
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
@@ -144,7 +106,7 @@ public class CombatManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (inCombat)
+        if (state == State.inCombat)
         {
             if (Camera.main.transform.position != new Vector3(18, 0, -10))
             {
@@ -153,10 +115,30 @@ public class CombatManager : MonoBehaviour
 
             if (playerHealthBar.value <= 0 || enemyHealthBar.value <= 0)
             {
-                inCombat = false;
+                state = State.endScreen;
+                endScreen.SetActive(true);
+                endScreenTimer = 3f;
+
+                if (playerHealthBar.value <= 0)
+                {
+                    endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
+                }
+                else if (enemyHealthBar.value <= 0)
+                {
+                    endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU WIN";
+                }
             }
         }
-        else
+        else if (state == State.endScreen)
+        {
+            endScreenTimer -= Time.deltaTime;
+            if (endScreenTimer <= 0)
+            {
+                endScreen.SetActive(false);
+                state = State.outOfCombat;
+            }
+        }
+        else if (state == State.outOfCombat)
         {
             if (Camera.main.transform.position != new Vector3(0, 0, -10))
             {
@@ -167,11 +149,13 @@ public class CombatManager : MonoBehaviour
 
     public void StartCombat()
     {
+        endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
+        endScreen.SetActive(false);
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;
         
         timer = tickLength;
-        inCombat = true;
+        state = State.inCombat;
 
         AudioManager.Instance.ResetPlayedList();
         AudioManager.Instance.StopEnemySong();
