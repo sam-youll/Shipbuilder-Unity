@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{1991bc75-c259-46f9-b56d-6853b9a96962}">
+		<property name="name">
+			<value>bpfreq</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{82646bbb-f502-4b7c-9aa7-059ccc10f7b5}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{82646bbb-f502-4b7c-9aa7-059ccc10f7b5}">
+		<property name="maximum">
+			<value>20000</value>
+		</property>
+		<property name="initialValue">
+			<value>440</value>
+		</property>
+	</object>
+</objects>

@@ -2,240 +2,26 @@
   {
     "name": "untitled",
     "preset": {
-      "AM": {
-        "value": 0.010000000000000002
-      },
-      "AM2": {
-        "value": 0
-      },
-      "AM2depth": {
-        "value": 1
-      },
-      "AM2freq": {
-        "value": 1
-      },
-      "AM2source": {
-        "value": 1
-      },
-      "AMdepth": {
-        "value": 1
-      },
-      "AMfreq": {
-        "value": 1
-      },
-      "AMsource": {
-        "value": 1
-      },
-      "FM": {
-        "value": 0
-      },
-      "FM2": {
-        "value": 0
-      },
-      "FM2Depth": {
-        "value": 10
-      },
-      "FM2freq": {
-        "value": 1
-      },
-      "FM2source": {
-        "value": 1
-      },
-      "FMDepth": {
-        "value": 10
-      },
-      "FMfreq": {
-        "value": 1
-      },
-      "FMsource": {
-        "value": 1
-      },
-      "__sps": {
-        "AM[1]": {
-          "__sps": {
-            "generator": {
-              "__sps": {
-                "phasor": {},
-                "sin": {},
-                "triangle": {}
-              }
-            },
-            "generator[1]": {
-              "__sps": {
-                "phasor": {
-                  "__sps": {
-                    "freq": {
-                      "__sps": {
-                        "FMLFO": {
-                          "__sps": {
-                            "generator": {
-                              "__sps": {
-                                "phasor": {},
-                                "sin": {},
-                                "triangle": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "sin": {
-                  "__sps": {
-                    "freq": {
-                      "__sps": {
-                        "FMLFO": {
-                          "__sps": {
-                            "generator": {
-                              "__sps": {
-                                "phasor": {},
-                                "sin": {},
-                                "triangle": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "triangle": {
-                  "__sps": {
-                    "freq": {
-                      "__sps": {
-                        "FMLFO": {
-                          "__sps": {
-                            "generator": {
-                              "__sps": {
-                                "phasor": {},
-                                "sin": {},
-                                "triangle": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "env": {},
-        "generator": {
-          "__sps": {
-            "phasor": {
-              "__sps": {
-                "freq": {
-                  "__sps": {
-                    "FMLFO": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
-                    "FMLFO[1]": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "sin": {
-              "__sps": {
-                "freq": {
-                  "__sps": {
-                    "FMLFO": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
-                    "FMLFO[1]": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "triangle": {
-              "__sps": {
-                "freq": {
-                  "__sps": {
-                    "FMLFO": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
-                    "FMLFO[1]": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "adsr": {
         "value": 1
       },
       "attack": {
-        "value": 5
+        "value": 11.100000000000001
+      },
+      "bpfreq": {
+        "value": 85
       },
       "decay": {
-        "value": 127
+        "value": 56
       },
-      "pitch": {
-        "value": 741
+      "gainctrl": {
+        "value": 141.6
       },
       "release": {
-        "value": 532
+        "value": 17
       },
-      "source": {
-        "value": 2.6
+      "reson": {
+        "value": 100
       },
       "sustain": {
         "value": 0
