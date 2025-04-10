@@ -32,7 +32,7 @@ public class Weapon : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Conductor.Instance.onBeat.AddListener(Fire);
     }
 
     // Update is called once per frame
@@ -56,9 +56,9 @@ public class Weapon : MonoBehaviour
         }
         if (charge >= 1)
         {
-            charge = 0;
             Fire();
         }
+        // charge = Mathf.Clamp(charge, 0, 1);
 
         statBar.value = charge;
 
@@ -79,6 +79,13 @@ public class Weapon : MonoBehaviour
 
     void Fire()
     {
+        if (charge < 1)
+        {
+            return;
+        }
+
+        charge = 0;
+        
         // create bullet
         var newBullet = Instantiate(bulletPrefab, transform.GetChild(0).transform.position, Quaternion.identity);
         newBullet.GetComponent<Bullet>().damage = damage;

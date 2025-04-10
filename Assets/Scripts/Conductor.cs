@@ -34,9 +34,9 @@ public class Conductor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        beat = (int)(time % tempo);
-        beat = (int)Mathf.Repeat(beat, measureLength);
+        time += Time.deltaTime * tempo / 60;
+        // time = Mathf.Repeat(beat, measureLength*tempo/60);
+        beat = (int)(time % measureLength);
 
         if (beat != lastBeat)
         {
