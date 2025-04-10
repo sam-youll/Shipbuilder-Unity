@@ -461,6 +461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 905353949}
   - component: {fileID: 905353948}
+  - component: {fileID: 905353950}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -493,42 +494,42 @@ MonoBehaviour:
       Data2: 1338095646
       Data3: 400696255
       Data4: -1681417737
-    Path: event:/amb_space
+    Path: event:/AMB/amb_space
   sfx_shipRef:
     Guid:
       Data1: -2114633682
       Data2: 1249271195
       Data3: 1335071910
       Data4: 1278638878
-    Path: event:/sfx_ship
+    Path: event:/SFX/sfx_ship
   sfx_paperRef:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1852902103
+      Data2: 1154708078
+      Data3: -1146371655
+      Data4: 1901945992
+    Path: event:/SFX/sfx_paper
   ui_pickupRef:
     Guid:
       Data1: -1047205009
       Data2: 1145836941
       Data3: -2076556401
       Data4: -2107987916
-    Path: event:/ui_pickup
+    Path: event:/UI/ui_pickup
   ui_putdownRef:
     Guid:
       Data1: 1097854466
       Data2: 1202042869
       Data3: 1282338962
       Data4: 608772177
-    Path: event:/ui_putdown
+    Path: event:/UI/ui_putdown
   ui_dialogueRef:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1413133552
+      Data2: 1155839557
+      Data3: -361738875
+      Data4: -921562907
+    Path: event:/UI/ui_dialogue
   enemySongRef:
     Guid:
       Data1: 0
@@ -542,21 +543,21 @@ MonoBehaviour:
       Data2: 1118738354
       Data3: 1028130183
       Data4: 1852101076
-    Path: event:/TestEnemy1
+    Path: event:/TEST ENEMIES/TestEnemy1
   test_enemySong2Ref:
     Guid:
       Data1: -1564846477
       Data2: 1111356597
       Data3: -1047017543
       Data4: -1997057339
-    Path: event:/TestEnemy2
+    Path: event:/TEST ENEMIES/TestEnemy2
   test_enemySong3Ref:
     Guid:
       Data1: -1570418411
       Data2: 1259088529
       Data3: -987667544
       Data4: -1302100234
-    Path: event:/TestEnemy3
+    Path: event:/TEST ENEMIES/TestEnemy3
   enemySongs: []
   enemySongsPlayed: []
 --- !u!4 &905353949
@@ -574,6 +575,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &905353950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905353947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cde123efa2d23d478b91039652f6795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 0
+  tempo: 120
+  beat: 0
+  measureLength: 4
 --- !u!1001 &1120947352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -692,6 +709,50 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1109587311127279805, guid: 105b8869ac6471742aeace985233441e, type: 3}
   m_PrefabInstance: {fileID: 1351164323}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1338962615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1338962617}
+  - component: {fileID: 1338962616}
+  m_Layer: 0
+  m_Name: Player Reactor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1338962616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338962615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 341143e1a09efe147942f3abb746d318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1338962617
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338962615}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.016110484, y: -0.9043961, z: -3.4972749}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1351164323
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -971,3 +1032,4 @@ SceneRoots:
   - {fileID: 1120947352}
   - {fileID: 1351164323}
   - {fileID: 905353949}
+  - {fileID: 1338962617}
