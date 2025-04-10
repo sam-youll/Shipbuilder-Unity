@@ -21,15 +21,17 @@ public class StatBar : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startPos = transform.position;
+        startPos = transform.localPosition;
         startScale = transform.localScale;
     }
 
     // Update is called once per frame
     void Update()
     {
+        value = Mathf.Clamp(value, 0, 1);
+        
         var myScale = transform.localScale;
-        var myPos = transform.position;
+        var myPos = transform.localPosition;
         float offset;
         
         switch (startingSide)
@@ -57,7 +59,7 @@ public class StatBar : MonoBehaviour
         }
         
         transform.localScale = myScale;
-        transform.position = myPos;
+        transform.localPosition = myPos;
     }
 
     private void FixedUpdate()

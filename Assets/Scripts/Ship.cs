@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Ship : MonoBehaviour
 {
-    public GameObject healthBar;
     public float maxHealth = 100f;
-    private float health;
+    public float health;
     public List<GameObject> weapons;
     private bool allWeaponsWarmed = false;
     public GameObject shield;
@@ -55,15 +54,22 @@ public class Ship : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
-        healthBar.GetComponent<StatBar>().value = health / maxHealth;
         var playerHitNumber = Instantiate(floatingDamageNumberPrefab, transform.position, Quaternion.identity);
+        var pos = transform.position;
+        pos.z -= .1f;
+        playerHitNumber.transform.position = pos;
         playerHitNumber.GetComponent<TextMeshPro>().text = "-" + damage;
+
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
     
     public void ApplyStun(float duration)
     {
         // apply stun to a random weapon
-        weapons[Random.Range(0, weapons.Count - 1)].GetComponent<Weapon>().stunTimer = duration;
+        weapons[Random.Range(0, weapons.Count)].GetComponent<Weapon>().stunTimer = duration;
     }
 
     public void ApplySlow(float strength)

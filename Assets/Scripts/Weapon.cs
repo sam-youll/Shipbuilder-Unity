@@ -60,7 +60,7 @@ public class Weapon : MonoBehaviour
             Fire();
         }
 
-        // statBar.value = charge;
+        statBar.value = charge;
 
 
         if (stunTimer > 0)

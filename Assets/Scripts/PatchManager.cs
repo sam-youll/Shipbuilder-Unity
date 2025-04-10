@@ -224,6 +224,6 @@ public class PatchManager : MonoBehaviour
             }
         }
         AudioManager.Instance.SetParametersByDict(i, paramDict);
-        CombatManager.Instance.SetStatsByDict(i, OutputRack.Instance.ModuleOutputType(patch[0].GetComponent<Module>()), statDict);
+        // CombatManager.Instance.SetStatsByDict(i, OutputRack.Instance.ModuleOutputType(patch[0].GetComponent<Module>()), statDict);
     }
 }
