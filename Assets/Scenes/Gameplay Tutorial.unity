@@ -757,7 +757,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0.1
-  direction: 3
+  lerpRate: 0.1
+  startingSide: 0
 --- !u!212 &53892773
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1758,7 +1759,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0.1
-  direction: 0
+  lerpRate: 0.1
+  startingSide: 0
 --- !u!212 &126245869
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2593,42 +2595,42 @@ MonoBehaviour:
       Data2: 1338095646
       Data3: 400696255
       Data4: -1681417737
-    Path: event:/amb_space
+    Path: event:/AMB/amb_space
   sfx_shipRef:
     Guid:
       Data1: -2114633682
       Data2: 1249271195
       Data3: 1335071910
       Data4: 1278638878
-    Path: event:/sfx_ship
+    Path: event:/SFX/sfx_ship
   sfx_paperRef:
     Guid:
       Data1: 1852902103
       Data2: 1154708078
       Data3: -1146371655
       Data4: 1901945992
-    Path: event:/sfx_paper
+    Path: event:/SFX/sfx_paper
   ui_pickupRef:
     Guid:
       Data1: -1047205009
       Data2: 1145836941
       Data3: -2076556401
       Data4: -2107987916
-    Path: event:/ui_pickup
+    Path: event:/UI/ui_pickup
   ui_putdownRef:
     Guid:
       Data1: 1097854466
       Data2: 1202042869
       Data3: 1282338962
       Data4: 608772177
-    Path: event:/ui_putdown
+    Path: event:/UI/ui_putdown
   ui_dialogueRef:
     Guid:
       Data1: 1413133552
       Data2: 1155839557
       Data3: -361738875
       Data4: -921562907
-    Path: event:/ui_dialogue
+    Path: event:/UI/ui_dialogue
   enemySongRef:
     Guid:
       Data1: 0
@@ -2642,21 +2644,21 @@ MonoBehaviour:
       Data2: 1118738354
       Data3: 1028130183
       Data4: 1852101076
-    Path: event:/TestEnemy1
+    Path: event:/TEST ENEMIES/TestEnemy1
   test_enemySong2Ref:
     Guid:
       Data1: -1564846477
       Data2: 1111356597
       Data3: -1047017543
       Data4: -1997057339
-    Path: event:/TestEnemy2
+    Path: event:/TEST ENEMIES/TestEnemy2
   test_enemySong3Ref:
     Guid:
       Data1: -1570418411
       Data2: 1259088529
       Data3: -987667544
       Data4: -1302100234
-    Path: event:/TestEnemy3
+    Path: event:/TEST ENEMIES/TestEnemy3
   enemySongs: []
   enemySongsPlayed: []
 --- !u!4 &250102138
@@ -3063,11 +3065,6 @@ SpriteRenderer:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3232918526076758534, guid: b3babcb7b4bd0ea40b0cd7448c14d7fe, type: 3}
   m_PrefabInstance: {fileID: 1231346492}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &418248491 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1944762851252729805, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
-  m_PrefabInstance: {fileID: 2674695832029865692}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &427360115
 GameObject:
@@ -3533,7 +3530,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0.1
-  direction: 0
+  lerpRate: 0.1
+  startingSide: 0
 --- !u!212 &456396808
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6199,8 +6197,8 @@ MonoBehaviour:
   tickLength: 0.5
   playerHealthBar: {fileID: 1153791355}
   enemyHealthBar: {fileID: 1305737094}
-  playerShip: {fileID: 418248491}
-  enemyShip: {fileID: 1925523541}
+  playerShip: {fileID: 0}
+  enemyShip: {fileID: 0}
   floatingDamageNumberPrefab: {fileID: 1571763405881929973, guid: 24273c65fbb646d4baf9016728f921d7, type: 3}
   playerHealth: 0
   playerEvasion: 0
@@ -9374,7 +9372,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0.1
-  direction: 0
+  lerpRate: 0.1
+  startingSide: 0
 --- !u!212 &1554781025
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10426,11 +10425,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1925523541 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6217032009508972700, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
-  m_PrefabInstance: {fileID: 2674695832029865692}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1952976820
 GameObject:
   m_ObjectHideFlags: 0
@@ -11644,6 +11638,18 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 6401166222981128451, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4521910808937308892, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2633301917581694986, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 3960730569371282883, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2197143312886557047, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
