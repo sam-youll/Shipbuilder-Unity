@@ -9,7 +9,8 @@ public class Ship : MonoBehaviour
     private float health;
     public List<GameObject> weapons;
     private bool allWeaponsWarmed = false;
-    
+    public GameObject shield;
+    public bool cloaked = false;
     public GameObject floatingDamageNumberPrefab;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -49,7 +50,6 @@ public class Ship : MonoBehaviour
                 }
             }
         }
-        
     }
 
     public void TakeDamage(float damage)
@@ -57,6 +57,21 @@ public class Ship : MonoBehaviour
         health -= damage;
         healthBar.GetComponent<StatBar>().value = health / maxHealth;
         var playerHitNumber = Instantiate(floatingDamageNumberPrefab, transform.position, Quaternion.identity);
-        playerHitNumber.GetComponent<TextMeshPro>().text = "-" + damage.ToString();
+        playerHitNumber.GetComponent<TextMeshPro>().text = "-" + damage;
+    }
+    
+    public void ApplyStun(float duration)
+    {
+        // apply stun to a random weapon
+        weapons[Random.Range(0, weapons.Count - 1)].GetComponent<Weapon>().stunTimer = duration;
+    }
+
+    public void ApplySlow(float strength)
+    {
+        allWeaponsWarmed = false;
+        foreach (var weapon in weapons)
+        {
+            weapon.GetComponent<Weapon>().warmup = .5f + .5f/strength; // TODO: Change this formula, it sucks
+        }
     }
 }

@@ -21,7 +21,7 @@ public class StatBar : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startPos = transform.localPosition;
+        startPos = transform.position;
         startScale = transform.localScale;
     }
 
@@ -29,7 +29,7 @@ public class StatBar : MonoBehaviour
     void Update()
     {
         var myScale = transform.localScale;
-        var myPos = transform.localPosition;
+        var myPos = transform.position;
         float offset;
         
         switch (startingSide)
@@ -57,7 +57,7 @@ public class StatBar : MonoBehaviour
         }
         
         transform.localScale = myScale;
-        transform.localPosition = myPos;
+        transform.position = myPos;
     }
 
     private void FixedUpdate()

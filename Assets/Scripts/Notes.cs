@@ -1,4 +1,5 @@
-using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public static class Notes
 {
@@ -98,5 +99,12 @@ public static class Notes
         }
 
         return root;
+    }
+
+    public static float RandomNoteInScale(float root, MODE mode)
+    {
+        var step = Random.Range((int)0, (int)8);
+        // Debug.Log(step);
+        return GetPitch(root, mode, step);
     }
 }

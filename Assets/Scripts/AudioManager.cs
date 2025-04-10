@@ -66,6 +66,7 @@ public class AudioManager: MonoBehaviour
 
     private List<GameObject> weapons = new List<GameObject>();
     private List<EventInstance> weaponsEventInstances = new List<EventInstance>();
+    private List<Coroutine> weaponsCoroutines = new List<Coroutine>();
 
     //im sure there's a better way
     private float enemyArpSpeed;
@@ -465,6 +466,7 @@ public class AudioManager: MonoBehaviour
                 weaponsEventInstances[weaponIndex].start();
             }
 
+            SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], noteInfo);
             weaponsEventInstances[weaponIndex].setParameterByName("adsr", 1);
 
             started = true;
@@ -531,44 +533,48 @@ public class AudioManager: MonoBehaviour
 
     void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)
     {
-        inst.setParameterByName("pitch", parameters["pitch"]);
-        inst.setParameterByName("source", parameters["source"]);
-        //AM params
-        inst.setParameterByName("AM", parameters["AM"]);
-        inst.setParameterByName("AMsource", parameters["AMsource"]);
-        inst.setParameterByName("AMfreq", parameters["AMfreq"]);
-        inst.setParameterByName("AMdepth", parameters["AMdepth"]);
-        //FM params
-        inst.setParameterByName("FM", parameters["FM"]);
-        inst.setParameterByName("FMsource", parameters["FMsource"]);
-        inst.setParameterByName("FMfreq", parameters["FMfreq"]);
-        inst.setParameterByName("FMdepth", parameters["FMdepth"]);
-        //AM on AM params
-        inst.setParameterByName("AM2", parameters["AM2"]);
-        inst.setParameterByName("AM2source", parameters["AM2source"]);
-        inst.setParameterByName("AM2freq", parameters["AM2freq"]);
-        inst.setParameterByName("AM2depth", parameters["AM2depth"]);
-        //FM on FM params - broken rn, wasn't before
-        inst.setParameterByName("FM2", parameters["FM2"]);
-        inst.setParameterByName("FM2source", parameters["FM2source"]);
-        inst.setParameterByName("FM2freq", parameters["FM2freq"]);
-        inst.setParameterByName("FM2depth", parameters["FM2depth"]);
-        //AM on FM params - this doesn't work right now
-        inst.setParameterByName("FMAM", parameters["FMAM"]);
-        inst.setParameterByName("FMAMsource", parameters["FMAMsource"]);
-        inst.setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
-        inst.setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
-        //FM on AM params - this doesn't work right now
-        inst.setParameterByName("AMFM", parameters["AMFM"]);
-        inst.setParameterByName("AMFMsource", parameters["AMFMsource"]);
-        inst.setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
-        inst.setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
-
-        //adsr params
-        inst.setParameterByName("adsr", parameters["adsr"]);
-        inst.setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
-        inst.setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
-        inst.setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
-        inst.setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+        foreach (var parameter in parameters)
+        {
+            inst.setParameterByName(parameter.Key, parameter.Value);
+        }
+        // inst.setParameterByName("pitch", parameters["pitch"]);
+        // inst.setParameterByName("source", parameters["source"]);
+        // //AM params
+        // inst.setParameterByName("AM", parameters["AM"]);
+        // inst.setParameterByName("AMsource", parameters["AMsource"]);
+        // inst.setParameterByName("AMfreq", parameters["AMfreq"]);
+        // inst.setParameterByName("AMdepth", parameters["AMdepth"]);
+        // //FM params
+        // inst.setParameterByName("FM", parameters["FM"]);
+        // inst.setParameterByName("FMsource", parameters["FMsource"]);
+        // inst.setParameterByName("FMfreq", parameters["FMfreq"]);
+        // inst.setParameterByName("FMdepth", parameters["FMdepth"]);
+        // //AM on AM params
+        // inst.setParameterByName("AM2", parameters["AM2"]);
+        // inst.setParameterByName("AM2source", parameters["AM2source"]);
+        // inst.setParameterByName("AM2freq", parameters["AM2freq"]);
+        // inst.setParameterByName("AM2depth", parameters["AM2depth"]);
+        // //FM on FM params - broken rn, wasn't before
+        // inst.setParameterByName("FM2", parameters["FM2"]);
+        // inst.setParameterByName("FM2source", parameters["FM2source"]);
+        // inst.setParameterByName("FM2freq", parameters["FM2freq"]);
+        // inst.setParameterByName("FM2depth", parameters["FM2depth"]);
+        // //AM on FM params - this doesn't work right now
+        // inst.setParameterByName("FMAM", parameters["FMAM"]);
+        // inst.setParameterByName("FMAMsource", parameters["FMAMsource"]);
+        // inst.setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
+        // inst.setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
+        // //FM on AM params - this doesn't work right now
+        // inst.setParameterByName("AMFM", parameters["AMFM"]);
+        // inst.setParameterByName("AMFMsource", parameters["AMFMsource"]);
+        // inst.setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
+        // inst.setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
+        //
+        // //adsr params
+        // inst.setParameterByName("adsr", parameters["adsr"]);
+        // inst.setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
+        // inst.setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
+        // inst.setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
+        // inst.setParameterByName("release", parameters["release"]); //release in ms, 0-2000
     }
 }
