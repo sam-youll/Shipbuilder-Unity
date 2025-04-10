@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Conductor : MonoBehaviour
 {
@@ -19,7 +20,10 @@ public class Conductor : MonoBehaviour
     public float time;
     public float tempo;
     public int beat;
+    private int lastBeat;
     public int measureLength;
+    
+    public UnityEvent onBeat;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,6 +37,11 @@ public class Conductor : MonoBehaviour
         time += Time.deltaTime;
         beat = (int)(time % tempo);
         beat = (int)Mathf.Repeat(beat, measureLength);
-        
+
+        if (beat != lastBeat)
+        {
+            onBeat.Invoke();
+        }
+        lastBeat = beat;
     }
 }
