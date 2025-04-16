@@ -39,6 +39,7 @@ public class ReactorSounds : MonoBehaviour
 
         Conductor.Instance.onBeat.AddListener(PlayerPerc);
         Conductor.Instance.onBeat.AddListener(EnemyPerc);
+        Conductor.Instance.onBeat.AddListener(PlayerBass);
     }
 
     // Update is called once per frame
@@ -139,7 +140,32 @@ public class ReactorSounds : MonoBehaviour
 
     void PlayerBass()
     {
+        var shouldPlay = false;
+        var pitchDice = 0;
+        var bassPitch = 440f;
 
+        if (Conductor.Instance.beat == 0 || Conductor.Instance.beat == 2)
+        {
+            shouldPlay = true;
+        }
+
+        if (shouldPlay)
+        {
+            UnityEngine.Debug.Log("BassPlaying");
+            pitchDice = Random.Range(0, 100);
+            if (pitchDice<50)
+            {
+                bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, 0))/8;
+                playerBass.setParameterByName("basspitch", bassPitch);
+
+            } else
+            {
+                bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, 4))/8;
+                playerBass.setParameterByName("basspitch", bassPitch);
+            }
+
+            StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
+        }
     }
 
     IEnumerator PlayNoteCoroutine(EventInstance instrument, float noteLength)
