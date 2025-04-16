@@ -124,6 +124,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{5340072a-930e-43d4-b2ae-0c1b22813159}">
+		<property name="volume">
+			<value>4.5</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{0d3dcef3-1259-4aed-9071-37c60ae3d986}</destination>
 		</relationship>
@@ -211,7 +214,11 @@
 			<destination>{78c7080d-ca04-42de-8db9-d5b085b21beb}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{749eb000-a1d1-4c9d-bf4a-2a1b61199dc6}" />
+	<object class="MixerBusPanner" id="{749eb000-a1d1-4c9d-bf4a-2a1b61199dc6}">
+		<property name="surroundPanExtent">
+			<value>304.866669</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{cb1f2bbc-dc8a-40df-bcf7-a81a63ce9f58}" />
 	<object class="Plugin" id="{a263f28f-87e4-4ec9-a2cb-313ac74a1a08}">
 		<property name="identifier">
@@ -234,10 +241,10 @@
 	</object>
 	<object class="MixerBusPanner" id="{2ae185f3-6b20-4914-91d3-720e22d8e600}">
 		<property name="surroundPanDirection">
-			<value>1.83696985</value>
+			<value>-5.85601377</value>
 		</property>
 		<property name="surroundPanExtent">
-			<value>65.9851151</value>
+			<value>177.999741</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{78c7080d-ca04-42de-8db9-d5b085b21beb}" />
