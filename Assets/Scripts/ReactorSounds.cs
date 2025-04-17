@@ -3,6 +3,7 @@ using FMOD;
 using FMODUnity;
 using FMOD.Studio;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ReactorSounds : MonoBehaviour
 {
@@ -19,6 +20,18 @@ public class ReactorSounds : MonoBehaviour
     public EventReference playerPadRef;
     public EventReference enemyPercRef;
     public EventReference playerPercRef;
+
+    public int currentChord;
+
+    public List<int> changes = new List<int>()
+    {
+        0,
+        3,
+        1,
+        6
+    };
+
+    private bool chordUpdated = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,12 +54,42 @@ public class ReactorSounds : MonoBehaviour
         Conductor.Instance.onBeat.AddListener(EnemyPerc);
         Conductor.Instance.onBeat.AddListener(PlayerBass);
         Conductor.Instance.onBeat.AddListener(EnemyBass);
+        Conductor.Instance.onBeat.AddListener(UpdateChord);
+
+        currentChord = changes[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    void SetTestChanges()
+    {
+        changes.Add(0);
+        changes.Add(3);
+        changes.Add(1);
+        changes.Add(6);
+    }
+
+    void UpdateChord()
+    {
+        if (Conductor.Instance.beat == 0)
+        {
+           if (currentChord >= changes.Count)
+            {
+                currentChord = changes[0];
+            }
+            else
+            {
+                currentChord++;
+            }
+           SetTestChanges();
+
+            UnityEngine.Debug.Log("chord: " + changes[currentChord]);
+            UnityEngine.Debug.Log("currentChord: " + currentChord);
+        }
     }
 
     void SetTestParams()
@@ -152,19 +195,8 @@ public class ReactorSounds : MonoBehaviour
 
         if (shouldPlay)
         {
-            UnityEngine.Debug.Log("BassPlaying");
-            pitchDice = Random.Range(0, 100);
-            if (pitchDice<50)
-            {
-                bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, 0))/8;
-                playerBass.setParameterByName("basspitch", bassPitch);
-
-            } else
-            {
-                bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, 4))/8;
-                playerBass.setParameterByName("basspitch", bassPitch);
-            }
-
+            bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, (changes[currentChord])))/4;
+            playerBass.setParameterByName("basspitch", bassPitch);
             StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
         }
     }
@@ -182,21 +214,9 @@ public class ReactorSounds : MonoBehaviour
 
         if (shouldPlay)
         {
-            UnityEngine.Debug.Log("BassPlaying");
-            pitchDice = Random.Range(0, 100);
-            if (pitchDice < 50)
-            {
-                bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, 0)) / 8;
-                enemyBass.setParameterByName("basspitch", bassPitch);
-
-            }
-            else
-            {
-                bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, 4)) / 8;
-                playerBass.setParameterByName("basspitch", bassPitch);
-            }
-
-            StartCoroutine(PlayNoteCoroutine(enemyBass, 1.33f));
+            bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, (changes[currentChord]))) / 8;
+            playerBass.setParameterByName("basspitch", bassPitch);
+            StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
         }
     }
 
