@@ -113,6 +113,7 @@ public class AudioManager: MonoBehaviour
 
         playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
         moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event:/Module");
+
     }
 
     void Update()
