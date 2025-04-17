@@ -2454,6 +2454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 250102138}
   - component: {fileID: 250102137}
+  - component: {fileID: 250102139}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -2567,6 +2568,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &250102139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250102136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cde123efa2d23d478b91039652f6795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 0
+  tempo: 0
+  beat: 0
+  measureLength: 0
+  onBeat:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &304928886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4579,6 +4599,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &616234707 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6854789873993570139, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+  m_PrefabInstance: {fileID: 1673322062}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -5972,19 +6003,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endScreen: {fileID: 1673322063}
-  tickLength: 0.5
   playerHealthBar: {fileID: 1077565176}
+  playerShieldBar: {fileID: 0}
   enemyHealthBar: {fileID: 1384567480}
+  enemyShieldBar: {fileID: 0}
   playerShip: {fileID: 0}
   enemyShip: {fileID: 0}
-  floatingDamageNumberPrefab: {fileID: 1571763405881929973, guid: 24273c65fbb646d4baf9016728f921d7, type: 3}
-  playerHealth: 0
-  playerEvasion: 0
-  enemyHealth: 1
-  enemyShieldMod: 0.9
-  enemyWeaponDamage: 0.07
-  enemyWeaponSoundType: 2
-  enemyShieldSoundType: 1
 --- !u!4 &978327455
 Transform:
   m_ObjectHideFlags: 0
@@ -9651,6 +9675,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4175806326759642964, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: statBar
+      value: 
+      objectReference: {fileID: 616234707}
     - target: {fileID: 9175082720454608208, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       propertyPath: m_Name
       value: Battle Screen

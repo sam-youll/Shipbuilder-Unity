@@ -473,7 +473,7 @@ public class AudioManager: MonoBehaviour
             started = true;
             yield return new WaitForSeconds(noteInfo["length"]);
         }
-        Debug.Log(weaponIndex);
+        // Debug.Log(weaponIndex);
         weaponsEventInstances[weaponIndex].setParameterByName("adsr", 0);
     }
 

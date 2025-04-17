@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour
     public GameObject myShield;
     // public float speed;
     public List<Weapon.Effect> effects;
+    public Combat.SoundType soundType;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,7 +30,7 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.name);
+        // Debug.Log(collision.gameObject.name);
         if (collision.gameObject.CompareTag("Ship") && collision.gameObject != myShip)
         {
             var ship = collision.gameObject.GetComponent<Ship>();

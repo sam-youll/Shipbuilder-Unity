@@ -18,7 +18,10 @@ public class Weapon : MonoBehaviour
     public GameObject myShip;
     public float dir;
     public float stunTimer;
-
+    public Combat.SoundType soundType;
+    public Dictionary<Combat.SoundType, int> soundTypePoints = new Dictionary<Combat.SoundType, int>();
+    public bool quantized;
+    
     public enum Effect
     {
         Stun, // disables weapons/systems
@@ -54,11 +57,18 @@ public class Weapon : MonoBehaviour
         {
             charge += energyRate * fireRate * warmup * Time.deltaTime;
         }
-        if (charge >= 1)
+
+        if (quantized)
         {
-            Fire();
+            charge = Mathf.Clamp(charge, 0, 1);
         }
-        // charge = Mathf.Clamp(charge, 0, 1);
+        else
+        {
+            if (charge >= 1)
+            {
+                Fire();
+            }
+        }
 
         statBar.value = charge;
 
@@ -95,6 +105,7 @@ public class Weapon : MonoBehaviour
         newBullet.GetComponent<Bullet>().myShip = myShip;
         newBullet.GetComponent<Bullet>().myShield = myShip.GetComponent<Ship>().shield;
         newBullet.GetComponent<Bullet>().effects = effects;
+        newBullet.GetComponent<Bullet>().soundType = soundType;
         
         // play note
         var pitch = Notes.RandomNoteInScale(Notes.A, Notes.MODE.IONIAN);
