@@ -307,7 +307,7 @@ public class ReactorSounds : MonoBehaviour
             string chordstring = chords[chord];
 
             //picks a random note from the current chord
-            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]));
+            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
 
             //sets the pitch
             playerPad.setParameterByName("pitch", padPitch);
@@ -321,7 +321,7 @@ public class ReactorSounds : MonoBehaviour
             var chord = changes[currentChord];
             string chordstring = chords[chord];
 
-            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]));
+            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
 
             enemyPad.setParameterByName("pitch", padPitch);
         }

@@ -21,6 +21,8 @@ public class Weapon : MonoBehaviour
     public Combat.SoundType soundType;
     public Dictionary<Combat.SoundType, int> soundTypePoints = new Dictionary<Combat.SoundType, int>();
     public bool quantized;
+    //throwing this in here since it's handling chord changes rn. should make global and move elsewhere and delete this when we do 
+    public GameObject reactor;
     
     public enum Effect
     {
@@ -106,9 +108,15 @@ public class Weapon : MonoBehaviour
         newBullet.GetComponent<Bullet>().myShield = myShip.GetComponent<Ship>().shield;
         newBullet.GetComponent<Bullet>().effects = effects;
         newBullet.GetComponent<Bullet>().soundType = soundType;
-        
+
         // play note
-        var pitch = Notes.RandomNoteInScale(Notes.A, Notes.MODE.IONIAN);
+        //var pitch = Notes.RandomNoteInScale(Notes.A, Notes.MODE.IONIAN);
+        //should make this global so we dont have to refer to dam reactor and do so many steps lmao
+        int currentChord = reactor.GetComponent<ReactorSounds>().currentChord;
+        var chord = reactor.GetComponent<ReactorSounds>().changes[currentChord];
+        string chordString = reactor.GetComponent<ReactorSounds>().chords[chord];
+
+        var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
         var noteInfo = new Dictionary<string, float>{ {"length", 1.17f}, {"pitch", pitch} };
         AudioManager.Instance.PlayNote(gameObject, noteInfo);
     }
