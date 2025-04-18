@@ -236,7 +236,7 @@ public class ReactorSounds : MonoBehaviour
         if (Conductor.Instance.beat == 0)
         {
             var chord = changes[currentChord];
-            //var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[changes][currentChord]));
+            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD["I"]));
         }
     }
 

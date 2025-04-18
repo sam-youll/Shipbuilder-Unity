@@ -62,13 +62,22 @@ public class RackMovement : MonoBehaviour
                     // isOverConveyor = false;
 
 
-                    // var dir = (snappedPos - (Vector2)dragStartPos).normalized;
-                    // var dots = dirs.ToArray();
-                    // Array.ForEach(dots, x => Vector2.Dot(x, dir));
-                    // dir = dots.Max();
-                    var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
+                    var dir = (snapSquare.transform.position - mousePos).normalized;
+                    var dots = new float[3];
+                    for (var j = 0; j < 3; j++)
+                    {
+                        dots[j] = Vector2.Dot(dir, dirs[j]);
+                    }
+                    var highestDot = dots[0];
+                    for (var j = 0; j < dots.Length; j++)
+                    {
+                        highestDot = Mathf.Max(highestDot, dots[j]);
+                    }
+                    dir = dirs[Array.IndexOf(dots, highestDot)];
+                    Debug.Log(dir);
+                    // var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
                     // Debug.Log(snapSquare.transform.position);
-                    snappedPos += dir;
+                    snappedPos += (Vector2)dir;
 
                     if (i == 99)
                     {
@@ -154,7 +163,6 @@ public class RackMovement : MonoBehaviour
                     // if we hit a jack, invoke that unity event
                     if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
                     {
-                        Debug.Log(result.collider.gameObject.name);
                         jackClick.Invoke();
                         break;
                     }
@@ -162,7 +170,6 @@ public class RackMovement : MonoBehaviour
                     // if we don't hit a jack, but we do hit the body, turn on dragging
                     if (result.collider.gameObject.layer == LayerMask.NameToLayer("Rack Objects"))
                     {
-                        Debug.Log(result.collider.gameObject.name);
                         if (result.collider.gameObject == gameObject)
                         {
                             AudioManager.Instance.PickUpModuleSFX();
@@ -237,7 +244,7 @@ public class RackMovement : MonoBehaviour
         coll.Overlap(pos, 0, filter, results);
         foreach (var result in results)
         {
-            Debug.Log(result.gameObject.name);
+            // Debug.Log(result.gameObject.name);
             if (result.gameObject.layer != LayerMask.NameToLayer("Rack Objects"))
                 continue;
             // ignore self

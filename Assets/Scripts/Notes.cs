@@ -39,13 +39,16 @@ public static class Notes
     public const float B = 493.88f;
 
     // these arrays contain the scale degrees that are present in the given triad
-    public static readonly int[] I = { 0, 2, 4, 6 };
-    public static readonly int[] II = { 1, 3, 5, 7 };
-    public static readonly int[] III = { 2, 4, 6, 8 };
-    public static readonly int[] IV = { 3, 5, 0, 2 };
-    public static readonly int[] V = { 4, 6, 1, 3 };
-    public static readonly int[] VI = { 5, 0, 2, 4 };
-    public static readonly int[] VII = { 6, 1, 3, 5 };
+    public static readonly Dictionary<string, int[]> SCALE_CHORD = new Dictionary<string, int[]>
+    {
+        { "I", new [] { 0, 2, 4, 6 } },
+        { "II", new [] { 1, 3, 5, 6 } },
+        { "III", new [] { 2, 4, 6, 8 } },
+        { "IV", new [] { 3, 5, 0, 2 } },
+        { "V", new [] { 4, 6, 1, 3 } },
+        { "VI", new [] { 5, 0, 2, 4 } },
+        { "VII", new [] { 6, 1, 3, 5 } },
+    };
     // here is an example of a chord that's not just a triad, though it's not being used anywhere yet
     public static readonly int[] I7 = { 0, 2, 4, 6 };
     // do not ask me how we're gonna handle diminished chords and other shit like that
@@ -67,20 +70,6 @@ public static class Notes
         AEOLIAN,
         LOCRIAN
     }
-
-    /// <summary>
-    /// SCALE_CHORD contains the various chord arrays. More chords can be added later.
-    /// </summary>
-    public enum SCALE_CHORD
-    {
-        I,
-        II,
-        III,
-        IV,
-        V,
-        VI,
-        VII
-    };
 
     // 
     public enum CHORD
