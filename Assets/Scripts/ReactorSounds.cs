@@ -33,6 +33,17 @@ public class ReactorSounds : MonoBehaviour
 
     private bool chordUpdated = false;
 
+    public List<string> chords = new List<string>()
+    {
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII"
+    };
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,6 +53,9 @@ public class ReactorSounds : MonoBehaviour
 
         enemyBass = FMODUnity.RuntimeManager.CreateInstance(enemyBassRef);
         playerBass = FMODUnity.RuntimeManager.CreateInstance(playerBassRef);
+
+        enemyPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
+        playerPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef); 
 
         SetTestParams();
 
@@ -57,6 +71,7 @@ public class ReactorSounds : MonoBehaviour
         Conductor.Instance.onBeat.AddListener(PlayerBass);
         Conductor.Instance.onBeat.AddListener(EnemyBass);
         Conductor.Instance.onBeat.AddListener(UpdateChord);
+        Conductor.Instance.onBeat.AddListener(PlayerPad);
 
         currentChord = changes[0];
     }
@@ -125,6 +140,15 @@ public class ReactorSounds : MonoBehaviour
         playerPad.setParameterByName("reson", 36);
         playerPad.setParameterByName("grit", 99);
         playerPad.setParameterByName("soft", 78);
+
+        enemyPad.setParameterByName("fbgain", 0.58f);
+        enemyPad.setParameterByName("ffgain", 0.41f);
+        enemyPad.setParameterByName("delaytime", 400);
+        enemyPad.setParameterByName("cgain", 0.51f);
+        enemyPad.setParameterByName("bpfreq", 8200);
+        enemyPad.setParameterByName("reson", 41);
+        enemyPad.setParameterByName("grit", 0);
+        enemyPad.setParameterByName("soft", 106);
     }
 
     void PlayerPerc()
@@ -196,7 +220,7 @@ public class ReactorSounds : MonoBehaviour
     void PlayerBass()
     {
         var shouldPlay = false;
-        var pitchDice = 0;
+        //var pitchDice = 0;
         var bassPitch = 440f;
 
         if (Conductor.Instance.beat == 0 || Conductor.Instance.beat == 2)
@@ -236,7 +260,24 @@ public class ReactorSounds : MonoBehaviour
         if (Conductor.Instance.beat == 0)
         {
             var chord = changes[currentChord];
-            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD["I"]));
+            string chordstring = chords[chord];
+
+            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]));
+
+            playerPad.setParameterByName("pitch", padPitch);
+        }
+    }
+
+    void EnemyPad()
+    {
+        if (Conductor.Instance.beat == 0)
+        {
+            var chord = changes[currentChord];
+            string chordstring = chords[chord];
+
+            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]));
+
+            enemyPad.setParameterByName("pitch", padPitch);
         }
     }
 
