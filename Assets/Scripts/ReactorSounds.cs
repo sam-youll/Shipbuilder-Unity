@@ -49,6 +49,8 @@ public class ReactorSounds : MonoBehaviour
         playerPerc.start();
         enemyBass.start();
         playerBass.start();
+        enemyPad.start();
+        playerPad.start();
 
         Conductor.Instance.onBeat.AddListener(PlayerPerc);
         Conductor.Instance.onBeat.AddListener(EnemyPerc);
@@ -114,6 +116,15 @@ public class ReactorSounds : MonoBehaviour
         enemyBass.setParameterByName("attack", 150);
         enemyBass.setParameterByName("decay", 1120);
         enemyBass.setParameterByName("release", 60);
+
+        playerPad.setParameterByName("fbgain", 0.48f);
+        playerPad.setParameterByName("ffgain", 0.33f);
+        playerPad.setParameterByName("delaytime", 650);
+        playerPad.setParameterByName("cgain", 0.47f);
+        playerPad.setParameterByName("bpfreq", 11200);
+        playerPad.setParameterByName("reson", 36);
+        playerPad.setParameterByName("grit", 99);
+        playerPad.setParameterByName("soft", 78);
     }
 
     void PlayerPerc()
@@ -214,9 +225,18 @@ public class ReactorSounds : MonoBehaviour
 
         if (shouldPlay)
         {
-            bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, (changes[currentChord]))) / 8;
+            bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, changes[currentChord])) / 8;
             playerBass.setParameterByName("basspitch", bassPitch);
             StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
+        }
+    }
+
+    void PlayerPad()
+    {
+        if (Conductor.Instance.beat == 0)
+        {
+            var chord = changes[currentChord];
+            //var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[changes][currentChord]));
         }
     }
 
