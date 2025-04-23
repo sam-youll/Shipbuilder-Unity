@@ -65,11 +65,11 @@ public class GameplayTutorial : MonoBehaviour
         {
             stepComplete = false;
             dialogueText.text = "Try pulling it open and placing one of the colorful modules onto the rack.";
-            if (ModuleRack.Instance.transform.childCount > 3)
-            {
-                dialogueText.text = "Great. Next, we'll look at plugging them in.";
-                stepComplete = true;
-            }
+            // if (ModuleRack.Instance.transform.childCount > 3)
+            // {
+            //     dialogueText.text = "Great. Next, we'll look at plugging them in.";
+            //     stepComplete = true;
+            // }
         }
         if (currentStep == 5)
         {
@@ -113,11 +113,11 @@ public class GameplayTutorial : MonoBehaviour
         {
             stepComplete = false;
             dialogueText.text = "Now, pull down another generator module.";
-            if (ModuleRack.Instance.transform.childCount > 4)
-            {
-                dialogueText.text = "Nice. This one is going to be our weapon, and we need to plug it into the sequencer.";
-                stepComplete = true;
-            }
+            // if (ModuleRack.Instance.transform.childCount > 4)
+            // {
+            //     dialogueText.text = "Nice. This one is going to be our weapon, and we need to plug it into the sequencer.";
+            //     stepComplete = true;
+            // }
         }
         if (currentStep == 11)
         {
@@ -154,13 +154,13 @@ public class GameplayTutorial : MonoBehaviour
         if (currentStep == 15) 
         {
             dialogueText.text = "Now let's look at how to fight.";
-            for (var i = 0; i < ModuleRack.Instance.transform.childCount; i++)
-            {
-                if (!ModuleRack.Instance.transform.GetChild(i).CompareTag("OutputRack"))
-                {
-                    Destroy(ModuleRack.Instance.transform.GetChild(i).GameObject());
-                }
-            }
+            // for (var i = 0; i < ModuleRack.Instance.transform.childCount; i++)
+            // {
+            //     if (!ModuleRack.Instance.transform.GetChild(i).CompareTag("OutputRack"))
+            //     {
+            //         Destroy(ModuleRack.Instance.transform.GetChild(i).GameObject());
+            //     }
+            // }
             PatchManager.Instance.UpdateAllPatches();
             stepComplete = true;
         }

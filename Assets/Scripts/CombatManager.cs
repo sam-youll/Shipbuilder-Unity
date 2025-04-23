@@ -42,7 +42,7 @@ public class CombatManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        state = State.inCombat;
+        state = State.outOfCombat;
     }
 
     // Update is called once per frame

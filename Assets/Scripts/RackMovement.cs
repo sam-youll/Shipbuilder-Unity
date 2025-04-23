@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public class RackMovement : MonoBehaviour
 {
@@ -11,9 +12,12 @@ public class RackMovement : MonoBehaviour
     private bool isMouseDragging;
     private Vector3 dragOffset;
     private Vector3 dragStartPos;
+    private Vector3 lastValidPos;
     public float dragHeight = 1;
     public bool canGoInInventory;
     private bool isOverInventory;
+    private bool isInInventory;
+    public GameObject myModuleRack;
     
     public UnityEvent bodyClick;
     public UnityEvent jackClick;
@@ -25,6 +29,14 @@ public class RackMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (transform.parent.GetComponent<ModuleRack>() != null)
+        {
+            myModuleRack = transform.parent.gameObject;
+        }
+        else if (transform.parent.GetComponent<Inventory>() != null)
+        {
+            isInInventory = true;
+        }
         cam = Camera.main;
     }
 
@@ -41,6 +53,10 @@ public class RackMovement : MonoBehaviour
             // set position
             var myPos = mousePos;
             myPos.z -= dragHeight;
+            if (isOverInventory)
+            {
+                myPos.z -= 3;
+            }
             transform.position = myPos;
             
             // set potential position of snap square
@@ -62,7 +78,13 @@ public class RackMovement : MonoBehaviour
                     // isOverConveyor = false;
 
 
-                    var dir = (snapSquare.transform.position - mousePos).normalized;
+                    // TODO: THIS BASICALLY NEEDS TO BE A FLOOD FILL ALGO BUT I DON'T WANT TO DO THAT RIGHT NOW
+                    var roundedMousePos = new Vector2
+                    {
+                        x = Mathf.Round(mousePos.x),
+                        y = Mathf.Round(mousePos.y)
+                    };
+                    var dir = ((Vector2)transform.position - roundedMousePos).normalized;
                     var dots = new float[3];
                     for (var j = 0; j < 3; j++)
                     {
@@ -74,19 +96,17 @@ public class RackMovement : MonoBehaviour
                         highestDot = Mathf.Max(highestDot, dots[j]);
                     }
                     dir = dirs[Array.IndexOf(dots, highestDot)];
-                    Debug.Log(dir);
-                    // var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
-                    // Debug.Log(snapSquare.transform.position);
-                    snappedPos += (Vector2)dir;
+                    snappedPos += dir;
 
                     if (i == 99)
                     {
                         Debug.Log("too many loop");
-                        snappedPos = dragStartPos;
+                        snappedPos = lastValidPos;
                     }
                 }
                 else
                 {
+                    lastValidPos = snappedPos;
                     break;
                 }
             }
@@ -94,8 +114,13 @@ public class RackMovement : MonoBehaviour
             // {
             //     isOverConveyor = false;
             // }
-            
-            snapSquare.transform.position = snappedPos;
+
+            var newPos = new Vector3(snappedPos.x, snappedPos.y, transform.parent.position.z - .1f);
+            if (isOverInventory)
+            {
+                newPos.z -= 3;
+            }
+            snapSquare.transform.position = newPos;
             
             HoverInventory();
             
@@ -126,18 +151,37 @@ public class RackMovement : MonoBehaviour
                 //     conveyor.GetComponent<Conveyor>().OnModuleAttached(this);
                 // }
                 
-                var isInInventory = transform.parent == Inventory.Instance.transform;
+                isInInventory = transform.parent == Inventory.Instance.transform;
                 if (!isInInventory && isOverInventory)
                 {
                     isInInventory = true;
                     transform.SetParent(Inventory.Instance.transform);
                     inventoryEnter.Invoke();
                 }
-                else if (isInInventory && !isOverInventory)
+                else if (isInInventory)
                 {
-                    isInInventory = false;
-                    transform.SetParent(ModuleRack.Instance.transform);
-                    inventoryExit.Invoke();
+                    var rackCheck = false;
+                    var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
+                    foreach (var result in results)
+                    {
+                        if (result.collider.gameObject.GetComponent(typeof(ModuleRack)) != null)
+                        {
+                            // theoretically, this is the module rack I'm hovering over
+                            transform.SetParent(result.collider.gameObject.transform);
+                            var pos = transform.position;
+                            pos.z = transform.parent.position.z - .1f;
+                            transform.position = pos;
+                            myModuleRack = result.collider.gameObject;
+                            rackCheck = true;
+                            isInInventory = false;
+                            inventoryExit.Invoke();
+                        }
+                    }
+
+                    if (!rackCheck)
+                    {
+                        transform.position = dragStartPos;
+                    }
                 }
             }
         }
@@ -234,28 +278,63 @@ public class RackMovement : MonoBehaviour
     /// <returns>True or false.</returns>
     private bool IsOverlapping(Collider2D coll, Vector2 pos)
     {
+        Debug.Log("checking overlap");
+        
+        // are we on the rack
+        var onRack = false;
+        var colliding = false;
+        
         var results = new List<Collider2D>();
         // we only care about checking against objects on the rack
         var filter = new ContactFilter2D
         {
-            layerMask = LayerMask.GetMask("Rack Objects")
+            layerMask = LayerMask.GetMask("Rack Objects", "Module Racks")
         };
         // check the collider for overlaps on that layer
         coll.Overlap(pos, 0, filter, results);
         foreach (var result in results)
         {
-            // Debug.Log(result.gameObject.name);
-            if (result.gameObject.layer != LayerMask.NameToLayer("Rack Objects"))
-                continue;
+            Debug.Log("colliding with " + result.gameObject.name);
             // ignore self
             if (result.gameObject == gameObject)
                 continue;
             if (result.gameObject == snapSquare)
                 continue;
+            if (result.gameObject == myModuleRack)
+            {
+                // Debug.Log("I hit a " + result.gameObject.name);
+                onRack = true;
+                continue;
+            }
+
+            if (result.gameObject.GetComponent<ModuleRack>() != null)
+            {
+                continue;
+            }
+
+            if (result.gameObject.GetComponent<Inventory>() != null)
+            {
+                continue;
+            }
+            
+            colliding = true;
             // otherwise if we hit something, return true
+        }
+        // receiving no hits means false
+        if (!onRack && !isInInventory && !isOverInventory)
+        {
+            Debug.Log("My module rack is " + myModuleRack.gameObject.name);
             return true;
         }
-        // no hits means false
-        return false;
+
+        if (colliding)
+        {
+            Debug.Log("colliding");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
