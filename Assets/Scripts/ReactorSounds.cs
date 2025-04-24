@@ -94,7 +94,7 @@ public class ReactorSounds : MonoBehaviour
         //setting the placeholder parameters that will just work for now
         SetTestParams();
         //setting params based on reactor variables
-        setReactorParams();
+        SetReactorParams();
 
         //starting the FMOD events
         enemyPerc.start();
