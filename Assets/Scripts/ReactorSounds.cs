@@ -177,9 +177,9 @@ public class ReactorSounds : MonoBehaviour
 
         //BASS
         //standard adsr stuff 
-        playerBass.setParameterByName("attack", 100);
-        playerBass.setParameterByName("decay", 1550);
-        playerBass.setParameterByName("release", 80);
+        ///playerBass.setParameterByName("attack", 100);
+        ///playerBass.setParameterByName("decay", 1550);
+        ///playerBass.setParameterByName("release", 80);
         //the time on the delay, it's for babies
         ///playerBass.setParameterByName("delaytime", 750);
 
@@ -189,19 +189,19 @@ public class ReactorSounds : MonoBehaviour
 
         //PADS
         //Feedback gain - how loud the feedback noise is... these params are probably better to play with IN FMOD to get an idea.
-        playerPad.setParameterByName("fbgain", 0.28f);
+        //playerPad.setParameterByName("fbgain", 0.28f);
         //Feedforward gain
-        playerPad.setParameterByName("ffgain", 0.33f);
+        //playerPad.setParameterByName("ffgain", 0.33f);
         //Delay time - literal delay, the longer it is the more cool and alien it sounds, but leads to clustery pitch stuff 
         ///playerPad.setParameterByName("delaytime", 650);
         //frequency of the bandpass filter, if u make it lower than the current pitch it's gonna be quiet af but that might be good
         playerPad.setParameterByName("bpfreq", 500);
         //resonance of the bandpass filter, honestly if it's higher it's mostly gonna be louder
-        playerPad.setParameterByName("reson", 0);
+        ///playerPad.setParameterByName("reson", 0);
         //grit is how much of the Gritty source ur getting . vibes based param im sorry to say
-        playerPad.setParameterByName("grit", 40);
+        ///playerPad.setParameterByName("grit", 40);
         //soft is how much of the Soft source ur getting, same as above. just mixing stuff 
-        playerPad.setParameterByName("soft", 30);
+        ///playerPad.setParameterByName("soft", 30);
 
         enemyPad.setParameterByName("fbgain", 0.5f);
         enemyPad.setParameterByName("ffgain", 0.2f);

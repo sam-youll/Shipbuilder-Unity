@@ -68,6 +68,7 @@ public class Reactor : MonoBehaviour
         Conductor.Instance.tempo = 120 + (rate * 100);
 
         // TODO: set values of ReactorSounds.Instance based on adsrValues[adsrIndex]
+
         ReactorSounds.Instance.SetReactorParams();
     }
 }

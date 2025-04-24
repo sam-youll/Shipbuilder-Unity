@@ -2603,7 +2603,6 @@ GameObject:
   - component: {fileID: 250102138}
   - component: {fileID: 250102137}
   - component: {fileID: 250102139}
-  - component: {fileID: 250102140}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -2744,7 +2743,7 @@ MonoBehaviour:
   half: 0
   whole: 0
   bar: 0
-  measureLength: 4
+  measureLength: 16
   onSixteenth:
     m_PersistentCalls:
       m_Calls: []
@@ -2763,89 +2762,6 @@ MonoBehaviour:
   onBar:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &250102140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250102136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 341143e1a09efe147942f3abb746d318, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyBassRef:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  playerBassRef:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  enemyPadRef:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  playerPadRef:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  enemyPercRef:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  playerPercRef:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  currentChord: 0
-  changes: 00000000030000000100000006000000
-  chords:
-  - I
-  - II
-  - III
-  - IV
-  - V
-  - VI
-  - VII
-  bassSyncProb: 0
-  bassDelayTime: 0
-  padDelayTime: 0
-  percSyncProb: 0
-  percFreq: 0
-  strength: 0
-  baseNoteLength: 0
-  playerBassAttackRatio: 0.3
-  playerBassDecayRatio: 0.4
-  playerBassReleaseRatio: 0.3
-  enemyBassAttackRatio: 0.3
-  enemyBassDecayRatio: 0.4
-  enemyBassReleaseRatio: 0.3
-  playerPercAttackRatio: 0.2
-  playerPercDecayRatio: 0.8
-  playerGrit: 0
-  playerSoft: 0
-  playerFB: 0
-  playerFF: 0
 --- !u!4 &272384642 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4417882624280236094, guid: fc9eff1b8dd8e5d4d919e5b3869a4da0, type: 3}
