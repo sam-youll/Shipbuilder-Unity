@@ -56,6 +56,9 @@ public class Module : MonoBehaviour
     private bool isOverInventory;
     private bool isOverConveyor;
 
+    public bool isReactorModule;
+    public bool isPowerModule;
+
     private Vector3 lastPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

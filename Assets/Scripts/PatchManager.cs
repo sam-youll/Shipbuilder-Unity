@@ -44,6 +44,8 @@ public class PatchManager : MonoBehaviour
         {
             weapon.SetPatch();
         }
+        Reactor.Instance.SetPatch();
+        
         // for (int i = 0; i < 6; i++)
         // {
         //     if (outputRack.previousModsWeapons[i] != null)

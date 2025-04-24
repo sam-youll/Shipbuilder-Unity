@@ -62,15 +62,16 @@ public class Wire : MonoBehaviour
                     //         index = i;
                     //     }
                     // }
+                    
+                    nextModuleJack = hit.collider.gameObject;
+                    nextModule = nextModuleJack.transform.parent.gameObject;
                     if (nextModule.GetComponent<Weapon>().previousModule != null)
                     {
                         nextModule.GetComponent<Weapon>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
                     }
-                    nextModuleJack = hit.collider.gameObject;
-                    nextModule = nextModuleJack.transform.parent.gameObject;
                     nextModule.gameObject.GetComponent<Weapon>().previousModule = previousModule;
                     previousModule.GetComponent<Module>().nextModule = nextModule;
-                    nextModule.GetComponent<Weapon>().SetPatch();
+                    PatchManager.Instance.UpdateAllPatches();
                     
                     // if (index == -1)
                     // {
@@ -100,6 +101,20 @@ public class Wire : MonoBehaviour
                     //     outputRack.previousModsShields[index-6] = previousModule;
                     //     PatchManager.Instance.UpdateAllPatches();
                     // }
+                    connectedToModule = true;
+                }
+                else if (hit.collider.transform.parent.CompareTag("Reactor"))
+                {
+                    Debug.Log("hit reactor");
+                    nextModuleJack = hit.collider.gameObject;
+                    nextModule = nextModuleJack.transform.parent.gameObject;
+                    if (nextModule.GetComponent<Reactor>().previousModule != null)
+                    {
+                        nextModule.GetComponent<Reactor>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                    }
+                    nextModule.gameObject.GetComponent<Reactor>().previousModule = previousModule;
+                    previousModule.GetComponent<Module>().nextModule = nextModule;
+                    PatchManager.Instance.UpdateAllPatches();
                     connectedToModule = true;
                 }
                 else if (hit.collider.gameObject.CompareTag("InputJack"))
