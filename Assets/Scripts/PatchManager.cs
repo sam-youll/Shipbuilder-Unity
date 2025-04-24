@@ -23,6 +23,8 @@ public class PatchManager : MonoBehaviour
     public OutputRack outputRack;
     
     public List<GameObject>[] Patches = new List<GameObject>[12];
+
+    public List<Weapon> weapons;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,70 +40,74 @@ public class PatchManager : MonoBehaviour
 
     public void UpdateAllPatches()
     {
-        for (int i = 0; i < 6; i++)
+        foreach (var weapon in weapons)
         {
-            if (outputRack.previousModsWeapons[i] != null)
-            {
-                var currentMod = outputRack.previousModsWeapons[i];
-                List<GameObject> patch = new List<GameObject>()
-                {
-                    currentMod
-                };
-                while (currentMod.GetComponent<Module>().previousModule != null)
-                {
-                    currentMod = currentMod.GetComponent<Module>().previousModule;
-                    patch.Add(currentMod);
-                }
-
-                if (patch[^1].GetComponent<Module>().isSourceModule)
-                {
-                    UpdatePatch(patch, i);
-                }
-                else
-                {
-                    UpdatePatch(null, i);
-                }
-            }
-            else if (Patches[i] != null)
-            {
-                UpdatePatch(null, i);
-            }
+            weapon.SetPatch();
         }
-
-        for (int i = 6; i < 12; i++)
-        {
-            if (outputRack.previousModsShields[i - 6] != null)
-            {
-                var currentMod = outputRack.previousModsShields[i - 6];
-                List<GameObject> patch = new List<GameObject>()
-                {
-                    currentMod
-                };
-                while (currentMod.GetComponent<Module>().previousModule != null)
-                {
-                    currentMod = currentMod.GetComponent<Module>().previousModule;
-                    patch.Add(currentMod);
-                }
-
-                if (patch[^1].GetComponent<Module>().isSourceModule)
-                {
-                    UpdatePatch(patch, i);
-                }
-                else
-                {
-                    UpdatePatch(null, i);
-                }
-            }
-            else if (Patches[i] != null)
-            {
-                UpdatePatch(null, i);
-            }
-        }
-        // Debug.Log(Patches);
-        // foreach (var patch in Patches)
+        // for (int i = 0; i < 6; i++)
         // {
-        //     Debug.Log(patch);
+        //     if (outputRack.previousModsWeapons[i] != null)
+        //     {
+        //         var currentMod = outputRack.previousModsWeapons[i];
+        //         List<GameObject> patch = new List<GameObject>()
+        //         {
+        //             currentMod
+        //         };
+        //         while (currentMod.GetComponent<Module>().previousModule != null)
+        //         {
+        //             currentMod = currentMod.GetComponent<Module>().previousModule;
+        //             patch.Add(currentMod);
+        //         }
+        //
+        //         if (patch[^1].GetComponent<Module>().isSourceModule)
+        //         {
+        //             UpdatePatch(patch, i);
+        //         }
+        //         else
+        //         {
+        //             UpdatePatch(null, i);
+        //         }
+        //     }
+        //     else if (Patches[i] != null)
+        //     {
+        //         UpdatePatch(null, i);
+        //     }
         // }
+        //
+        // for (int i = 6; i < 12; i++)
+        // {
+        //     if (outputRack.previousModsShields[i - 6] != null)
+        //     {
+        //         var currentMod = outputRack.previousModsShields[i - 6];
+        //         List<GameObject> patch = new List<GameObject>()
+        //         {
+        //             currentMod
+        //         };
+        //         while (currentMod.GetComponent<Module>().previousModule != null)
+        //         {
+        //             currentMod = currentMod.GetComponent<Module>().previousModule;
+        //             patch.Add(currentMod);
+        //         }
+        //
+        //         if (patch[^1].GetComponent<Module>().isSourceModule)
+        //         {
+        //             UpdatePatch(patch, i);
+        //         }
+        //         else
+        //         {
+        //             UpdatePatch(null, i);
+        //         }
+        //     }
+        //     else if (Patches[i] != null)
+        //     {
+        //         UpdatePatch(null, i);
+        //     }
+        // }
+        // // Debug.Log(Patches);
+        // // foreach (var patch in Patches)
+        // // {
+        // //     Debug.Log(patch);
+        // // }
     }
 
 

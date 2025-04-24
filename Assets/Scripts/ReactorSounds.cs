@@ -7,6 +7,13 @@ using System.Collections.Generic;
 
 public class ReactorSounds : MonoBehaviour
 {
+    public static ReactorSounds Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
+    
     //FMOD Event Instance variables
     private EventInstance enemyBass;
     private EventInstance playerBass;

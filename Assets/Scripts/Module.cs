@@ -93,14 +93,10 @@ public class Module : MonoBehaviour
         
         if (isSourceModule)
         {
-            sourceModule = this.gameObject;
+            sourceModule = gameObject;
         }
 
-        if (transform.parent.GetComponent<ModuleRack>() != null)
-        {
-            isInInventory = false;
-        }
-        else if (transform.parent == Inventory.Instance.transform)
+        if (transform.parent == Inventory.Instance.transform)
         {
             isInInventory = true;
         }

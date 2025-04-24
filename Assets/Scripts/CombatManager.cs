@@ -27,7 +27,7 @@ public class CombatManager : MonoBehaviour
         endScreen
     }
 
-    private State state = State.outOfCombat;
+    public State state = State.outOfCombat;
     public GameObject endScreen;
     private float endScreenTimer = 3f;
 

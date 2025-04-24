@@ -294,9 +294,11 @@ public class RackMovement : MonoBehaviour
         coll.Overlap(pos, 0, filter, results);
         foreach (var result in results)
         {
-            Debug.Log("colliding with " + result.gameObject.name);
+            Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
             // ignore self
             if (result.gameObject == gameObject)
+                continue;
+            if (result.gameObject.CompareTag("Bullet"))
                 continue;
             if (result.gameObject == snapSquare)
                 continue;
@@ -306,16 +308,12 @@ public class RackMovement : MonoBehaviour
                 onRack = true;
                 continue;
             }
-
+            if (result.CompareTag("Weapon"))
+                continue;
             if (result.gameObject.GetComponent<ModuleRack>() != null)
-            {
                 continue;
-            }
-
             if (result.gameObject.GetComponent<Inventory>() != null)
-            {
                 continue;
-            }
             
             colliding = true;
             // otherwise if we hit something, return true
@@ -323,7 +321,7 @@ public class RackMovement : MonoBehaviour
         // receiving no hits means false
         if (!onRack && !isInInventory && !isOverInventory)
         {
-            Debug.Log("My module rack is " + myModuleRack.gameObject.name);
+            Debug.Log("My module rack is " + myModuleRack.gameObject.name + " on " + myModuleRack.transform.parent.gameObject.name);
             return true;
         }
 

@@ -1,28 +1,52 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Weapon : MonoBehaviour
 {
+    [Header("Components")]
     public StatBar statBar;
+    public GameObject bulletPrefab;
+    public GameObject myShip;
+    public GameObject myShipWeapon;
+    public GameObject output;
+    public List<StatBar> noteMeters = new();
+    
+    [Header("Properties")]
+    public bool warming = false;
+    public float warmup = 0;
     public float charge = 0;
     public float fireRate;
     public float energyRate;
     public float damage;
     public float hullDamage;
     public float shieldDamage;
-    public float warmup = 0;
-    public bool warming = false;
     public float bulletSpeed;
     public float bulletSpread;
-    public GameObject bulletPrefab;
-    public GameObject myShip;
     public float dir;
     public float stunTimer;
     public Combat.SoundType soundType;
-    public Dictionary<Combat.SoundType, int> soundTypePoints = new Dictionary<Combat.SoundType, int>();
+    public Dictionary<Combat.SoundType, int> soundTypePoints = new();
     public bool quantized;
-    //throwing this in here since it's handling chord changes rn. should make global and move elsewhere and delete this when we do 
-    public GameObject reactor;
+    public bool inCombat;
+    public bool testing;
+    public bool firing;
+
+    public GameObject previousModule;
+    
+    public Dictionary<string, float> noteInfo = new()
+    {
+        { "length", .17f },
+        { "attack", 100 },
+        { "decay", 70 },
+        { "sustain", 0 },
+        { "release", 100 },
+    };
+    
+    public int currentNoteMeter = 0;
+    
+    public List<Module> myPatch = new();
     
     public enum Effect
     {
@@ -34,7 +58,6 @@ public class Weapon : MonoBehaviour
     }
     public List<Effect> effects;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Conductor.Instance.onSixteenth.AddListener(Fire);
@@ -43,6 +66,12 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        firing = testing || inCombat;
+        if (previousModule == null || !SourceModuleConnected())
+        {
+            firing = false;
+        }
+        
         if (warming)
         {
             if (warmup < 1)
@@ -55,7 +84,7 @@ public class Weapon : MonoBehaviour
             }
         }
         
-        if (stunTimer <= 0)
+        if (firing && stunTimer <= 0)
         {
             charge += energyRate * fireRate * warmup * Time.deltaTime;
         }
@@ -73,6 +102,9 @@ public class Weapon : MonoBehaviour
         }
 
         statBar.value = charge;
+        // Debug.Log(currentNoteMeter);
+        if (noteMeters.Count > 0)
+            noteMeters[currentNoteMeter].value = charge;
 
 
         if (stunTimer > 0)
@@ -97,9 +129,18 @@ public class Weapon : MonoBehaviour
         }
 
         charge = 0;
+        currentNoteMeter++;
+        if (currentNoteMeter >= noteMeters.Count)
+        {
+            foreach (var n in noteMeters)
+            {
+                n.value = 0;
+            }
+            currentNoteMeter = 0;
+        }
         
         // create bullet
-        var newBullet = Instantiate(bulletPrefab, transform.GetChild(0).transform.position, Quaternion.identity);
+        var newBullet = Instantiate(bulletPrefab, myShipWeapon.transform.position + Vector3.right * (dir * .5f), Quaternion.identity);
         newBullet.GetComponent<Bullet>().damage = damage;
         newBullet.GetComponent<Bullet>().hullDamage = hullDamage;
         newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage;
@@ -111,13 +152,64 @@ public class Weapon : MonoBehaviour
 
         // play note
         //var pitch = Notes.RandomNoteInScale(Notes.A, Notes.MODE.IONIAN);
-        //should make this global so we dont have to refer to dam reactor and do so many steps lmao
-        int currentChord = reactor.GetComponent<ReactorSounds>().currentChord;
-        var chord = reactor.GetComponent<ReactorSounds>().changes[currentChord];
-        string chordString = reactor.GetComponent<ReactorSounds>().chords[chord];
-
+        //should make this global so we don't have to refer to dam reactor and do so many steps lmao
+        int currentChord = ReactorSounds.Instance.currentChord;
+        var chord = ReactorSounds.Instance.changes[currentChord];
+        string chordString = ReactorSounds.Instance.chords[chord];
+        
+        SetPatch();
+        foreach (var mod in myPatch)
+        {
+            if (noteInfo.ContainsKey(mod.parameter))
+            {
+                noteInfo[mod.parameter] = mod.parameterValue;
+            }
+            else
+            {
+                noteInfo.Add(mod.parameter, mod.parameterValue);
+            }
+        }
+        
         var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
-        var noteInfo = new Dictionary<string, float>{ {"length", 1.17f}, {"pitch", pitch} };
         AudioManager.Instance.PlayNote(gameObject, noteInfo);
+    }
+
+    private void OnMouseDown()
+    {
+        if (inCombat)
+            return;
+        
+        testing = !testing;
+    }
+
+    public void SetPatch()
+    {
+        if (previousModule == null)
+            return;
+        
+        myPatch = new();
+        var prev = previousModule.GetComponent<Module>();
+        while (prev.previousModule != null)
+        {
+            Debug.Log(prev.name);
+            myPatch.Add(prev);
+            prev = prev.previousModule.GetComponent<Module>();
+        }
+        Debug.Log(prev.name);
+        myPatch.Add(prev);
+    }
+
+    private bool SourceModuleConnected()
+    {
+        var result = false;
+        foreach (var module in myPatch)
+        {
+            if (module.isSourceModule)
+            {
+                result = true;
+            }
+        }
+
+        return result;
     }
 }
