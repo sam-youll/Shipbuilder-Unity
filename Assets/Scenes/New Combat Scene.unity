@@ -627,7 +627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   time: 0
-  tempo: 480
+  tempo: 250
   sixteenth: 0
   eighth: 0
   quarter: 0
@@ -863,6 +863,9 @@ MonoBehaviour:
   bassSyncProb: 40
   bassDelayTime: 500
   padDelayTime: 1000
+  percSyncProb: 20
+  percFreq: 5600
+  strength: 1
   baseNoteLength: 0
   playerBassAttackRatio: 0.4
   playerBassDecayRatio: 0.2
@@ -870,6 +873,12 @@ MonoBehaviour:
   enemyBassAttackRatio: 0.4
   enemyBassDecayRatio: 0.2
   enemyBassReleaseRatio: 0.4
+  playerPercAttackRatio: 0.1
+  playerPercDecayRatio: 0.4
+  playerGrit: 0
+  playerSoft: 0
+  playerFB: 0
+  playerFF: 0
 --- !u!4 &1338962617
 Transform:
   m_ObjectHideFlags: 0

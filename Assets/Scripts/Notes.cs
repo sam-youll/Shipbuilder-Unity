@@ -41,13 +41,13 @@ public static class Notes
     // these arrays contain the scale degrees that are present in the given triad
     public static readonly Dictionary<string, int[]> SCALE_CHORD = new Dictionary<string, int[]>
     {
-        { "I", new [] { 0, 2, 4 } },
-        { "II", new [] { 1, 3, 5} },
-        { "III", new [] { 2, 4, 6 } },
-        { "IV", new [] { 3, 5, 0} },
-        { "V", new [] { 4, 6, 1 } },
-        { "VI", new [] { 5, 0, 2 } },
-        { "VII", new [] { 6, 1, 3 } },
+        { "I", new [] { 0, 2, 4, 6 } },
+        { "II", new [] { 1, 3, 5, 0 } },
+        { "III", new [] { 2, 4, 6, 1 } },
+        { "IV", new [] { 3, 5, 0, 2 } },
+        { "V", new [] { 4, 6, 1, 3 } },
+        { "VI", new [] { 5, 0, 2, 4 } },
+        { "VII", new [] { 6, 1, 3, 5 } },
     };
     // here is an example of a chord that's not just a triad, though it's not being used anywhere yet
     public static readonly int[] I7 = { 0, 2, 4, 6 };

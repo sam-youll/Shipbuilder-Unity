@@ -16,7 +16,7 @@ public class ReactorSounds : MonoBehaviour
     
     //FMOD Event Instance variables
     private EventInstance enemyBass;
-    private EventInstance playerBass;
+    private EventInstance playerBass; 
     private EventInstance enemyPad;
     private EventInstance playerPad;
     private EventInstance enemyPerc;
@@ -57,6 +57,9 @@ public class ReactorSounds : MonoBehaviour
     public int bassSyncProb;
     public float bassDelayTime;
     public float padDelayTime;
+    public int percSyncProb;
+    public float percFreq;
+    public float strength;
 
     public float baseNoteLength;
 
@@ -67,6 +70,12 @@ public class ReactorSounds : MonoBehaviour
     public float enemyBassAttackRatio = .3f;
     public float enemyBassDecayRatio = 0.4f;
     public float enemyBassReleaseRatio = .3f;
+    public float playerPercAttackRatio = .2f;
+    public float playerPercDecayRatio = .8f;
+    public float playerGrit;
+    public float playerSoft;
+    public float playerFB;
+    public float playerFF;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -97,7 +106,7 @@ public class ReactorSounds : MonoBehaviour
 
         //Subscribing all the instruments so they're quantized
         Conductor.Instance.onSixteenth.AddListener(PlayerPerc);
-        Conductor.Instance.onEighth.AddListener(EnemyPerc);
+        Conductor.Instance.onSixteenth.AddListener(EnemyPerc);
         Conductor.Instance.onEighth.AddListener(PlayerBass);
         Conductor.Instance.onEighth.AddListener(EnemyBass);
         Conductor.Instance.onBar.AddListener(UpdateChord);
@@ -154,17 +163,17 @@ public class ReactorSounds : MonoBehaviour
 
         //PERC
         //standard adsr stuff
-        playerPerc.setParameterByName("attack", 10);
-        playerPerc.setParameterByName("decay", 60);
+        ///playerPerc.setParameterByName("attack", 10);
+        ///playerPerc.setParameterByName("decay", 60);
         //bpfreq determines what band of frequencies the filter is passing over - more or less how high/low it is
-        playerPerc.setParameterByName("bpfreq", 5600);
+        ///playerPerc.setParameterByName("bpfreq", 5600);
         //reson is how resonant the bp freq is -- how much does it sound like noise vs a pitch
-        playerPerc.setParameterByName("reson", 80);
+        ///playerPerc.setParameterByName("reson", 80);
 
         enemyPerc.setParameterByName("attack", 10);
         enemyPerc.setParameterByName("decay", 60);
-        enemyPerc.setParameterByName("bpfreq", 100);
-        enemyPerc.setParameterByName("reson", 100);
+        enemyPerc.setParameterByName("bpfreq", 150);
+        enemyPerc.setParameterByName("reson", 80);
 
         //BASS
         //standard adsr stuff 
@@ -205,11 +214,75 @@ public class ReactorSounds : MonoBehaviour
 
     void setReactorParams()
     {
-        baseNoteLength = 60 / Conductor.Instance.tempo;
 
         playerBass.setParameterByName("delaytime", bassDelayTime);
 
         playerPad.setParameterByName("delaytime", padDelayTime);
+
+        playerPerc.setParameterByName("bpfreq", percFreq);
+
+        if (strength <= 1)
+        {
+            baseNoteLength = 60 / Conductor.Instance.tempo;
+            playerGrit = Random.Range(0, 20);
+            playerSoft = 80 - playerGrit;
+
+            playerPerc.setParameterByName("reson", Random.Range(0, 50));
+            playerPad.setParameterByName("grit", playerGrit);
+            playerPad.setParameterByName("soft", playerSoft);
+            playerPad.setParameterByName("reson", 0);
+            playerPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
+            playerPad.setParameterByName("ffgain", Random.Range(0f, .1f));
+        } else if (strength <= 2)
+        {
+            baseNoteLength = (60 / Conductor.Instance.tempo) * .8f;
+            playerGrit = Random.Range(20, 40);
+            playerSoft = 80 - playerGrit;
+
+            playerPerc.setParameterByName("reson", Random.Range(30, 80));
+            playerPad.setParameterByName("grit", playerGrit);
+            playerPad.setParameterByName("soft", playerSoft);
+            playerPad.setParameterByName("reson", Random.Range(0, 50));
+            playerPad.setParameterByName("fbgain", Random.Range(.3f, .4f));
+            playerPad.setParameterByName("ffgain", Random.Range(.2f, .3f));
+        }
+        else if (strength <= 3)
+        {
+            baseNoteLength = (60 / Conductor.Instance.tempo) * .65f;
+            playerGrit = Random.Range(40, 60);
+            playerSoft = 80 - playerGrit;
+
+            playerPerc.setParameterByName("reson", Random.Range(80, 90));
+            playerPad.setParameterByName("grit", playerGrit);
+            playerPad.setParameterByName("soft", playerSoft);
+            playerPad.setParameterByName("reson", Random.Range(50, 80));
+            playerPad.setParameterByName("fbgain", Random.Range(.2f, .3f));
+            playerPad.setParameterByName("ffgain", Random.Range(.3f, .4f));
+        } else
+        {
+            baseNoteLength = (60 / Conductor.Instance.tempo) * .5f;
+            playerGrit = Random.Range(60, 79);
+            playerSoft = 80 - playerGrit;
+
+            playerPerc.setParameterByName("reson", Random.Range(90, 100));
+            playerPad.setParameterByName("grit", playerGrit);
+            playerPad.setParameterByName("soft", playerSoft);
+            playerPad.setParameterByName("reson", Random.Range(80, 100));
+            playerPad.setParameterByName("fbgain", Random.Range(0f, .2f));
+            playerPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
+        }
+
+        //option for changing perc reson based on pitch rather than strength, tucking this away just in case
+        /*if (percFreq < 500)
+        {
+            playerPerc.setParameterByName("reson", Random.Range(80, 100));
+        } else if (percFreq < 1000)
+        {
+            playerPerc.setParameterByName("reson", Random.Range(30, 80));
+        } else
+        {
+            playerPerc.setParameterByName("reson", Random.Range(0, 50));
+        }*/
 
     }
 
@@ -217,37 +290,64 @@ public class ReactorSounds : MonoBehaviour
     {
         //shouldPlay is telling it whether it's cool to trigger adsr on the dam beat 
         var shouldPlay = false;
-        playerPerc.getParameterByName("bpfreq", out var bpfreq);
+        var syncDice = Random.Range(0, 100);
+        var notelength = baseNoteLength;
 
-        if (bpfreq < 500)
+        float percAttack = notelength * playerPercAttackRatio;
+        float percDecay = notelength * playerPercDecayRatio;
+
+        playerPerc.setParameterByName("attack", percAttack * 1000);
+        playerPerc.setParameterByName("decay", percDecay * 1000);  
+
+        if (percFreq < 500)
         {
             //if this shit sounds like a kick drum, play it on 1 and 3
-            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
+            if (syncDice < percSyncProb)
             {
-                shouldPlay = true;
+                if (Conductor.Instance.sixteenth == 6 || Conductor.Instance.sixteenth == 14)
+                {
+                    shouldPlay = true;
+                }
+            }
+            if (syncDice > percSyncProb)
+            {
+                if (Conductor.Instance.sixteenth == 0 || Conductor.Instance.sixteenth == 8)
+                {
+                    shouldPlay = true;
+                }
             }
         }
-        else if (bpfreq < 1000)
+        else if (percFreq < 1000)
         {
-            //if this shit sounds like a snare or tom, play it on 2. idk why. 
-            if (Conductor.Instance.quarter == 1)
+            //if this shit sounds like a snare or tom, play it on 2 or 4 
+            if (Conductor.Instance.sixteenth == 4 || Conductor.Instance.sixteenth == 12)
             {
                 shouldPlay = true;
             }
         }
-        else if (bpfreq > 1000)
+        else if (percFreq > 1000)
         {
             //if this shit sounds like a hi hat, play it on 3 and 4. truly all this is placeholder logic, we should get funkier w it 
-            if (Conductor.Instance.quarter > 2)
+            if (syncDice < percSyncProb)
             {
-                shouldPlay = true;
+                if (Conductor.Instance.sixteenth % 2 != 0)
+                {
+                    shouldPlay = true;
+                } 
+            }
+            if (syncDice > percSyncProb)
+            {
+                if(Conductor.Instance.sixteenth % 2 == 0)
+                {
+                    shouldPlay = true;
+                }
             }
         }
 
         //pretty much copied from the weapon firing, should put a variable in the length field that's the combined ADSR params later
         if (shouldPlay)
         {
-            StartCoroutine(PlayNoteCoroutine(playerPerc, .07f));
+            StartCoroutine(PlayNoteCoroutine(playerPerc, notelength));
         }
         
     }
@@ -257,25 +357,50 @@ public class ReactorSounds : MonoBehaviour
         //See PlayerPerc
         var shouldPlay = false;
         enemyPerc.getParameterByName("bpfreq", out var bpfreq);
+        var syncDice = Random.Range(0, 100);
 
         if (bpfreq < 500)
         {
-            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
+            //if this shit sounds like a kick drum, play it on 1 and 3
+            if (syncDice < percSyncProb)
             {
-                shouldPlay = true;
+                if (Conductor.Instance.sixteenth == 6 || Conductor.Instance.sixteenth == 14)
+                {
+                    shouldPlay = true;
+                }
+            }
+            if (syncDice > percSyncProb)
+            {
+                if (Conductor.Instance.sixteenth == 0 || Conductor.Instance.sixteenth == 8)
+                {
+                    shouldPlay = true;
+                }
             }
         }
         else if (bpfreq < 1000)
         {
-            if (Conductor.Instance.quarter == 1)
+            //if this shit sounds like a snare or tom, play it on 2 or 4 
+            if (Conductor.Instance.sixteenth == 4 || Conductor.Instance.sixteenth == 12)
             {
                 shouldPlay = true;
             }
-        } else if (bpfreq > 1000)
+        }
+        else if (bpfreq > 1000)
         {
-            if (Conductor.Instance.quarter > 2)
+            //if this shit sounds like a hi hat, play it on 3 and 4. truly all this is placeholder logic, we should get funkier w it 
+            if (syncDice < percSyncProb)
             {
-                shouldPlay = true;
+                if (Conductor.Instance.sixteenth % 2 != 0)
+                {
+                    shouldPlay = true;
+                }
+            }
+            if (syncDice > percSyncProb)
+            {
+                if (Conductor.Instance.sixteenth % 2 == 0)
+                {
+                    shouldPlay = true;
+                }
             }
         }
 
@@ -294,14 +419,8 @@ public class ReactorSounds : MonoBehaviour
 
         var syncDice = Random.Range(0, 100);
 
-        var notelength = baseNoteLength * 2;
-        float playerBassAttack = notelength * playerBassAttackRatio;
-        float playerBassDecay = notelength * playerBassDecayRatio;
-        float playerBassRelease = notelength * playerBassReleaseRatio;
-
-        playerBass.setParameterByName("attack", playerBassAttack * 1000);
-        playerBass.setParameterByName("decay", playerBassDecay * 1000);
-        playerBass.setParameterByName("release", playerBassRelease * 1000);
+        var notelength = baseNoteLength;
+        
 
         if (syncDice > bassSyncProb)
         {
@@ -309,6 +428,15 @@ public class ReactorSounds : MonoBehaviour
             if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
             {
                 shouldPlay = true;
+
+                notelength = baseNoteLength * 4;
+                float playerBassAttack = notelength * playerBassAttackRatio;
+                float playerBassDecay = notelength * playerBassDecayRatio;
+                float playerBassRelease = notelength * playerBassReleaseRatio;
+
+                playerBass.setParameterByName("attack", playerBassAttack * 1000);
+                playerBass.setParameterByName("decay", playerBassDecay * 1000);
+                playerBass.setParameterByName("release", playerBassRelease * 1000);
             }
 
         }
@@ -318,6 +446,15 @@ public class ReactorSounds : MonoBehaviour
             if (Conductor.Instance.quarter == 0 || Conductor.Instance.eighth == 3 || Conductor.Instance.eighth == 5 || Conductor.Instance.eighth == 7)
             {
                 shouldPlay = true;
+
+                notelength = baseNoteLength * 2;
+                float playerBassAttack = notelength * playerBassAttackRatio;
+                float playerBassDecay = notelength * playerBassDecayRatio;
+                float playerBassRelease = notelength * playerBassReleaseRatio;
+
+                playerBass.setParameterByName("attack", playerBassAttack * 1000);
+                playerBass.setParameterByName("decay", playerBassDecay * 1000);
+                playerBass.setParameterByName("release", playerBassRelease * 1000);
             }
 
         }
@@ -330,7 +467,7 @@ public class ReactorSounds : MonoBehaviour
             //sets the pitch
             playerBass.setParameterByName("basspitch", bassPitch);
             //plays the note
-            StartCoroutine(PlayNoteCoroutine(playerBass, notelength));
+            StartCoroutine(PlayBassCoroutine(playerBass, notelength));
         }
     }
 
@@ -339,7 +476,6 @@ public class ReactorSounds : MonoBehaviour
         var shouldPlay = false;
         //var pitchDice = 0;
         var bassPitch = 440f;
-
 
         var notelength = baseNoteLength * 4;
         float enemyBassAttack = notelength * enemyBassAttackRatio;
@@ -350,10 +486,10 @@ public class ReactorSounds : MonoBehaviour
         enemyBass.setParameterByName("decay", enemyBassAttack * 1000);
         enemyBass.setParameterByName("release", enemyBassAttack * 1000);
 
-            //should play on 1 and 3
-            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
+        //should play on 1 and 3
+        if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
             {
-                shouldPlay = true;
+               shouldPlay = true;
             }
 
         if (shouldPlay)
@@ -361,7 +497,7 @@ public class ReactorSounds : MonoBehaviour
             //same as before but drops it a couple more octaves
             bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, changes[currentChord])) / 8;
             playerBass.setParameterByName("basspitch", bassPitch);
-            StartCoroutine(PlayNoteCoroutine(playerBass, notelength));
+            StartCoroutine(PlayBassCoroutine(playerBass, notelength));
 
         }
     }
@@ -411,6 +547,21 @@ public class ReactorSounds : MonoBehaviour
 
             started = true;
             yield return new WaitForSeconds(noteLength);
+        }
+
+        instrument.setParameterByName("adsr", 0);
+    }
+
+    IEnumerator PlayBassCoroutine(EventInstance instrument, float noteLength)
+    {
+        var started = false;
+
+        if (!started)
+        {
+            instrument.setParameterByName("adsr", 1);
+
+            started = true;
+            yield return new WaitForSeconds(noteLength + (baseNoteLength * 4));
         }
 
         instrument.setParameterByName("adsr", 0);

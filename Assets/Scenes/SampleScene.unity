@@ -2690,6 +2690,13 @@ MonoBehaviour:
     Path: event:/TEST ENEMIES/TestEnemy3
   enemySongs: []
   enemySongsPlayed: []
+  noteLength: 0
+  attackRatio: 0.3
+  decayRatio: 0.4
+  releaseRatio: 0.3
+  attack: 0
+  decay: 0
+  release: 0
 --- !u!4 &250102138
 Transform:
   m_ObjectHideFlags: 0
@@ -2809,6 +2816,24 @@ MonoBehaviour:
   - VI
   - VII
   bassSyncProb: 0
+  bassDelayTime: 0
+  padDelayTime: 0
+  percSyncProb: 0
+  percFreq: 0
+  strength: 0
+  baseNoteLength: 0
+  playerBassAttackRatio: 0.3
+  playerBassDecayRatio: 0.4
+  playerBassReleaseRatio: 0.3
+  enemyBassAttackRatio: 0.3
+  enemyBassDecayRatio: 0.4
+  enemyBassReleaseRatio: 0.3
+  playerPercAttackRatio: 0.2
+  playerPercDecayRatio: 0.8
+  playerGrit: 0
+  playerSoft: 0
+  playerFB: 0
+  playerFF: 0
 --- !u!1001 &304928886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10786,6 +10811,7 @@ GameObject:
   - component: {fileID: 1634029375}
   - component: {fileID: 1634029374}
   - component: {fileID: 1634029376}
+  - component: {fileID: 1634029377}
   m_Layer: 10
   m_Name: Reactor
   m_TagString: Untagged
@@ -10880,11 +10906,96 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6e734ce1b51e0e40a4f149f18e22494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  power: 0
   rate: 0
   strength: 0
   izki: 0
   aubo: 0
   dwth: 0
+  previousModule: {fileID: 0}
+--- !u!114 &1634029377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634029373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 341143e1a09efe147942f3abb746d318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyBassRef:
+    Guid:
+      Data1: -882703425
+      Data2: 1076792622
+      Data3: 1111426239
+      Data4: -286263609
+    Path: event:/ENEMY GEN/enemy_bass
+  playerBassRef:
+    Guid:
+      Data1: 1577863340
+      Data2: 1293431072
+      Data3: 599389357
+      Data4: -1994605737
+    Path: event:/PLAYER GEN/player_bass
+  enemyPadRef:
+    Guid:
+      Data1: -22682584
+      Data2: 1168354225
+      Data3: -1592922724
+      Data4: -921203472
+    Path: event:/ENEMY GEN/enemy_pad
+  playerPadRef:
+    Guid:
+      Data1: 384406097
+      Data2: 1170066996
+      Data3: -916520015
+      Data4: 974316332
+    Path: event:/PLAYER GEN/player_pad
+  enemyPercRef:
+    Guid:
+      Data1: -1193807301
+      Data2: 1119971342
+      Data3: 1804405159
+      Data4: -1418873121
+    Path: event:/ENEMY GEN/enemy_perc
+  playerPercRef:
+    Guid:
+      Data1: 1530440174
+      Data2: 1297913103
+      Data3: 1218545851
+      Data4: -40908790
+    Path: event:/PLAYER GEN/player_perc
+  currentChord: 0
+  changes: 00000000030000000100000006000000
+  chords:
+  - I
+  - II
+  - III
+  - IV
+  - V
+  - VI
+  - VII
+  bassSyncProb: 60
+  bassDelayTime: 500
+  padDelayTime: 1500
+  percSyncProb: 20
+  percFreq: 5600
+  strength: 0
+  baseNoteLength: 0
+  playerBassAttackRatio: 0.3
+  playerBassDecayRatio: 0.4
+  playerBassReleaseRatio: 0.3
+  enemyBassAttackRatio: 0.3
+  enemyBassDecayRatio: 0.4
+  enemyBassReleaseRatio: 0.3
+  playerPercAttackRatio: 0.2
+  playerPercDecayRatio: 0.8
+  playerGrit: 0
+  playerSoft: 0
+  playerFB: 0
+  playerFF: 0
 --- !u!1 &1634672642
 GameObject:
   m_ObjectHideFlags: 0
