@@ -122,7 +122,7 @@ public class ReactorSounds : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        strength = Reactor.Instance.strength;
     }
 
     void SetTestChanges()
@@ -212,7 +212,7 @@ public class ReactorSounds : MonoBehaviour
         enemyPad.setParameterByName("soft", 80);
     }
 
-    void setReactorParams()
+    public void SetReactorParams()
     {
 
         playerBass.setParameterByName("delaytime", bassDelayTime);
