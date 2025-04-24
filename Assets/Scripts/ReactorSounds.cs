@@ -46,6 +46,8 @@ public class ReactorSounds : MonoBehaviour
         "VII"
     };
 
+    public int bassSyncProb;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -72,13 +74,13 @@ public class ReactorSounds : MonoBehaviour
         playerPad.start();
 
         //Subscribing all the instruments so they're quantized
-        Conductor.Instance.onBeat.AddListener(PlayerPerc);
-        Conductor.Instance.onBeat.AddListener(EnemyPerc);
-        Conductor.Instance.onBeat.AddListener(PlayerBass);
-        Conductor.Instance.onBeat.AddListener(EnemyBass);
-        Conductor.Instance.onBeat.AddListener(UpdateChord);
-        Conductor.Instance.onBeat.AddListener(PlayerPad);
-        Conductor.Instance.onBeat.AddListener(EnemyPad);
+        Conductor.Instance.onSixteenth.AddListener(PlayerPerc);
+        Conductor.Instance.onEighth.AddListener(EnemyPerc);
+        Conductor.Instance.onEighth.AddListener(PlayerBass);
+        Conductor.Instance.onEighth.AddListener(EnemyBass);
+        Conductor.Instance.onBar.AddListener(UpdateChord);
+        Conductor.Instance.onHalf.AddListener(PlayerPad);
+        Conductor.Instance.onHalf.AddListener(EnemyPad);
 
         //idk setting current chord to 0 
         currentChord = changes[0];
@@ -102,7 +104,7 @@ public class ReactorSounds : MonoBehaviour
     void UpdateChord()
     {
         //this function updates the current chord every bar 
-        if (Conductor.Instance.beat == 0)
+        if (Conductor.Instance.quarter == 0)
         {
            if (currentChord >= changes.Count)
             {
@@ -189,7 +191,7 @@ public class ReactorSounds : MonoBehaviour
         if (bpfreq < 500)
         {
             //if this shit sounds like a kick drum, play it on 1 and 3
-            if (Conductor.Instance.beat == 0 || Conductor.Instance.beat == 2)
+            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
             {
                 shouldPlay = true;
             }
@@ -197,7 +199,7 @@ public class ReactorSounds : MonoBehaviour
         else if (bpfreq < 1000)
         {
             //if this shit sounds like a snare or tom, play it on 2. idk why. 
-            if (Conductor.Instance.beat == 1)
+            if (Conductor.Instance.quarter == 1)
             {
                 shouldPlay = true;
             }
@@ -205,7 +207,7 @@ public class ReactorSounds : MonoBehaviour
         else if (bpfreq > 1000)
         {
             //if this shit sounds like a hi hat, play it on 3 and 4. truly all this is placeholder logic, we should get funkier w it 
-            if (Conductor.Instance.beat > 2)
+            if (Conductor.Instance.quarter > 2)
             {
                 shouldPlay = true;
             }
@@ -227,20 +229,20 @@ public class ReactorSounds : MonoBehaviour
 
         if (bpfreq < 500)
         {
-            if (Conductor.Instance.beat == 0 || Conductor.Instance.beat == 2)
+            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
             {
                 shouldPlay = true;
             }
         }
         else if (bpfreq < 1000)
         {
-            if (Conductor.Instance.beat == 1)
+            if (Conductor.Instance.quarter == 1)
             {
                 shouldPlay = true;
             }
         } else if (bpfreq > 1000)
         {
-            if (Conductor.Instance.beat > 2)
+            if (Conductor.Instance.quarter > 2)
             {
                 shouldPlay = true;
             }
@@ -258,11 +260,28 @@ public class ReactorSounds : MonoBehaviour
         var shouldPlay = false;
         //var pitchDice = 0;
         var bassPitch = 440f;
+        
+        var syncDice = 0;
 
-        //should play on 1 and 3
-        if (Conductor.Instance.beat == 0 || Conductor.Instance.beat == 2)
+        syncDice = Random.Range(0, 100);
+
+        if (syncDice > bassSyncProb)
         {
-            shouldPlay = true;
+            //should play on 1 and 3
+            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
+            {
+                shouldPlay = true;
+            }
+
+            
+        }
+
+        if (syncDice < bassSyncProb)
+        {
+            if (Conductor.Instance.quarter == 0 || Conductor.Instance.eighth == 3 || Conductor.Instance.eighth == 5 || Conductor.Instance.eighth == 7)
+            {
+                shouldPlay = true;
+            }
         }
 
         if (shouldPlay)
@@ -273,6 +292,8 @@ public class ReactorSounds : MonoBehaviour
             playerBass.setParameterByName("basspitch", bassPitch);
             //plays the note
             StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
+
+           
         }
     }
 
@@ -282,9 +303,25 @@ public class ReactorSounds : MonoBehaviour
         //var pitchDice = 0;
         var bassPitch = 440f;
 
-        if (Conductor.Instance.beat == 0 || Conductor.Instance.beat == 2)
+        var syncDice = 0;
+
+        syncDice = Random.Range(0, 100);
+
+        if (syncDice > bassSyncProb)
         {
-            shouldPlay = true;
+            //should play on 1 and 3
+            if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
+            {
+                shouldPlay = true;
+            }
+        }
+
+        if (syncDice < bassSyncProb)
+        {
+            if (Conductor.Instance.quarter == 0 || Conductor.Instance.eighth == 3 || Conductor.Instance.eighth == 5 || Conductor.Instance.eighth == 7)
+            {
+                shouldPlay = true;
+            }
         }
 
         if (shouldPlay)
@@ -299,7 +336,7 @@ public class ReactorSounds : MonoBehaviour
     void PlayerPad()
     {
         //every bar change pitch
-        if (Conductor.Instance.beat == 0)
+        if (Conductor.Instance.quarter == 0)
         {
             //gets the current chord value from the changes list
             var chord = changes[currentChord];
@@ -311,12 +348,16 @@ public class ReactorSounds : MonoBehaviour
 
             //sets the pitch
             playerPad.setParameterByName("pitch", padPitch);
+
+            float paramValue = 0f;
+            playerPad.getParameterByName("pitch", out paramValue);
+            UnityEngine.Debug.Log(paramValue);
         }
     }
 
     void EnemyPad()
     {
-        if (Conductor.Instance.beat == 0)
+        if (Conductor.Instance.quarter == 0)
         {
             var chord = changes[currentChord];
             string chordstring = chords[chord];

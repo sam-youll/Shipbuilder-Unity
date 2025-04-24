@@ -604,10 +604,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   time: 0
-  tempo: 160
-  beat: 0
-  measureLength: 4
-  onBeat:
+  tempo: 240
+  sixteenth: 0
+  eighth: 0
+  quarter: 0
+  half: 0
+  whole: 0
+  bar: 0
+  measureLength: 16
+  onSixteenth:
+    m_PersistentCalls:
+      m_Calls: []
+  onEighth:
+    m_PersistentCalls:
+      m_Calls: []
+  onQuarter:
+    m_PersistentCalls:
+      m_Calls: []
+  onHalf:
+    m_PersistentCalls:
+      m_Calls: []
+  onWhole:
+    m_PersistentCalls:
+      m_Calls: []
+  onBar:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1001 &1120947352
@@ -813,6 +833,7 @@ MonoBehaviour:
   - V
   - VI
   - VII
+  bassSyncProb: 40
 --- !u!4 &1338962617
 Transform:
   m_ObjectHideFlags: 0
