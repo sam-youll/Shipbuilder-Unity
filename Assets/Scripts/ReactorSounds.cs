@@ -53,7 +53,20 @@ public class ReactorSounds : MonoBehaviour
         "VII"
     };
 
+    //reactor variables
     public int bassSyncProb;
+    public float bassDelayTime;
+    public float padDelayTime;
+
+    public float baseNoteLength;
+
+    //reactor params, more hidden
+    public float playerBassAttackRatio = .3f;
+    public float playerBassDecayRatio = 0.4f;
+    public float playerBassReleaseRatio = .3f;
+    public float enemyBassAttackRatio = .3f;
+    public float enemyBassDecayRatio = 0.4f;
+    public float enemyBassReleaseRatio = .3f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -71,6 +84,8 @@ public class ReactorSounds : MonoBehaviour
 
         //setting the placeholder parameters that will just work for now
         SetTestParams();
+        //setting params based on reactor variables
+        setReactorParams();
 
         //starting the FMOD events
         enemyPerc.start();
@@ -91,6 +106,8 @@ public class ReactorSounds : MonoBehaviour
 
         //idk setting current chord to 0 
         currentChord = changes[0];
+
+
     }
 
     // Update is called once per frame
@@ -155,7 +172,7 @@ public class ReactorSounds : MonoBehaviour
         playerBass.setParameterByName("decay", 1550);
         playerBass.setParameterByName("release", 80);
         //the time on the delay, it's for babies
-        playerBass.setParameterByName("delaytime", 750);
+        ///playerBass.setParameterByName("delaytime", 750);
 
         enemyBass.setParameterByName("attack", 150);
         enemyBass.setParameterByName("decay", 1120);
@@ -163,30 +180,37 @@ public class ReactorSounds : MonoBehaviour
 
         //PADS
         //Feedback gain - how loud the feedback noise is... these params are probably better to play with IN FMOD to get an idea.
-        playerPad.setParameterByName("fbgain", 0.48f);
+        playerPad.setParameterByName("fbgain", 0.28f);
         //Feedforward gain
         playerPad.setParameterByName("ffgain", 0.33f);
         //Delay time - literal delay, the longer it is the more cool and alien it sounds, but leads to clustery pitch stuff 
-        playerPad.setParameterByName("delaytime", 650);
-        //im gonna keep it real w u i dont fuckin remember 
-        playerPad.setParameterByName("cgain", 0.47f);
+        ///playerPad.setParameterByName("delaytime", 650);
         //frequency of the bandpass filter, if u make it lower than the current pitch it's gonna be quiet af but that might be good
-        playerPad.setParameterByName("bpfreq", 11200);
+        playerPad.setParameterByName("bpfreq", 500);
         //resonance of the bandpass filter, honestly if it's higher it's mostly gonna be louder
-        playerPad.setParameterByName("reson", 36);
+        playerPad.setParameterByName("reson", 0);
         //grit is how much of the Gritty source ur getting . vibes based param im sorry to say
-        playerPad.setParameterByName("grit", 99);
+        playerPad.setParameterByName("grit", 40);
         //soft is how much of the Soft source ur getting, same as above. just mixing stuff 
-        playerPad.setParameterByName("soft", 78);
+        playerPad.setParameterByName("soft", 30);
 
-        enemyPad.setParameterByName("fbgain", 0.58f);
-        enemyPad.setParameterByName("ffgain", 0.41f);
+        enemyPad.setParameterByName("fbgain", 0.5f);
+        enemyPad.setParameterByName("ffgain", 0.2f);
         enemyPad.setParameterByName("delaytime", 400);
-        enemyPad.setParameterByName("cgain", 0.51f);
-        enemyPad.setParameterByName("bpfreq", 8200);
-        enemyPad.setParameterByName("reson", 41);
-        enemyPad.setParameterByName("grit", 0);
-        enemyPad.setParameterByName("soft", 106);
+        enemyPad.setParameterByName("bpfreq", 200);
+        enemyPad.setParameterByName("reson", 0);
+        enemyPad.setParameterByName("grit", 5);
+        enemyPad.setParameterByName("soft", 80);
+    }
+
+    void setReactorParams()
+    {
+        baseNoteLength = 60 / Conductor.Instance.tempo;
+
+        playerBass.setParameterByName("delaytime", bassDelayTime);
+
+        playerPad.setParameterByName("delaytime", padDelayTime);
+
     }
 
     void PlayerPerc()
@@ -267,10 +291,17 @@ public class ReactorSounds : MonoBehaviour
         var shouldPlay = false;
         //var pitchDice = 0;
         var bassPitch = 440f;
-        
-        var syncDice = 0;
 
-        syncDice = Random.Range(0, 100);
+        var syncDice = Random.Range(0, 100);
+
+        var notelength = baseNoteLength * 2;
+        float playerBassAttack = notelength * playerBassAttackRatio;
+        float playerBassDecay = notelength * playerBassDecayRatio;
+        float playerBassRelease = notelength * playerBassReleaseRatio;
+
+        playerBass.setParameterByName("attack", playerBassAttack * 1000);
+        playerBass.setParameterByName("decay", playerBassDecay * 1000);
+        playerBass.setParameterByName("release", playerBassRelease * 1000);
 
         if (syncDice > bassSyncProb)
         {
@@ -280,7 +311,6 @@ public class ReactorSounds : MonoBehaviour
                 shouldPlay = true;
             }
 
-            
         }
 
         if (syncDice < bassSyncProb)
@@ -289,18 +319,18 @@ public class ReactorSounds : MonoBehaviour
             {
                 shouldPlay = true;
             }
+
         }
 
         if (shouldPlay)
         {
+
             //if it should play, get the pitch of the root of the current chord, drop it 2 octaves
             bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, (changes[currentChord])))/4;
             //sets the pitch
             playerBass.setParameterByName("basspitch", bassPitch);
             //plays the note
-            StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
-
-           
+            StartCoroutine(PlayNoteCoroutine(playerBass, notelength));
         }
     }
 
@@ -310,40 +340,36 @@ public class ReactorSounds : MonoBehaviour
         //var pitchDice = 0;
         var bassPitch = 440f;
 
-        var syncDice = 0;
 
-        syncDice = Random.Range(0, 100);
+        var notelength = baseNoteLength * 4;
+        float enemyBassAttack = notelength * enemyBassAttackRatio;
+        float enemyBassDecay = notelength * enemyBassDecayRatio;
+        float enemyBassRelease = notelength * enemyBassReleaseRatio;
 
-        if (syncDice > bassSyncProb)
-        {
+        enemyBass.setParameterByName("attack", enemyBassAttack * 1000);
+        enemyBass.setParameterByName("decay", enemyBassAttack * 1000);
+        enemyBass.setParameterByName("release", enemyBassAttack * 1000);
+
             //should play on 1 and 3
             if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
             {
                 shouldPlay = true;
             }
-        }
-
-        if (syncDice < bassSyncProb)
-        {
-            if (Conductor.Instance.quarter == 0 || Conductor.Instance.eighth == 3 || Conductor.Instance.eighth == 5 || Conductor.Instance.eighth == 7)
-            {
-                shouldPlay = true;
-            }
-        }
 
         if (shouldPlay)
         {
             //same as before but drops it a couple more octaves
             bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, changes[currentChord])) / 8;
             playerBass.setParameterByName("basspitch", bassPitch);
-            StartCoroutine(PlayNoteCoroutine(playerBass, 1.73f));
+            StartCoroutine(PlayNoteCoroutine(playerBass, notelength));
+
         }
     }
 
     void PlayerPad()
     {
         //every bar change pitch
-        if (Conductor.Instance.quarter == 0)
+        if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
         {
             //gets the current chord value from the changes list
             var chord = changes[currentChord];
@@ -356,15 +382,12 @@ public class ReactorSounds : MonoBehaviour
             //sets the pitch
             playerPad.setParameterByName("pitch", padPitch);
 
-            float paramValue = 0f;
-            playerPad.getParameterByName("pitch", out paramValue);
-            UnityEngine.Debug.Log(paramValue);
         }
     }
 
     void EnemyPad()
     {
-        if (Conductor.Instance.quarter == 0)
+        if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
         {
             var chord = changes[currentChord];
             string chordstring = chords[chord];

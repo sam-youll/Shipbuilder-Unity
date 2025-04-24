@@ -88,6 +88,14 @@ public class AudioManager: MonoBehaviour
     private VCA playerVCA;
     private EventDescription moduleDescription;
 
+    public float noteLength;
+    public float attackRatio = 0.3f;
+    public float decayRatio = 0.4f;
+    public float releaseRatio = 0.3f;
+    public float attack;
+    public float decay;
+    public float release;
+
     void Start()
     {
         // moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
@@ -114,6 +122,11 @@ public class AudioManager: MonoBehaviour
         playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
         moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event:/Module");
 
+        noteLength = 60 / Conductor.Instance.tempo;
+        attack = noteLength * attackRatio;
+        decay = noteLength * decayRatio;
+        release = noteLength * releaseRatio;
+        UnityEngine.Debug.Log("note length: " + noteLength + "attack: " + attack + "decay: " + decay + "release" + release);
     }
 
     void Update()
@@ -517,12 +530,12 @@ public class AudioManager: MonoBehaviour
             { "AMFMdepth", 100 },
             //arp adsr params
             { "adsr", 0 },
-            { "attack", 100 },
-            { "decay", 70 },
+            { "attack", attack * 1000},
+            { "decay", decay * 1000 },
             { "sustain", 0 },
-            { "release", 1000 },
+            { "release", release * 1000 },
             // length should be the sum of adsr params divided by 1000
-            { "length", 1.17f },
+            { "length", noteLength },
             //arp pitch params
             { "apitch1", 440 },
             { "apitch2", 554.37f },
