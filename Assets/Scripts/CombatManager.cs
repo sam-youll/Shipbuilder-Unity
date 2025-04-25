@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CombatManager : MonoBehaviour
 {
@@ -38,11 +39,14 @@ public class CombatManager : MonoBehaviour
 
     public Ship playerShip;
     public Ship enemyShip;
+    public List<GameObject> enemyWeapons;
+    public int fightLevel;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         state = State.outOfCombat;
+        enemyShip.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -57,6 +61,7 @@ public class CombatManager : MonoBehaviour
         
         if (state == State.inCombat)
         {
+            enemyShip.gameObject.SetActive(true);
             // if (Camera.main.transform.position != new Vector3(18, 0, -10))
             // {
             //     Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(18, 0, -10), .3f);
@@ -71,10 +76,17 @@ public class CombatManager : MonoBehaviour
                 if (playerHealthBar.value <= 0)
                 {
                     endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
+                    
                 }
                 else if (enemyHealthBar.value <= 0)
                 {
                     endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU WIN";
+                    endScreenTimer = 999f;
+                    fightLevel++;
+                    foreach (var weapon in enemyWeapons)
+                    {
+                        weapon.GetComponent<Weapon>().damage += 2;
+                    }
                 }
             }
         }
@@ -84,6 +96,7 @@ public class CombatManager : MonoBehaviour
             if (endScreenTimer <= 0)
             {
                 endScreen.SetActive(false);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 state = State.outOfCombat;
             }
         }
@@ -98,10 +111,11 @@ public class CombatManager : MonoBehaviour
 
     public void StartCombat()
     {
-        endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
+        // endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
         endScreen.SetActive(false);
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;
+        enemyShip.health = enemyShip.maxHealth;
         
         state = State.inCombat;
 

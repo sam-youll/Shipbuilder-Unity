@@ -136,6 +136,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.newSize.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6226524275950156507, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: lerpRate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6591875588019939347, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
       propertyPath: m_Size.x
       value: 4
@@ -164,6 +168,30 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8388688771330225993, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: quantized
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388688771330225993, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: bulletSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388688771330225993, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: bulletSpread
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388688771330225993, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: noteMeters.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388688771330225993, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: 'noteMeters.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4276933803376732943}
+    - target: {fileID: 8388688771330225993, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+      propertyPath: 'noteMeters.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7898084149721201395}
     - target: {fileID: 8993631841280745277, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
       propertyPath: m_Name
       value: Weapon 2 Shot Small
@@ -173,3 +201,25 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+--- !u!114 &4276933803376732943 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 47313929306499879, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+  m_PrefabInstance: {fileID: 4319707848765112360}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7898084149721201395 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6226524275950156507, guid: fa5054533aa387a429c21c5f0948e309, type: 3}
+  m_PrefabInstance: {fileID: 4319707848765112360}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

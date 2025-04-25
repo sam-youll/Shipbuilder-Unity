@@ -76,6 +76,12 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
+    public void AddNewRandomModule()
+    {
+        
+    }
+    
     //
     // private void OnMouseEnter()
     // {

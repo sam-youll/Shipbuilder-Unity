@@ -105,7 +105,7 @@ public class Wire : MonoBehaviour
                 }
                 else if (hit.collider.transform.parent.CompareTag("Reactor"))
                 {
-                    Debug.Log("hit reactor");
+                    // Debug.Log("hit reactor");
                     nextModuleJack = hit.collider.gameObject;
                     nextModule = nextModuleJack.transform.parent.gameObject;
                     if (nextModule.GetComponent<Reactor>().previousModule != null)
@@ -219,6 +219,10 @@ public class Wire : MonoBehaviour
             else if (nextModule.CompareTag("Weapon"))
             {
                 nextModule.GetComponent<Weapon>().previousModule = null;
+            }
+            else if (nextModule.CompareTag("Reactor"))
+            {
+                nextModule.GetComponent<Reactor>().previousModule = null;
             }
             else
             {

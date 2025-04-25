@@ -10,8 +10,28 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 297062206093580734, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
       propertyPath: m_Name
-      value: Weapon 1
+      value: Weapon 1 Shot
       objectReference: {fileID: 0}
+    - target: {fileID: 917107032953893322, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+      propertyPath: damage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 917107032953893322, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+      propertyPath: fireRate
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 917107032953893322, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+      propertyPath: bulletSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 917107032953893322, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+      propertyPath: noteMeters.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 917107032953893322, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+      propertyPath: 'noteMeters.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1385384939435176606}
     - target: {fileID: 4979235002145325256, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -57,3 +77,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+--- !u!114 &1385384939435176606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8680894742436081060, guid: 7317d3765b8f3874bae599f4797df4be, type: 3}
+  m_PrefabInstance: {fileID: 7728559064333999930}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

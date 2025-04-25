@@ -16,12 +16,12 @@ public class Bullet : MonoBehaviour
     public List<Weapon.Effect> effects;
     public Combat.SoundType soundType;
 
-    public float lifeTime = 3;
+    private float lifeTime = 10;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        lifeTime /= GetComponent<Rigidbody2D>().linearVelocity.magnitude;
     }
 
     // Update is called once per frame
@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
 
         if (lifeTime <= 0)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 

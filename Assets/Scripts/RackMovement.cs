@@ -278,7 +278,7 @@ public class RackMovement : MonoBehaviour
     /// <returns>True or false.</returns>
     private bool IsOverlapping(Collider2D coll, Vector2 pos)
     {
-        Debug.Log("checking overlap");
+        // Debug.Log("checking overlap");
         
         // are we on the rack
         var onRack = false;
@@ -294,7 +294,7 @@ public class RackMovement : MonoBehaviour
         coll.Overlap(pos, 0, filter, results);
         foreach (var result in results)
         {
-            Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
+            // Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
             // ignore self
             if (result.gameObject == gameObject)
                 continue;
@@ -321,13 +321,13 @@ public class RackMovement : MonoBehaviour
         // receiving no hits means false
         if (!onRack && !isInInventory && !isOverInventory)
         {
-            Debug.Log("My module rack is " + myModuleRack.gameObject.name + " on " + myModuleRack.transform.parent.gameObject.name);
+            // Debug.Log("My module rack is " + myModuleRack.gameObject.name + " on " + myModuleRack.transform.parent.gameObject.name);
             return true;
         }
 
         if (colliding)
         {
-            Debug.Log("colliding");
+            // Debug.Log("colliding");
             return true;
         }
         else

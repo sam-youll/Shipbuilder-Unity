@@ -67,7 +67,7 @@ PrefabInstance:
     - target: {fileID: 4578909643397398158, guid: c3de1810472e2b143b42cd5967717880, type: 3}
       propertyPath: statBar
       value: 
-      objectReference: {fileID: 4520259547867697721}
+      objectReference: {fileID: 0}
     - target: {fileID: 4578909643397398158, guid: c3de1810472e2b143b42cd5967717880, type: 3}
       propertyPath: fireRate
       value: 1
@@ -88,6 +88,10 @@ PrefabInstance:
       propertyPath: bulletSpread
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 4578909643397398158, guid: c3de1810472e2b143b42cd5967717880, type: 3}
+      propertyPath: myShipWeapon
+      value: 
+      objectReference: {fileID: 4881515177895648263}
     - target: {fileID: 4761680190941667104, guid: c3de1810472e2b143b42cd5967717880, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.47
@@ -136,17 +140,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3980275559300522183, guid: c3de1810472e2b143b42cd5967717880, type: 3}
   m_PrefabInstance: {fileID: 454768758150084000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4520259547867697721 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4104074324963747737, guid: c3de1810472e2b143b42cd5967717880, type: 3}
+--- !u!1 &4881515177895648263 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5039820411452189095, guid: c3de1810472e2b143b42cd5967717880, type: 3}
   m_PrefabInstance: {fileID: 454768758150084000}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6294011976999256740 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5843274613947332356, guid: c3de1810472e2b143b42cd5967717880, type: 3}
@@ -235,7 +233,7 @@ PrefabInstance:
     - target: {fileID: 8438774000138891156, guid: 105b8869ac6471742aeace985233441e, type: 3}
       propertyPath: statBar
       value: 
-      objectReference: {fileID: 1474953151299810595}
+      objectReference: {fileID: 0}
     - target: {fileID: 8438774000138891156, guid: 105b8869ac6471742aeace985233441e, type: 3}
       propertyPath: fireRate
       value: 0.8
@@ -256,22 +254,20 @@ PrefabInstance:
       propertyPath: bulletSpread
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 8438774000138891156, guid: 105b8869ac6471742aeace985233441e, type: 3}
+      propertyPath: myShipWeapon
+      value: 
+      objectReference: {fileID: 7601379353100581661}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 105b8869ac6471742aeace985233441e, type: 3}
---- !u!114 &1474953151299810595 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8242603177511794307, guid: 105b8869ac6471742aeace985233441e, type: 3}
+--- !u!1 &7601379353100581661 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1109587311127279805, guid: 105b8869ac6471742aeace985233441e, type: 3}
   m_PrefabInstance: {fileID: 7357630515342066592}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &7969239587245854106 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 613581184522047034, guid: 105b8869ac6471742aeace985233441e, type: 3}
@@ -360,7 +356,7 @@ PrefabInstance:
     - target: {fileID: 8438774000138891156, guid: 105b8869ac6471742aeace985233441e, type: 3}
       propertyPath: statBar
       value: 
-      objectReference: {fileID: 1928342181070830142}
+      objectReference: {fileID: 0}
     - target: {fileID: 8438774000138891156, guid: 105b8869ac6471742aeace985233441e, type: 3}
       propertyPath: fireRate
       value: 0.6
@@ -381,24 +377,22 @@ PrefabInstance:
       propertyPath: bulletSpread
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 8438774000138891156, guid: 105b8869ac6471742aeace985233441e, type: 3}
+      propertyPath: myShipWeapon
+      value: 
+      objectReference: {fileID: 7478025780958458880}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 105b8869ac6471742aeace985233441e, type: 3}
---- !u!114 &1928342181070830142 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8242603177511794307, guid: 105b8869ac6471742aeace985233441e, type: 3}
-  m_PrefabInstance: {fileID: 7539381004377017533}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6927279231012733575 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 613581184522047034, guid: 105b8869ac6471742aeace985233441e, type: 3}
+  m_PrefabInstance: {fileID: 7539381004377017533}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7478025780958458880 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1109587311127279805, guid: 105b8869ac6471742aeace985233441e, type: 3}
   m_PrefabInstance: {fileID: 7539381004377017533}
   m_PrefabAsset: {fileID: 0}
