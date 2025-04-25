@@ -271,12 +271,12 @@ public class AudioManager: MonoBehaviour
 
     public void PickUpModuleSFX()
     {
-        // FMODUnity.RuntimeManager.PlayOneShot(ui_pickupRef);
+         FMODUnity.RuntimeManager.PlayOneShot(ui_pickupRef);
     }
 
     public void PutDownModuleSFX()
     {
-        // FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
+         FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
     }
 
     private EventReference EnemySongPicked()
