@@ -60,8 +60,10 @@ public class ReactorSounds : MonoBehaviour
     public int percSyncProb;
     public float percFreq;
     public float strength;
+    public float enemyStrength;
 
     public float baseNoteLength;
+    public float enemyBaseNoteLength;
 
     //reactor params, more hidden
     public float playerBassAttackRatio = .3f;
@@ -74,8 +76,12 @@ public class ReactorSounds : MonoBehaviour
     public float playerPercDecayRatio = .8f;
     public float playerGrit;
     public float playerSoft;
+    public float enemyGrit;
+    public float enemySoft;
     public float playerFB;
     public float playerFF;
+    public float enemyFF;
+    public float enemyFB;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -97,12 +103,10 @@ public class ReactorSounds : MonoBehaviour
         SetReactorParams();
 
         //starting the FMOD events
-        enemyPerc.start();
         playerPerc.start();
-        enemyBass.start();
         playerBass.start();
-        enemyPad.start();
         playerPad.start();
+        
 
         //Subscribing all the instruments so they're quantized
         Conductor.Instance.onSixteenth.AddListener(PlayerPerc);
@@ -170,10 +174,8 @@ public class ReactorSounds : MonoBehaviour
         //reson is how resonant the bp freq is -- how much does it sound like noise vs a pitch
         ///playerPerc.setParameterByName("reson", 80);
 
-        enemyPerc.setParameterByName("attack", 10);
-        enemyPerc.setParameterByName("decay", 60);
-        enemyPerc.setParameterByName("bpfreq", 150);
-        enemyPerc.setParameterByName("reson", 80);
+        //enemyPerc.setParameterByName("bpfreq", 150);
+        //enemyPerc.setParameterByName("reson", 80);
 
         //BASS
         //standard adsr stuff 
@@ -183,9 +185,6 @@ public class ReactorSounds : MonoBehaviour
         //the time on the delay, it's for babies
         ///playerBass.setParameterByName("delaytime", 750);
 
-        enemyBass.setParameterByName("attack", 150);
-        enemyBass.setParameterByName("decay", 1120);
-        enemyBass.setParameterByName("release", 60);
 
         //PADS
         //Feedback gain - how loud the feedback noise is... these params are probably better to play with IN FMOD to get an idea.
@@ -203,13 +202,13 @@ public class ReactorSounds : MonoBehaviour
         //soft is how much of the Soft source ur getting, same as above. just mixing stuff 
         ///playerPad.setParameterByName("soft", 30);
 
-        enemyPad.setParameterByName("fbgain", 0.5f);
-        enemyPad.setParameterByName("ffgain", 0.2f);
-        enemyPad.setParameterByName("delaytime", 400);
+        //enemyPad.setParameterByName("fbgain", 0.5f);
+        //enemyPad.setParameterByName("ffgain", 0.2f);
+        //enemyPad.setParameterByName("delaytime", 400);
         enemyPad.setParameterByName("bpfreq", 200);
-        enemyPad.setParameterByName("reson", 0);
-        enemyPad.setParameterByName("grit", 5);
-        enemyPad.setParameterByName("soft", 80);
+        //enemyPad.setParameterByName("reson", 0);
+        //enemyPad.setParameterByName("grit", 5);
+        //enemyPad.setParameterByName("soft", 80);
     }
 
     public void SetReactorParams()
@@ -267,6 +266,60 @@ public class ReactorSounds : MonoBehaviour
             playerPerc.setParameterByName("reson", Random.Range(90, 100));
             playerPad.setParameterByName("grit", playerGrit);
             playerPad.setParameterByName("soft", playerSoft);
+            playerPad.setParameterByName("reson", Random.Range(80, 100));
+            playerPad.setParameterByName("fbgain", Random.Range(0f, .2f));
+            playerPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
+        }
+
+        //ENEMIES 
+        if (strength <= 1)
+        {
+            enemyBaseNoteLength = 60 / Conductor.Instance.tempo;
+            enemyGrit = Random.Range(0, 20);
+            enemySoft = 80 - playerGrit;
+
+            enemyPerc.setParameterByName("reson", Random.Range(0, 50));
+            enemyPad.setParameterByName("grit", enemyGrit);
+            enemyPad.setParameterByName("soft", enemySoft);
+            enemyPad.setParameterByName("reson", 0);
+            enemyPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
+            enemyPad.setParameterByName("ffgain", Random.Range(0f, .1f));
+        }
+        else if (strength <= 2)
+        {
+            enemyBaseNoteLength = (60 / Conductor.Instance.tempo) * .8f;
+            enemyGrit = Random.Range(20, 40);
+            enemySoft = 80 - enemyGrit;
+
+            enemyPerc.setParameterByName("reson", Random.Range(30, 80));
+            enemyPad.setParameterByName("grit", enemyGrit);
+            enemyPad.setParameterByName("soft", enemySoft);
+            enemyPad.setParameterByName("reson", Random.Range(0, 50));
+            enemyPad.setParameterByName("fbgain", Random.Range(.3f, .4f));
+            enemyPad.setParameterByName("ffgain", Random.Range(.2f, .3f));
+        }
+        else if (strength <= 3)
+        {
+            enemyBaseNoteLength = (60 / Conductor.Instance.tempo) * .65f;
+            enemyGrit = Random.Range(40, 60);
+            enemySoft = 80 - enemyGrit;
+
+            enemyPerc.setParameterByName("reson", Random.Range(80, 90));
+            enemyPad.setParameterByName("grit", enemyGrit);
+            enemyPad.setParameterByName("soft", enemySoft);
+            enemyPad.setParameterByName("reson", Random.Range(50, 80));
+            enemyPad.setParameterByName("fbgain", Random.Range(.2f, .3f));
+            enemyPad.setParameterByName("ffgain", Random.Range(.3f, .4f));
+        }
+        else
+        {
+            enemyBaseNoteLength = (60 / Conductor.Instance.tempo) * .5f;
+            enemyGrit = Random.Range(60, 79);
+            playerSoft = 80 - enemyGrit;
+
+            playerPerc.setParameterByName("reson", Random.Range(90, 100));
+            playerPad.setParameterByName("grit", enemyGrit);
+            playerPad.setParameterByName("soft", enemySoft);
             playerPad.setParameterByName("reson", Random.Range(80, 100));
             playerPad.setParameterByName("fbgain", Random.Range(0f, .2f));
             playerPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
@@ -358,6 +411,14 @@ public class ReactorSounds : MonoBehaviour
         var shouldPlay = false;
         enemyPerc.getParameterByName("bpfreq", out var bpfreq);
         var syncDice = Random.Range(0, 100);
+        var notelength = enemyBaseNoteLength;
+
+        //TODO: should give enemy their own ratio at somepoint but rn dont have time for all that, just copy/paste lol
+        float percAttack = notelength * playerPercAttackRatio;
+        float percDecay = notelength * playerPercDecayRatio;
+
+        enemyPerc.setParameterByName("attack", percAttack * 1000);
+        enemyPerc.setParameterByName("decay", percDecay * 1000);
 
         if (bpfreq < 500)
         {
@@ -477,14 +538,14 @@ public class ReactorSounds : MonoBehaviour
         //var pitchDice = 0;
         var bassPitch = 440f;
 
-        var notelength = baseNoteLength * 4;
+        var notelength = enemyBaseNoteLength * 4;
         float enemyBassAttack = notelength * enemyBassAttackRatio;
         float enemyBassDecay = notelength * enemyBassDecayRatio;
         float enemyBassRelease = notelength * enemyBassReleaseRatio;
 
         enemyBass.setParameterByName("attack", enemyBassAttack * 1000);
-        enemyBass.setParameterByName("decay", enemyBassAttack * 1000);
-        enemyBass.setParameterByName("release", enemyBassAttack * 1000);
+        enemyBass.setParameterByName("decay", enemyBassDecay * 1000);
+        enemyBass.setParameterByName("release", enemyBassRelease * 1000);
 
         //should play on 1 and 3
         if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
@@ -565,5 +626,19 @@ public class ReactorSounds : MonoBehaviour
         }
 
         instrument.setParameterByName("adsr", 0);
+    }
+
+    public void StartEnemyReactor()
+    {
+        enemyPerc.start();
+        enemyBass.start();
+        enemyPad.start();
+    }
+
+    public void StopEnemyReactor()
+    {
+        enemyPerc.stop(0);
+        enemyBass.stop(0);
+        enemyPad.stop(0);
     }
 }
