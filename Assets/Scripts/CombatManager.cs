@@ -96,8 +96,9 @@ public class CombatManager : MonoBehaviour
             if (endScreenTimer <= 0)
             {
                 endScreen.SetActive(false);
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 state = State.outOfCombat;
+                // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                Application.Quit();
             }
         }
         else if (state == State.outOfCombat)

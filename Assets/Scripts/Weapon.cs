@@ -46,6 +46,8 @@ public class Weapon : MonoBehaviour
     };
     
     public int currentNoteMeter = 0;
+    private int[] notes;
+    private int currentNote;
     
     public List<Module> myPatch = new();
     
@@ -62,6 +64,11 @@ public class Weapon : MonoBehaviour
     void Start()
     {
         Conductor.Instance.onSixteenth.AddListener(Fire);
+        notes = new int[noteMeters.Count];
+        for (int i = 0; i < notes.Length; i++)
+        {
+            notes[i] = Random.Range(0, 7);
+        }
     }
 
     // Update is called once per frame
@@ -183,6 +190,9 @@ public class Weapon : MonoBehaviour
         }
         
         noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
+        noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);
+        currentNote++;
+        currentNote = (int)Mathf.Repeat(currentNote, notes.Length-1);
         AudioManager.Instance.PlayNote(gameObject, noteInfo);
     }
 

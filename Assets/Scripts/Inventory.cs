@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 public class Inventory : MonoBehaviour
 {
@@ -22,6 +24,8 @@ public class Inventory : MonoBehaviour
     public Vector2 downPos;
     public bool isPulledDown = false;
     public SpriteRenderer sr;
+
+    public List<GameObject> modulePrefabs;
     
     void Start()
     {
@@ -79,7 +83,10 @@ public class Inventory : MonoBehaviour
 
     public void AddNewRandomModule()
     {
-        
+        var pos = new Vector3(-6.5f, -1f, -3f);
+        var roll = UnityEngine.Random.Range(0, modulePrefabs.Count);
+        var module = Instantiate(modulePrefabs[roll], transform);
+        module.transform.localPosition = pos;
     }
     
     //
