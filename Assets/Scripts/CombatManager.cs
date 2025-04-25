@@ -69,6 +69,7 @@ public class CombatManager : MonoBehaviour
 
             if (playerHealthBar.value <= 0 || enemyHealthBar.value <= 0)
             {
+                ReactorSounds.Instance.StopEnemyReactor();
                 state = State.endScreen;
                 endScreen.SetActive(true);
                 endScreenTimer = 3f;
@@ -113,6 +114,7 @@ public class CombatManager : MonoBehaviour
     public void StartCombat()
     {
         // endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
+        ReactorSounds.Instance.StartEnemyReactor();
         endScreen.SetActive(false);
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;

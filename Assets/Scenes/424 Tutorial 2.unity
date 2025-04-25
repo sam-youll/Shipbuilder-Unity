@@ -2790,11 +2790,11 @@ MonoBehaviour:
     Path: event:/SFX/sfx_ship
   sfx_paperRef:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1852902103
+      Data2: 1154708078
+      Data3: -1146371655
+      Data4: 1901945992
+    Path: event:/SFX/sfx_paper
   ui_pickupRef:
     Guid:
       Data1: -1047205009
@@ -2811,11 +2811,11 @@ MonoBehaviour:
     Path: event:/UI/ui_putdown
   ui_dialogueRef:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1413133552
+      Data2: 1155839557
+      Data3: -361738875
+      Data4: -921562907
+    Path: event:/UI/ui_dialogue
   enemySongRef:
     Guid:
       Data1: 0
@@ -12628,9 +12628,25 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6040632816976111980, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: m_text
+      value: START GAME
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040632816976111980, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: m_fontSize
+      value: 5.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6156602289210000563, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: type
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6960144117722344344, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7345008120607355093, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7939187391672935557, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       propertyPath: m_IsActive
@@ -12641,7 +12657,9 @@ PrefabInstance:
       value: Battle Screen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7256876678166238711, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+    - {fileID: 4134170517191515536, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7672642176976906326, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
@@ -14316,6 +14334,7 @@ MonoBehaviour:
   weaponInput: {fileID: 1581322386}
   jack1: {fileID: 1068360256}
   jack2: {fileID: 903200206}
+  startButton: {fileID: 2133127484}
 --- !u!4 &2036933920
 Transform:
   m_ObjectHideFlags: 0

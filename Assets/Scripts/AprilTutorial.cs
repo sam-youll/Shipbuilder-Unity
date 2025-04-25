@@ -44,6 +44,8 @@ public class AprilTutorial : MonoBehaviour
     private Vector3 jack1Pos;
     private Vector3 jack2Pos;
 
+    public GameObject startButton;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
@@ -314,7 +316,14 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = startCombatHighlight.transform.position;
             fakeCursor.SetActive(true);
 
+            if (startButton.GetComponent<StartCombatButton>().Pressed)
+            {
+                fakeCursor.SetActive(false);
+                startCombatHighlight.SetActive(false);
+            }
+
         }
+
 
         fakeCursor.transform.position = fakeCursorPos;
         modulePlaceHighlight.transform.position = modulePlacePos;
