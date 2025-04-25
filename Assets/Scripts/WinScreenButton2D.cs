@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WinScreenButton2D : Button2D
 {
@@ -7,7 +8,8 @@ public class WinScreenButton2D : Button2D
     {
         NewWeapon,
         NewModule,
-        NoThanks
+        NoThanks,
+        Tutorial
     }
     public Type type;
     
@@ -30,6 +32,9 @@ public class WinScreenButton2D : Button2D
                 Inventory.Instance.AddNewRandomModule();
                 break;
             case Type.NoThanks:
+                break;
+            case Type.Tutorial:
+                SceneManager.LoadScene("SampleScene");
                 break;
         }
         
