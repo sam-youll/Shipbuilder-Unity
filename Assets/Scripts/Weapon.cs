@@ -208,11 +208,11 @@ public class Weapon : MonoBehaviour
         }
         newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1*sensorMod, Random.Range(-bulletSpread, bulletSpread)) * bulletSpeed;
         
-        // noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
-        noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);
-        currentNote++;
-        currentNote = (int)Mathf.Repeat(currentNote, notes.Length);
-        Debug.Log("current note is " + currentNote + " which is " + notes[currentNote]);
+        noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
+        //noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);
+        //currentNote++;
+        //currentNote = (int)Mathf.Repeat(currentNote, notes.Length);
+        //Debug.Log("current note is " + currentNote + " which is " + notes[currentNote]);
         AudioManager.Instance.PlayNote(gameObject, noteInfo);
     }
 
