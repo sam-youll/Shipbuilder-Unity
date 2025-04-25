@@ -30,6 +30,7 @@ public class AprilTutorial : MonoBehaviour
     public GameObject inventoryHighlight;
     private Vector3 modulePlacePos;
     public GameObject modulePlaceHighlight;
+    public GameObject startCombatHighlight;
 
     //rack variables
     public GameObject reactor;
@@ -253,7 +254,7 @@ public class AprilTutorial : MonoBehaviour
             //PLACE IZKI
             isComplete = false;
             cursorSpeed = 6;
-            modulePlacePos = new Vector3(-7, 0, -3.4241f);
+            modulePlacePos = new Vector3(-7, -4, -3.4241f);
             modulePlaceHighlight.SetActive(true);
 
             cursorStart = new Vector3(izkiModule.transform.position.x, izkiModule.transform.position.y, -6f);
@@ -284,7 +285,7 @@ public class AprilTutorial : MonoBehaviour
             fakeCursor.SetActive(true);
 
             jack1Pos = new Vector3(izkiOutput.transform.position.x, izkiOutput.transform.position.y, -4);
-            jack2Pos = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -.17f);
+            jack2Pos = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -4f);
             jack1.SetActive(true);
             jack2.SetActive(true);
 
@@ -301,7 +302,8 @@ public class AprilTutorial : MonoBehaviour
         if (currentStep == 9)
         {
             isComplete = false;
-            cursorSpeed = 4;
+            startCombatHighlight.SetActive(true);
+            cursorSpeed = 8;
             cursorStart = new Vector3(0, 0, -3.4775f);
             if (!cursorSet)
             {
@@ -309,8 +311,7 @@ public class AprilTutorial : MonoBehaviour
                 cursorSet = true;
             }
             //change this to start combat
-            cursorTarget = new Vector3(-4.46f, -0.18f, -4.54f);
-            //make a start combat highlight 
+            cursorTarget = startCombatHighlight.transform.position;
             fakeCursor.SetActive(true);
 
         }

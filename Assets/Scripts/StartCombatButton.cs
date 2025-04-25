@@ -6,6 +6,7 @@ public class StartCombatButton : MonoBehaviour
     public Color hoverColor;
     public Color pressedColor;
     private Color currentColor;
+    public bool Pressed = false;
     
     private SpriteRenderer sr;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,7 +42,8 @@ public class StartCombatButton : MonoBehaviour
         sr.color = pressedColor;
         currentColor = hoverColor;
 
-        CombatManager.Instance.StartCombat();
+        Pressed = true;
+
         CombatManager.Instance.StartCombat();
     }
 }
