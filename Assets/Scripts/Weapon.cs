@@ -68,6 +68,7 @@ public class Weapon : MonoBehaviour
         for (int i = 0; i < notes.Length; i++)
         {
             notes[i] = Random.Range(0, 7);
+            Debug.Log(notes[i]);
         }
     }
 
@@ -114,10 +115,12 @@ public class Weapon : MonoBehaviour
             }
         }
 
-         statBar.value = charge;
+        statBar.value = charge;
         // Debug.Log(currentNoteMeter);
         if (noteMeters.Count > 0)
+        {
             noteMeters[currentNoteMeter].value = charge;
+        }
 
 
         if (stunTimer > 0)
@@ -166,7 +169,6 @@ public class Weapon : MonoBehaviour
             newBullet.GetComponent<Bullet>().hullDamage = hullDamage;
             newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage;
         }
-        newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1, Random.Range(-bulletSpread, bulletSpread)) * bulletSpeed;
         newBullet.GetComponent<Bullet>().myShip = myShip;
         newBullet.GetComponent<Bullet>().myShield = myShip.GetComponent<Ship>().shield;
         newBullet.GetComponent<Bullet>().effects = effects;
@@ -175,6 +177,8 @@ public class Weapon : MonoBehaviour
         int currentChord = ReactorSounds.Instance.currentChord;
         var chord = ReactorSounds.Instance.changes[currentChord];
         string chordString = ReactorSounds.Instance.chords[chord];
+
+        var sensorMod = 1f;
         
         SetPatch();
         foreach (var mod in myPatch)
@@ -183,16 +187,32 @@ public class Weapon : MonoBehaviour
             {
                 noteInfo[mod.parameter] = mod.parameterValue;
             }
-            else
+            else if (!string.IsNullOrEmpty(mod.parameter))
             {
                 noteInfo.Add(mod.parameter, mod.parameterValue);
             }
+
+            if (!string.IsNullOrEmpty(mod.stat))
+            {
+                if (mod.stat == "damage")
+                {
+                    newBullet.GetComponent<Bullet>().damage += mod.statValue;
+                }
+
+                if (mod.stat == "bulletSpread")
+                {
+                    sensorMod *= mod.statValue;
+                }
+            }
+            
         }
+        newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1*sensorMod, Random.Range(-bulletSpread, bulletSpread)) * bulletSpeed;
         
-        noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
+        // noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
         noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);
         currentNote++;
-        currentNote = (int)Mathf.Repeat(currentNote, notes.Length-1);
+        currentNote = (int)Mathf.Repeat(currentNote, notes.Length);
+        Debug.Log("current note is " + currentNote + " which is " + notes[currentNote]);
         AudioManager.Instance.PlayNote(gameObject, noteInfo);
     }
 
