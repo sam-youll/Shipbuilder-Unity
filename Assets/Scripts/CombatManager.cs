@@ -89,6 +89,10 @@ public class CombatManager : MonoBehaviour
                         weapon.GetComponent<Weapon>().damage += 2;
                     }
                 }
+
+                //resetting health for now 
+                playerHealthBar.value = 1;
+                playerShip.health = playerShip.maxHealth;
             }
         }
         else if (state == State.endScreen)
