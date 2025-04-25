@@ -61,7 +61,7 @@ public class Weapon : MonoBehaviour
     }
     public List<Effect> effects;
     
-    void Start()
+    public void Start()
     {
         Conductor.Instance.onSixteenth.AddListener(Fire);
         notes = new int[noteMeters.Count];
@@ -115,6 +115,8 @@ public class Weapon : MonoBehaviour
             }
         }
 
+        Debug.Log(charge);
+        Debug.Log(statBar.value);
         statBar.value = charge;
         // Debug.Log(currentNoteMeter);
         if (noteMeters.Count > 0)

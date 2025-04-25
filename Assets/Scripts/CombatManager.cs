@@ -45,8 +45,14 @@ public class CombatManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        SceneManager.sceneLoaded += OnMainSceneLoaded;
+    }
+
+    void OnMainSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
         state = State.outOfCombat;
         enemyShip.gameObject.SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -89,10 +95,7 @@ public class CombatManager : MonoBehaviour
                         weapon.GetComponent<Weapon>().damage += 2;
                     }
                 }
-
-                //resetting health for now 
-                playerHealthBar.value = 1;
-                playerShip.health = playerShip.maxHealth;
+                
             }
         }
         else if (state == State.endScreen)
@@ -122,7 +125,20 @@ public class CombatManager : MonoBehaviour
         endScreen.SetActive(false);
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;
+        playerShip.health = playerShip.maxHealth;
         enemyShip.health = enemyShip.maxHealth;
+
+        playerShip.weapons = new List<GameObject>();
+        foreach (var weapon in WeaponManager.Instance.weapons)
+        {
+            if (weapon.activeSelf)
+            {
+                playerShip.weapons.Add(weapon);
+                weapon.GetComponent<Weapon>().warmup = 0;
+                weapon.GetComponent<Weapon>().warming = false;
+            }
+        }
+        playerShip.allWeaponsWarmed = false;
         
         state = State.inCombat;
 

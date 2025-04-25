@@ -7,7 +7,7 @@ public class Ship : MonoBehaviour
     public float maxHealth = 100f;
     public float health;
     public List<GameObject> weapons;
-    private bool allWeaponsWarmed = false;
+    public bool allWeaponsWarmed;
     public GameObject shield;
     public bool cloaked = false;
     public GameObject floatingDamageNumberPrefab;

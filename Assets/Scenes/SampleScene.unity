@@ -6808,60 +6808,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &978327453
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 978327455}
-  - component: {fileID: 978327454}
-  m_Layer: 0
-  m_Name: CombatManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &978327454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 978327453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c0e6a5ce181d9c4fa034f902a4bf30e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  endScreen: {fileID: 1673322063}
-  playerHealthBar: {fileID: 1077565176}
-  playerShieldBar: {fileID: 0}
-  enemyHealthBar: {fileID: 1384567480}
-  enemyShieldBar: {fileID: 0}
-  playerShip: {fileID: 0}
-  enemyShip: {fileID: 0}
-  enemyWeapons: []
-  fightLevel: 0
---- !u!4 &978327455
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 978327453}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.4256287, y: 1.8842156, z: -0.02348041}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &990678695
 GameObject:
   m_ObjectHideFlags: 0
@@ -7587,17 +7533,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc9eff1b8dd8e5d4d919e5b3869a4da0, type: 3}
---- !u!114 &1077565176 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6564970022908517810, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
-  m_PrefabInstance: {fileID: 1673322062}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1082514024
 GameObject:
   m_ObjectHideFlags: 0
@@ -8525,6 +8460,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1167914979 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1385384939435176606, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
+  m_PrefabInstance: {fileID: 1286330586}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1169333661
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9386,9 +9332,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
-      propertyPath: noteMeters.Array.size
-      value: 0
+      propertyPath: energyRate
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
+      propertyPath: noteMeters.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
+      propertyPath: 'noteMeters.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1167914979}
     - target: {fileID: 8024916482190608004, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
       propertyPath: m_Name
       value: Weapon 1 Shot
@@ -9833,17 +9787,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1384567480 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9094039172960854962, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
-  m_PrefabInstance: {fileID: 1673322062}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fccd124e3ba4f4e8b661dc7f1e4335, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1417145596
 GameObject:
   m_ObjectHideFlags: 0
@@ -10985,6 +10928,10 @@ PrefabInstance:
       propertyPath: fireRate
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
+      propertyPath: energyRate
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11601,11 +11548,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
---- !u!1 &1673322063 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7345008120607355093, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
-  m_PrefabInstance: {fileID: 1673322062}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1711727565 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
@@ -14323,6 +14265,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PauseMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 1143774551840711998, guid: c1bdd4ac21794714392a38e71a656af3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441762295190778137, guid: c1bdd4ac21794714392a38e71a656af3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7040055096252460159, guid: c1bdd4ac21794714392a38e71a656af3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -15349,7 +15299,6 @@ SceneRoots:
   - {fileID: 1894525832}
   - {fileID: 1087120756}
   - {fileID: 250102138}
-  - {fileID: 978327455}
   - {fileID: 1634029375}
   - {fileID: 476463537}
   - {fileID: 75982812}
