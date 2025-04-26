@@ -8847,11 +8847,15 @@ PrefabInstance:
       objectReference: {fileID: 616234707}
     - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
       propertyPath: warming
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
       propertyPath: fireRate
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
+      propertyPath: quantized
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
       propertyPath: energyRate
@@ -8860,6 +8864,10 @@ PrefabInstance:
     - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
       propertyPath: bulletSpeed
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
+      propertyPath: bulletSpread
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 462771294527215458, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
       propertyPath: myShipWeapon
@@ -10186,6 +10194,18 @@ PrefabInstance:
     - target: {fileID: 3339577861447131122, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
+      propertyPath: quantized
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
+      propertyPath: energyRate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
+      propertyPath: bulletSpread
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7492701675220266736, guid: 3bd1559b2bb9ba44a945ecff67a09e75, type: 3}
       propertyPath: noteMeters.Array.size
@@ -11803,15 +11823,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
       propertyPath: warmup
-      value: 0.86
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
       propertyPath: warming
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
       propertyPath: fireRate
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
+      propertyPath: quantized
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
+      propertyPath: energyRate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5735391956543911777, guid: c92da5a7153ec4f49a9261388e871b3d, type: 3}
+      propertyPath: bulletSpread
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12466,10 +12498,18 @@ PrefabInstance:
       propertyPath: statBar
       value: 
       objectReference: {fileID: 400531155}
+    - target: {fileID: 1465692051252048812, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1940455276852051121, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       propertyPath: statBar
       value: 
       objectReference: {fileID: 5649894}
+    - target: {fileID: 1940455276852051121, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3972200423388228163, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6
@@ -12522,6 +12562,10 @@ PrefabInstance:
       propertyPath: statBar
       value: 
       objectReference: {fileID: 309143189}
+    - target: {fileID: 4509239194850448566, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4866691640381096061, guid: e6d3f45474295364fa8a47a1e7e620e3, type: 3}
       propertyPath: m_IsActive
       value: 0
