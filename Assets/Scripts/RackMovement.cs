@@ -18,12 +18,13 @@ public class RackMovement : MonoBehaviour
     private bool isOverInventory;
     private bool isInInventory;
     public GameObject myModuleRack;
+    private Transform lastParent;
     
     public UnityEvent bodyClick;
     public UnityEvent jackClick;
     public UnityEvent inventoryEnter;
     public UnityEvent inventoryExit;
-    
+    public bool oddSize;
     private static Vector2[] dirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -65,8 +66,16 @@ public class RackMovement : MonoBehaviour
                 x = Mathf.Round(mousePos.x),
                 y = Mathf.Round(mousePos.y)
             };
+            if (oddSize)
+            {
+                snappedPos = new Vector2
+                {
+                    x = Mathf.Floor(mousePos.x) + .5f,
+                    y = Mathf.Floor(mousePos.y) + .5f
+                };
+            }
             // check for overlap, then move if needed
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 100; i++) // basically a while loop
             {
                 if (IsOverlapping(snapSquare.GetComponent<Collider2D>(), snappedPos)) // THIS IS PROBABLY A BAD IDEA
                 {
@@ -115,7 +124,7 @@ public class RackMovement : MonoBehaviour
             //     isOverConveyor = false;
             // }
 
-            var newPos = new Vector3(snappedPos.x, snappedPos.y, transform.parent.position.z - .1f);
+            var newPos = new Vector3(snappedPos.x, snappedPos.y, transform.position.z + .1f);
             if (isOverInventory)
             {
                 newPos.z -= 3;
@@ -151,14 +160,17 @@ public class RackMovement : MonoBehaviour
                 //     conveyor.GetComponent<Conveyor>().OnModuleAttached(this);
                 // }
                 
-                isInInventory = transform.parent == Inventory.Instance.transform;
-                if (!isInInventory && isOverInventory)
+                // isInInventory = transform.parent == Inventory.Instance.transform;
+                if (isOverInventory)
                 {
                     isInInventory = true;
                     transform.SetParent(Inventory.Instance.transform);
+                    var pos = transform.position;
+                    pos.z = transform.parent.transform.position.z - 1f;
+                    transform.position = pos;
                     inventoryEnter.Invoke();
                 }
-                else if (isInInventory)
+                else// if (isInInventory)
                 {
                     var rackCheck = false;
                     var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
@@ -220,6 +232,8 @@ public class RackMovement : MonoBehaviour
                             dragOffset = transform.position - mousePos;
                             snapSquare.SetActive(true);
                             isMouseDragging = true;
+                            lastParent = transform.parent;
+                            transform.SetParent(cam.transform);
                             bodyClick.Invoke();
                             // var adjPos = transform.position;
                             // adjPos.z = -1;
@@ -302,7 +316,7 @@ public class RackMovement : MonoBehaviour
                 continue;
             if (result.gameObject == snapSquare)
                 continue;
-            if (result.gameObject == myModuleRack)
+            if (result.gameObject.layer == LayerMask.NameToLayer("Module Racks"))
             {
                 // Debug.Log("I hit a " + result.gameObject.name);
                 onRack = true;

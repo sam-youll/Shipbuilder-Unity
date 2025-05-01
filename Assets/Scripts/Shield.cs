@@ -24,6 +24,11 @@ public class Shield : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (CombatManager.Instance.state != CombatManager.State.inCombat)
+        {
+            return;
+        }
+        
         health -= damage;
         if (health <= 0)
         {

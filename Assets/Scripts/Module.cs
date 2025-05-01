@@ -58,6 +58,13 @@ public class Module : MonoBehaviour
 
     public bool isReactorModule;
     public bool isPowerModule;
+    
+    [Header("Envelope Properties")] 
+    public bool isEnvelopeModule;
+    public float attack;
+    public float decay;
+    public float release;
+    public float length;
 
     private Vector3 lastPos;
 
@@ -76,6 +83,13 @@ public class Module : MonoBehaviour
         
         parameters.Add(parameter, parameterValue);
         stats.Add(stat, statValue);
+
+        if (isEnvelopeModule)
+        {
+            parameters.Add("attack", attack);
+            parameters.Add("decay", decay);
+            parameters.Add("release", release);
+        }
         
         // set onLFO to true if parent has LFO component
         onConveyor = transform.GetComponentInParent<Conveyor>() != null;

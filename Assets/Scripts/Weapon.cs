@@ -41,7 +41,6 @@ public class Weapon : MonoBehaviour
         { "length", .17f },
         { "attack", 100 },
         { "decay", 70 },
-        { "sustain", 0 },
         { "release", 100 },
     };
     
@@ -185,30 +184,36 @@ public class Weapon : MonoBehaviour
         SetPatch();
         foreach (var mod in myPatch)
         {
-            if (noteInfo.ContainsKey(mod.parameter))
+            foreach (var param in mod.parameters)
             {
-                noteInfo[mod.parameter] = mod.parameterValue;
-            }
-            else if (!string.IsNullOrEmpty(mod.parameter))
-            {
-                noteInfo.Add(mod.parameter, mod.parameterValue);
-            }
-
-            if (!string.IsNullOrEmpty(mod.stat))
-            {
-                if (mod.stat == "damage")
+                if (noteInfo.ContainsKey(param.Key))
                 {
-                    newBullet.GetComponent<Bullet>().damage += mod.statValue;
+                    noteInfo[param.Key] = param.Value;
                 }
-
-                if (mod.stat == "bulletSpread")
+                else
                 {
-                    sensorMod *= mod.statValue;
+                    noteInfo.Add(param.Key, param.Value);
+                }
+            }
+
+            foreach (var stat in mod.stats)
+            {
+                if (!string.IsNullOrEmpty(mod.stat))
+                {
+                    if (mod.stat == "damage")
+                    {
+                        newBullet.GetComponent<Bullet>().damage += mod.statValue;
+                    }
+
+                    if (mod.stat == "bulletSpread")
+                    {
+                        sensorMod *= mod.statValue;
+                    }
                 }
             }
             
         }
-        newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1*sensorMod, Random.Range(-bulletSpread, bulletSpread)) * bulletSpeed;
+        newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1, Random.Range(-bulletSpread, bulletSpread)*sensorMod) * bulletSpeed;
         
         noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
         // noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);

@@ -40,7 +40,10 @@ public class CombatManager : MonoBehaviour
     public Ship playerShip;
     public Ship enemyShip;
     public List<GameObject> enemyWeapons;
-    public int fightLevel;
+    public int fightLevel = 1;
+
+    public TextMeshPro battleNumberLabel;
+    private int battleNumber;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -67,7 +70,6 @@ public class CombatManager : MonoBehaviour
         
         if (state == State.inCombat)
         {
-            enemyShip.gameObject.SetActive(true);
             // if (Camera.main.transform.position != new Vector3(18, 0, -10))
             // {
             //     Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(18, 0, -10), .3f);
@@ -90,6 +92,7 @@ public class CombatManager : MonoBehaviour
                     endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU WIN";
                     endScreenTimer = 999f;
                     fightLevel++;
+                    battleNumberLabel.text = fightLevel.ToString();
                     foreach (var weapon in enemyWeapons)
                     {
                         weapon.GetComponent<Weapon>().damage += 2;
@@ -123,6 +126,11 @@ public class CombatManager : MonoBehaviour
         // endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
         ReactorSounds.Instance.StartEnemyReactor();
         endScreen.SetActive(false);
+        enemyShip.gameObject.SetActive(true);
+        enemyShip.GetComponent<Ship>().shield.transform.localScale = Vector3.one;
+        enemyShip.GetComponent<Ship>().shield.GetComponent<Shield>().health =
+            enemyShip.GetComponent<Ship>().shield.GetComponent<Shield>().maxHealth;
+        enemyShip.GetComponent<Ship>().shield.GetComponent<Shield>().StartCoroutine("RegenShield");
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;
         playerShip.health = playerShip.maxHealth;

@@ -53,6 +53,11 @@ public class Ship : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (CombatManager.Instance.state != CombatManager.State.inCombat)
+        {
+            return;
+        }
+        
         health -= damage;
         var playerHitNumber = Instantiate(floatingDamageNumberPrefab, transform.position, Quaternion.identity);
         var pos = transform.position;
