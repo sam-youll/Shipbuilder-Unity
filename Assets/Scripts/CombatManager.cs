@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
@@ -191,6 +192,7 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator Pulsar()
     {
+        AudioManager.Instance.StartStorm();
         geomagneticPulse.transform.localScale = Vector3.one;
         geomagneticPulse.SetActive(true);
         var sr = geomagneticPulse.GetComponent<SpriteRenderer>();
@@ -201,6 +203,7 @@ public class CombatManager : MonoBehaviour
         {
             geomagneticPulse.transform.localScale *= 1 + (Time.deltaTime * 7);
             yield return null;
+            AudioManager.Instance.StormStun();
         }
         foreach (var weapon in playerShip.weapons)
         {
@@ -228,5 +231,9 @@ public class CombatManager : MonoBehaviour
         colcol.a = .6f;
         sr.color = colcol;
         geomagneticPulse.SetActive(false);
+
+        yield return new WaitForSeconds(2.5f);
+        AudioManager.Instance.StopStorm();
+        
     }
 }

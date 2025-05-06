@@ -33,6 +33,7 @@ public class AudioManager: MonoBehaviour
     private EventInstance enemySongInst;
     private EventInstance tutorialEnemyShieldInst;
     private EventInstance tutorialEnemyWeaponInst;
+    private EventInstance sfx_stormInst;
 
 
     //FMOD Event Reference 
@@ -46,6 +47,7 @@ public class AudioManager: MonoBehaviour
     [Header("SFX Reference")]
     public EventReference sfx_shipRef;
     public EventReference sfx_paperRef;
+    public EventReference sfx_stormRef;
     //ui
     [Header("UI References")]
     public EventReference ui_pickupRef;
@@ -57,6 +59,7 @@ public class AudioManager: MonoBehaviour
     public EventReference test_enemySong1Ref;
     public EventReference test_enemySong2Ref;
     public EventReference test_enemySong3Ref;
+    
     
     
     public EventInstance[] patchInstances = new EventInstance[12];
@@ -543,6 +546,23 @@ public class AudioManager: MonoBehaviour
             { "apitch4", 880 }
 
         };
+    }
+
+    public void StartStorm()
+    {
+        sfx_stormInst = FMODUnity.RuntimeManager.CreateInstance(sfx_stormRef);
+        sfx_stormInst.setParameterByName("storm", 1);
+        sfx_stormInst.start();
+    }
+
+    public void StormStun()
+    {
+        sfx_stormInst.setParameterByName("storm", 1);
+    }
+
+    public void StopStorm()
+    {
+        sfx_stormInst.stop(0);
     }
 
     void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)
