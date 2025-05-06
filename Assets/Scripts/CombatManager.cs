@@ -92,23 +92,6 @@ public class CombatManager : MonoBehaviour
                 {
                     StartCoroutine(Pulsar());
                     pulseTimer += 6;
-                    foreach (var weapon in playerShip.weapons)
-                    {
-                        var roll = Random.value;
-                        if (roll < 0.8f)
-                        {
-                            weapon.GetComponent<Weapon>().stunTimer += 3;
-                        }
-                    }
-
-                    foreach (var weapon in enemyShip.weapons)
-                    {
-                        var roll = Random.value;
-                        if (roll < 0.8f)
-                        {
-                            weapon.GetComponent<Weapon>().stunTimer += 3;
-                        }
-                    }
                 }
                 
             }
@@ -218,6 +201,22 @@ public class CombatManager : MonoBehaviour
         {
             geomagneticPulse.transform.localScale *= 1 + (Time.deltaTime * 7);
             yield return null;
+        }
+        foreach (var weapon in playerShip.weapons)
+        {
+            var roll = Random.value;
+            if (roll < 0.8f)
+            {
+                weapon.GetComponent<Weapon>().stunTimer += 3;
+            }
+        }
+        foreach (var weapon in enemyShip.weapons)
+        {
+            var roll = Random.value;
+            if (roll < 0.8f)
+            {
+                weapon.GetComponent<Weapon>().stunTimer += 3;
+            }
         }
         while (sr.color.a > 0)
         {
