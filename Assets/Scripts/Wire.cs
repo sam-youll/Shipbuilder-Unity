@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class Wire : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class Wire : MonoBehaviour
         {
             lineRenderer.SetPosition(i, transform.position);
         }
+        
+        CombatManager.Instance.playerShipImpact.AddListener(ApplyForce);
     }
 
     // Update is called once per frame
@@ -146,10 +149,10 @@ public class Wire : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdatePoints();
+        UpdatePoints(Vector2.down * .1f);
     }
 
-    private void UpdatePoints()
+    private void UpdatePoints(Vector2 force)
     {
         // calculate points
         Vector2[] targetPositions = new Vector2[points];
@@ -174,7 +177,7 @@ public class Wire : MonoBehaviour
             {
                 Vector2 pos = lineRenderer.GetPosition(i);
                 Vector2 targetPos = (lineRenderer.GetPosition(i + 1) + lineRenderer.GetPosition(i - 1))*.5f;
-                targetPos += .1f * Vector2.down;
+                targetPos += force;
                 pos = Vector2.Lerp(pos, targetPos, .6f);
                 targetPositions[i] = pos;
             }
@@ -194,6 +197,11 @@ public class Wire : MonoBehaviour
         }
     }
 
+    void ApplyForce()
+    {
+        // UpdatePoints(new Vector2(Random.Range(-.2f, .2f), Random.Range(.1f, 1)));
+    }
+    
     public void DeleteSelf()
     {
         if (connectedToModule)

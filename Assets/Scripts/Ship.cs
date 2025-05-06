@@ -58,6 +58,8 @@ public class Ship : MonoBehaviour
             return;
         }
         
+        CombatManager.Instance.playerShipImpact.Invoke();
+        
         health -= damage;
         var playerHitNumber = Instantiate(floatingDamageNumberPrefab, transform.position, Quaternion.identity);
         var pos = transform.position;

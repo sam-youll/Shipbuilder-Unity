@@ -26,6 +26,7 @@ public class RackMovement : MonoBehaviour
     public UnityEvent inventoryExit;
     public bool oddSize;
     private static Vector2[] dirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
+    private Vector3 lastInvPos;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -192,7 +193,15 @@ public class RackMovement : MonoBehaviour
 
                     if (!rackCheck)
                     {
-                        transform.position = dragStartPos;
+                        if (isInInventory)
+                        {
+                            transform.SetParent(Inventory.Instance.transform);
+                            transform.localPosition = lastInvPos;
+                        }
+                        else
+                        {
+                            transform.position = dragStartPos;
+                        }
                     }
                 }
             }
@@ -228,6 +237,10 @@ public class RackMovement : MonoBehaviour
                     {
                         if (result.collider.gameObject == gameObject)
                         {
+                            if (isInInventory)
+                            {
+                                lastInvPos = transform.localPosition;
+                            }
                             AudioManager.Instance.PickUpModuleSFX();
                             dragOffset = transform.position - mousePos;
                             snapSquare.SetActive(true);
@@ -328,6 +341,8 @@ public class RackMovement : MonoBehaviour
                 continue;
             if (result.gameObject.GetComponent<Inventory>() != null)
                 continue;
+            if (!InsideCol(coll, result))
+                continue;
             
             colliding = true;
             // otherwise if we hit something, return true
@@ -342,6 +357,19 @@ public class RackMovement : MonoBehaviour
         if (colliding)
         {
             // Debug.Log("colliding");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    bool InsideCol(Collider2D mycol, Collider2D other)
+    {
+        if (other.bounds.Contains(mycol.bounds.min)
+            && other.bounds.Contains(mycol.bounds.max))
+        {
             return true;
         }
         else

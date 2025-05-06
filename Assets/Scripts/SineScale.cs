@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class SineScale : MonoBehaviour
 {
+    public float amplitude = .5f;
+
+    public float rate = 1;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,7 +16,7 @@ public class SineScale : MonoBehaviour
     void Update()
     {
         var scale = transform.localScale;
-        scale = Vector3.one * (1 + .5f * Mathf.Sin(Time.timeSinceLevelLoad));
+        scale = Vector3.one * (1 + amplitude * Mathf.Sin(Time.time * rate));
         transform.localScale = scale;
     }
 }

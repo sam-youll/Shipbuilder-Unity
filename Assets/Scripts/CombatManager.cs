@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class CombatManager : MonoBehaviour
@@ -44,6 +45,8 @@ public class CombatManager : MonoBehaviour
 
     public TextMeshPro battleNumberLabel;
     private int battleNumber;
+
+    public UnityEvent playerShipImpact;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -95,8 +98,11 @@ public class CombatManager : MonoBehaviour
                     battleNumberLabel.text = fightLevel.ToString();
                     foreach (var weapon in enemyWeapons)
                     {
-                        weapon.GetComponent<Weapon>().damage += 2;
+                        weapon.GetComponent<Weapon>().damage += 1;
                     }
+
+                    enemyShip.maxHealth += 5;
+                    playerShip.maxHealth += 5;
                 }
                 
             }
