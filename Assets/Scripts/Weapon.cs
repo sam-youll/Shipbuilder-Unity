@@ -161,7 +161,7 @@ public class Weapon : MonoBehaviour
         var newBullet = Instantiate(bulletPrefab, myShipWeapon.transform.position + Vector3.right * (dir * .5f), Quaternion.identity);
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cinematic Scene"))
         {
-            newBullet.transform.localScale = (Vector3.one * 0.5f);
+            newBullet.transform.localScale = (Vector3.one * 0.3f);
         }
         if (dir == 1)
         {

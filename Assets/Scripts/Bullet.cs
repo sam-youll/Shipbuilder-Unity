@@ -16,6 +16,8 @@ public class Bullet : MonoBehaviour
     public List<Weapon.Effect> effects;
     public Combat.SoundType soundType;
 
+    public GameObject explosionPrefab;
+    
     private float lifeTime = 10;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -63,6 +65,7 @@ public class Bullet : MonoBehaviour
                 
             }
             
+            Instantiate(explosionPrefab, transform.position + new Vector3(0, 0, -.1f), Quaternion.identity);
             ship.TakeDamage(damage);
             Destroy(gameObject);
         }
