@@ -27,11 +27,11 @@ public class TrailerManager : MonoBehaviour
             CombatManager.Instance.enemyShip.weapons.Remove(weapon);
         }*/
 
-        for (var i = 0; i < WeaponManager.Instance.weapons.Count; i++)
-        {
-            var weapon = WeaponManager.Instance.weapons[i];
-            WeaponManager.Instance.weapons.Remove(weapon);
-        }
+        // for (var i = 0; i < WeaponManager.Instance.weapons.Count; i++)
+        // {
+        //     var weapon = WeaponManager.Instance.weapons[i];
+        //     WeaponManager.Instance.weapons.Remove(weapon);
+        // }
 
         CombatManager.Instance.enemyShip.weapons[1].SetActive(false);
         CombatManager.Instance.enemyShip.weapons[2].SetActive(false);
