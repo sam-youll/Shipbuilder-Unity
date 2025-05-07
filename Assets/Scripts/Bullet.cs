@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Bullet : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         lifeTime /= GetComponent<Rigidbody2D>().linearVelocity.magnitude;
+        
+        if (SceneManager.GetActiveScene().name == "Cinematic Scene")
+        {
+            var pos = transform.position;
+            pos.z -= 1;
+            transform.position = pos;
+        }
     }
 
     // Update is called once per frame
@@ -65,7 +73,11 @@ public class Bullet : MonoBehaviour
                 
             }
             
-            Instantiate(explosionPrefab, transform.position + new Vector3(0, 0, -.1f), Quaternion.identity);
+            var explosion = Instantiate(explosionPrefab, transform.position + new Vector3(0, 0, -.3f), Quaternion.identity);
+            if (SceneManager.GetActiveScene().name == "Cinematic Scene")
+            {
+                explosion.transform.localScale = new Vector3(3, 3, 3);
+            }
             ship.TakeDamage(damage);
             Destroy(gameObject);
         }

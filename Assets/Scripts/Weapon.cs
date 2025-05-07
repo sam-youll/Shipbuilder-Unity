@@ -68,7 +68,7 @@ public class Weapon : MonoBehaviour
         for (int i = 0; i < notes.Length; i++)
         {
             notes[i] = Random.Range(0, 7);
-            Debug.Log(notes[i]);
+            // Debug.Log(notes[i]);
         }
     }
 

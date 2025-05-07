@@ -27,8 +27,9 @@ public class TrailerManager : MonoBehaviour
             CombatManager.Instance.enemyShip.weapons.Remove(weapon);
         }*/
 
-        foreach (var weapon in WeaponManager.Instance.weapons)
+        for (var i = 0; i < WeaponManager.Instance.weapons.Count; i++)
         {
+            var weapon = WeaponManager.Instance.weapons[i];
             WeaponManager.Instance.weapons.Remove(weapon);
         }
 
@@ -60,6 +61,10 @@ public class TrailerManager : MonoBehaviour
 
     void WeaponOne()
     {
+        WeaponManager.Instance.weapons[0].GetComponent<Weapon>().bulletSpread = .1f;
+        WeaponManager.Instance.weapons[0].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
+        WeaponManager.Instance.weapons[0].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
+        
         if (Conductor.Instance.bar == 0)
         {
             if (Conductor.Instance.eighth % 2 != 0)
@@ -84,6 +89,10 @@ public class TrailerManager : MonoBehaviour
         if (Conductor.Instance.bar == 1 && Conductor.Instance.sixteenth == 0)
         {
             WeaponManager.Instance.AddWeapon();
+            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().bulletSpread = .2f;
+            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().bulletSpeed = 3;
+            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
+            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         }
 
         if (Conductor.Instance.bar >= 2)
@@ -100,6 +109,8 @@ public class TrailerManager : MonoBehaviour
         if (Conductor.Instance.bar == 3 && Conductor.Instance.quarter == 0)
         {
             WeaponManager.Instance.AddWeapon();
+            WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
+            WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         }
 
         if (Conductor.Instance.bar >= 4)
