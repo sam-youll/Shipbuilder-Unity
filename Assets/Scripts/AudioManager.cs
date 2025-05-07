@@ -551,13 +551,13 @@ public class AudioManager: MonoBehaviour
     public void StartStorm()
     {
         sfx_stormInst = FMODUnity.RuntimeManager.CreateInstance(sfx_stormRef);
-        sfx_stormInst.setParameterByName("storm", 1);
+        //sfx_stormInst.setParameterByName("storm", 0);
         sfx_stormInst.start();
     }
 
     public void StormStun()
     {
-        sfx_stormInst.setParameterByName("storm", 1);
+        //sfx_stormInst.setParameterByName("storm", 1);
     }
 
     public void StopStorm()

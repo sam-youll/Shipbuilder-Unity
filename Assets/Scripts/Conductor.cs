@@ -44,6 +44,8 @@ public class Conductor : MonoBehaviour
     //onWhole won't really do anything until we get into meters that have more than 16 16th notes, don't worry about it
     public UnityEvent onWhole;
     public UnityEvent onBar;
+
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

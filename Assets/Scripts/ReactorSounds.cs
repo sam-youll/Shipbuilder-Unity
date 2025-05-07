@@ -21,6 +21,20 @@ public class ReactorSounds : MonoBehaviour
     private EventInstance playerPad;
     private EventInstance enemyPerc;
     private EventInstance playerPerc;
+
+    public EventInstance playerPad2;
+    public EventInstance playerPerc2;
+    public EventInstance playerPad3;
+    public EventInstance playerPerc3;
+    public EventInstance playerPad4;
+    public EventInstance playerPerc4;
+    public EventInstance enemyPad2;
+    public EventInstance enemyPerc2;
+    public EventInstance enemyPad3;
+    public EventInstance enemyPerc3;
+    public EventInstance enemyPad4;
+    public EventInstance enemyPerc4;
+
     [Header("FMOD Events")]
     public EventReference enemyBassRef;
     public EventReference playerBassRef;
@@ -575,9 +589,15 @@ public class ReactorSounds : MonoBehaviour
 
             //picks a random note from the current chord
             var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
+            var padPitch2 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            var padPitch3 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            var padPitch4 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
 
             //sets the pitch
             playerPad.setParameterByName("pitch", padPitch);
+            playerPad2.setParameterByName("pitch", padPitch2);
+            playerPad3.setParameterByName("pitch", padPitch3);
+            playerPad4.setParameterByName("pitch", padPitch4);
 
         }
     }
@@ -589,9 +609,17 @@ public class ReactorSounds : MonoBehaviour
             var chord = changes[currentChord];
             string chordstring = chords[chord];
 
+            //picks a random note from the current chord
             var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
+            var padPitch2 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            var padPitch3 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            var padPitch4 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
 
+            //sets the pitch
             enemyPad.setParameterByName("pitch", padPitch);
+            enemyPad2.setParameterByName("pitch", padPitch2);
+            enemyPad3.setParameterByName("pitch", padPitch3);
+            enemyPad4.setParameterByName("pitch", padPitch4);
         }
     }
 
@@ -640,5 +668,42 @@ public class ReactorSounds : MonoBehaviour
         enemyPerc.stop(0);
         enemyBass.stop(0);
         enemyPad.stop(0);
+    }
+
+    public void AddPlayerPad(EventInstance addedPad)
+    {
+
+        addedPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
+
+        addedPad.setParameterByName("grit", playerGrit);
+        addedPad.setParameterByName("soft", playerSoft);
+        addedPad.setParameterByName("reson", 0);
+        addedPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
+        addedPad.setParameterByName("ffgain", Random.Range(0f, .1f));
+        addedPad.setParameterByName("delaytime", padDelayTime);
+
+        addedPad.start();
+        
+
+        UnityEngine.Debug.Log("added player pad: " + addedPad);
+        
+    }
+
+    public void AddEnemyPad(EventInstance addedPad)
+    {
+
+        addedPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
+
+        addedPad.setParameterByName("grit", enemyGrit);
+        addedPad.setParameterByName("soft", enemySoft);
+        addedPad.setParameterByName("reson", 0);
+        addedPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
+        addedPad.setParameterByName("ffgain", Random.Range(0f, .1f));
+        addedPad.setParameterByName("delaytime", padDelayTime);
+
+        addedPad.start();
+
+
+        UnityEngine.Debug.Log("added enemy pad: " + addedPad);
     }
 }

@@ -51,9 +51,11 @@ public class CombatManager : MonoBehaviour
 
     public GameObject geomagneticPulse;
     private bool pulsarEventActive;
-    private float pulseTimer = 4;
+    public float pulseTimer = 4;
 
     public UnityEvent playerShipImpact;
+
+    public bool combatOverride;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -190,7 +192,7 @@ public class CombatManager : MonoBehaviour
         AudioManager.Instance.StopEnemySong();
     }
 
-    IEnumerator Pulsar()
+    public IEnumerator Pulsar()
     {
         AudioManager.Instance.StartStorm();
         geomagneticPulse.transform.localScale = Vector3.one;
@@ -203,7 +205,7 @@ public class CombatManager : MonoBehaviour
         {
             geomagneticPulse.transform.localScale *= 1 + (Time.deltaTime * 7);
             yield return null;
-            AudioManager.Instance.StormStun();
+            //AudioManager.Instance.StormStun();
         }
         foreach (var weapon in playerShip.weapons)
         {

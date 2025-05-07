@@ -20,7 +20,9 @@ public class Reactor : MonoBehaviour
     private List<Module> myPatch;
 
     public GameObject previousModule;
-    
+
+    public bool tempoOverride;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -64,8 +66,10 @@ public class Reactor : MonoBehaviour
         }
 
         strength = power / rate;
-        
-        Conductor.Instance.tempo = 120 + (rate * 100);
+        if (!tempoOverride)
+        {
+            Conductor.Instance.tempo = 120 + (rate * 100);
+        } 
 
         // TODO: set values of ReactorSounds.Instance based on adsrValues[adsrIndex]
 

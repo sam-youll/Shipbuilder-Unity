@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class Weapon : MonoBehaviour
@@ -138,7 +139,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    void Fire()
+    public void Fire()
     {
         if (charge < 1)
         {
@@ -158,11 +159,19 @@ public class Weapon : MonoBehaviour
         
         // create bullet
         var newBullet = Instantiate(bulletPrefab, myShipWeapon.transform.position + Vector3.right * (dir * .5f), Quaternion.identity);
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cinematic Scene"))
+        {
+            newBullet.transform.localScale = (Vector3.one * 0.5f);
+        }
         if (dir == 1)
         {
             newBullet.GetComponent<Bullet>().damage = damage * Reactor.Instance.strength;
             newBullet.GetComponent<Bullet>().hullDamage = hullDamage * Reactor.Instance.strength;
             newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage * Reactor.Instance.strength;
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cinematic Scene"))
+            {
+                newBullet.GetComponent<Bullet>().damage = damage * (Random.Range(1, 4));
+            }
         }
         else if (dir == -1)
         {
@@ -174,6 +183,8 @@ public class Weapon : MonoBehaviour
         newBullet.GetComponent<Bullet>().myShield = myShip.GetComponent<Ship>().shield;
         newBullet.GetComponent<Bullet>().effects = effects;
         newBullet.GetComponent<Bullet>().soundType = soundType;
+
+
 
         int currentChord = ReactorSounds.Instance.currentChord;
         var chord = ReactorSounds.Instance.changes[currentChord];
