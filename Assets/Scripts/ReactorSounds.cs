@@ -689,6 +689,11 @@ public class ReactorSounds : MonoBehaviour
         
     }
 
+    public void RemovePlayerPad(EventInstance removedPad)
+    {
+        removedPad.stop(0);
+    }
+
     public void AddEnemyPad(EventInstance addedPad)
     {
 

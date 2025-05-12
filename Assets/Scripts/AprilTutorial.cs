@@ -25,6 +25,7 @@ public class AprilTutorial : MonoBehaviour
     public GameObject fuelOutput;
     public GameObject izkiModule;
     public GameObject izkiOutput;
+    public GameObject currentModule;
 
 
     //highlight variables
@@ -33,12 +34,21 @@ public class AprilTutorial : MonoBehaviour
     public GameObject modulePlaceHighlight;
     public GameObject startCombatHighlight;
     private Vector3 highlightScale;
+    public GameObject battleScreen;
 
     //rack variables
     public GameObject reactor;
     public GameObject weaponRack;
     public GameObject reactorInput;
     public GameObject weaponInput;
+
+    //transform pos variables for moving things in front of/behind the dimmer
+    private Vector3 inventoryPos;
+    public Vector3 currentModulePos;
+    private Vector3 battleScreenPos;
+    private Vector3 reactorPos;
+    private Vector3 weaponPos;
+
 
     //jack variables
     public GameObject jack1;
@@ -47,6 +57,7 @@ public class AprilTutorial : MonoBehaviour
     private Vector3 jack2Pos;
 
     public GameObject startButton;
+    public GameObject startBlock;
 
     public float timerLength = 0.2f;
     private bool timerStarted = false;
@@ -56,6 +67,11 @@ public class AprilTutorial : MonoBehaviour
     void Start()
     {
         fakeCursorPos = new Vector3(fakeCursor.transform.position.x, fakeCursor.transform.position.y, -6f);
+        inventoryPos = Inventory.Instance.transform.position;
+        battleScreenPos = battleScreen.transform.position;
+        reactorPos = reactor.transform.parent.transform.position;
+        weaponPos = weaponRack.transform.parent.transform.position;
+        UpdateCurrentModule(funnel);
     }
 
     // Update is called once per frame
@@ -88,7 +104,12 @@ public class AprilTutorial : MonoBehaviour
             isComplete = false;
             inventoryHighlight.SetActive(true);
             cursorSpeed = 3;
-            
+
+            HighlightInventory();
+            if (funnel.transform.parent = Inventory.Instance.transform)
+            {
+                UpdateCurrentModule(funnel);
+            }
 
             cursorStart = new Vector3(0, 5.84f, -6f);
             if (!cursorSet)
@@ -114,9 +135,12 @@ public class AprilTutorial : MonoBehaviour
             isComplete = false;
             cursorSpeed = 8;
 
-            modulePlacePos = new Vector3(-12, -4, -3.4241f);
+            modulePlacePos = new Vector3(-12, -4, -6);
             highlightScale = new Vector3(9, 9, 9);
             modulePlaceHighlight.SetActive(true);
+
+            reactorPos.z = -4;
+            reactor.transform.parent.transform.position = reactorPos;
 
             cursorStart = new Vector3 (funnel.transform.position.x, funnel.transform.position.y, -6f);
             if (!cursorSet)
@@ -129,10 +153,19 @@ public class AprilTutorial : MonoBehaviour
 
             if (funnel.transform.parent == reactor.transform)
             {
-                    fakeCursor.SetActive(false);
-                    modulePlaceHighlight.SetActive(false);
-                    isComplete = true;
-                    CompleteStep();
+                fakeCursor.SetActive(false);
+                modulePlaceHighlight.SetActive(false);
+                isComplete = true;
+                HideInventory();
+                CompleteStep();
+
+                bool placedModule = false;
+                if (!placedModule)
+                {
+                    currentModulePos = cursorTarget;
+                    currentModule.transform.position = currentModulePos;
+                    placedModule = true;
+                }
             }
 
         }
@@ -151,8 +184,8 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = new Vector3 (reactorInput.transform.position.x, reactorInput.transform.position.y, -6f);
             fakeCursor.SetActive(true);
 
-            jack1Pos = new Vector3(funnelOutput.transform.position.x, funnelOutput.transform.position.y, -4);
-            jack2Pos = new Vector3(reactorInput.transform.position.x, reactorInput.transform.position.y, -.17f);
+            jack1Pos = new Vector3(funnelOutput.transform.position.x, funnelOutput.transform.position.y, -7);
+            jack2Pos = new Vector3(reactorInput.transform.position.x, reactorInput.transform.position.y, -9);
             jack1.SetActive(true);
             jack2.SetActive(true);
 
@@ -162,12 +195,16 @@ public class AprilTutorial : MonoBehaviour
                 jack1.SetActive(false);
                 jack2.SetActive(false);
                 isComplete = true;
+                currentModulePos.z = -1;
                 CompleteStep();
             }
         }
 
         if (currentStep == 3)
         {
+            reactorPos.z = 0;
+            reactor.transform.parent.transform.position = reactorPos;
+
             //OPEN INVENTORY
             isComplete = false;
             cursorSpeed = 3;
@@ -178,8 +215,13 @@ public class AprilTutorial : MonoBehaviour
                 fakeCursorPos = cursorStart;
                 cursorSet = true;
             }
-            cursorTarget = new Vector3(2.01f, 7.06f, -6f);
+            cursorTarget = new Vector3(-7, 7, -6f);
             fakeCursor.SetActive(true);
+            if (fuel.transform.parent = Inventory.Instance.transform)
+            {
+                UpdateCurrentModule(fuel);
+            }
+            HighlightInventory();
 
             if (Inventory.Instance.isPulledDown)
             {
@@ -196,9 +238,12 @@ public class AprilTutorial : MonoBehaviour
             isComplete = false;
             cursorSpeed = 8;
 
-            modulePlacePos = new Vector3(-12.5f, 0.5f, -3.4241f);
+            modulePlacePos = new Vector3(-12.5f, 0.5f, -6);
             highlightScale = new Vector3(18, 18, 18);
             modulePlaceHighlight.SetActive(true);
+
+            reactorPos.z = -4;
+            reactor.transform.parent.transform.position = reactorPos;
 
             cursorStart = new Vector3(fuel.transform.position.x, fuel.transform.position.y, -6f);
             if (!cursorSet)
@@ -215,7 +260,16 @@ public class AprilTutorial : MonoBehaviour
                 fakeCursor.SetActive(false);
                 modulePlaceHighlight.SetActive(false);
                 isComplete = true;
+                HideInventory();
                 CompleteStep();
+
+                bool placedModule = false;
+                if (!placedModule)
+                {
+                    currentModulePos = cursorTarget;
+                    currentModule.transform.position = currentModulePos;
+                    placedModule = true;
+                }
             }
         }
 
@@ -233,8 +287,8 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = new Vector3(funnelInput.transform.position.x, funnelInput.transform.position.y, -6f);
             fakeCursor.SetActive(true);
 
-            jack1Pos = new Vector3(fuelOutput.transform.position.x, fuelOutput.transform.position.y, -4);
-            jack2Pos = new Vector3(funnelInput.transform.position.x, funnelInput.transform.position.y, -4);
+            jack1Pos = new Vector3(fuelOutput.transform.position.x, fuelOutput.transform.position.y, -7);
+            jack2Pos = new Vector3(funnelInput.transform.position.x, funnelInput.transform.position.y, -9);
             jack1.SetActive(true);
             jack2.SetActive(true);
 
@@ -244,12 +298,17 @@ public class AprilTutorial : MonoBehaviour
                 jack1.SetActive(false);
                 jack2.SetActive(false);
                 fakeCursor.SetActive(false);
+                currentModulePos.z = -1;
                 CompleteStep();
             }
         }
 
         if (currentStep == 6)
         {
+
+            reactorPos.z = 0;
+            reactor.transform.parent.transform.position = reactorPos;
+
             //OPEN INVENTORY
             isComplete = false;
             cursorSpeed = 3;
@@ -262,6 +321,13 @@ public class AprilTutorial : MonoBehaviour
                 cursorSet = true;
             }
             cursorTarget = new Vector3(-7, 7, -3.4775f);
+
+            HighlightInventory();
+            if (izkiModule.transform.parent = Inventory.Instance.transform)
+            {
+                UpdateCurrentModule(izkiModule);
+            }
+            
 
             if (Inventory.Instance.isPulledDown)
             {
@@ -277,9 +343,12 @@ public class AprilTutorial : MonoBehaviour
             //PLACE IZKI
             isComplete = false;
             cursorSpeed = 6;
-            modulePlacePos = new Vector3(-7, -4, -3.4241f);
+            modulePlacePos = new Vector3(-7, -4, -6);
             modulePlaceHighlight.SetActive(true);
             highlightScale = new Vector3(9, 9, 9);
+
+            weaponPos.z = -5;
+            weaponRack.transform.parent.transform.position = weaponPos;
 
             cursorStart = new Vector3(izkiModule.transform.position.x, izkiModule.transform.position.y, -6f);
             if (!cursorSet)
@@ -295,7 +364,16 @@ public class AprilTutorial : MonoBehaviour
                 fakeCursor.SetActive(false);
                 modulePlaceHighlight.SetActive(false);
                 isComplete = true;
+                HideInventory();
                 CompleteStep();
+
+                bool placedModule = false;
+                if (!placedModule)
+                {
+                    currentModulePos = cursorTarget;
+                    currentModule.transform.position = currentModulePos;
+                    placedModule = true;
+                }
             }
         }
 
@@ -308,8 +386,8 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -6f);
             fakeCursor.SetActive(true);
 
-            jack1Pos = new Vector3(izkiOutput.transform.position.x, izkiOutput.transform.position.y, -4);
-            jack2Pos = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -4f);
+            jack1Pos = new Vector3(izkiOutput.transform.position.x, izkiOutput.transform.position.y, -7);
+            jack2Pos = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -9);
             jack1.SetActive(true);
             jack2.SetActive(true);
 
@@ -319,12 +397,16 @@ public class AprilTutorial : MonoBehaviour
                 jack1.SetActive(false); 
                 jack2.SetActive(false);
                 isComplete = true;
+                currentModulePos.z = -1;
                 CompleteStep();
             }
         }
 
         if (currentStep == 9)
         {
+            weaponPos.z = 0;
+            weaponRack.transform.parent.transform.position = weaponPos;
+
             isComplete = false;
             startCombatHighlight.SetActive(true);
             cursorSpeed = 8;
@@ -334,6 +416,11 @@ public class AprilTutorial : MonoBehaviour
                 fakeCursorPos = cursorStart;
                 cursorSet = true;
             }
+
+            currentModule = startBlock;
+            currentModulePos = new Vector3(12.5f, 1.85f, -5);
+            currentModule.transform.position = currentModulePos;
+
             //change this to start combat
             cursorTarget = startCombatHighlight.transform.position;
             fakeCursor.SetActive(true);
@@ -342,6 +429,10 @@ public class AprilTutorial : MonoBehaviour
             {
                 fakeCursor.SetActive(false);
                 startCombatHighlight.SetActive(false);
+                currentModulePos.z = -1;
+                currentModule.transform.position = currentModulePos;
+                battleScreenPos = new Vector3(6, -4.15f, -5);
+                battleScreen.transform.position = battleScreenPos;
             }
 
         }
@@ -367,6 +458,31 @@ public class AprilTutorial : MonoBehaviour
     void EndTimer()
     {
         AudioManager.Instance.PlayDialogueSound();
+    }
+
+    void HighlightInventory()
+    {
+        inventoryPos.z = -5;
+        Inventory.Instance.transform.position = inventoryPos;
+    }
+
+    void HideInventory()
+    {
+        inventoryPos.z = -1;
+        Inventory.Instance.transform.position = inventoryPos;
+    }
+
+    void UpdateCurrentModule(GameObject module)
+    {
+        currentModule = module;
+        bool set = false;
+        if (!set)
+        {
+            currentModulePos = currentModule.transform.localPosition;
+            currentModulePos.z = -3;
+            currentModule.transform.localPosition = currentModulePos;
+            set = true;
+        }   
     }
 
 }

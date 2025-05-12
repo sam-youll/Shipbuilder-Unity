@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = System.Random;
 
 public class Inventory : MonoBehaviour
@@ -65,7 +66,13 @@ public class Inventory : MonoBehaviour
             {
                 var pos = transform.position;
                 pos = Vector3.Lerp(pos, downPos, .2f);
-                pos.z = -2;
+                if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Spring Showcase Tutorial"))
+                {
+                    pos.z = -5;
+                } else
+                {
+                    pos.z = -2;
+                }
                 transform.position = pos;
             }
         }
