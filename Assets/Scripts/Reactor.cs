@@ -81,13 +81,13 @@ public class Reactor : MonoBehaviour
         for (var i = 0; i < CombatManager.Instance.playerShip.shields.Length; i++)
         {
             var shield = CombatManager.Instance.playerShip.shields[i];
-            ReactorSounds.Instance.AddPlayerPad(pads[i]);
             shield.SetActive(false);
         }
 
         for (var i = 0; i < shields; i++)
         {
             CombatManager.Instance.playerShip.shields[i].SetActive(true);
+            ReactorSounds.Instance.AddPlayerPad(pads[i]);
         }
 
         strength = power / rate;
