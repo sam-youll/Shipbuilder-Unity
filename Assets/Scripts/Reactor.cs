@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FMOD.Studio;
 using TMPro;
 using UnityEngine;
 
@@ -21,9 +22,9 @@ public class Reactor : MonoBehaviour
     public float dwth;
     private List<Module> myPatch;
 
-    public TextMeshPro shieldNumberLabel;
-
     public GameObject previousModule;
+
+    private EventInstance[] pads = new EventInstance[8];
 
     public bool tempoOverride;
 
@@ -41,23 +42,25 @@ public class Reactor : MonoBehaviour
     
     public void SetPatch()
     {
-        if (previousModule == null)
-            return;
-        
         myPatch = new();
-        var prev = previousModule.GetComponent<Module>();
-        while (prev.previousModule != null)
+        
+        if (previousModule != null)
         {
+            var prev = previousModule.GetComponent<Module>();
+            while (prev.previousModule != null)
+            {
+                // Debug.Log(prev.name);
+                myPatch.Add(prev);
+                prev = prev.previousModule.GetComponent<Module>();
+            }
             // Debug.Log(prev.name);
             myPatch.Add(prev);
-            prev = prev.previousModule.GetComponent<Module>();
         }
-        // Debug.Log(prev.name);
-        myPatch.Add(prev);
 
         power = 0;
         rate = 0;
         shields = 0;
+        ReactorSounds.Instance.RemoveAllPads(pads);
         foreach (var module in myPatch)
         {
             if (module.stat == "power")
@@ -75,10 +78,13 @@ public class Reactor : MonoBehaviour
         }
 
         shields = Mathf.Clamp(shields, 0, 4);
-        foreach (var shield in CombatManager.Instance.playerShip.shields)
+        for (var i = 0; i < CombatManager.Instance.playerShip.shields.Length; i++)
         {
+            var shield = CombatManager.Instance.playerShip.shields[i];
+            ReactorSounds.Instance.AddPlayerPad(pads[i]);
             shield.SetActive(false);
         }
+
         for (var i = 0; i < shields; i++)
         {
             CombatManager.Instance.playerShip.shields[i].SetActive(true);

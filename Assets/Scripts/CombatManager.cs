@@ -81,9 +81,9 @@ public class CombatManager : MonoBehaviour
         for (var i = 0; i < 4; i++)
         {
             playerShieldBars[i].gameObject.SetActive(playerShip.shields[i].activeSelf);
-            playerShieldBars[i].value = playerShip.shields[i].GetComponent<Shield>().health;
+            playerShieldBars[i].value = playerShip.shields[i].GetComponent<Shield>().health / playerShip.shields[i].GetComponent<Shield>().maxHealth;
             enemyShieldBars[i].gameObject.SetActive(enemyShip.shields[i].activeSelf);
-            enemyShieldBars[i].value = enemyShip.shields[i].GetComponent<Shield>().health;
+            enemyShieldBars[i].value = enemyShip.shields[i].GetComponent<Shield>().health / enemyShip.shields[i].GetComponent<Shield>().maxHealth;
         }
         
         if (state == State.inCombat)

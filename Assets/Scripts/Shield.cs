@@ -8,12 +8,12 @@ public class Shield : MonoBehaviour
     public float defense;
     public float downtime;
     public float rechargeRate;
-    public float defaultScale;
+    private float defaultScale;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        defaultScale = transform.localScale.x;
     }
 
     // Update is called once per frame

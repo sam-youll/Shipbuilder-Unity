@@ -716,4 +716,12 @@ public class ReactorSounds : MonoBehaviour
     {
         removedPad.stop(0);
     }
+
+    public void RemoveAllPads(EventInstance[] pads)
+    {
+        for (int i = 0; i < pads.Length; i++)
+        {
+            pads[i].stop(0);
+        }
+    }
 }
