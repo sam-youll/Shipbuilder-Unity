@@ -711,4 +711,9 @@ public class ReactorSounds : MonoBehaviour
 
         UnityEngine.Debug.Log("added enemy pad: " + addedPad);
     }
+
+    public void RemoveEnemyPad(EventInstance removedPad)
+    {
+        removedPad.stop(0);
+    }
 }
