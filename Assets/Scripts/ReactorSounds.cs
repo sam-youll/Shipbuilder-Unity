@@ -22,6 +22,9 @@ public class ReactorSounds : MonoBehaviour
     private EventInstance enemyPerc;
     private EventInstance playerPerc;
 
+    public EventInstance[] playerPads = new EventInstance[4];
+    public EventInstance[] enemyPads = new EventInstance[4];
+
     public EventInstance playerPad2;
     public EventInstance playerPerc2;
     public EventInstance playerPad3;
@@ -109,7 +112,11 @@ public class ReactorSounds : MonoBehaviour
         playerBass = FMODUnity.RuntimeManager.CreateInstance(playerBassRef);
 
         enemyPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
-        playerPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef); 
+        // playerPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
+        for (var index = 0; index < playerPads.Length; index++)
+        {
+            playerPads[index] = RuntimeManager.CreateInstance(playerPadRef);
+        }
 
         //setting the placeholder parameters that will just work for now
         SetTestParams();
@@ -119,7 +126,7 @@ public class ReactorSounds : MonoBehaviour
         //starting the FMOD events
         playerPerc.start();
         playerBass.start();
-        playerPad.start();
+        // playerPad.start();
         
 
         //Subscribing all the instruments so they're quantized
@@ -588,16 +595,21 @@ public class ReactorSounds : MonoBehaviour
             string chordstring = chords[chord];
 
             //picks a random note from the current chord
-            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
-            var padPitch2 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-            var padPitch3 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-            var padPitch4 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            for (int i = 0; i < 4; i++)
+            {
+                var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+                playerPads[i].setParameterByName("pitch", pitch);
+            }
+            // var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
+            // var padPitch2 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            // var padPitch3 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+            // var padPitch4 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
 
             //sets the pitch
-            playerPad.setParameterByName("pitch", padPitch);
-            playerPad2.setParameterByName("pitch", padPitch2);
-            playerPad3.setParameterByName("pitch", padPitch3);
-            playerPad4.setParameterByName("pitch", padPitch4);
+            // playerPad.setParameterByName("pitch", padPitch);
+            // playerPad2.setParameterByName("pitch", padPitch2);
+            // playerPad3.setParameterByName("pitch", padPitch3);
+            // playerPad4.setParameterByName("pitch", padPitch4);
 
         }
     }

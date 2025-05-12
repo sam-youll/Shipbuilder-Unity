@@ -60,7 +60,7 @@ public class Reactor : MonoBehaviour
         power = 0;
         rate = 0;
         shields = 0;
-        ReactorSounds.Instance.RemoveAllPads(pads);
+        ReactorSounds.Instance.RemoveAllPads(ReactorSounds.Instance.playerPads);
         foreach (var module in myPatch)
         {
             if (module.stat == "power")
@@ -87,7 +87,7 @@ public class Reactor : MonoBehaviour
         for (var i = 0; i < shields; i++)
         {
             CombatManager.Instance.playerShip.shields[i].SetActive(true);
-            ReactorSounds.Instance.AddPlayerPad(pads[i]);
+            ReactorSounds.Instance.AddPlayerPad(ReactorSounds.Instance.playerPads[i]);
         }
 
         strength = power / rate;
