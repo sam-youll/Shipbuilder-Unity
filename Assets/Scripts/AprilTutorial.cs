@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ public class AprilTutorial : MonoBehaviour
     private Vector3 modulePlacePos;
     public GameObject modulePlaceHighlight;
     public GameObject startCombatHighlight;
+    private Vector3 highlightScale;
 
     //rack variables
     public GameObject reactor;
@@ -46,6 +48,9 @@ public class AprilTutorial : MonoBehaviour
 
     public GameObject startButton;
 
+    public float timerLength = 0.2f;
+    private bool timerStarted = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
@@ -56,6 +61,20 @@ public class AprilTutorial : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //timer for chime sound
+        if (timerStarted)
+        {
+            timerLength -= Time.deltaTime;
+        } else
+        {
+            timerLength = 0.2f;
+        }
+        if (timerLength <= 0)
+        {
+            EndTimer();
+            timerStarted = false;
+        }
+
         step = cursorSpeed * Time.deltaTime;
         fakeCursorPos = Vector3.MoveTowards(fakeCursor.transform.position, cursorTarget, step);
         if (fakeCursorPos == cursorTarget)
@@ -77,7 +96,7 @@ public class AprilTutorial : MonoBehaviour
                 fakeCursorPos = cursorStart;
                 cursorSet = true;
             }
-            cursorTarget = new Vector3(2.01f, 7.06f, -6f);
+            cursorTarget = new Vector3(-7, 7, -6f);
             fakeCursor.SetActive(true);
 
 
@@ -95,7 +114,8 @@ public class AprilTutorial : MonoBehaviour
             isComplete = false;
             cursorSpeed = 8;
 
-            modulePlacePos = new Vector3(-12, 0, -3.4241f);
+            modulePlacePos = new Vector3(-12, -4, -3.4241f);
+            highlightScale = new Vector3(9, 9, 9);
             modulePlaceHighlight.SetActive(true);
 
             cursorStart = new Vector3 (funnel.transform.position.x, funnel.transform.position.y, -6f);
@@ -176,7 +196,8 @@ public class AprilTutorial : MonoBehaviour
             isComplete = false;
             cursorSpeed = 8;
 
-            modulePlacePos = new Vector3(-12, -1, -3.4241f);
+            modulePlacePos = new Vector3(-12.5f, 0.5f, -3.4241f);
+            highlightScale = new Vector3(18, 18, 18);
             modulePlaceHighlight.SetActive(true);
 
             cursorStart = new Vector3(fuel.transform.position.x, fuel.transform.position.y, -6f);
@@ -240,7 +261,7 @@ public class AprilTutorial : MonoBehaviour
                 fakeCursorPos = cursorStart;
                 cursorSet = true;
             }
-            cursorTarget = new Vector3(2.01f, 7.06f, -3.4775f);
+            cursorTarget = new Vector3(-7, 7, -3.4775f);
 
             if (Inventory.Instance.isPulledDown)
             {
@@ -258,6 +279,7 @@ public class AprilTutorial : MonoBehaviour
             cursorSpeed = 6;
             modulePlacePos = new Vector3(-7, -4, -3.4241f);
             modulePlaceHighlight.SetActive(true);
+            highlightScale = new Vector3(9, 9, 9);
 
             cursorStart = new Vector3(izkiModule.transform.position.x, izkiModule.transform.position.y, -6f);
             if (!cursorSet)
@@ -327,6 +349,7 @@ public class AprilTutorial : MonoBehaviour
 
         fakeCursor.transform.position = fakeCursorPos;
         modulePlaceHighlight.transform.position = modulePlacePos;
+        modulePlaceHighlight.transform.localScale = highlightScale;
         jack1.transform.position = jack1Pos;
         jack2.transform.position = jack2Pos;
     }
@@ -335,8 +358,15 @@ public class AprilTutorial : MonoBehaviour
     {
         if (isComplete)
         {
+            timerStarted = true;
             currentStep++;
             cursorSet = false;
         }
     }
+
+    void EndTimer()
+    {
+        AudioManager.Instance.PlayDialogueSound();
+    }
+
 }
