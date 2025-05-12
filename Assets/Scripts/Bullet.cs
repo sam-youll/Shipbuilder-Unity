@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
     public float hullDamage;
     public float shieldDamage;
     public GameObject myShip;
-    public GameObject myShield;
+    public GameObject[] myShields;
     // public float speed;
     public List<Weapon.Effect> effects;
     public Combat.SoundType soundType;
@@ -82,7 +82,7 @@ public class Bullet : MonoBehaviour
             ship.TakeDamage(damage);
             Destroy(gameObject);
         }
-        else if (collision.gameObject.CompareTag("Shield") && collision.gameObject != myShield)
+        else if (collision.gameObject.CompareTag("Shield") &&  !myShields.Contains(collision.gameObject))
         {
             var shield = collision.gameObject.GetComponent<Shield>();
             

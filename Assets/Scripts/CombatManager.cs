@@ -37,9 +37,9 @@ public class CombatManager : MonoBehaviour
     private float endScreenTimer = 3f;
 
     public StatBar playerHealthBar;
-    public StatBar playerShieldBar;
+    public StatBar[] playerShieldBars;
     public StatBar enemyHealthBar;
-    public StatBar enemyShieldBar;
+    public StatBar[] enemyShieldBars;
 
     public Ship playerShip;
     public Ship enemyShip;
@@ -78,10 +78,13 @@ public class CombatManager : MonoBehaviour
     {
         playerHealthBar.value = playerShip.health / playerShip.maxHealth;
         enemyHealthBar.value = enemyShip.health / enemyShip.maxHealth;
-        playerShieldBar.value = playerShip.transform.GetComponentInChildren<Shield>().health /
-                                playerShip.transform.GetComponentInChildren<Shield>().maxHealth;
-        enemyShieldBar.value = enemyShip.transform.GetComponentInChildren<Shield>().health /
-                               enemyShip.transform.GetComponentInChildren<Shield>().maxHealth;
+        for (var i = 0; i < 4; i++)
+        {
+            playerShieldBars[i].gameObject.SetActive(playerShip.shields[i].activeSelf);
+            playerShieldBars[i].value = playerShip.shields[i].GetComponent<Shield>().health;
+            enemyShieldBars[i].gameObject.SetActive(enemyShip.shields[i].activeSelf);
+            enemyShieldBars[i].value = enemyShip.shields[i].GetComponent<Shield>().health;
+        }
         
         if (state == State.inCombat)
         {
@@ -132,9 +135,7 @@ public class CombatManager : MonoBehaviour
                     }
 
                     enemyShip.maxHealth += 5;
-                    enemyShip.shield.GetComponent<Shield>().maxHealth += 2;
                     playerShip.maxHealth += 5;
-                    playerShip.shield.GetComponent<Shield>().maxHealth += 2;
                 }
                 
             }
@@ -165,10 +166,12 @@ public class CombatManager : MonoBehaviour
         ReactorSounds.Instance.StartEnemyReactor();
         endScreen.SetActive(false);
         enemyShip.gameObject.SetActive(true);
-        enemyShip.GetComponent<Ship>().shield.transform.localScale = Vector3.one;
-        enemyShip.GetComponent<Ship>().shield.GetComponent<Shield>().health =
-            enemyShip.GetComponent<Ship>().shield.GetComponent<Shield>().maxHealth;
-        enemyShip.GetComponent<Ship>().shield.GetComponent<Shield>().StartCoroutine("RegenShield");
+        foreach (var shield in enemyShip.GetComponent<Ship>().shields)
+        {
+            shield.transform.localScale = Vector3.one;
+            shield.GetComponent<Shield>().health = shield.GetComponent<Shield>().maxHealth;
+            shield.GetComponent<Shield>().StartCoroutine("RegenShield");
+        }
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;
         playerShip.health = playerShip.maxHealth;

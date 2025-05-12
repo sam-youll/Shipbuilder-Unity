@@ -180,7 +180,7 @@ public class Weapon : MonoBehaviour
             newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage;
         }
         newBullet.GetComponent<Bullet>().myShip = myShip;
-        newBullet.GetComponent<Bullet>().myShield = myShip.GetComponent<Ship>().shield;
+        newBullet.GetComponent<Bullet>().myShields = myShip.GetComponent<Ship>().shields;
         newBullet.GetComponent<Bullet>().effects = effects;
         newBullet.GetComponent<Bullet>().soundType = soundType;
 

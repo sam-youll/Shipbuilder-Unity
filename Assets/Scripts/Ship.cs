@@ -8,7 +8,7 @@ public class Ship : MonoBehaviour
     public float health;
     public List<GameObject> weapons;
     public bool allWeaponsWarmed;
-    public GameObject shield;
+    public GameObject[] shields;
     public bool cloaked = false;
     public GameObject floatingDamageNumberPrefab;
     

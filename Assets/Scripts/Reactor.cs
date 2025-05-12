@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Reactor : MonoBehaviour
@@ -14,10 +15,13 @@ public class Reactor : MonoBehaviour
     public float power; // default power module adds 1, can be more or less (upper limit 30-40 maybe?)
     public float rate; // 1-4, but tempo is 200-600
     public float strength; // 1-4
+    private float shields; // 1-4
     public float izki;
     public float aubo;
     public float dwth;
     private List<Module> myPatch;
+
+    public TextMeshPro shieldNumberLabel;
 
     public GameObject previousModule;
 
@@ -53,6 +57,7 @@ public class Reactor : MonoBehaviour
 
         power = 0;
         rate = 0;
+        shields = 0;
         foreach (var module in myPatch)
         {
             if (module.stat == "power")
@@ -63,6 +68,20 @@ public class Reactor : MonoBehaviour
             {
                 rate += module.statValue;
             }
+            else if (module.stat == "shield")
+            {
+                shields += module.statValue;
+            }
+        }
+
+        shields = Mathf.Clamp(shields, 0, 4);
+        foreach (var shield in CombatManager.Instance.playerShip.shields)
+        {
+            shield.SetActive(false);
+        }
+        for (var i = 0; i < shields; i++)
+        {
+            CombatManager.Instance.playerShip.shields[i].SetActive(true);
         }
 
         strength = power / rate;
