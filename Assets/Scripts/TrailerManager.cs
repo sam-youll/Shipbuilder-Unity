@@ -14,9 +14,9 @@ public class TrailerManager : MonoBehaviour
         Conductor.Instance.onHalf.AddListener(Pads);
         Conductor.Instance.onSixteenth.AddListener(WeaponTwo);
         Conductor.Instance.onQuarter.AddListener(WeaponThree);
-        Conductor.Instance.onQuarter.AddListener(EnemyWeaponOne);
-        Conductor.Instance.onEighth.AddListener(EnemyWeaponTwo);
-        Conductor.Instance.onSixteenth.AddListener(EnemyWeaponThree);
+        //Conductor.Instance.onQuarter.AddListener(EnemyWeaponOne);
+        //Conductor.Instance.onEighth.AddListener(EnemyWeaponTwo);
+        //Conductor.Instance.onSixteenth.AddListener(EnemyWeaponThree);
         Conductor.Instance.onHalf.AddListener(Perc);
         Conductor.Instance.onHalf.AddListener(TempoChanges);
 
@@ -35,6 +35,7 @@ public class TrailerManager : MonoBehaviour
 
         CombatManager.Instance.enemyShip.weapons[1].SetActive(false);
         CombatManager.Instance.enemyShip.weapons[2].SetActive(false);
+        CombatManager.Instance.enemyShip.weapons[3].SetActive(false);
         
         //enemyShipSprite.enabled = false;
     }
@@ -42,7 +43,7 @@ public class TrailerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Conductor.Instance.bar == 9 && Conductor.Instance.half == 1)
+        /*if (Conductor.Instance.bar == 9 && Conductor.Instance.half == 1)
         {
             CombatManager.Instance.geomagneticPulse.transform.parent.gameObject.SetActive(true);
 
@@ -55,7 +56,7 @@ public class TrailerManager : MonoBehaviour
                     CombatManager.Instance.pulseTimer += 6;
                 }
             }
-        }
+        }*/
 
     }
 
@@ -74,12 +75,11 @@ public class TrailerManager : MonoBehaviour
             }
         }
 
-        if (Conductor.Instance.bar >= 1)
+        if (Conductor.Instance.bar >= 1 && Conductor.Instance.bar < 9)
         {
             WeaponManager.Instance.weapons[0].GetComponent<Weapon>().charge = 1;
             WeaponManager.Instance.weapons[0].GetComponent<Weapon>().Fire();
         }
-
 
         
     }
@@ -95,11 +95,16 @@ public class TrailerManager : MonoBehaviour
             WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         }
 
-        if (Conductor.Instance.bar >= 2)
+        if (Conductor.Instance.bar >= 2 && Conductor.Instance.bar < 7)
         {
             
             WeaponManager.Instance.weapons[1].GetComponent<Weapon>().charge = 1;
             WeaponManager.Instance.weapons[1].GetComponent<Weapon>().Fire();
+        }
+
+        if (Conductor.Instance.bar == 7 && Conductor.Instance.sixteenth == 8)
+        {
+            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.gameObject.SetActive(false);
         }
 
     }
@@ -113,31 +118,68 @@ public class TrailerManager : MonoBehaviour
             WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         }
 
-        if (Conductor.Instance.bar >= 4)
+        if (Conductor.Instance.bar >= 4 && Conductor.Instance.bar < 8)
         {
             WeaponManager.Instance.weapons[2].GetComponent<Weapon>().charge = 1;
             WeaponManager.Instance.weapons[2].GetComponent <Weapon>().Fire();
+        }
+
+        if (Conductor.Instance.bar == 8 && Conductor.Instance.quarter == 2)
+        {
+            WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.gameObject.SetActive(false);
         }
 
     }
 
     void EnemyWeaponOne()
     {
-        if (Conductor.Instance.bar == 1)
+        if (Conductor.Instance.bar == 1 && Conductor.Instance.bar < 9)
         {
             CombatManager.Instance.enemyShip.weapons[0].GetComponent<Weapon>().charge = 1;
             CombatManager.Instance.enemyShip.weapons[0].GetComponent<Weapon>().Fire();
+        }
+        if (Conductor.Instance.bar == 9 && Conductor.Instance.quarter == 0)
+        {
+            CombatManager.Instance.enemyShip.weapons[0].SetActive(false);
         }
     }
 
     void EnemyWeaponTwo()
     {
+        if (Conductor.Instance.bar == 2 && Conductor.Instance.eighth == 1)
+        {
+            CombatManager.Instance.enemyShip.weapons[1].SetActive(true);
+        }
 
+        if (Conductor.Instance.bar >= 2 && Conductor.Instance.bar < 7)
+        {
+            CombatManager.Instance.enemyShip.weapons[1].GetComponent<Weapon>().charge = 1;
+            CombatManager.Instance.enemyShip.weapons[1].GetComponent<Weapon>().Fire();
+        }
+
+        if (Conductor.Instance.bar == 7 && Conductor.Instance.eighth == 0)
+        {
+            CombatManager.Instance.enemyShip.weapons[1].SetActive(false);
+        }
     }
 
     void EnemyWeaponThree()
     {
+        if (Conductor.Instance.bar == 3 && Conductor.Instance.sixteenth == 1)
+        {
+            CombatManager.Instance.enemyShip.weapons[2].SetActive(true);
+        }
 
+        if (Conductor.Instance.bar >= 3 && Conductor.Instance.bar < 8)
+        {
+            CombatManager.Instance.enemyShip.weapons[2].GetComponent<Weapon>().charge = 1;
+            CombatManager.Instance.enemyShip.weapons[2].GetComponent <Weapon>().Fire();
+        }
+
+        if (Conductor.Instance.bar == 8 && Conductor.Instance.sixteenth == 1 )
+        {
+            CombatManager.Instance.enemyShip.weapons[2].SetActive(false);
+        }
     }
 
     void Pads()

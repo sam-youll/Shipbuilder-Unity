@@ -34,6 +34,7 @@ public class AudioManager: MonoBehaviour
     private EventInstance tutorialEnemyShieldInst;
     private EventInstance tutorialEnemyWeaponInst;
     private EventInstance sfx_stormInst;
+    private EventInstance sfx_explosionInst;
 
 
     //FMOD Event Reference 
@@ -48,6 +49,7 @@ public class AudioManager: MonoBehaviour
     public EventReference sfx_shipRef;
     public EventReference sfx_paperRef;
     public EventReference sfx_stormRef;
+    public EventReference sfx_explosionRef;
     //ui
     [Header("UI References")]
     public EventReference ui_pickupRef;
@@ -563,6 +565,11 @@ public class AudioManager: MonoBehaviour
     public void StopStorm()
     {
         sfx_stormInst.stop(0);
+    }
+
+    public void PlayExplosionSFX()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_explosionRef);
     }
 
     void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)

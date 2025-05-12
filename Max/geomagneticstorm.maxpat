@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 76.0, 973.0, 653.0 ],
+		"rect" : [ 74.0, 82.0, 973.0, 653.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -184,7 +184,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 602.0, 258.0, 52.0, 22.0 ],
+					"patching_rect" : [ 603.0, 267.0, 52.0, 22.0 ],
 					"text" : "phasor~"
 				}
 
@@ -426,8 +426,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
-					"patching_rect" : [ 703.0, 230.0, 39.0, 22.0 ],
-					"text" : "+ 250"
+					"patching_rect" : [ 703.0, 230.0, 29.5, 22.0 ],
+					"text" : "+ 1"
 				}
 
 			}
@@ -566,6 +566,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
+						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"comment" : "",

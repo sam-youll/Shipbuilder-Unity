@@ -78,6 +78,7 @@ public class Bullet : MonoBehaviour
             {
                 explosion.transform.localScale = new Vector3(3, 3, 3);
             }
+            //AudioManager.Instance.PlayExplosionSFX();
             ship.TakeDamage(damage);
             Destroy(gameObject);
         }
