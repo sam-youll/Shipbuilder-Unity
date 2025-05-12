@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 public class AprilTutorial : MonoBehaviour
 {
@@ -62,6 +63,10 @@ public class AprilTutorial : MonoBehaviour
     public float timerLength = 0.2f;
     private bool timerStarted = false;
 
+    //text
+    public TextMeshPro tutorialText;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
@@ -105,6 +110,8 @@ public class AprilTutorial : MonoBehaviour
             inventoryHighlight.SetActive(true);
             cursorSpeed = 3;
 
+            tutorialText.text = "Open your inventory";
+
             HighlightInventory();
             if (funnel.transform.parent = Inventory.Instance.transform)
             {
@@ -141,6 +148,8 @@ public class AprilTutorial : MonoBehaviour
 
             reactorPos.z = -4;
             reactor.transform.parent.transform.position = reactorPos;
+
+            tutorialText.text = "Move the Converter module into your Reactor.";
 
             cursorStart = new Vector3 (funnel.transform.position.x, funnel.transform.position.y, -6f);
             if (!cursorSet)
@@ -184,6 +193,8 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = new Vector3 (reactorInput.transform.position.x, reactorInput.transform.position.y, -6f);
             fakeCursor.SetActive(true);
 
+            tutorialText.text = "Plug the Converter module into the Reactor's output. <br><br><br>This will speed things up.";
+
             jack1Pos = new Vector3(funnelOutput.transform.position.x, funnelOutput.transform.position.y, -7);
             jack2Pos = new Vector3(reactorInput.transform.position.x, reactorInput.transform.position.y, -9);
             jack1.SetActive(true);
@@ -217,6 +228,9 @@ public class AprilTutorial : MonoBehaviour
             }
             cursorTarget = new Vector3(-7, 7, -6f);
             fakeCursor.SetActive(true);
+
+            tutorialText.text = "Open your inventory.";
+
             if (fuel.transform.parent = Inventory.Instance.transform)
             {
                 UpdateCurrentModule(fuel);
@@ -244,6 +258,8 @@ public class AprilTutorial : MonoBehaviour
 
             reactorPos.z = -4;
             reactor.transform.parent.transform.position = reactorPos;
+
+            tutorialText.text = "Move the Power module into your Reactor.";
 
             cursorStart = new Vector3(fuel.transform.position.x, fuel.transform.position.y, -6f);
             if (!cursorSet)
@@ -287,6 +303,8 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = new Vector3(funnelInput.transform.position.x, funnelInput.transform.position.y, -6f);
             fakeCursor.SetActive(true);
 
+            tutorialText.text = "Route the Power module through your Converter module. <br><br>This will provide power that will be funneled to your weapons.";
+
             jack1Pos = new Vector3(fuelOutput.transform.position.x, fuelOutput.transform.position.y, -7);
             jack2Pos = new Vector3(funnelInput.transform.position.x, funnelInput.transform.position.y, -9);
             jack1.SetActive(true);
@@ -322,6 +340,8 @@ public class AprilTutorial : MonoBehaviour
             }
             cursorTarget = new Vector3(-7, 7, -3.4775f);
 
+            tutorialText.text = "Open your inventory.";
+
             HighlightInventory();
             if (izkiModule.transform.parent = Inventory.Instance.transform)
             {
@@ -346,6 +366,8 @@ public class AprilTutorial : MonoBehaviour
             modulePlacePos = new Vector3(-7, -4, -6);
             modulePlaceHighlight.SetActive(true);
             highlightScale = new Vector3(9, 9, 9);
+
+            tutorialText.text = "Move your Source module into your Weapon Rack.";
 
             weaponPos.z = -5;
             weaponRack.transform.parent.transform.position = weaponPos;
@@ -386,6 +408,8 @@ public class AprilTutorial : MonoBehaviour
             cursorTarget = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -6f);
             fakeCursor.SetActive(true);
 
+            tutorialText.text = "Plug your Source module into your Weapon Rack's Output Jack. <br><br>This will determine what your ship fires.";
+
             jack1Pos = new Vector3(izkiOutput.transform.position.x, izkiOutput.transform.position.y, -7);
             jack2Pos = new Vector3(weaponInput.transform.position.x, weaponInput.transform.position.y, -9);
             jack1.SetActive(true);
@@ -417,6 +441,8 @@ public class AprilTutorial : MonoBehaviour
                 cursorSet = true;
             }
 
+            tutorialText.text = "When you're ready, click to start combat";
+
             currentModule = startBlock;
             currentModulePos = new Vector3(12.5f, 1.85f, -5);
             currentModule.transform.position = currentModulePos;
@@ -433,6 +459,7 @@ public class AprilTutorial : MonoBehaviour
                 currentModule.transform.position = currentModulePos;
                 battleScreenPos = new Vector3(6, -4.15f, -5);
                 battleScreen.transform.position = battleScreenPos;
+                tutorialText.enabled = false;
             }
 
         }
