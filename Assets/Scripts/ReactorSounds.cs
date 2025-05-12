@@ -240,10 +240,10 @@ public class ReactorSounds : MonoBehaviour
             playerGrit = Random.Range(0, 20);
             playerSoft = 80 - playerGrit;
 
-            playerPerc.setParameterByName("reson", Random.Range(0, 50));
+            playerPerc.setParameterByName("reson", Random.Range(0, 10));
             playerPad.setParameterByName("grit", playerGrit);
             playerPad.setParameterByName("soft", playerSoft);
-            playerPad.setParameterByName("reson", 0);
+            //playerPad.setParameterByName("reson", 0);
             playerPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
             playerPad.setParameterByName("ffgain", Random.Range(0f, .1f));
         } else if (strength <= 2)
@@ -252,10 +252,10 @@ public class ReactorSounds : MonoBehaviour
             playerGrit = Random.Range(20, 40);
             playerSoft = 80 - playerGrit;
 
-            playerPerc.setParameterByName("reson", Random.Range(30, 80));
+            playerPerc.setParameterByName("reson", Random.Range(10, 20));
             playerPad.setParameterByName("grit", playerGrit);
             playerPad.setParameterByName("soft", playerSoft);
-            playerPad.setParameterByName("reson", Random.Range(0, 50));
+            //playerPad.setParameterByName("reson", Random.Range(0, 1));
             playerPad.setParameterByName("fbgain", Random.Range(.3f, .4f));
             playerPad.setParameterByName("ffgain", Random.Range(.2f, .3f));
         }
@@ -265,10 +265,10 @@ public class ReactorSounds : MonoBehaviour
             playerGrit = Random.Range(40, 60);
             playerSoft = 80 - playerGrit;
 
-            playerPerc.setParameterByName("reson", Random.Range(80, 90));
+            playerPerc.setParameterByName("reson", Random.Range(20, 30));
             playerPad.setParameterByName("grit", playerGrit);
             playerPad.setParameterByName("soft", playerSoft);
-            playerPad.setParameterByName("reson", Random.Range(50, 80));
+            //playerPad.setParameterByName("reson", Random.Range(2, 3));
             playerPad.setParameterByName("fbgain", Random.Range(.2f, .3f));
             playerPad.setParameterByName("ffgain", Random.Range(.3f, .4f));
         } else
@@ -277,10 +277,10 @@ public class ReactorSounds : MonoBehaviour
             playerGrit = Random.Range(60, 79);
             playerSoft = 80 - playerGrit;
 
-            playerPerc.setParameterByName("reson", Random.Range(90, 100));
+            playerPerc.setParameterByName("reson", Random.Range(40, 50));
             playerPad.setParameterByName("grit", playerGrit);
             playerPad.setParameterByName("soft", playerSoft);
-            playerPad.setParameterByName("reson", Random.Range(80, 100));
+            //playerPad.setParameterByName("reson", Random.Range(4, 5));
             playerPad.setParameterByName("fbgain", Random.Range(0f, .2f));
             playerPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
         }
@@ -295,7 +295,7 @@ public class ReactorSounds : MonoBehaviour
             enemyPerc.setParameterByName("reson", Random.Range(0, 50));
             enemyPad.setParameterByName("grit", enemyGrit);
             enemyPad.setParameterByName("soft", enemySoft);
-            enemyPad.setParameterByName("reson", 0);
+            //enemyPad.setParameterByName("reson", 0);
             enemyPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
             enemyPad.setParameterByName("ffgain", Random.Range(0f, .1f));
         }
@@ -308,7 +308,7 @@ public class ReactorSounds : MonoBehaviour
             enemyPerc.setParameterByName("reson", Random.Range(30, 80));
             enemyPad.setParameterByName("grit", enemyGrit);
             enemyPad.setParameterByName("soft", enemySoft);
-            enemyPad.setParameterByName("reson", Random.Range(0, 50));
+            //enemyPad.setParameterByName("reson", Random.Range(0, 1));
             enemyPad.setParameterByName("fbgain", Random.Range(.3f, .4f));
             enemyPad.setParameterByName("ffgain", Random.Range(.2f, .3f));
         }
@@ -321,7 +321,7 @@ public class ReactorSounds : MonoBehaviour
             enemyPerc.setParameterByName("reson", Random.Range(80, 90));
             enemyPad.setParameterByName("grit", enemyGrit);
             enemyPad.setParameterByName("soft", enemySoft);
-            enemyPad.setParameterByName("reson", Random.Range(50, 80));
+            //enemyPad.setParameterByName("reson", Random.Range(2, 3));
             enemyPad.setParameterByName("fbgain", Random.Range(.2f, .3f));
             enemyPad.setParameterByName("ffgain", Random.Range(.3f, .4f));
         }
@@ -329,14 +329,14 @@ public class ReactorSounds : MonoBehaviour
         {
             enemyBaseNoteLength = (60 / Conductor.Instance.tempo) * .5f;
             enemyGrit = Random.Range(60, 79);
-            playerSoft = 80 - enemyGrit;
+            enemySoft = 80 - enemyGrit;
 
-            playerPerc.setParameterByName("reson", Random.Range(90, 100));
-            playerPad.setParameterByName("grit", enemyGrit);
-            playerPad.setParameterByName("soft", enemySoft);
-            playerPad.setParameterByName("reson", Random.Range(80, 100));
-            playerPad.setParameterByName("fbgain", Random.Range(0f, .2f));
-            playerPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
+            enemyPerc.setParameterByName("reson", Random.Range(90, 100));
+            enemyPad.setParameterByName("grit", enemyGrit);
+            enemyPad.setParameterByName("soft", enemySoft);
+            //playerPad.setParameterByName("reson", Random.Range(4, 5));
+            enemyPad.setParameterByName("fbgain", Random.Range(0f, .2f));
+            enemyPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
         }
 
         //option for changing perc reson based on pitch rather than strength, tucking this away just in case
