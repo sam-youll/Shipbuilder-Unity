@@ -668,9 +668,8 @@ public class ReactorSounds : MonoBehaviour
 
     public void AddPlayerPad()
     {
-        EventInstance addedPad;
 
-        addedPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
+        EventInstance addedPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
 
         playerPads.Add(addedPad);
 
@@ -693,10 +692,12 @@ public class ReactorSounds : MonoBehaviour
         removedPad.stop(0);
     }
 
-    public void AddEnemyPad(EventInstance addedPad)
+    public void AddEnemyPad()
     {
 
-        addedPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
+        EventInstance addedPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
+
+        enemyPads.Add(addedPad);
 
         addedPad.setParameterByName("grit", enemyGrit);
         addedPad.setParameterByName("soft", enemySoft);
