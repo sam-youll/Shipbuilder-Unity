@@ -185,7 +185,7 @@ public class CombatManager : MonoBehaviour
         }
         enemyHealthBar.value = 1;
         playerHealthBar.value = 1;
-        playerShip.health = playerShip.maxHealth;
+        //playerShip.health = playerShip.maxHealth;
         enemyShip.health = enemyShip.maxHealth;
 
         playerShip.weapons = new List<GameObject>();
