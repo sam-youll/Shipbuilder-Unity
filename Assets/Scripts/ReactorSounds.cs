@@ -4,6 +4,7 @@ using FMODUnity;
 using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
+using Debug = UnityEngine.Debug;
 
 public class ReactorSounds : MonoBehaviour
 {
@@ -590,7 +591,7 @@ public class ReactorSounds : MonoBehaviour
                 {
                     var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
                     playerPads[i].setParameterByName("pitch", pitch);
-                    UnityEngine.Debug.Log("pad: " + playerPads[i] + " pitch: " + pitch);
+                    // UnityEngine.Debug.Log("pad: " + playerPads[i] + " pitch: " + pitch);
                 }
             }
         }
@@ -679,18 +680,23 @@ public class ReactorSounds : MonoBehaviour
         addedPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
         addedPad.setParameterByName("ffgain", Random.Range(0f, .1f));
         addedPad.setParameterByName("delaytime", padDelayTime);
-
+        
+        var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chords[changes[currentChord]]]) * 2;
+        addedPad.setParameterByName("pitch", pitch);
+        
         addedPad.start();
-        
-
-        UnityEngine.Debug.Log("added player pad: " + playerPads.Count);
-        
     }
 
-    public void RemovePlayerPad(EventInstance removedPad)
+    public void RemovePlayerPad()
     {
-        removedPad.stop(0);
-        playerPads.Remove(removedPad);
+        if (playerPads.Count <= 0)
+        {
+            Debug.Log("No player pad found to remove");
+            return;
+        }
+        
+        playerPads[^1].stop(0);
+        playerPads.Remove(playerPads[^1]);
     }
 
     public void ResumePlayerPad()

@@ -60,9 +60,9 @@ public class Reactor : MonoBehaviour
         power = 0;
         rate = 0;
         shields = 0;
-        ReactorSounds.Instance.RemoveAllPads(ReactorSounds.Instance.playerPads);
         foreach (var module in myPatch)
         {
+            Debug.Log(module);
             if (module.stat == "power")
             {
                 power += module.statValue;
@@ -92,7 +92,7 @@ public class Reactor : MonoBehaviour
 
 
         float shieldDiff = shields - ReactorSounds.Instance.playerPads.Count;
-        Debug.Log("shield diff: " + shieldDiff + " shields + " + shields + " pads: " + ReactorSounds.Instance.playerPads.Count);
+        Debug.Log("shield diff: " + shieldDiff + ", shields: " + shields + ", pads: " + ReactorSounds.Instance.playerPads.Count);
 
         if (shieldDiff > 0) 
         {
@@ -105,8 +105,8 @@ public class Reactor : MonoBehaviour
         {
             for (int i = 0; i < -shieldDiff; i++)
             {
-                ReactorSounds.Instance.RemovePlayerPad(ReactorSounds.Instance.playerPads[i]);
-                Debug.Log("Removing :3");
+                ReactorSounds.Instance.RemovePlayerPad();
+                Debug.Log("Removing");
             }
         }
 

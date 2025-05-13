@@ -214,12 +214,13 @@ public class RackMovement : MonoBehaviour
             var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
             
             var isItMe = false;
+            GetComponent<Tooltip>().hover = false;
             foreach (var r in results)
             {
                 if (r.collider.gameObject == gameObject)
                 {
                     isItMe = true;
-                    GetComponent<Tooltip>().
+                    GetComponent<Tooltip>().hover = true;
                 }
             }
             if (isItMe)
@@ -322,7 +323,7 @@ public class RackMovement : MonoBehaviour
         coll.Overlap(pos, 0, filter, results);
         foreach (var result in results)
         {
-            Debug.Log(result.gameObject.name);
+            // Debug.Log(result.gameObject.name);
             // Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
             // ignore self
             if (result.gameObject == gameObject)
@@ -335,7 +336,7 @@ public class RackMovement : MonoBehaviour
             {
                 if (InsideCol(coll, result))
                 {
-                    Debug.Log("inside rack");
+                    // Debug.Log("inside rack");
                 }
                 // Debug.Log("I hit a " + result.gameObject.name);
                 onRack = true;
