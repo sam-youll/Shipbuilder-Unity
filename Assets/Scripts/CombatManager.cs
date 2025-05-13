@@ -50,6 +50,7 @@ public class CombatManager : MonoBehaviour
     private int battleNumber;
 
     public GameObject geomagneticPulse;
+    public GameObject pulseTooltip;
     private bool pulsarEventActive;
     public float pulseTimer = 4;
 
@@ -85,14 +86,23 @@ public class CombatManager : MonoBehaviour
             enemyShieldBars[i].gameObject.SetActive(enemyShip.shields[i].activeSelf);
             enemyShieldBars[i].value = enemyShip.shields[i].GetComponent<Shield>().health / enemyShip.shields[i].GetComponent<Shield>().maxHealth;
         }
+
+        if (fightLevel == 4 && state == State.outOfCombat) 
+        {
+            geomagneticPulse.transform.parent.gameObject.SetActive(true);
+            pulseTooltip.SetActive(true);
+            Debug.Log("showing tooltip");
+        }
         
         if (state == State.inCombat)
         {
             if (fightLevel == 4)
             {
                 // geomagneticPulse.SetActive(true);
-                geomagneticPulse.transform.parent.gameObject.SetActive(true);
                 
+                Debug.Log("hiding tooltip");
+                pulseTooltip.SetActive(false);
+
                 pulseTimer -= Time.deltaTime;
                 if (pulseTimer <= 0)
                 {
@@ -100,6 +110,7 @@ public class CombatManager : MonoBehaviour
                     pulseTimer += 6;
                 }
                 
+
             }
             else
             {
