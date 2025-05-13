@@ -219,6 +219,7 @@ public class RackMovement : MonoBehaviour
                 if (r.collider.gameObject == gameObject)
                 {
                     isItMe = true;
+                    GetComponent<Tooltip>().
                 }
             }
             if (isItMe)
@@ -321,6 +322,7 @@ public class RackMovement : MonoBehaviour
         coll.Overlap(pos, 0, filter, results);
         foreach (var result in results)
         {
+            Debug.Log(result.gameObject.name);
             // Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
             // ignore self
             if (result.gameObject == gameObject)
@@ -331,6 +333,10 @@ public class RackMovement : MonoBehaviour
                 continue;
             if (result.gameObject.layer == LayerMask.NameToLayer("Module Racks"))
             {
+                if (InsideCol(coll, result))
+                {
+                    Debug.Log("inside rack");
+                }
                 // Debug.Log("I hit a " + result.gameObject.name);
                 onRack = true;
                 continue;
@@ -341,8 +347,11 @@ public class RackMovement : MonoBehaviour
                 continue;
             if (result.gameObject.GetComponent<Inventory>() != null)
                 continue;
-            if (!InsideCol(coll, result))
-                continue;
+            // if (!InsideCol(coll, result))
+            // {
+            //     Debug.Log("not inside collider");
+            //     continue;
+            // }
             
             colliding = true;
             // otherwise if we hit something, return true
