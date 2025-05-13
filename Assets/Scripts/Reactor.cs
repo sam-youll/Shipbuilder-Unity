@@ -92,14 +92,13 @@ public class Reactor : MonoBehaviour
 
 
         float shieldDiff = shields - ReactorSounds.Instance.playerPads.Count;
+        Debug.Log("shield diff: " + shieldDiff + " shields + " + shields + " pads: " + ReactorSounds.Instance.playerPads.Count);
 
         if (shieldDiff > 0) 
         {
             for (int i = 0; i < shieldDiff; i++)
             {
-
                 ReactorSounds.Instance.AddPlayerPad();
-
             }
         }
         if (shieldDiff < 0)
@@ -107,8 +106,10 @@ public class Reactor : MonoBehaviour
             for (int i = 0; i < -shieldDiff; i++)
             {
                 ReactorSounds.Instance.RemovePlayerPad(ReactorSounds.Instance.playerPads[i]);
+                Debug.Log("Removing :3");
             }
         }
+
 
         strength = power / rate;
         if (!tempoOverride)
