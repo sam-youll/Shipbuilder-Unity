@@ -552,7 +552,7 @@ public class ReactorSounds : MonoBehaviour
             if (playerPads.Count > 0)
             {
                 //picks a random note from the current chord
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < playerPads.Count; i++)
                 {
                     var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
                     playerPads[i].setParameterByName("pitch", pitch);
