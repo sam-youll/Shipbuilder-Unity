@@ -22,8 +22,8 @@ public class ReactorSounds : MonoBehaviour
     private EventInstance enemyPerc;
     private EventInstance playerPerc;
 
-    public EventInstance[] playerPads = new EventInstance[4];
-    public EventInstance[] enemyPads = new EventInstance[4];
+    public List<EventInstance> playerPads = new List<EventInstance>();
+    public List<EventInstance> enemyPads = new List<EventInstance>();
 
     public EventInstance playerPad2;
     public EventInstance playerPerc2;
@@ -113,10 +113,7 @@ public class ReactorSounds : MonoBehaviour
 
         enemyPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
         // playerPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
-        for (var index = 0; index < playerPads.Length; index++)
-        {
-            playerPads[index] = RuntimeManager.CreateInstance(playerPadRef);
-        }
+        
 
         //setting the placeholder parameters that will just work for now
         SetTestParams();
@@ -184,52 +181,11 @@ public class ReactorSounds : MonoBehaviour
 
     void SetTestParams()
     {
-        //These are placeholders to get generative shit working, we need to figure out how we're setting them in the reactor 
-
-        //PERC
-        //standard adsr stuff
-        ///playerPerc.setParameterByName("attack", 10);
-        ///playerPerc.setParameterByName("decay", 60);
-        //bpfreq determines what band of frequencies the filter is passing over - more or less how high/low it is
-        ///playerPerc.setParameterByName("bpfreq", 5600);
-        //reson is how resonant the bp freq is -- how much does it sound like noise vs a pitch
-        ///playerPerc.setParameterByName("reson", 80);
-
-        //enemyPerc.setParameterByName("bpfreq", 150);
-        //enemyPerc.setParameterByName("reson", 80);
-
-        //BASS
-        //standard adsr stuff 
-        ///playerBass.setParameterByName("attack", 100);
-        ///playerBass.setParameterByName("decay", 1550);
-        ///playerBass.setParameterByName("release", 80);
-        //the time on the delay, it's for babies
-        ///playerBass.setParameterByName("delaytime", 750);
-
-
-        //PADS
-        //Feedback gain - how loud the feedback noise is... these params are probably better to play with IN FMOD to get an idea.
-        //playerPad.setParameterByName("fbgain", 0.28f);
-        //Feedforward gain
-        //playerPad.setParameterByName("ffgain", 0.33f);
-        //Delay time - literal delay, the longer it is the more cool and alien it sounds, but leads to clustery pitch stuff 
-        ///playerPad.setParameterByName("delaytime", 650);
-        //frequency of the bandpass filter, if u make it lower than the current pitch it's gonna be quiet af but that might be good
+       
         playerPad.setParameterByName("bpfreq", 500);
-        //resonance of the bandpass filter, honestly if it's higher it's mostly gonna be louder
-        ///playerPad.setParameterByName("reson", 0);
-        //grit is how much of the Gritty source ur getting . vibes based param im sorry to say
-        ///playerPad.setParameterByName("grit", 40);
-        //soft is how much of the Soft source ur getting, same as above. just mixing stuff 
-        ///playerPad.setParameterByName("soft", 30);
-
-        //enemyPad.setParameterByName("fbgain", 0.5f);
-        //enemyPad.setParameterByName("ffgain", 0.2f);
-        //enemyPad.setParameterByName("delaytime", 400);
+        
         enemyPad.setParameterByName("bpfreq", 200);
-        //enemyPad.setParameterByName("reson", 0);
-        //enemyPad.setParameterByName("grit", 5);
-        //enemyPad.setParameterByName("soft", 80);
+        
     }
 
     public void SetReactorParams()
@@ -593,24 +549,16 @@ public class ReactorSounds : MonoBehaviour
             var chord = changes[currentChord];
             //sets it to a string according to the list of chords
             string chordstring = chords[chord];
-
-            //picks a random note from the current chord
-            for (int i = 0; i < 4; i++)
+            if (playerPads.Count > 0)
             {
-                var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-                playerPads[i].setParameterByName("pitch", pitch);
+                //picks a random note from the current chord
+                for (int i = 0; i < 4; i++)
+                {
+                    var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+                    playerPads[i].setParameterByName("pitch", pitch);
+                    UnityEngine.Debug.Log("pad: " + playerPads[i] + " pitch: " + pitch);
+                }
             }
-            // var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
-            // var padPitch2 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-            // var padPitch3 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-            // var padPitch4 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-
-            //sets the pitch
-            // playerPad.setParameterByName("pitch", padPitch);
-            // playerPad2.setParameterByName("pitch", padPitch2);
-            // playerPad3.setParameterByName("pitch", padPitch3);
-            // playerPad4.setParameterByName("pitch", padPitch4);
-
         }
     }
 
@@ -682,10 +630,13 @@ public class ReactorSounds : MonoBehaviour
         enemyPad.stop(0);
     }
 
-    public void AddPlayerPad(EventInstance addedPad)
+    public void AddPlayerPad()
     {
+        EventInstance addedPad;
 
         addedPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
+
+        playerPads.Add(addedPad);
 
         addedPad.setParameterByName("grit", playerGrit);
         addedPad.setParameterByName("soft", playerSoft);
@@ -729,9 +680,9 @@ public class ReactorSounds : MonoBehaviour
         removedPad.stop(0);
     }
 
-    public void RemoveAllPads(EventInstance[] pads)
+    public void RemoveAllPads(List<EventInstance> pads)
     {
-        for (int i = 0; i < pads.Length; i++)
+        for (int i = 0; i < pads.Count; i++)
         {
             pads[i].stop(0);
         }

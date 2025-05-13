@@ -184,7 +184,7 @@ public class TrailerManager : MonoBehaviour
 
     void Pads()
     {
-        if (Conductor.Instance.bar == 2 && Conductor.Instance.half == 0)
+        /*if (Conductor.Instance.bar == 2 && Conductor.Instance.half == 0)
         {
             ReactorSounds.Instance.AddPlayerPad(ReactorSounds.Instance.playerPad2);
         }
@@ -207,7 +207,7 @@ public class TrailerManager : MonoBehaviour
         if (Conductor.Instance.bar == 5 && Conductor.Instance.half == 0)
         {
             ReactorSounds.Instance.AddEnemyPad(ReactorSounds.Instance.playerPad4);
-        }
+        }*/
     }
 
     void Perc()
