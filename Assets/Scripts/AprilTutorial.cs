@@ -484,7 +484,7 @@ public class AprilTutorial : MonoBehaviour
 
     void EndTimer()
     {
-        AudioManager.Instance.PlayDialogueSound();
+        AudioManager.Instance.PlayChime();
     }
 
     void HighlightInventory()
