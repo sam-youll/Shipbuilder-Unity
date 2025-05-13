@@ -88,7 +88,7 @@ public class CombatManager : MonoBehaviour
         
         if (state == State.inCombat)
         {
-            if (fightLevel == 2)
+            if (fightLevel == 4)
             {
                 // geomagneticPulse.SetActive(true);
                 geomagneticPulse.transform.parent.gameObject.SetActive(true);
