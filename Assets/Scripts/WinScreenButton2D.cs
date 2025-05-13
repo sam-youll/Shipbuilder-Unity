@@ -39,5 +39,6 @@ public class WinScreenButton2D : Button2D
         }
         
         CombatManager.Instance.endScreen.SetActive(false);
+        CombatManager.Instance.state = CombatManager.State.outOfCombat;
     }
 }

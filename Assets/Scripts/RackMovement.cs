@@ -214,13 +214,11 @@ public class RackMovement : MonoBehaviour
             var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
             
             var isItMe = false;
-            GetComponent<Tooltip>().hover = false;
             foreach (var r in results)
             {
                 if (r.collider.gameObject == gameObject)
                 {
                     isItMe = true;
-                    GetComponent<Tooltip>().hover = true;
                 }
             }
             if (isItMe)
