@@ -16,27 +16,20 @@ public class ReactorSounds : MonoBehaviour
     
     //FMOD Event Instance variables
     private EventInstance enemyBass;
-    private EventInstance playerBass; 
-    private EventInstance enemyPad;
-    private EventInstance playerPad;
+    private EventInstance playerBass;
     private EventInstance enemyPerc;
     private EventInstance playerPerc;
 
+    //pads
     public List<EventInstance> playerPads = new List<EventInstance>();
     public List<EventInstance> enemyPads = new List<EventInstance>();
 
-    public EventInstance playerPad2;
-    public EventInstance playerPerc2;
-    public EventInstance playerPad3;
-    public EventInstance playerPerc3;
-    public EventInstance playerPad4;
-    public EventInstance playerPerc4;
-    public EventInstance enemyPad2;
-    public EventInstance enemyPerc2;
-    public EventInstance enemyPad3;
-    public EventInstance enemyPerc3;
-    public EventInstance enemyPad4;
-    public EventInstance enemyPerc4;
+    //NOTE: these are commented out for now bc we don't actually have anything in to add extra instruments here -- 
+    //they're here for if/when we do 
+    //---------------------------------
+    //perc
+    //public List<EventInstance> playerPerc = new List<EventInstance>();
+    //public List<EventInstance> enemyPads = new List<EventInstance>();
 
     [Header("FMOD Events")]
     public EventReference enemyBassRef;
@@ -111,8 +104,6 @@ public class ReactorSounds : MonoBehaviour
         enemyBass = FMODUnity.RuntimeManager.CreateInstance(enemyBassRef);
         playerBass = FMODUnity.RuntimeManager.CreateInstance(playerBassRef);
 
-        enemyPad = FMODUnity.RuntimeManager.CreateInstance(enemyPadRef);
-        // playerPad = FMODUnity.RuntimeManager.CreateInstance(playerPadRef);
         
 
         //setting the placeholder parameters that will just work for now
@@ -123,7 +114,6 @@ public class ReactorSounds : MonoBehaviour
         //starting the FMOD events
         playerPerc.start();
         playerBass.start();
-        // playerPad.start();
         
 
         //Subscribing all the instruments so they're quantized
@@ -181,11 +171,15 @@ public class ReactorSounds : MonoBehaviour
 
     void SetTestParams()
     {
-       
-        playerPad.setParameterByName("bpfreq", 500);
-        
-        enemyPad.setParameterByName("bpfreq", 200);
-        
+        for (int i = 0; i < playerPads.Count; i++)
+        {
+            playerPads[i].setParameterByName("bpfreq", 500);
+        }
+
+        for (int i = 0; i < enemyPads.Count; i++) 
+        {
+            enemyPads[i].setParameterByName("bpfreq", 200);
+        }
     }
 
     public void SetReactorParams()
@@ -193,7 +187,11 @@ public class ReactorSounds : MonoBehaviour
 
         playerBass.setParameterByName("delaytime", bassDelayTime);
 
-        playerPad.setParameterByName("delaytime", padDelayTime);
+        for (int i = 0;i < playerPads.Count; i++)
+        {
+            playerPads[i].setParameterByName("delaytime", padDelayTime);
+        }
+        
 
         playerPerc.setParameterByName("bpfreq", percFreq);
 
@@ -204,11 +202,16 @@ public class ReactorSounds : MonoBehaviour
             playerSoft = 80 - playerGrit;
 
             playerPerc.setParameterByName("reson", Random.Range(0, 10));
-            playerPad.setParameterByName("grit", playerGrit);
-            playerPad.setParameterByName("soft", playerSoft);
-            //playerPad.setParameterByName("reson", 0);
-            playerPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
-            playerPad.setParameterByName("ffgain", Random.Range(0f, .1f));
+
+            for (int i = 0; i < playerPads.Count; i++)
+            {
+                playerPads[i].setParameterByName("grit", playerGrit);
+                playerPads[i].setParameterByName("soft", playerSoft);
+                //playerPads[i].setParameterByName("reson", 0);
+                playerPads[i].setParameterByName("fbgain", Random.Range(.4f, .5f));
+                playerPads[i].setParameterByName("ffgain", Random.Range(0f, .1f));
+            }
+            
         } else if (strength <= 2)
         {
             baseNoteLength = (60 / Conductor.Instance.tempo) * .8f;
@@ -216,11 +219,14 @@ public class ReactorSounds : MonoBehaviour
             playerSoft = 80 - playerGrit;
 
             playerPerc.setParameterByName("reson", Random.Range(10, 20));
-            playerPad.setParameterByName("grit", playerGrit);
-            playerPad.setParameterByName("soft", playerSoft);
-            //playerPad.setParameterByName("reson", Random.Range(0, 1));
-            playerPad.setParameterByName("fbgain", Random.Range(.3f, .4f));
-            playerPad.setParameterByName("ffgain", Random.Range(.2f, .3f));
+            for (int i = 0; i < playerPads.Count; i++)
+            {
+                playerPads[i].setParameterByName("grit", playerGrit);
+                playerPads[i].setParameterByName("soft", playerSoft);
+                //playerPads[i].setParameterByName("reson", Random.Range(0, 1));
+                playerPads[i].setParameterByName("fbgain", Random.Range(.3f, .4f));
+                playerPads[i].setParameterByName("ffgain", Random.Range(.2f, .3f));
+            }  
         }
         else if (strength <= 3)
         {
@@ -229,11 +235,16 @@ public class ReactorSounds : MonoBehaviour
             playerSoft = 80 - playerGrit;
 
             playerPerc.setParameterByName("reson", Random.Range(20, 30));
-            playerPad.setParameterByName("grit", playerGrit);
-            playerPad.setParameterByName("soft", playerSoft);
-            //playerPad.setParameterByName("reson", Random.Range(2, 3));
-            playerPad.setParameterByName("fbgain", Random.Range(.2f, .3f));
-            playerPad.setParameterByName("ffgain", Random.Range(.3f, .4f));
+
+            for (int i = 0; i < playerPads.Count; i++)
+            {
+                playerPads[i].setParameterByName("grit", playerGrit);
+                playerPads[i].setParameterByName("soft", playerSoft);
+                //playerPads[i].setParameterByName("reson", Random.Range(2, 3));
+                playerPads[i].setParameterByName("fbgain", Random.Range(.2f, .3f));
+                playerPads[i].setParameterByName("ffgain", Random.Range(.3f, .4f));
+            }
+            
         } else
         {
             baseNoteLength = (60 / Conductor.Instance.tempo) * .5f;
@@ -241,11 +252,15 @@ public class ReactorSounds : MonoBehaviour
             playerSoft = 80 - playerGrit;
 
             playerPerc.setParameterByName("reson", Random.Range(40, 50));
-            playerPad.setParameterByName("grit", playerGrit);
-            playerPad.setParameterByName("soft", playerSoft);
-            //playerPad.setParameterByName("reson", Random.Range(4, 5));
-            playerPad.setParameterByName("fbgain", Random.Range(0f, .2f));
-            playerPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
+
+            for (int i = 0; i < playerPads.Count; i++)
+            {
+                playerPads[i].setParameterByName("grit", playerGrit);
+                playerPads[i].setParameterByName("soft", playerSoft);
+                //playerPads[i].setParameterByName("reson", Random.Range(4, 5));
+                playerPads[i].setParameterByName("fbgain", Random.Range(0f, .2f));
+                playerPads[i].setParameterByName("ffgain", Random.Range(.4f, .5f));
+            }  
         }
 
         //ENEMIES 
@@ -256,11 +271,16 @@ public class ReactorSounds : MonoBehaviour
             enemySoft = 80 - playerGrit;
 
             enemyPerc.setParameterByName("reson", Random.Range(0, 50));
-            enemyPad.setParameterByName("grit", enemyGrit);
-            enemyPad.setParameterByName("soft", enemySoft);
-            //enemyPad.setParameterByName("reson", 0);
-            enemyPad.setParameterByName("fbgain", Random.Range(.4f, .5f));
-            enemyPad.setParameterByName("ffgain", Random.Range(0f, .1f));
+
+            for (int i = 0; i < enemyPads.Count; i++)
+            {
+                enemyPads[i].setParameterByName("grit", enemyGrit);
+                enemyPads[i].setParameterByName("soft", enemySoft);
+                //enemyPad.setParameterByName("reson", 0);
+                enemyPads[i].setParameterByName("fbgain", Random.Range(.4f, .5f));
+                enemyPads[i].setParameterByName("ffgain", Random.Range(0f, .1f));
+            }
+            
         }
         else if (strength <= 2)
         {
@@ -269,11 +289,16 @@ public class ReactorSounds : MonoBehaviour
             enemySoft = 80 - enemyGrit;
 
             enemyPerc.setParameterByName("reson", Random.Range(30, 80));
-            enemyPad.setParameterByName("grit", enemyGrit);
-            enemyPad.setParameterByName("soft", enemySoft);
-            //enemyPad.setParameterByName("reson", Random.Range(0, 1));
-            enemyPad.setParameterByName("fbgain", Random.Range(.3f, .4f));
-            enemyPad.setParameterByName("ffgain", Random.Range(.2f, .3f));
+
+            for (int i = 0; i < enemyPads.Count; i++)
+            {
+                enemyPads[i].setParameterByName("grit", enemyGrit);
+                enemyPads[i].setParameterByName("soft", enemySoft);
+                //enemyPads[i].setParameterByName("reson", Random.Range(0, 1));
+                enemyPads[i].setParameterByName("fbgain", Random.Range(.3f, .4f));
+                enemyPads[i].setParameterByName("ffgain", Random.Range(.2f, .3f));
+            }
+            
         }
         else if (strength <= 3)
         {
@@ -282,11 +307,16 @@ public class ReactorSounds : MonoBehaviour
             enemySoft = 80 - enemyGrit;
 
             enemyPerc.setParameterByName("reson", Random.Range(80, 90));
-            enemyPad.setParameterByName("grit", enemyGrit);
-            enemyPad.setParameterByName("soft", enemySoft);
-            //enemyPad.setParameterByName("reson", Random.Range(2, 3));
-            enemyPad.setParameterByName("fbgain", Random.Range(.2f, .3f));
-            enemyPad.setParameterByName("ffgain", Random.Range(.3f, .4f));
+
+            for (int i = 0;i < enemyPads.Count; i++)
+            {
+                enemyPads[i].setParameterByName("grit", enemyGrit);
+                enemyPads[i].setParameterByName("soft", enemySoft);
+                //enemyPad.setParameterByName("reson", Random.Range(2, 3));
+                enemyPads[i].setParameterByName("fbgain", Random.Range(.2f, .3f));
+                enemyPads[i].setParameterByName("ffgain", Random.Range(.3f, .4f));
+            }
+            
         }
         else
         {
@@ -295,11 +325,15 @@ public class ReactorSounds : MonoBehaviour
             enemySoft = 80 - enemyGrit;
 
             enemyPerc.setParameterByName("reson", Random.Range(90, 100));
-            enemyPad.setParameterByName("grit", enemyGrit);
-            enemyPad.setParameterByName("soft", enemySoft);
-            //playerPad.setParameterByName("reson", Random.Range(4, 5));
-            enemyPad.setParameterByName("fbgain", Random.Range(0f, .2f));
-            enemyPad.setParameterByName("ffgain", Random.Range(.4f, .5f));
+            for (int i = 0; i < enemyPads.Count; i++)
+            {
+                enemyPads[i].setParameterByName("grit", enemyGrit);
+                enemyPads[i].setParameterByName("soft", enemySoft);
+                //enemyPads.setParameterByName("reson", Random.Range(4, 5));
+                enemyPads[i].setParameterByName("fbgain", Random.Range(0f, .2f));
+                enemyPads[i].setParameterByName("ffgain", Random.Range(.4f, .5f));
+            }
+            
         }
 
         //option for changing perc reson based on pitch rather than strength, tucking this away just in case
@@ -569,17 +603,13 @@ public class ReactorSounds : MonoBehaviour
             var chord = changes[currentChord];
             string chordstring = chords[chord];
 
-            //picks a random note from the current chord
-            var padPitch = (Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring])) * 2;
-            var padPitch2 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-            var padPitch3 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-            var padPitch4 = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
-
-            //sets the pitch
-            enemyPad.setParameterByName("pitch", padPitch);
-            enemyPad2.setParameterByName("pitch", padPitch2);
-            enemyPad3.setParameterByName("pitch", padPitch3);
-            enemyPad4.setParameterByName("pitch", padPitch4);
+            for (int i = 0; i < enemyPads.Count; i++)
+            {
+                //picks a random note from the current chord
+                var padPitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+                //sets the pitch
+                enemyPads[i].setParameterByName("pitch", padPitch);
+            }
         }
     }
 
@@ -620,14 +650,20 @@ public class ReactorSounds : MonoBehaviour
     {
         enemyPerc.start();
         enemyBass.start();
-        enemyPad.start();
+        for (int i = 0; enemyPads.Count > 0; i++)
+        {
+            enemyPads[i].start();
+        }
     }
 
     public void StopEnemyReactor()
     {
         enemyPerc.stop(0);
         enemyBass.stop(0);
-        enemyPad.stop(0);
+        for (int i = 0; enemyPads.Count > 0; i++)
+        {
+            enemyPads[i].stop(0);
+        }
     }
 
     public void AddPlayerPad()
