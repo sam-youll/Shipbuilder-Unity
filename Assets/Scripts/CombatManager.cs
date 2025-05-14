@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.DebugUI;
 using Random = UnityEngine.Random;
 
 public class CombatManager : MonoBehaviour
@@ -57,6 +58,12 @@ public class CombatManager : MonoBehaviour
     public UnityEvent playerShipImpact;
 
     public bool combatOverride;
+
+    private int newWeapon = 1;
+    private int newShield = 0;
+
+    public int weaponChance = 33;
+    public int shieldChance = 66;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -97,7 +104,6 @@ public class CombatManager : MonoBehaviour
         {
             geomagneticPulse.transform.parent.gameObject.SetActive(true);
             pulseTooltip.SetActive(true);
-            // Debug.Log("showing tooltip");
         }
         
         #region Combat State Machine
@@ -106,7 +112,8 @@ public class CombatManager : MonoBehaviour
             // On fight 4, start firing pulsar/geomagnetic storm
             if (fightLevel == 4)
             {
-                // Debug.Log("hiding tooltip");
+                // geomagneticPulse.SetActive(true);
+               
                 pulseTooltip.SetActive(false);
 
                 // countdown timer to pulse
@@ -147,6 +154,7 @@ public class CombatManager : MonoBehaviour
                     
                     fightLevel++;
                     battleNumberLabel.text = fightLevel.ToString();
+                    EnemyBeShopping();
                     
                     // increase damage of all enemy weapons
                     foreach (var weapon in enemyWeapons)
@@ -302,4 +310,52 @@ public class CombatManager : MonoBehaviour
         AudioManager.Instance.StopStorm();
         
     }
+    /// <summary>
+    /// Adds shields or weapons to the enemy
+    /// </summary>
+    private void EnemyBeShopping()
+    {
+        int roll = Random.Range(0,100);
+
+        if (roll < weaponChance)
+        {
+            if (newWeapon < enemyShip.weapons.Count)
+            {
+                enemyShip.weapons[newWeapon].SetActive(true);
+                newWeapon++;
+            } else
+            {
+                weaponChance = 0;
+            }
+        } 
+        else if (roll < shieldChance)
+        {
+            if (newShield < enemyShip.shields.Length)
+            {
+                enemyShip.shields[newShield].SetActive(true);
+                //enemyShip.shields[newShield].gameObject.transform.localScale = Vector3.one;
+                //StartCoroutine(enemyShip.shields[newShield].GetComponent<Shield>().RegenShield());
+                enemyShip.shields[newShield].GetComponent<Shield>().StartCoroutine("RegenShield");
+                newShield++;
+                Debug.Log("Adding shield to enemy: " + newShield);
+            } 
+            else
+            {
+                shieldChance = 0;
+            }
+        } else
+        {
+            if (shieldChance > 0)
+            {
+                shieldChance += 5;
+            }
+            if (weaponChance > 0)
+            {
+                weaponChance += 5;
+            }
+        }
+
+        
+    }
+
 }

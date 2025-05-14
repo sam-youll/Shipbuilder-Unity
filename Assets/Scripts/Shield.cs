@@ -36,7 +36,7 @@ public class Shield : MonoBehaviour
         }
     }
     
-    IEnumerator RegenShield()
+    public IEnumerator RegenShield()
     {
         gameObject.GetComponent<PolygonCollider2D>().enabled = false;
         var sprite = gameObject.GetComponent<SpriteRenderer>();
