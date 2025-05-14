@@ -9,7 +9,9 @@ public class WinScreenButton2D : Button2D
         NewWeapon,
         NewModule,
         NoThanks,
-        Tutorial
+        Tutorial, 
+        Start,
+        Quit
     }
     public Type type;
     
@@ -36,6 +38,13 @@ public class WinScreenButton2D : Button2D
             case Type.Tutorial:
                 SceneManager.LoadScene("SampleScene");
                 break;
+            case Type.Start:
+                SceneManager.LoadScene("Spring Showcase Tutorial");
+                break;
+            case Type.Quit:
+                Application.Quit();
+                break;
+
         }
         
         CombatManager.Instance.endScreen.SetActive(false);
