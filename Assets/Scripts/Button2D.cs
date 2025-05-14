@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Button2D : MonoBehaviour
 {
-    public Color defaultColor;
-    public Color hoverColor;
-    public Color pressedColor;
-    private Color currentColor;
+    public Color defaultColor = Color.white;
+    public Color hoverColor = Color.white;
+    public Color pressedColor = Color.white;
+    private Color currentColor = Color.white;
 
     public SpriteRenderer sr;
     

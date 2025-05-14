@@ -63,6 +63,7 @@ public class Reactor : MonoBehaviour
         foreach (var module in myPatch)
         {
             Debug.Log(module);
+            
             if (module.stat == "power")
             {
                 power += module.statValue;
