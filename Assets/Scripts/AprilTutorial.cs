@@ -36,6 +36,7 @@ public class AprilTutorial : MonoBehaviour
     public GameObject startCombatHighlight;
     private Vector3 highlightScale;
     public GameObject battleScreen;
+    public GameObject dimmer;
 
     //rack variables
     public GameObject reactor;
@@ -49,7 +50,8 @@ public class AprilTutorial : MonoBehaviour
     private Vector3 battleScreenPos;
     private Vector3 reactorPos;
     private Vector3 weaponPos;
-
+    private Vector3 dimmerPos;
+    private Vector3 dimmerStart;
 
     //jack variables
     public GameObject jack1;
@@ -76,6 +78,8 @@ public class AprilTutorial : MonoBehaviour
         battleScreenPos = battleScreen.transform.position;
         reactorPos = reactor.transform.parent.transform.position;
         weaponPos = weaponRack.transform.parent.transform.position;
+        dimmerStart = dimmer.transform.localPosition;
+        dimmerPos = dimmer.transform.localPosition;
         UpdateCurrentModule(funnel);
     }
 
@@ -132,6 +136,7 @@ public class AprilTutorial : MonoBehaviour
             {
                 inventoryHighlight.SetActive(false);
                 fakeCursor.SetActive(false);
+                HighlightCurrentModuleInv();
                 isComplete = true;
                 CompleteStep();
             }
@@ -162,6 +167,7 @@ public class AprilTutorial : MonoBehaviour
 
             if (funnel.transform.parent == reactor.transform)
             {
+                dimmerPos = dimmerStart;
                 fakeCursor.SetActive(false);
                 modulePlaceHighlight.SetActive(false);
                 isComplete = true;
@@ -242,6 +248,7 @@ public class AprilTutorial : MonoBehaviour
                 inventoryHighlight.SetActive(false);
                 fakeCursor.SetActive(false);
                 isComplete = true;
+                HighlightCurrentModuleInv();
                 CompleteStep();
             }
         }
@@ -273,6 +280,7 @@ public class AprilTutorial : MonoBehaviour
 
             if (fuel.transform.parent == reactor.transform) 
             {
+                dimmerPos = dimmerStart;
                 fakeCursor.SetActive(false);
                 modulePlaceHighlight.SetActive(false);
                 isComplete = true;
@@ -470,6 +478,7 @@ public class AprilTutorial : MonoBehaviour
         modulePlaceHighlight.transform.localScale = highlightScale;
         jack1.transform.position = jack1Pos;
         jack2.transform.position = jack2Pos;
+        dimmer.transform.localPosition = dimmerPos;
     }
 
     void CompleteStep()
@@ -512,4 +521,11 @@ public class AprilTutorial : MonoBehaviour
         }   
     }
 
+    /// <summary>
+    /// moves the dimmer so that the current module is highlighted when the inventory is opened
+    /// </summary>
+    void HighlightCurrentModuleInv()
+    {
+        dimmerPos.z = -2;
+    }
 }
