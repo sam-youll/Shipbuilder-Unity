@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = System.Random;
@@ -27,6 +28,9 @@ public class Inventory : MonoBehaviour
     public SpriteRenderer sr;
 
     public List<GameObject> modulePrefabs;
+
+    public float credits;
+    public TextMeshPro creditsLabel;
     
     void Start()
     {
@@ -36,6 +40,10 @@ public class Inventory : MonoBehaviour
 
     void Update()
     {
+        if (creditsLabel != null)
+        {
+            creditsLabel.text = "Credits: " + credits;
+        }
         if (Input.GetMouseButtonDown(0) && sr.color == defaultColor) // if click when not over collider
         {
             // close tray
@@ -94,6 +102,36 @@ public class Inventory : MonoBehaviour
         var roll = UnityEngine.Random.Range(0, modulePrefabs.Count);
         var module = Instantiate(modulePrefabs[roll], transform);
         module.transform.localPosition = pos;
+    }
+
+    public void AddModule(GameObject module)
+    {
+        Debug.Log("Added " + module.name);
+        var pos = Vector3.zero;
+        for (int i = 0; i < 36; i++)
+        {
+            var pos1 = Vector2.zero;
+            var pos2 = Vector2.zero;
+            
+            var empty = true;
+            for (int j = 0; j < transform.childCount - 6; j++)
+            {
+                pos1 = new Vector2(transform.GetChild(5).GetChild(i).position.x, transform.GetChild(5).GetChild(i).position.y);
+                pos2 = new Vector2(transform.GetChild(6 + j).position.x, transform.GetChild(6 + j).position.y);
+                if (pos1 == pos2)
+                {
+                    empty = false;
+                }
+            }
+
+            if (empty)
+            {
+                pos = new Vector3(pos1.x, pos1.y, -3);
+                break;
+            }
+        }
+        var newMod = Instantiate(module, pos, Quaternion.identity);
+        newMod.transform.SetParent(gameObject.transform);
     }
     
     //

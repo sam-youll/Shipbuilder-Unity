@@ -45,6 +45,9 @@ public class RackMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (transform.parent.GetComponent<ShopSlotButton>() != null)
+            return;
+        
         // convert mouse position to world coordinates
         var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 

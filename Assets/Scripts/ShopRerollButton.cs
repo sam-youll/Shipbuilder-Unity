@@ -18,6 +18,11 @@ public class ShopRerollButton : Button2D
 
     protected override void OnClick()
     {
+        if (Inventory.Instance.credits < 1)
+            return;
+        
+        Inventory.Instance.credits -= 1;
+        
         shop.GetComponent<Shop>().Reroll();
     }
 }

@@ -64,6 +64,8 @@ public class CombatManager : MonoBehaviour
 
     public int weaponChance = 33;
     public int shieldChance = 66;
+
+    public GameObject shop;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -144,15 +146,19 @@ public class CombatManager : MonoBehaviour
                 if (playerHealthBar.value <= 0)
                 {
                     endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
-                    
+                    if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Spring Showcase Tutorial"))
+                    {
+                        Invoke(nameof(GoToMainMenu), 2);
+                    }
                 }
                 // otherwise, the enemy lost and the player won
                 else if (enemyHealthBar.value <= 0)
                 {
                     endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU WIN";
-                    endScreenTimer = 999f; // set the timer to 999 (basically turning it off) so the player has time to choose their reward
+                    // endScreenTimer = 999f; // set the timer to 999 (basically turning it off) so the player has time to choose their reward
                     
                     fightLevel++;
+                    Inventory.Instance.credits += Random.Range(3, 6);
                     battleNumberLabel.text = fightLevel.ToString();
                     EnemyBeShopping();
                     
@@ -167,6 +173,11 @@ public class CombatManager : MonoBehaviour
                     // theoretically we'll eventually have some actual mechanic for increasing health
                     enemyShip.maxHealth += 5;
                     playerShip.maxHealth += 5;
+                    
+                    if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Spring Showcase Tutorial"))
+                    {
+                        Invoke(nameof(GoToShop), 1);
+                    }
                 }
                 
             }
@@ -175,13 +186,13 @@ public class CombatManager : MonoBehaviour
         {
             // once the timer runs out, just close the damn game
             // TODO: don't quit the game, just go to the main menu or something
-            endScreenTimer -= Time.deltaTime;
+            // endScreenTimer -= Time.deltaTime;
             if (endScreenTimer <= 0)
             {
                 endScreen.SetActive(false);
                 state = State.outOfCombat;
                 // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                Application.Quit();
+                // Application.Quit();
             }
         }
         else if (state == State.outOfCombat)
@@ -310,6 +321,21 @@ public class CombatManager : MonoBehaviour
         AudioManager.Instance.StopStorm();
         
     }
+
+    void GoToShop()
+    {
+        state = State.outOfCombat;
+        endScreen.SetActive(false);
+        shop.SetActive(true);
+        shop.GetComponent<Shop>().Reroll();
+    }
+
+    void GoToMainMenu()
+    {
+        state = State.outOfCombat;
+        SceneManager.LoadScene("MainMenu");
+    }
+    
     /// <summary>
     /// Adds shields or weapons to the enemy
     /// </summary>
@@ -336,8 +362,8 @@ public class CombatManager : MonoBehaviour
                 //enemyShip.shields[newShield].gameObject.transform.localScale = Vector3.one;
                 //StartCoroutine(enemyShip.shields[newShield].GetComponent<Shield>().RegenShield());
                 enemyShip.shields[newShield].GetComponent<Shield>().StartCoroutine("RegenShield");
-                newShield++;
                 Debug.Log("Adding shield to enemy: " + newShield);
+                newShield++;
             } 
             else
             {

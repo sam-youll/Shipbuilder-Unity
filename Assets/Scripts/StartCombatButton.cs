@@ -44,7 +44,10 @@ public class StartCombatButton : MonoBehaviour
 
         Pressed = true;
 
-        CombatManager.Instance.StartCombat();
+        if (CombatManager.Instance.state != CombatManager.State.inCombat)
+        {
+            CombatManager.Instance.StartCombat();
+        }
     }
 }
 

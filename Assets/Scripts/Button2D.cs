@@ -12,7 +12,7 @@ public class Button2D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // sr = GetComponent<SpriteRenderer>();
+        sr = GetComponent<SpriteRenderer>();
         sr.color = defaultColor;
         currentColor = sr.color;
     }
@@ -23,6 +23,11 @@ public class Button2D : MonoBehaviour
         if (currentColor == Color.clear)
         {
             currentColor = sr.color;
+        }
+
+        if (sr.color == Color.clear)
+        {
+            sr.color = defaultColor;
         }
         
         var col = sr.color;

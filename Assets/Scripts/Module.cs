@@ -16,8 +16,9 @@ public class Module : MonoBehaviour
         Aubo,
         Dwth
     }
-    
+
     [Header("Values")] 
+    public float price;
     public bool isSourceModule;
     public string parameter;
     public float parameterValue;

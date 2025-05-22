@@ -28,6 +28,9 @@ public class WinScreenButton2D : Button2D
         switch (type)
         {
             case Type.NewWeapon:
+                if (Inventory.Instance.credits < 10)
+                    break;
+                Inventory.Instance.credits -= 10;
                 WeaponManager.Instance.AddWeapon();
                 break;
             case Type.NewModule:
@@ -47,7 +50,7 @@ public class WinScreenButton2D : Button2D
 
         }
         
-        CombatManager.Instance.endScreen.SetActive(false);
-        CombatManager.Instance.state = CombatManager.State.outOfCombat;
+        // CombatManager.Instance.endScreen.SetActive(false);
+        // CombatManager.Instance.state = CombatManager.State.outOfCombat;
     }
 }
