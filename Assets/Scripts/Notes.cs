@@ -1,3 +1,4 @@
+using FMOD;
 using System;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
@@ -70,6 +71,7 @@ public static class Notes
         AEOLIAN,
         LOCRIAN
     }
+
 
     // 
     public enum CHORD
@@ -164,6 +166,8 @@ public static class Notes
         OCTAVE
     };
 
+
+
     /// <summary>
     /// Function for getting the frequency of a given interval in a given scale.
     /// </summary>
@@ -178,15 +182,15 @@ public static class Notes
             case MODE.IONIAN:
                 return IONIAN[interval]*root;
             case MODE.DORIAN:
-                break;
+                return DORIAN[interval]*root;
             case MODE.PHRYGIAN:
-                break;
+                return PHRYGIAN[interval]*root;
             case MODE.LYDIAN:
                 return LYDIAN[interval]*root;
             case MODE.MIXOLYDIAN:
-                break;
+                return MIXOLYDIAN[interval]*root;
             case MODE.AEOLIAN:
-                break;
+                return AEOLIAN[interval]*root;
             case MODE.LOCRIAN:
                 break;
         }
@@ -230,6 +234,24 @@ public static class Notes
     }
 
     /// <summary>
+    /// Gets chord scale of current chord. 
+    /// </summary>
+    /// <param name="root">Tonic of current key/mode</param>
+    /// <param name="chord"></param>
+    /// <param name="mode"></param>
+    /// <returns></returns>
+    public static MODE GetChordMode(float root, MODE mode, int chordRoot)
+    {
+        MODE result = mode + chordRoot;
+        if ((int)result > Enum.GetNames(typeof(MODE)).Length)
+        {
+            result -= Enum.GetNames(typeof(MODE)).Length;
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="root"></param>
@@ -253,6 +275,5 @@ public static class Notes
         var i = Random.Range(0, chord.Length);
         return GetPitch(root, mode, i);
     }
-
 
 }
