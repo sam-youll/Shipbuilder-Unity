@@ -94,7 +94,26 @@ public static class Notes
 
     public static readonly float[] DORIAN =
     {
+        UNISON, 
+        MAJOR_SECOND,
+        MINOR_THIRD,
+        PERFECT_FOURTH,
+        PERFECT_FIFTH,
+        MAJOR_SIXTH,
+        MINOR_SEVENTH,
+        OCTAVE
+    };
 
+    public static readonly float[] PHRYGIAN =
+    {
+        UNISON,
+        MINOR_SECOND,
+        MINOR_THIRD,
+        PERFECT_FOURTH,
+        PERFECT_FIFTH,
+        MINOR_SIXTH,
+        MINOR_SEVENTH,
+        OCTAVE
     };
     
     public static readonly float[] LYDIAN =
@@ -106,6 +125,42 @@ public static class Notes
         PERFECT_FIFTH,
         MAJOR_SIXTH,
         MAJOR_SEVENTH,
+        OCTAVE
+    };
+
+    public static readonly float[] MIXOLYDIAN =
+    {
+        UNISON, 
+        MAJOR_SECOND,
+        MAJOR_THIRD,
+        PERFECT_FOURTH,
+        PERFECT_FIFTH,
+        MAJOR_SIXTH,
+        MINOR_SEVENTH,
+        OCTAVE
+    };
+
+    public static readonly float[] AEOLIAN =
+    {
+        UNISON, 
+        MAJOR_SECOND,
+        MINOR_THIRD,
+        PERFECT_FOURTH,
+        PERFECT_FIFTH,
+        MINOR_SIXTH,
+        MINOR_SEVENTH,
+        OCTAVE
+    };
+
+    public static readonly float[] LOCRIAN =
+    {
+        UNISON,
+        MINOR_SECOND,
+        MINOR_THIRD,
+        PERFECT_FOURTH,
+        TRITONE,
+        MINOR_SIXTH,
+        MINOR_SEVENTH,
         OCTAVE
     };
 
@@ -198,4 +253,6 @@ public static class Notes
         var i = Random.Range(0, chord.Length);
         return GetPitch(root, mode, i);
     }
+
+
 }
