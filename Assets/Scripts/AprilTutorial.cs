@@ -259,8 +259,8 @@ public class AprilTutorial : MonoBehaviour
             isComplete = false;
             cursorSpeed = 8;
 
-            modulePlacePos = new Vector3(-12.5f, 0.5f, -6);
-            highlightScale = new Vector3(18, 18, 18);
+            modulePlacePos = new Vector3(-12f, 1f, -6);
+            //highlightScale = new Vector3(18, 18, 18);
             modulePlaceHighlight.SetActive(true);
 
             reactorPos.z = -4;
@@ -325,6 +325,7 @@ public class AprilTutorial : MonoBehaviour
                 jack2.SetActive(false);
                 fakeCursor.SetActive(false);
                 currentModulePos.z = -1;
+                izkiModule.SetActive(true);
                 CompleteStep();
             }
         }
@@ -430,6 +431,7 @@ public class AprilTutorial : MonoBehaviour
                 jack2.SetActive(false);
                 isComplete = true;
                 currentModulePos.z = -1;
+                startBlock.SetActive(true);
                 CompleteStep();
             }
         }

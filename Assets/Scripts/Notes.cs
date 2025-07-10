@@ -237,10 +237,10 @@ public static class Notes
     /// Gets chord scale of current chord. 
     /// </summary>
     /// <param name="root">Tonic of current key/mode</param>
-    /// <param name="chord"></param>
-    /// <param name="mode"></param>
+    /// <param name="chordRoot">Use current chord</param>
+    /// <param name="mode">Use mode</param>
     /// <returns></returns>
-    public static MODE GetChordMode(float root, MODE mode, int chordRoot)
+    public static MODE GetChordScale(float root, MODE mode, int chordRoot)
     {
         MODE result = mode + chordRoot;
         if ((int)result > Enum.GetNames(typeof(MODE)).Length)
