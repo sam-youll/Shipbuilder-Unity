@@ -170,7 +170,26 @@ public class Wire : MonoBehaviour
                 }
                 else
                 {
-                    targetPositions[i] = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    var mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
+                    var overJack = false;
+                    GameObject jack = null;
+                    foreach (var result in results)
+                    {
+                        if (result.collider.gameObject.CompareTag("InputJack"))
+                        {
+                            overJack = true;
+                            jack = result.collider.gameObject;
+                        }
+                    }
+                    if (overJack)
+                    {
+                        targetPositions[i] = jack.transform.position;
+                    }
+                    else
+                    {
+                        targetPositions[i] = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    }
                 }
             }
             else
