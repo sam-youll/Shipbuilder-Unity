@@ -1720,6 +1720,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  objUnderMouse: {fileID: 0}
 --- !u!212 &127343955
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8888,7 +8889,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moduleRack: {fileID: 476463535}
-  outputRack: {fileID: 127343954}
   weapons:
   - {fileID: 1711727565}
 --- !u!4 &1087120756
@@ -9019,6 +9019,66 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59e64b16226f074469f3a14625d36e2d, type: 3}
+--- !u!1001 &1124590450
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1866123017}
+    m_Modifications:
+    - target: {fileID: 946178726130747652, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_Name
+      value: Source Module
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6098845790146465182, guid: c03f996e690406142855cbafcf8008df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: c03f996e690406142855cbafcf8008df, type: 3}
 --- !u!1001 &1132372419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9771,6 +9831,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1255794455 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1804978175650929464, guid: c03f996e690406142855cbafcf8008df, type: 3}
+  m_PrefabInstance: {fileID: 1124590450}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1258640128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15941,6 +16006,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1587119258110763539, guid: ecae1fbf8eb7752409188ee2d6e29156, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2095779726}
+    - targetCorrespondingSourceObject: {fileID: 1587119258110763539, guid: ecae1fbf8eb7752409188ee2d6e29156, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1255794455}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 755523976297939730, guid: ecae1fbf8eb7752409188ee2d6e29156, type: 3}
       insertIndex: -1

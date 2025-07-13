@@ -6,12 +6,13 @@ using Random = UnityEngine.Random;
 
 public class Weapon : MonoBehaviour
 {
-    [Header("Components")]
+    [Header("Components")] 
+    private GameObject startJack;
+    private GameObject endJack;
     public StatBar statBar;
     public GameObject bulletPrefab;
     public GameObject myShip;
     public GameObject myShipWeapon;
-    public GameObject output;
     public List<StatBar> noteMeters = new();
     
     [Header("Properties")]
@@ -35,6 +36,8 @@ public class Weapon : MonoBehaviour
     public bool firing;
 
     public GameObject previousModule;
+
+    public GameObject wirePrefab;
     
     public Dictionary<string, float> noteInfo = new()
     {
@@ -70,15 +73,58 @@ public class Weapon : MonoBehaviour
             notes[i] = Random.Range(0, 7);
             // Debug.Log(notes[i]);
         }
+        
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).CompareTag("InputJack"))
+            {
+                endJack = transform.GetChild(i).gameObject;
+            }
+            else if (transform.GetChild(i).CompareTag("OutputJack"))
+            {
+                startJack = transform.GetChild(i).gameObject;
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        // we don't have RackMovement.cs on the weapons, so we just do the same code to check for a jack click here
+        // we can maybe refactor this later into just being a UnityEvent sent by the jack itself, but this works for now
+        if (Input.GetMouseButtonDown(0))
+        {
+            // we do a lil raycast
+            var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+
+            var isItMe = false;
+            foreach (var r in results)
+            {
+                if (r.collider.gameObject == startJack)
+                {
+                    isItMe = true;
+                }
+            }
+
+            if (isItMe)
+            {
+                foreach (var result in results)
+                {
+                    // if we hit a jack, invoke that unity event
+                    if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
+                    {
+                        OnJackClick(startJack);
+                        break;
+                    }
+                }
+            }
+        }
+
         inCombat = CombatManager.Instance.state == CombatManager.State.inCombat;
         firing = testing || inCombat;
-        if (dir == 1 && (previousModule == null || !SourceModuleConnected()))
+        if (dir == 1 && !CompletePatch())
         {
+            Debug.Log("Is patch complete? " + CompletePatch());
             firing = false;
         }
         
@@ -195,32 +241,19 @@ public class Weapon : MonoBehaviour
         SetPatch();
         foreach (var mod in myPatch)
         {
-            foreach (var param in mod.parameters)
+            foreach (var param in mod.MusicParams)
             {
-                if (noteInfo.ContainsKey(param.Key))
-                {
-                    noteInfo[param.Key] = param.Value;
-                }
-                else
-                {
-                    noteInfo.Add(param.Key, param.Value);
-                }
+                noteInfo[param.Key] = param.Value;
             }
 
-            foreach (var stat in mod.stats)
+            foreach (var stat in mod.CombatStats)
             {
-                if (!string.IsNullOrEmpty(mod.stat))
-                {
-                    if (mod.stat == "damage")
-                    {
-                        newBullet.GetComponent<Bullet>().damage += mod.statValue;
-                    }
-
-                    if (mod.stat == "bulletSpread")
-                    {
-                        sensorMod *= mod.statValue;
-                    }
-                }
+                // fireRate
+                // damage
+                // bullet speed
+                // spread
+                // effects
+                // type
             }
             
         }
@@ -249,27 +282,54 @@ public class Weapon : MonoBehaviour
         
         myPatch = new();
         var prev = previousModule.GetComponent<Module>();
-        while (prev.previousModule != null)
+        while (prev.PreviousModule() != null)
         {
             // Debug.Log(prev.name);
             myPatch.Add(prev);
-            prev = prev.previousModule.GetComponent<Module>();
+            
+            if (prev.PreviousModule().TryGetComponent(out Module mod))
+            {
+                prev = mod;
+            }
+            else if (prev.PreviousModule().TryGetComponent(out Weapon weapon))
+            {
+                break;
+            }
         }
         // Debug.Log(prev.name);
         myPatch.Add(prev);
     }
 
-    private bool SourceModuleConnected()
+    private bool CompletePatch()
     {
-        var result = false;
-        foreach (var module in myPatch)
+        foreach (var patch in myPatch)
         {
-            if (module.isSourceModule)
+            Debug.Log(patch);
+        }
+        Debug.Log(myPatch[^1].PreviousModule());
+        return myPatch[^1].PreviousModule() == gameObject;
+    }
+    
+    private void OnJackClick(GameObject jack)
+    {
+        if (transform.parent == Inventory.Instance.transform)
+        {
+            return;
+        }
+        
+        // is there already a wire there?
+        if (jack.transform.childCount > 0)
+        {
+            // get rid of it, unless you're holding left control
+            // this way, left control + drag creates a second wire on top of the first
+            // same as VCV rack
+            // TODO: allow dragging wires from either end and don't just automatically delete to create new
+            if (!Input.GetKeyDown(KeyCode.LeftControl))
             {
-                result = true;
+                jack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
             }
         }
-
-        return result;
+        // make a new wire
+        GameObject newWire = Instantiate(wirePrefab, jack.transform);
     }
 }

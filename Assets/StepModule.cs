@@ -1,32 +1,14 @@
 using UnityEngine;
 
-public class StepModule : MonoBehaviour
+public class StepModule : SecondaryModule
 {
-    public enum direction
+    // we can set this to different sizes positive or negative
+    public float stepSize = 1;
+
+    public override void Trigger(float value)
     {
-        Up,
-        Down
+        base.Trigger(value);
+        
+        // foreach child wire, Trigger(value);
     }
-
-    public int steps;
-
-    private int previousNote;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        previousNote = 8;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //NOTE: This needs to change when we have stuff in place to have it dangling off
-        if (GetComponent<Module>().nextModule != null) 
-        {
-            
-        }
-    }
-
-
 }

@@ -1,0 +1,154 @@
+// using System;
+// using System.Collections.Generic;
+// using UnityEngine;
+//
+// public class Conveyor : MonoBehaviour
+// {
+//     public GameObject moduleAttached;
+//
+//     private bool isMouseDragging;
+//     private Vector2 dragOffset;
+//
+//     [Header("Combat Stats")] 
+//     public float speed = 1;
+//     public float damage = 1;
+//
+//     public GameObject snapSquare;
+//
+//     public float source = 2;
+//     public float freq = 8;
+//     public float depth = 20;
+//     
+//     public float izki;
+//     public float aubo;
+//     public float dwth;
+//     public Dictionary<Module.SoundType, float> soundType = new Dictionary<Module.SoundType, float>
+//     {
+//         { Module.SoundType.None, 0 },
+//         { Module.SoundType.Izki, 0 },
+//         { Module.SoundType.Aubo, 0 },
+//         { Module.SoundType.Dwth, 0 },
+//     };
+//     
+//     // Start is called once before the first execution of Update after the MonoBehaviour is created
+//     void Start()
+//     {
+//         soundType[Module.SoundType.Izki] = izki;
+//         soundType[Module.SoundType.Aubo] = aubo;
+//         soundType[Module.SoundType.Dwth] = dwth;
+//     }
+//
+//     // Update is called once per frame
+//     void Update()
+//     {
+//         // move the module attached
+//         if (moduleAttached != null)
+//         {
+//             var pos = moduleAttached.transform.position;
+//             pos.y = Mathf.Sin(Time.time*6.5f) + transform.position.y;
+//             pos.z = transform.position.z - .2f;
+//             moduleAttached.transform.position = pos;
+//         }
+//         
+//         
+//         // convert mouse position to world coordinates
+//         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+//         
+//         // mouse movement
+//         if (isMouseDragging)
+//         {
+//             // add offset from center of module to mouse position
+//             mousePos += dragOffset;
+//             // set position
+//             var myPos = new Vector3(mousePos.x, mousePos.y, -1);
+//             transform.position = myPos;
+//
+//             // set position of snap square
+//             var snappedPos = new Vector2
+//             {
+//                 x = Mathf.Round(mousePos.x),
+//                 y = Mathf.Round(mousePos.y)
+//             };
+//             while (OverlapCheck(snappedPos, new Vector2(.5f, 1.5f))) // THIS IS PROBABLY A BAD IDEA
+//             {
+//                 var dir = new Vector2(1, 0); // TODO: Make this directional based on diff between snap pos and pos
+//                 snappedPos += dir;
+//             }
+//             snapSquare.transform.position = snappedPos;
+//             
+//             // drop module
+//             if (Input.GetMouseButtonUp(0))
+//             {
+//                 // reset mouse drag
+//                 isMouseDragging = false;
+//                 transform.position = snapSquare.transform.position;
+//                 snapSquare.SetActive(false);
+//                 dragOffset = Vector2.zero;
+//
+//                 AudioManager.Instance.PutDownModuleSFX();
+//             }
+//         }
+//     }
+//
+//     public void OnModuleAttached(Module mod)
+//     {
+//         moduleAttached = mod.gameObject;
+//         moduleAttached.GetComponent<Module>().parameters.Add("FM", 1);
+//         moduleAttached.GetComponent<Module>().parameters.Add("FMsource", source);
+//         moduleAttached.GetComponent<Module>().parameters.Add("FMfreq", freq);
+//         moduleAttached.GetComponent<Module>().parameters.Add("FMdepth", depth);
+//         // moduleAttached.GetComponent<Module>().stats.Add("damage", damage);
+//         // moduleAttached.GetComponent<Module>().stats.Add("speed", speed);
+//         foreach (var type in soundType)
+//         {
+//             mod.soundType[type.Key] += type.Value;
+//         }
+//         PatchManager.Instance.UpdateAllPatches();
+//     }
+//
+//     public void OnModuleDetached(Module mod)
+//     {
+//         moduleAttached.GetComponent<Module>().parameters.Remove("FM");
+//         moduleAttached.GetComponent<Module>().parameters.Remove("FMsource");
+//         moduleAttached.GetComponent<Module>().parameters.Remove("FMfreq");
+//         moduleAttached.GetComponent<Module>().parameters.Remove("FMdepth");
+//         // moduleAttached.GetComponent<Module>().stats.Remove("damage");
+//         // moduleAttached.GetComponent<Module>().stats.Remove("speed");
+//         moduleAttached = null;
+//         foreach (var type in soundType)
+//         {
+//             mod.soundType[type.Key] -= type.Value;
+//         }
+//         PatchManager.Instance.UpdateAllPatches();
+//     }
+//     
+//     private bool OverlapCheck(Vector2 pos, Vector2 size)
+//     {
+//         var overlap = Physics2D.OverlapBoxAll(pos, size, 0, LayerMask.GetMask("Module Bodies"));
+//         foreach (var coll in overlap)
+//         {
+//             if (coll.gameObject == gameObject)
+//                 continue;
+//             if (coll.gameObject == transform.GetChild(3).gameObject)
+//                 continue;
+//             
+//             return true;
+//         }
+//
+//         return false;
+//     }
+//
+//     private void OnMouseOver()
+//     {
+//         if (Input.GetMouseButtonDown(0))
+//         {
+//             isMouseDragging = true;
+//             snapSquare.SetActive(true);
+//                 
+//             var adjPos = transform.position;
+//             adjPos.z = -1;
+//             transform.position = adjPos;
+//             AudioManager.Instance.PickUpModuleSFX();
+//         }
+//     }
+// }

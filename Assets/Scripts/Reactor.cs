@@ -20,7 +20,7 @@ public class Reactor : MonoBehaviour
     public float izki;
     public float aubo;
     public float dwth;
-    private List<Module> myPatch;
+    public List<Module> myPatch;
 
     public GameObject previousModule;
 
@@ -47,11 +47,11 @@ public class Reactor : MonoBehaviour
         if (previousModule != null)
         {
             var prev = previousModule.GetComponent<Module>();
-            while (prev.previousModule != null)
+            while (prev.PreviousModule() != null)
             {
                 // Debug.Log(prev.name);
                 myPatch.Add(prev);
-                prev = prev.previousModule.GetComponent<Module>();
+                prev = prev.PreviousModule().GetComponent<Module>();
             }
             // Debug.Log(prev.name);
             myPatch.Add(prev);
@@ -62,20 +62,9 @@ public class Reactor : MonoBehaviour
         shields = 0;
         foreach (var module in myPatch)
         {
-            Debug.Log(module);
-            
-            if (module.stat == "power")
-            {
-                power += module.statValue;
-            }
-            else if (module.stat == "rate")
-            {
-                rate += module.statValue;
-            }
-            else if (module.stat == "shield")
-            {
-                shields += module.statValue;
-            }
+            power += module.CombatStats["power"];
+            rate += module.CombatStats["rate"];
+            shields += module.CombatStats["shields"];
         }
 
         shields = Mathf.Clamp(shields, 0, 4);
