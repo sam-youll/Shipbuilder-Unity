@@ -124,7 +124,7 @@ public class Weapon : MonoBehaviour
         firing = testing || inCombat;
         if (dir == 1 && !CompletePatch())
         {
-            Debug.Log("Is patch complete? " + CompletePatch());
+            // Debug.Log("Is patch complete? " + CompletePatch());
             firing = false;
         }
         
@@ -302,11 +302,9 @@ public class Weapon : MonoBehaviour
 
     private bool CompletePatch()
     {
-        foreach (var patch in myPatch)
-        {
-            Debug.Log(patch);
-        }
-        Debug.Log(myPatch[^1].PreviousModule());
+        if (myPatch.Count == 0)
+            return false;
+        
         return myPatch[^1].PreviousModule() == gameObject;
     }
     

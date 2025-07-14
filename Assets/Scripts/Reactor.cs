@@ -82,7 +82,7 @@ public class Reactor : MonoBehaviour
 
 
         float shieldDiff = shields - ReactorSounds.Instance.playerPads.Count;
-        Debug.Log("shield diff: " + shieldDiff + ", shields: " + shields + ", pads: " + ReactorSounds.Instance.playerPads.Count);
+        // Debug.Log("shield diff: " + shieldDiff + ", shields: " + shields + ", pads: " + ReactorSounds.Instance.playerPads.Count);
 
         if (shieldDiff > 0) 
         {

@@ -15,4 +15,9 @@ public class CounterModule : SecondaryModule
         }
         base.Trigger(currentValue);
     }
+
+    public override void Trigger()
+    {
+        base.Trigger(currentValue);
+    }
 }

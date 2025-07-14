@@ -456,6 +456,11 @@ public class AudioManager: MonoBehaviour
 
     public void PlayNote(GameObject weapon, Dictionary<string, float> noteInfo)
     {
+        Debug.Log("===== Playing note =====");
+        foreach (var datum in noteInfo)
+        {
+            Debug.Log(datum.Key + " : " + datum.Value);
+        }
         StartCoroutine(PlayNoteCoroutine(weapon, noteInfo));
     }
 

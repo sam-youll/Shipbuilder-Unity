@@ -6,9 +6,11 @@ public class SourceModule : PrimaryModule
     // TODO: reorder these to match FMOD source parameter
     public enum Waveform
     {
-        Saw,
+        Nothing,
+        Nothing2,
         Sine,
         Square,
+        Saw,
         Noise
     }
     public Waveform waveform = Waveform.Sine;
