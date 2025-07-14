@@ -201,6 +201,7 @@ public class Weapon : MonoBehaviour
                 if (startJack.transform.GetChild(i).CompareTag("Wire"))
                 {
                     startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
+                    Debug.Log("triggering wire");
                 }
             }
         }

@@ -10,7 +10,7 @@ public class AddModule : SecondaryModule
         value += stepSize;
 
         base.Trigger(value);
-        Debug.Log(value);
+        Debug.Log("add " + value);
     }
 
     public override void Trigger()
