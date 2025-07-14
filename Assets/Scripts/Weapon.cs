@@ -194,11 +194,14 @@ public class Weapon : MonoBehaviour
             return;
         }
         
-        for (int i = 0; i < startJack.transform.childCount; i++)
+        if (dir == 1)
         {
-            if (startJack.transform.GetChild(i).CompareTag("Wire"))
+            for (int i = 0; i < startJack.transform.childCount; i++)
             {
-                startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
+                if (startJack.transform.GetChild(i).CompareTag("Wire"))
+                {
+                    startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
+                }
             }
         }
 
