@@ -188,17 +188,18 @@ public class Weapon : MonoBehaviour
 
     public void Fire()
     {
+
+        if (charge < 1)
+        {
+            return;
+        }
+        
         for (int i = 0; i < startJack.transform.childCount; i++)
         {
             if (startJack.transform.GetChild(i).CompareTag("Wire"))
             {
                 startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
             }
-        }
-        
-        if (charge < 1)
-        {
-            return;
         }
 
         charge = 0;
