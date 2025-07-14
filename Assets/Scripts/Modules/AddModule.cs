@@ -1,14 +1,16 @@
 using UnityEngine;
 
-public class StepModule : SecondaryModule
+public class AddModule : SecondaryModule
 {
     // we can set this to different sizes positive or negative
     public float stepSize = 1;
 
     public override void Trigger(float value)
     {
+        value += stepSize;
+
         base.Trigger(value);
+       
         
-        // foreach child wire, Trigger(value);
     }
 }
