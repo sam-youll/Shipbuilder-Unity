@@ -103,7 +103,7 @@ public abstract class Module : MonoBehaviour
             // this way, left control + drag creates a second wire on top of the first
             // same as VCV rack
             // TODO: allow dragging wires from either end and don't just automatically delete to create new
-            if (!Input.GetKeyDown(KeyCode.LeftControl))
+            if (!Input.GetKey(KeyCode.LeftControl))
             {
                 jack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
             }

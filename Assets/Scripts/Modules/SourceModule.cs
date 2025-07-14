@@ -6,12 +6,10 @@ public class SourceModule : PrimaryModule
     // TODO: reorder these to match FMOD source parameter
     public enum Waveform
     {
-        Nothing,
-        Nothing2,
-        Sine,
-        Square,
-        Saw,
-        Noise
+        Sine = 2,
+        Square = 3,
+        Saw = 4,
+        Noise = 5
     }
     public Waveform waveform = Waveform.Sine;
 
@@ -20,10 +18,5 @@ public class SourceModule : PrimaryModule
         base.Start();
         
         MusicParams["source"] = (float)waveform;
-    }
-
-    public override void Trigger(Dictionary<string, float> MusicParams, Dictionary<string, float> CombatStats)
-    {
-        base.Trigger(MusicParams, CombatStats);
     }
 }

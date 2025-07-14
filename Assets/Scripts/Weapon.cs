@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -187,6 +188,14 @@ public class Weapon : MonoBehaviour
 
     public void Fire()
     {
+        for (int i = 0; i < startJack.transform.childCount; i++)
+        {
+            if (startJack.transform.GetChild(i).CompareTag("Wire"))
+            {
+                startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
+            }
+        }
+        
         if (charge < 1)
         {
             return;
@@ -259,7 +268,7 @@ public class Weapon : MonoBehaviour
         }
         newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1, Random.Range(-bulletSpread, bulletSpread)*sensorMod) * bulletSpeed;
         
-        noteInfo["pitch"] = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordString]);
+        noteInfo["pitch"] = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chordString]);
         // noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);
         // currentNote++;
         // currentNote = (int)Mathf.Repeat(currentNote, notes.Length);
@@ -322,7 +331,7 @@ public class Weapon : MonoBehaviour
             // this way, left control + drag creates a second wire on top of the first
             // same as VCV rack
             // TODO: allow dragging wires from either end and don't just automatically delete to create new
-            if (!Input.GetKeyDown(KeyCode.LeftControl))
+            if (!Input.GetKey(KeyCode.LeftControl))
             {
                 jack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
             }

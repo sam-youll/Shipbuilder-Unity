@@ -536,7 +536,7 @@ public class ReactorSounds : MonoBehaviour
         {
 
             //if it should play, get the pitch of the root of the current chord, drop it 2 octaves
-            bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, (changes[currentChord])))/4;
+            bassPitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[currentChord])))/4;
             //sets the pitch
             playerBass.setParameterByName("basspitch", bassPitch);
             //plays the note
@@ -568,7 +568,7 @@ public class ReactorSounds : MonoBehaviour
         if (shouldPlay)
         {
             //same as before but drops it a couple more octaves
-            bassPitch = (Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, changes[currentChord])) / 8;
+            bassPitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, changes[currentChord])) / 8;
             playerBass.setParameterByName("basspitch", bassPitch);
             StartCoroutine(PlayBassCoroutine(playerBass, notelength));
 
@@ -589,7 +589,7 @@ public class ReactorSounds : MonoBehaviour
                 //picks a random note from the current chord
                 for (int i = 0; i < playerPads.Count; i++)
                 {
-                    var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+                    var pitch = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chordstring]) * 2;
                     playerPads[i].setParameterByName("pitch", pitch);
                     // UnityEngine.Debug.Log("pad: " + playerPads[i] + " pitch: " + pitch);
                 }
@@ -607,7 +607,7 @@ public class ReactorSounds : MonoBehaviour
             for (int i = 0; i < enemyPads.Count; i++)
             {
                 //picks a random note from the current chord
-                var padPitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chordstring]) * 2;
+                var padPitch = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chordstring]) * 2;
                 //sets the pitch
                 enemyPads[i].setParameterByName("pitch", padPitch);
             }
@@ -681,7 +681,7 @@ public class ReactorSounds : MonoBehaviour
         addedPad.setParameterByName("ffgain", Random.Range(0f, .1f));
         addedPad.setParameterByName("delaytime", padDelayTime);
         
-        var pitch = Notes.RandomNoteInChord(Notes.A, Notes.MODE.IONIAN, Notes.SCALE_CHORD[chords[changes[currentChord]]]) * 2;
+        var pitch = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chords[changes[currentChord]]]) * 2;
         addedPad.setParameterByName("pitch", pitch);
         
         addedPad.start();

@@ -19,7 +19,9 @@ public class Conductor : MonoBehaviour
     
     public float time;
     public float tempo;
-
+    public Notes.MODE mode;
+    public float keyRoot = Notes.A_FLAT;
+    
     public int sixteenth;
     public int eighth;
     public int quarter;
