@@ -14,10 +14,13 @@ public class CounterModule : SecondaryModule
             currentValue -= limit;
         }
         base.Trigger(currentValue);
+        
+        //Debug.Log("Counter: " + currentValue);
     }
 
     public override void Trigger()
     {
         base.Trigger(currentValue);
+        //Debug.Log("Counter: " + currentValue);
     }
 }

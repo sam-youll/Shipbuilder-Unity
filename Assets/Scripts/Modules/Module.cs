@@ -39,6 +39,10 @@ public abstract class Module : MonoBehaviour
     public List<GameObject> parentWires = new();
     public List<GameObject> childWires = new();
     public GameObject wirePrefab;
+    
+    // this is mostly for the early testing of the new modules, probably will delete later? idk
+    [Header("Sample Text")]
+    public TextMeshPro sampleText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
@@ -48,11 +52,25 @@ public abstract class Module : MonoBehaviour
         GetComponent<RackMovement>().jackClick.AddListener(OnJackClick);
         GetComponent<RackMovement>().inventoryEnter.AddListener(OnInventoryEnter);
         GetComponent<RackMovement>().inventoryExit.AddListener(OnInventoryExit);
+        
+        // setting sample text tmp guy
+        sampleText = GetComponentInChildren<TextMeshPro>();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
+        //sample text stuff 
+        if (GetComponent<AddModule>())
+        {
+            sampleText.text = "+" + GetComponent<AddModule>().stepSize;
+        } else if (GetComponent<CounterModule>())
+        {
+            sampleText.text = "counter: " + GetComponent<CounterModule>().currentValue;
+        } else if (GetComponent<SwitchModule>())
+        {
+            sampleText.text = "switch: " + GetComponent<SwitchModule>().currentIndex;
+        }
         
     }
     
