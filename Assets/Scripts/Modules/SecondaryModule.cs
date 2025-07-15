@@ -21,8 +21,7 @@ public abstract class SecondaryModule : Module
     
     public override void Trigger(float value)
     {
+        Debug.Log($"SecondaryModule on {gameObject.name} called base.Trigger().");
         base.Trigger(value);
-        
-        
     }
 }

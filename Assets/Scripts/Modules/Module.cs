@@ -59,8 +59,10 @@ public abstract class Module : MonoBehaviour
     #region Trigger Method + Overloads
     public virtual void Trigger()
     {
+        Debug.Log($"Attempting to call Trigger() from base Module class on {gameObject.name}");
         foreach (GameObject wire in childWires)
         {
+            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} without arguments.");
             wire.GetComponent<Wire>().Trigger();
         }
         // Other behavior should be extended in inherited classes
@@ -70,6 +72,7 @@ public abstract class Module : MonoBehaviour
     {
         foreach (GameObject wire in childWires)
         {
+            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with primary (dictionary) arguments.");
             wire.GetComponent<Wire>().Trigger(musicParams, combatStats);
         }
     }
@@ -78,6 +81,7 @@ public abstract class Module : MonoBehaviour
     {
         foreach (GameObject wire in childWires)
         {
+            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with secondary (value) arguments.");
             wire.GetComponent<Wire>().Trigger(value);
         }
     }

@@ -99,6 +99,17 @@ public class Wire : MonoBehaviour
                     
                     
                     nextModule.GetComponent<Module>().parentWires.Add(gameObject);
+
+                    if (previousModule.TryGetComponent(out Module module))
+                    {
+                        module.childWires.Add(gameObject);
+                    }
+                    // uh Weapon.cs doesn't have childWires lol it just searches
+                    // through its children for the wires it's going to trigger
+                    // else if (previousModule.TryGetComponent(out Weapon weapon))
+                    // {
+                    //     weapon.childWires.Add(gameObject);
+                    // }
                     
                     // previousModule.GetComponent<Module>().nextModule = nextModule;
                     // if (nextModule.GetComponent<Module>().previousModule != null)
@@ -255,16 +266,19 @@ public class Wire : MonoBehaviour
 
     public void Trigger()
     {
+        Debug.Log($"{previousModule.name} triggered {nextModule.name} without arguments.");
         nextModule.GetComponent<Module>().Trigger();
     }
     
     public void Trigger(Dictionary<string, float> musicParams, Dictionary<string, float> combatStats)
     {
+        Debug.Log($"{previousModule.name} triggered {nextModule.name} with primary (dictionary) arguments.");
         nextModule.GetComponent<Module>().Trigger(musicParams, combatStats);
     }
 
     public void Trigger(float value)
     {
+        Debug.Log($"{previousModule.name} triggered {nextModule.name} with secondary (value) arguments.");
         nextModule.GetComponent<Module>().Trigger(value);
     }
 }

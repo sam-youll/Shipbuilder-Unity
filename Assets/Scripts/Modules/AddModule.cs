@@ -7,15 +7,14 @@ public class AddModule : SecondaryModule
 
     public override void Trigger(float value)
     {
+        Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() without arguments.");
         value += stepSize;
-
         base.Trigger(value);
-        Debug.Log("add " + value);
     }
 
     public override void Trigger()
     {
+        Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() without arguments.");
         base.Trigger(stepSize);
-        Debug.Log("add " + stepSize);
     }
 }
