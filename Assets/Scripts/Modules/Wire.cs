@@ -226,6 +226,7 @@ public class Wire : MonoBehaviour
             }
             else
             {
+                previousModule.GetComponent<Module>().childWires.Remove(gameObject);
                 nextModule.GetComponent<Module>().parentWires.Remove(gameObject);
                 // nextModule.GetComponent<Module>().previousModule = null;
             }
