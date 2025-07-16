@@ -9,6 +9,8 @@ public abstract class SecondaryModule : Module
     }
     public ActiveState activeState = ActiveState.Triggered;
 
+    public int myInputIndex;
+    
     protected override void Update()
     {
         base.Update();
@@ -19,9 +21,9 @@ public abstract class SecondaryModule : Module
         }
     }
     
-    public override void Trigger(float value)
-    {
-        Debug.Log($"SecondaryModule on {gameObject.name} called base.Trigger().");
-        base.Trigger(value);
-    }
+    // public override void Trigger(float value,  int inputIndex)
+    // {
+    //     Debug.Log($"SecondaryModule on {gameObject.name} called base.Trigger().");
+    //     base.Trigger(value, inputIndex);
+    // }
 }

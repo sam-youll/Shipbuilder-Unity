@@ -35,7 +35,10 @@ public abstract class Module : MonoBehaviour
     
     // TODO: combine connections and module components
     // probably don't need references to modules if those references are already stored in the wires
-    [Header("Connections")]
+    [Header("Connections")] 
+    [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
+    public List<GameObject> inputJacks = new();
+    public List<GameObject> outputJacks = new();
     public List<GameObject> parentWires = new();
     public List<GameObject> childWires = new();
     public GameObject wirePrefab;
@@ -89,23 +92,32 @@ public abstract class Module : MonoBehaviour
         // Other behavior should be extended in inherited classes
     }
 
-    public virtual void Trigger(Dictionary<string, float> musicParams, Dictionary<string, float> combatStats)
-    {
-        foreach (GameObject wire in childWires)
-        {
-            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with primary (dictionary) arguments.");
-            wire.GetComponent<Wire>().Trigger(musicParams, combatStats);
-        }
-    }
-
     public virtual void Trigger(float value)
     {
         foreach (GameObject wire in childWires)
         {
-            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with secondary (value) arguments.");
+            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with a value of {value}.");
             wire.GetComponent<Wire>().Trigger(value);
         }
     }
+
+    public virtual void Trigger(float value, int inputIndex)
+    {
+        foreach (GameObject wire in childWires)
+        {
+            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with a value of {value}.");
+            wire.GetComponent<Wire>().Trigger(value, inputIndex);
+        }
+    }
+    
+    // public virtual void Trigger(Dictionary<string, float> musicParams, Dictionary<string, float> combatStats)
+    // {
+    //     foreach (GameObject wire in childWires)
+    //     {
+    //         Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with primary (dictionary) arguments.");
+    //         wire.GetComponent<Wire>().Trigger(musicParams, combatStats);
+    //     }
+    // }
     #endregion
     
     #region Event Handlers

@@ -4,12 +4,20 @@ public class PitchModule : PrimaryModule
 {
     public float pitch;
     
-    public override void Trigger(float value)
+    public override void Trigger(float value, int inputIndex)
     {
-        value %= 7;
-        pitch = Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (int)value);
-        MusicParams["pitch"] = pitch;
-        base.Trigger();
+        switch (inputIndex)
+        {
+            case 0:
+                base.Trigger();
+                break;
+            case 1:
+                value %= 7;
+                pitch = Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (int)value);
+                MusicParams["pitch"] = pitch;
+                base.Trigger();
+                break;
+        }
     }
 
     protected override void Start()

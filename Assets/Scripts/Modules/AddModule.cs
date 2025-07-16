@@ -9,12 +9,12 @@ public class AddModule : SecondaryModule
     {
         Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");
         value += stepSize;
-        base.Trigger(value);
+        base.Trigger(value, myInputIndex);
     }
 
     public override void Trigger()
     {
         Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() with a value of {stepSize}.");
-        base.Trigger(stepSize);
+        base.Trigger(stepSize, myInputIndex);
     }
 }
