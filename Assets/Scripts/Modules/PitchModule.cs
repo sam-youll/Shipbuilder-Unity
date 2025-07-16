@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PitchModule : PrimaryModule
 {
-    private float pitch;
+    public float pitch;
     
     public override void Trigger(float value)
     {

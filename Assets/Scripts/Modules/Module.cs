@@ -70,6 +70,9 @@ public abstract class Module : MonoBehaviour
         } else if (GetComponent<SwitchModule>())
         {
             sampleText.text = "switch: " + GetComponent<SwitchModule>().currentIndex;
+        } else if (GetComponent<PitchModule>())
+        {
+            sampleText.text = "pitch: " + GetComponent<PitchModule>().pitch;
         }
         
     }
