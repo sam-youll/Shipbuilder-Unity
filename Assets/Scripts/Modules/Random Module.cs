@@ -7,15 +7,15 @@ public class RandomModule : SecondaryModule
     public override void Trigger(float value)
     {
         randomNumber = Random.Range(0, 7);
-        Debug.Log($"RandomModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");
         value += randomNumber;
+        Debug.Log($"RandomModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");
         base.Trigger(value, myInputIndex);
     }
 
     public override void Trigger()
     {
         randomNumber = Random.Range(0, 7);
-        Debug.Log($"RandomModule on {gameObject.name} triggered base.Trigger() with a value of a random number.");
+        Debug.Log($"RandomModule on {gameObject.name} triggered base.Trigger() with a value of {randomNumber}.");
         base.Trigger(randomNumber, myInputIndex);
     }
 }

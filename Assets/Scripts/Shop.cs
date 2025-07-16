@@ -13,7 +13,7 @@ public class Shop : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Reroll();
     }
 
     // Update is called once per frame
@@ -32,8 +32,10 @@ public class Shop : MonoBehaviour
             priceLabels[i].text = "Price: " + newItem.GetComponent<Module>().price;
             Destroy(slot.GetComponent<ShopSlotButton>().shopItem);
             slot.GetComponent<ShopSlotButton>().shopItem = Instantiate(newItem, slot.transform);
+            // slot.GetComponent<ShopSlotButton>().shopItem.GetComponent<Collider>().enabled = false;
             var pos = slot.GetComponent<ShopSlotButton>().shopItem.transform.localPosition;
             pos.z = -.1f;
+            pos.y = 1.5f;
             slot.GetComponent<ShopSlotButton>().shopItem.transform.localPosition = pos;
             slot.GetComponent<ShopSlotButton>().shopItem.SetActive(true);
             // slot.GetComponent<ShopSlotButton>().shopItem.GetComponent<BoxCollider2D>().enabled = false;

@@ -86,6 +86,9 @@ public class Weapon : MonoBehaviour
                 startJack = transform.GetChild(i).gameObject;
             }
         }
+        
+        // TODO: this is temporary, maybe change it so that this is more tied to the modules or something idk
+        noteInfo["pitch"] = Notes.RandomNoteInScale(Conductor.Instance.keyRoot, Conductor.Instance.mode);
     }
 
     // Update is called once per frame

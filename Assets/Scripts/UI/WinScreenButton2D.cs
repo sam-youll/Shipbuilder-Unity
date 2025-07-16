@@ -38,10 +38,10 @@ public class WinScreenButton2D : Button2D
                 break;
             case Type.NoThanks:
                 break;
-            case Type.Tutorial:
+            case Type.Start:
                 SceneManager.LoadScene("SampleScene");
                 break;
-            case Type.Start:
+            case Type.Tutorial:
                 SceneManager.LoadScene("Spring Showcase Tutorial");
                 break;
             case Type.Quit:

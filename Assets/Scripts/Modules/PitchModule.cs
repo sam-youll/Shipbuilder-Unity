@@ -15,6 +15,7 @@ public class PitchModule : PrimaryModule
                 value %= 7;
                 pitch = Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (int)value);
                 MusicParams["pitch"] = pitch;
+                Debug.Log($"PitchModule received a value {value} and set pitch to  {pitch}.");
                 base.Trigger();
                 break;
         }

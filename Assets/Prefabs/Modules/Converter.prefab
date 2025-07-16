@@ -184,7 +184,7 @@ PrefabInstance:
       addedObject: {fileID: 4374512705616464286}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2170875819057116906, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
-      insertIndex: -1
+      insertIndex: 1
       addedObject: {fileID: -7964128716715547307}
   m_SourcePrefab: {fileID: 100100000, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
 --- !u!1 &5247644990794900211 stripped
@@ -205,13 +205,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   systemType: 1
-  price: 0
+  price: 4
   izki: 0
   aubo: 0
   dwth: 0
+  inputJacks: []
+  outputJacks: []
   parentWires: []
   childWires: []
   wirePrefab: {fileID: 3834299262851421809, guid: 30fe35db45a847b4ca2ffa480ab3a66a, type: 3}
+  sampleText: {fileID: 0}
+  rate: 1
 --- !u!4 &6700920630176362703 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 724396268766225622, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}

@@ -18,6 +18,5 @@ public class SourceModule : PrimaryModule
         base.Start();
         
         MusicParams["source"] = (float)waveform;
-        MusicParams["pitch"] = Notes.RandomNoteInScale(Conductor.Instance.keyRoot, Conductor.Instance.mode);
     }
 }
