@@ -28,6 +28,7 @@ public class Wire : MonoBehaviour
     private LineRenderer lineRenderer;
 
     private bool connectedToModule = false;
+    private bool connectedToWeapon = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -66,6 +67,7 @@ public class Wire : MonoBehaviour
                     nextModuleJack = hit.collider.gameObject;
                     nextModule = nextModuleJack.transform.parent.gameObject;
                     nextModule.GetComponent<Weapon>().previousModule = previousModule;
+                    previousModule.GetComponent<Module>().childWires.Add(gameObject);
                     // if (nextModule.GetComponent<Weapon>().previousModule != null)
                     // {
                     //     nextModule.GetComponent<Weapon>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
@@ -75,6 +77,7 @@ public class Wire : MonoBehaviour
                     PatchManager.Instance.UpdateAllPatches();
                     
                     connectedToModule = true;
+                    connectedToWeapon = true;
                 }
                 // hit reactor output
                 else if (hit.collider.transform.parent.CompareTag("Reactor"))
@@ -274,18 +277,39 @@ public class Wire : MonoBehaviour
     public void Trigger()
     {
         Debug.Log($"{previousModule.name} triggered {nextModule.name} with no arguments.");
-        nextModule.GetComponent<Module>().Trigger();
+        if (connectedToWeapon)
+        {
+            nextModule.GetComponent<Weapon>().Fire();
+        }
+        else
+        {
+            nextModule.GetComponent<Module>().Trigger();
+        }
     }
 
     public void Trigger(float value)
     {
         Debug.Log($"{previousModule.name} triggered {nextModule.name} with a value of {value}");
-        nextModule.GetComponent<Module>().Trigger(value);
+        if (connectedToWeapon)
+        {
+            nextModule.GetComponent<Weapon>().Fire();
+        }
+        else
+        {
+            nextModule.GetComponent<Module>().Trigger(value);
+        }
     }
     
     public void Trigger(float value, int inputIndex)
     {
         Debug.Log($"{previousModule.name} triggered {nextModule.name} with a value of {value} to secondary input jack {inputIndex}");
-        nextModule.GetComponent<Module>().Trigger(value, inputIndex);
+        if (connectedToWeapon)
+        {
+            nextModule.GetComponent<Weapon>().Fire();
+        }
+        else
+        {
+            nextModule.GetComponent<Module>().Trigger(value, inputIndex);
+        }
     }
 }

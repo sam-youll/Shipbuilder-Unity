@@ -231,6 +231,7 @@ public class RackMovement : MonoBehaviour
                     // if we hit a jack, invoke that unity event
                     if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
                     {
+                        
                         jackClick.Invoke(result.collider.gameObject);
                         break;
                     }

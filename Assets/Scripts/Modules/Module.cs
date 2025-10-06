@@ -9,13 +9,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public abstract class Module : MonoBehaviour
 {
-    public enum SystemType
-    {
-        Weapon,
-        Reactor
-    }
-    public SystemType systemType = SystemType.Weapon;
-    
     public enum SoundType
     {
         None,
@@ -128,6 +121,7 @@ public abstract class Module : MonoBehaviour
 
     private void OnJackClick(GameObject jack)
     {
+        Debug.Log("module jack clicked");
         if (transform.parent == Inventory.Instance.transform)
         {
             return;

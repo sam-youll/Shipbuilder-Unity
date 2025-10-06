@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Weapon : MonoBehaviour
@@ -21,7 +22,7 @@ public class Weapon : MonoBehaviour
     public float warmup = 0;
     public float charge = 0;
     public float fireRate;
-    public float energyRate;
+    [FormerlySerializedAs("energyRate")] public float warmupRate;
     public float damage;
     public float hullDamage;
     public float shieldDamage;
@@ -67,7 +68,7 @@ public class Weapon : MonoBehaviour
     
     public void Start()
     {
-        Conductor.Instance.onSixteenth.AddListener(Fire);
+        // Conductor.Instance.onSixteenth.AddListener(Fire);
         notes = new int[noteMeters.Count];
         for (int i = 0; i < notes.Length; i++)
         {
@@ -96,36 +97,39 @@ public class Weapon : MonoBehaviour
     {
         // we don't have RackMovement.cs on the weapons, so we just do the same code to check for a jack click here
         // we can maybe refactor this later into just being a UnityEvent sent by the jack itself, but this works for now
-        if (Input.GetMouseButtonDown(0))
-        {
-            // we do a lil raycast
-            var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     // we do a lil raycast
+        //     var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        //
+        //     var isItMe = false;
+        //     foreach (var r in results)
+        //     {
+        //         if (r.collider.gameObject == startJack)
+        //         {
+        //             isItMe = true;
+        //         }
+        //     }
+        //
+        //     if (isItMe)
+        //     {
+        //         foreach (var result in results)
+        //         {
+        //             // if we hit a jack, invoke that unity event
+        //             if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
+        //             {
+        //                 OnJackClick(startJack);
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
 
-            var isItMe = false;
-            foreach (var r in results)
-            {
-                if (r.collider.gameObject == startJack)
-                {
-                    isItMe = true;
-                }
-            }
-
-            if (isItMe)
-            {
-                foreach (var result in results)
-                {
-                    // if we hit a jack, invoke that unity event
-                    if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
-                    {
-                        OnJackClick(startJack);
-                        break;
-                    }
-                }
-            }
-        }
-
+        // is the CombatManager in combat?
         inCombat = CombatManager.Instance.state == CombatManager.State.inCombat;
+        // are we either testing or in combat? If yes to either, we're firing
         firing = testing || inCombat;
+        // if we're facing right (only true if player ship) and the patch is not complete, turn it off
         if (dir == 1 && !CompletePatch())
         {
             // Debug.Log("Is patch complete? " + CompletePatch());
@@ -136,7 +140,7 @@ public class Weapon : MonoBehaviour
         {
             if (warmup < 1)
             {
-                warmup += energyRate * .1f * Time.deltaTime;
+                warmup += warmupRate * .1f * Time.deltaTime;
             }
             else if (warmup > 1)
             {
@@ -161,7 +165,7 @@ public class Weapon : MonoBehaviour
         {
             if (charge >= 1)
             {
-                Fire();
+                // Fire();
             }
         }
 
@@ -323,7 +327,8 @@ public class Weapon : MonoBehaviour
         if (myPatch.Count == 0)
             return false;
         
-        return myPatch[^1].PreviousModule() == gameObject;
+        return true;
+        // return myPatch[^1].PreviousModule();
     }
     
     private void OnJackClick(GameObject jack)
