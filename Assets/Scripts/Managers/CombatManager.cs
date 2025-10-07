@@ -251,8 +251,8 @@ public class CombatManager : MonoBehaviour
         
         state = State.inCombat;
 
-        AudioManager.Instance.ResetPlayedList();
-        AudioManager.Instance.StopEnemySong();
+        //AudioManager.Instance.ResetPlayedList();
+        //AudioManager.Instance.StopEnemySong();
     }
 
     public IEnumerator Pulsar()
