@@ -73,20 +73,7 @@ public class AudioManager: MonoBehaviour
     private List<GameObject> weapons = new List<GameObject>();
     private List<EventInstance> weaponsEventInstances = new List<EventInstance>();
     private List<Coroutine> weaponsCoroutines = new List<Coroutine>();
-
-    //im sure there's a better way
-    private float enemyArpSpeed;
-    private float enemyThrusterSpeed;
-    private float enemyRingmod;
-    private float enemyShields;
-    private float enemyAttackPitch;
-    private float enemyAttackSource;
-    private float enemyDefensePitch;
-    private float enemyDefenseSource;
-    private float enemyEvasionPitch;
-    private float enemyEvasionSource;
-    private float enemyAccuracyPitch;
-    private float enemyAccuracySource;
+    
 
     private int pickedInstanceRef;
     private int mostRecent;
@@ -198,6 +185,12 @@ public class AudioManager: MonoBehaviour
         patchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
         patchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
         patchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+        
+        //wobble params - just set wobble to 1 to activate it in place of original param, and then play w below params + AM depth
+        patchInstances[instanceIndex].setParameterByName("wobble", parameters["wobble"]);
+        patchInstances[instanceIndex].setParameterByName("delaytime", parameters["delaytime"]);
+        patchInstances[instanceIndex].setParameterByName("reson", parameters["reson"]);
+        patchInstances[instanceIndex].setParameterByName("fbgain", parameters["fbgain"]); 
 
 
         //OLD PARAMS - just holding this in case shit breaks at a bad time
@@ -298,101 +291,11 @@ public class AudioManager: MonoBehaviour
 
     public void PlayEnemySong()
     {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Gameplay Tutorial"))
-        {
-            PlayTutEnemyShields();
-            Debug.Log("In the right scene");
-        }
-        else if (enemySongsPlayed.Count == 0)
-        {
-            //pick the new song from songs list
-            EnemySongPicked();
-            //create the instance
-            enemySongInst = FMODUnity.RuntimeManager.CreateInstance(enemySongRef);
-            //start the instance
-            enemySongInst.start();
-            //add it to the played song list
-            enemySongsPlayed.Add(enemySongRef);
-            //get the event's parameters 
-            GetEnemyParams(enemySongRef);
-            //delete it from the songs list so it doesn't get selected again
-            enemySongs.Remove(enemySongRef);
-
-            //Debug.Log(enemySongRef.Guid);
-        }
-        else
-        {
-            enemySongInst.start();
-            //Debug.Log(enemySongRef.Guid);
-        }
+        //need to redo this when we reintroduce enemy puzzle
         
     }
 
-    public void GetEnemyParams(EventReference enemySongRef)
-    {
-        //this is where shit gets unhinged this is NOT the way to do it im so so so sorry for the crimes i am committing here pls forgive, surely figuring out dicts will save me one day
-        //just setting the things u need to calculate the stats based on which event is playing
-        if (enemySongRef.Guid == test_enemySong1Ref.Guid)
-        {
-            enemyArpSpeed = 226;
-            enemyThrusterSpeed = 5;
-            enemyRingmod = 1;
-            enemyShields = 3;
-            enemyAttackPitch = 174.6f;
-            enemyAttackSource = 2;
-            enemyDefensePitch = 349.2f;
-            enemyDefenseSource = 4;
-            enemyEvasionPitch = 43.65f;
-            enemyEvasionSource = 4;
-            enemyAccuracyPitch = 659.3f;
-            enemyAccuracySource = 2;
-        }
-        else if (enemySongRef.Guid == test_enemySong2Ref.Guid)
-        {
-            enemyArpSpeed = 82;
-            enemyThrusterSpeed = 2;
-            enemyRingmod = 1;
-            enemyShields = 3;
-            enemyAttackPitch = 932.3f;
-            enemyAttackSource = 4;
-            enemyDefensePitch = 116.5f;
-            enemyDefenseSource = 3;
-            enemyEvasionPitch = 349.2f;
-            enemyEvasionSource = 4;
-            enemyAccuracyPitch = 1397;
-            enemyAccuracySource = 2;
-        }
-        else if (enemySongRef.Guid == test_enemySong3Ref.Guid)
-        {
-            enemyArpSpeed = 2000;
-            enemyThrusterSpeed = 1;
-            enemyRingmod = 1;
-            enemyShields = 2;
-            enemyAttackPitch = 196;
-            enemyAttackSource = 4;
-            enemyDefensePitch = 246.9f;
-            enemyDefenseSource = 2;
-            enemyEvasionPitch = 73.41f;
-            enemyEvasionSource = 3;
-            enemyAccuracyPitch = 739.9f;
-            enemyAccuracySource = 2;
-        }
-    }
-
-    public void ResetPlayedList()
-    {
-        if (enemySongsPlayed.Count > 0)
-        {
-            enemySongsPlayed.RemoveAt(0);
-        }
-    }
-
-    public void StopEnemySong()
-    {
-        enemySongInst.stop(0);
-        tutorialEnemyShieldInst.stop(0);
-        tutorialEnemyWeaponInst.stop(0);
-    }
+    
 
     public void MutePlayerVolume()
     {
@@ -417,35 +320,6 @@ public class AudioManager: MonoBehaviour
     public void PlayPaperSound()
     {
         FMODUnity.RuntimeManager.PlayOneShot(sfx_paperRef);
-    }
-
-    public void PlayTutEnemyShields()
-    {
-        tutorialEnemyShieldInst.setParameterByName("source", 2);
-        tutorialEnemyShieldInst.setParameterByName("pitch", 164.81f);
-        tutorialEnemyShieldInst.start();
-        Debug.Log("Playing tut enemy shield");
-    }
-
-    public void PlayTutEnemyWeapon()
-    {
-        tutorialEnemyWeaponInst.setParameterByName("source", 3);
-        tutorialEnemyWeaponInst.setParameterByName("pitch", 440);
-        tutorialEnemyWeaponInst.setParameterByName("arpstart", 1);
-        tutorialEnemyWeaponInst.setParameterByName("arp", 1);
-        tutorialEnemyWeaponInst.setParameterByName("apitch1", 587.33f);
-        tutorialEnemyWeaponInst.setParameterByName("apitch2", 739.99f);
-        tutorialEnemyWeaponInst.setParameterByName("apitch3", 880);
-        tutorialEnemyWeaponInst.setParameterByName("apitch4", 1108.7f);
-        tutorialEnemyWeaponInst.setParameterByName("note1", 1);
-        tutorialEnemyWeaponInst.setParameterByName("note2", 1);
-        tutorialEnemyWeaponInst.setParameterByName("note3", 1);
-        tutorialEnemyWeaponInst.setParameterByName("note4", 1);
-        tutorialEnemyWeaponInst.setParameterByName("attack", 10);
-        tutorialEnemyWeaponInst.setParameterByName("decay", 10);
-        tutorialEnemyWeaponInst.setParameterByName("sustain", 0);
-        tutorialEnemyWeaponInst.setParameterByName("release", 20);
-        tutorialEnemyWeaponInst.start();
     }
     
     bool IsPlaying(FMOD.Studio.EventInstance instance) {
