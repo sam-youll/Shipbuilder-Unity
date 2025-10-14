@@ -44,10 +44,13 @@ public abstract class Module : MonoBehaviour
     protected virtual void Start()
     {
         // assign delegates to unity events from rack movement script
-        GetComponent<RackMovement>().bodyClick.AddListener(OnBodyClick);
-        GetComponent<RackMovement>().jackClick.AddListener(OnJackClick);
-        GetComponent<RackMovement>().inventoryEnter.AddListener(OnInventoryEnter);
-        GetComponent<RackMovement>().inventoryExit.AddListener(OnInventoryExit);
+        if (GetComponent<RackMovement>() != null)
+        {
+            GetComponent<RackMovement>().bodyClick.AddListener(OnBodyClick);
+            GetComponent<RackMovement>().jackClick.AddListener(OnJackClick);
+            GetComponent<RackMovement>().inventoryEnter.AddListener(OnInventoryEnter);
+            GetComponent<RackMovement>().inventoryExit.AddListener(OnInventoryExit);
+        }
         
         // setting sample text tmp guy
         sampleText = GetComponentInChildren<TextMeshPro>();
@@ -56,19 +59,25 @@ public abstract class Module : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        //sample text stuff 
-        if (GetComponent<AddModule>())
+        if (sampleText != null)
         {
-            sampleText.text = "+" + GetComponent<AddModule>().stepSize;
-        } else if (GetComponent<CounterModule>())
-        {
-            sampleText.text = "counter: " + GetComponent<CounterModule>().currentValue;
-        } else if (GetComponent<SwitchModule>())
-        {
-            sampleText.text = "switch: " + GetComponent<SwitchModule>().currentIndex;
-        } else if (GetComponent<RandomModule>())
-        {
-            sampleText.text = "random: " + GetComponent<RandomModule>().randomNumber;
+            //sample text stuff 
+            if (GetComponent<AddModule>())
+            {
+                sampleText.text = "+" + GetComponent<AddModule>().stepSize;
+            }
+            else if (GetComponent<CounterModule>())
+            {
+                sampleText.text = "counter: " + GetComponent<CounterModule>().currentValue;
+            }
+            else if (GetComponent<SwitchModule>())
+            {
+                sampleText.text = "switch: " + GetComponent<SwitchModule>().currentIndex;
+            }
+            else if (GetComponent<RandomModule>())
+            {
+                sampleText.text = "random: " + GetComponent<RandomModule>().randomNumber;
+            }
         }
         
     }
@@ -76,10 +85,10 @@ public abstract class Module : MonoBehaviour
     #region Trigger Method + Overloads
     public virtual void Trigger()
     {
-        Debug.Log($"Attempting to call Trigger() from base Module class on {gameObject.name}");
+        // Debug.Log($"Attempting to call Trigger() from base Module class on {gameObject.name}");
         foreach (GameObject wire in childWires)
         {
-            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} without arguments.");
+            // Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} without arguments.");
             wire.GetComponent<Wire>().Trigger();
         }
         // Other behavior should be extended in inherited classes
@@ -89,7 +98,7 @@ public abstract class Module : MonoBehaviour
     {
         foreach (GameObject wire in childWires)
         {
-            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with a value of {value}.");
+            // Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with a value of {value}.");
             wire.GetComponent<Wire>().Trigger(value);
         }
     }
@@ -98,7 +107,7 @@ public abstract class Module : MonoBehaviour
     {
         foreach (GameObject wire in childWires)
         {
-            Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with a value of {value}.");
+            // Debug.Log($"Base Module class on {gameObject.name} triggered {wire.name} with a value of {value}.");
             wire.GetComponent<Wire>().Trigger(value, inputIndex);
         }
     }
@@ -119,7 +128,7 @@ public abstract class Module : MonoBehaviour
         
     }
 
-    private void OnJackClick(GameObject jack)
+    protected virtual void OnJackClick(GameObject jack)
     {
         Debug.Log("module jack clicked");
         if (transform.parent == Inventory.Instance.transform)
@@ -128,7 +137,7 @@ public abstract class Module : MonoBehaviour
         }
         
         // is there already a wire there?
-        if (jack.transform.childCount > 0)
+        if (childWires.Count > 0)
         {
             // get rid of it, unless you're holding left control
             // this way, left control + drag creates a second wire on top of the first
@@ -136,11 +145,16 @@ public abstract class Module : MonoBehaviour
             // TODO: allow dragging wires from either end and don't just automatically delete to create new
             if (!Input.GetKey(KeyCode.LeftControl))
             {
-                jack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
+                for (var i = 0; i < childWires.Count; i++)
+                {
+                    childWires[i].gameObject.GetComponent<Wire>().DeleteSelf();
+                }
+                childWires.Clear();
             }
         }
         // make a new wire
         GameObject newWire = Instantiate(wirePrefab, jack.transform);
+        childWires.Add(newWire);
     }
 
     private void OnInventoryEnter()
@@ -160,34 +174,43 @@ public abstract class Module : MonoBehaviour
 
         foreach (GameObject wire in parentWires)
         {
-            if (wire.GetComponent<Wire>().type == Wire.Type.Primary)
+            if (wire.GetComponent<Wire>().previousModule.GetComponent<Module>() is not SecondaryModule)
             {
                 result = wire.GetComponent<Wire>().previousModule;
             }
-            else if (wire.GetComponent<Wire>().type == Wire.Type.Trigger && wire.GetComponent<Wire>().previousModule.GetComponent<Weapon>() != null)
-            {
-                result = wire.GetComponent<Wire>().previousModule;
-            }
+            
+            // if (wire.GetComponent<Wire>().type == Wire.Type.Primary)
+            // {
+            //     result = wire.GetComponent<Wire>().previousModule;
+            // }
+            // else if (wire.GetComponent<Wire>().type == Wire.Type.Trigger && wire.GetComponent<Wire>().previousModule.GetComponent<Weapon>() != null)
+            // {
+            //     result = wire.GetComponent<Wire>().previousModule;
+            // }
         }
 
         return result;
     }
     
-    void ClearWires()
+    public void ClearWires()
     {
         if (parentWires.Count > 0)
         {
-            foreach (var wire in parentWires)
+            for (var i = 0; i < parentWires.Count; i++)
             {
-                wire.GetComponent<Wire>().DeleteSelf();
+                parentWires[i].GetComponent<Wire>().DeleteSelf();
             }
+
+            parentWires.Clear();
         }
         if (childWires.Count > 0)
         {
-            foreach (var wire in childWires)
+            for (var i = 0; i < childWires.Count; i++)
             {
-                wire.GetComponent<Wire>().DeleteSelf();
+                childWires[i].GetComponent<Wire>().DeleteSelf();
             }
+
+            childWires.Clear();
         }
     }
 }

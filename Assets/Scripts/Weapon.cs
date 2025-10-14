@@ -68,7 +68,13 @@ public class Weapon : MonoBehaviour
     
     public void Start()
     {
-        // Conductor.Instance.onSixteenth.AddListener(Fire);
+        // Enemy weapons do not have actual modules behind them (for now)
+        // so we just want them to attempt to fire as often as possible
+        if (dir == -1)
+        {
+            Conductor.Instance.onSixteenth.AddListener(Fire);
+        }
+        
         notes = new int[noteMeters.Count];
         for (int i = 0; i < notes.Length; i++)
         {
@@ -195,24 +201,32 @@ public class Weapon : MonoBehaviour
 
     public void Fire()
     {
-
+        if (dir == 1)
+        {
+            Debug.Log($"Attempting to fire {gameObject.name}.");
+        }
+        
         if (charge < 1)
         {
             return;
         }
         
+        // if (dir == 1)
+        // {
+        //     for (int i = 0; i < startJack.transform.childCount; i++)
+        //     {
+        //         if (startJack.transform.GetChild(i).CompareTag("Wire"))
+        //         {
+        //             Debug.Log($"Weapon script on {gameObject.name} triggering {startJack.transform.GetChild(i).name}");
+        //             startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
+        //         }
+        //     }
+        // }
+
         if (dir == 1)
         {
-            for (int i = 0; i < startJack.transform.childCount; i++)
-            {
-                if (startJack.transform.GetChild(i).CompareTag("Wire"))
-                {
-                    Debug.Log($"Weapon script on {gameObject.name} triggering {startJack.transform.GetChild(i).name}");
-                    startJack.transform.GetChild(i).GetComponent<Wire>().Trigger();
-                }
-            }
+            Debug.Log($"Firing {gameObject.name}.");
         }
-
         charge = 0;
         currentNoteMeter++;
         if (currentNoteMeter >= noteMeters.Count)
@@ -299,20 +313,26 @@ public class Weapon : MonoBehaviour
 
     public void SetPatch()
     {
+        if (dir == -1)
+            return;
+        
+        Debug.Log($"Setting patch for {gameObject.name}.");
         if (previousModule == null)
             return;
         
         myPatch = new();
         var prev = previousModule.GetComponent<Module>();
+        Debug.Log($"{prev}'s previous module is {prev.PreviousModule()}");
         while (prev.PreviousModule() != null)
         {
             // Debug.Log(prev.name);
             myPatch.Add(prev);
-            
+
             if (prev.PreviousModule().TryGetComponent(out Module mod))
             {
                 prev = mod;
             }
+            // The lines below can probably be deleted
             else if (prev.PreviousModule().TryGetComponent(out Weapon weapon))
             {
                 break;
@@ -320,6 +340,11 @@ public class Weapon : MonoBehaviour
         }
         // Debug.Log(prev.name);
         myPatch.Add(prev);
+        Debug.Log($"{gameObject.name}'s patch consists of the following modules:");
+        foreach (var mod in myPatch)
+        {
+            Debug.Log(mod.gameObject.name);
+        }
     }
 
     private bool CompletePatch()

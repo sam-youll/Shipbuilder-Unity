@@ -41,6 +41,9 @@ public class PatchManager : MonoBehaviour
     {
         foreach (var weapon in weapons)
         {
+            if (!weapon.enabled)
+                continue;
+            
             weapon.SetPatch();
         }
         Reactor.Instance.SetPatch();

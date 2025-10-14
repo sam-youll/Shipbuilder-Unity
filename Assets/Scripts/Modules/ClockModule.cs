@@ -1,15 +1,16 @@
 using UnityEngine;
 
-public class ClockModule : SecondaryModule
+public class ClockModule : Module
 {
-    int frequency = 3;
+    [SerializeField]
+    int frequency = 2;
 
     public int Frequency
     {
         get => frequency;
         set
         {
-            value = value % 5;
+            value = Mathf.Clamp(value, 0, 5);
             frequency = value;
             UpdateFrequency(frequency);
         }

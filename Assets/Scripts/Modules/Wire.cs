@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -27,19 +28,32 @@ public class Wire : MonoBehaviour
     
     private LineRenderer lineRenderer;
 
-    private bool connectedToModule = false;
-    private bool connectedToWeapon = false;
+    public bool connectedToModule = false;
+    public bool connectedToWeapon = false;
+
+    public bool invisible = false;
+
+    public UnityEvent connected;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        previousModuleJack = transform.parent.gameObject;
-        previousModule = previousModuleJack.transform.parent.gameObject;
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = points;
-        for (int i = 0; i < points; i++)
+        if (!invisible)
         {
-            lineRenderer.SetPosition(i, transform.position);
+            previousModuleJack = transform.parent.gameObject;
+            previousModule = previousModuleJack.transform.parent.gameObject;
+
+            if (previousModule.TryGetComponent(out Subpatch subpatch))
+            {
+                previousModule = subpatch.subpatchDict[^1].module;
+            }
+            
+            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.positionCount = points;
+            for (int i = 0; i < points; i++)
+            {
+                lineRenderer.SetPosition(i, transform.position);
+            }
         }
     }
 
@@ -67,7 +81,6 @@ public class Wire : MonoBehaviour
                     nextModuleJack = hit.collider.gameObject;
                     nextModule = nextModuleJack.transform.parent.gameObject;
                     nextModule.GetComponent<Weapon>().previousModule = previousModule;
-                    previousModule.GetComponent<Module>().childWires.Add(gameObject);
                     // if (nextModule.GetComponent<Weapon>().previousModule != null)
                     // {
                     //     nextModule.GetComponent<Weapon>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
@@ -78,6 +91,7 @@ public class Wire : MonoBehaviour
                     
                     connectedToModule = true;
                     connectedToWeapon = true;
+                    connected.Invoke();
                 }
                 // hit reactor output
                 else if (hit.collider.transform.parent.CompareTag("Reactor"))
@@ -93,6 +107,7 @@ public class Wire : MonoBehaviour
                     // previousModule.GetComponent<Module>().nextModule = nextModule;
                     PatchManager.Instance.UpdateAllPatches();
                     connectedToModule = true;
+                    connected.Invoke();
                 }
                 // hit a module
                 else if (hit.collider.gameObject.CompareTag("InputJack"))
@@ -102,17 +117,6 @@ public class Wire : MonoBehaviour
                     
                     
                     nextModule.GetComponent<Module>().parentWires.Add(gameObject);
-
-                    if (previousModule.TryGetComponent(out Module module))
-                    {
-                        module.childWires.Add(gameObject);
-                        if (previousModule.TryGetComponent(out SecondaryModule secondaryModule))
-                        {
-                            // might not work if you plug into primary input jack, not sure though
-                            var inputIndex = nextModule.GetComponent<Module>().inputJacks.FindIndex(x => x == nextModuleJack);
-                            secondaryModule.myInputIndex = inputIndex;
-                        }
-                    }
                     // uh Weapon.cs doesn't have childWires lol it just searches
                     // through its children for the wires it's going to trigger
                     // else if (previousModule.TryGetComponent(out Weapon weapon))
@@ -127,6 +131,7 @@ public class Wire : MonoBehaviour
                     // }
                     // nextModule.GetComponent<Module>().previousModule = previousModule;
                     connectedToModule = true;
+                    connected.Invoke();
                     PatchManager.Instance.UpdateAllPatches();
                 }
                 else
@@ -134,6 +139,14 @@ public class Wire : MonoBehaviour
                     PatchManager.Instance.UpdateAllPatches();
                     DeleteSelf();
                 }
+                
+                if (previousModule.TryGetComponent(out SecondaryModule secondaryModule))
+                {
+                    // might not work if you plug into primary input jack, not sure though
+                    var inputIndex = nextModule.GetComponent<Module>().inputJacks.FindIndex(x => x == nextModuleJack);
+                    secondaryModule.myInputIndex = inputIndex;
+                }
+                
                 
                 // determine wire type
                 UpdateWireType();
@@ -148,7 +161,10 @@ public class Wire : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdatePoints(Vector2.down * .1f);
+        if (!invisible)
+        {
+            UpdatePoints(Vector2.down * .1f);
+        }
     }
 
     private void UpdatePoints(Vector2 force)
@@ -229,18 +245,28 @@ public class Wire : MonoBehaviour
             }
             else
             {
-                previousModule.GetComponent<Module>().childWires.Remove(gameObject);
                 nextModule.GetComponent<Module>().parentWires.Remove(gameObject);
                 // nextModule.GetComponent<Module>().previousModule = null;
             }
         }
-        // previousModule.GetComponent<Module>().nextModule = null;
+        previousModule.GetComponent<Module>().childWires.Remove(gameObject);
+        if (previousModule.transform.parent.TryGetComponent(out Subpatch subpatch))
+        {
+            subpatch.childWires.Remove(gameObject);
+        }
         PatchManager.Instance.UpdateAllPatches();
         Destroy(gameObject);
     }
 
     void UpdateWireType()
     {
+        type = Type.Primary;
+        return;
+        
+        
+        // TODO: This sorely needs an update. Trigger wires are not a thing anymore, and
+        // wires need a way to parse subpatches.
+        
         Module prev = previousModule.GetComponent<Module>();
         Module next = nextModule.GetComponent<Module>();
         if (prev is PrimaryModule && next is PrimaryModule)
@@ -257,7 +283,7 @@ public class Wire : MonoBehaviour
         }
         else
         {
-            type = Type.Trigger;
+            type = Type.Primary;
         }
 
         switch (type)
@@ -276,7 +302,10 @@ public class Wire : MonoBehaviour
 
     public void Trigger()
     {
-        Debug.Log($"{previousModule.name} triggered {nextModule.name} with no arguments.");
+        if (!connectedToModule && !connectedToWeapon)
+            return;
+        
+        Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with no arguments.");
         if (connectedToWeapon)
         {
             nextModule.GetComponent<Weapon>().Fire();
@@ -289,7 +318,10 @@ public class Wire : MonoBehaviour
 
     public void Trigger(float value)
     {
-        Debug.Log($"{previousModule.name} triggered {nextModule.name} with a value of {value}");
+        if (!connectedToModule && !connectedToWeapon)
+            return;
+        
+        Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value}");
         if (connectedToWeapon)
         {
             nextModule.GetComponent<Weapon>().Fire();
@@ -302,7 +334,10 @@ public class Wire : MonoBehaviour
     
     public void Trigger(float value, int inputIndex)
     {
-        Debug.Log($"{previousModule.name} triggered {nextModule.name} with a value of {value} to secondary input jack {inputIndex}");
+        if (!connectedToModule && !connectedToWeapon)
+            return;
+        
+        Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value} to secondary input jack {inputIndex}");
         if (connectedToWeapon)
         {
             nextModule.GetComponent<Weapon>().Fire();
