@@ -63,7 +63,7 @@ public class FakeButtonPress : MonoBehaviour
     {
         sr.color = pressedColor;
         currentColor = hoverColor;
-        AudioManager.Instance.PlayEnemySong();
+        //AudioManager.Instance.PlayEnemySong();
 
         // if (!timerRunning)
         // {
@@ -71,7 +71,7 @@ public class FakeButtonPress : MonoBehaviour
             {
                 sr.sprite = triangle;
                 otherTriangle.GetComponent<SpriteRenderer>().sprite = triangle;
-                AudioManager.Instance.StopEnemySong();
+                //AudioManager.Instance.StopEnemySong();
                 Debug.Log("stopping");
                 isPlaying = false;
             }

@@ -139,7 +139,7 @@ public class PatchManager : MonoBehaviour
             { "AM", 0 },
             { "AMsource", 1 },
             { "AMfreq", 1 },
-            { "AMdepth", 1 },
+            { "AMdepth", 1 }, //NOTE: this is working specifically for wobble
             //FM params
             { "FM", 0 },
             { "FMsource", 1 },
@@ -184,7 +184,12 @@ public class PatchManager : MonoBehaviour
             { "apitch1", 440 },
             { "apitch2", 554.37f },
             { "apitch3", 659.26f },
-            { "apitch4", 880 }
+            { "apitch4", 880 },
+            //wobble 
+            { "wobble", 0 },
+            { "delaytime", 500},
+            { "reson", 1},
+            { "fbgain", 0}
 
         };
         var statDict = new Dictionary<string, float>

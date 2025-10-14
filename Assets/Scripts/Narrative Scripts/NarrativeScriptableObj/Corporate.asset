@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e7faceba7787043bc4665fbeec8874, type: 3}
+  m_Name: Corporate
+  m_EditorClassIdentifier: 
+  faction: 0
+  scenarioText:
+  - A corporate ship approaches. What do you do?
+  - A corporate drone whizzes by. What do you do?
+  - One of S.H.A.D.E.'s ships turns its weapons on you. How do you respond?
+  talkOutcomes:
+  - The ship doesn't respond. It doesn't even seem to hear you.
+  - No reaction. Just weapons trained on you.
+  - Not a thought behind those eyes. Only ammunition.
+  fightChance: 100
+  moduleChance: 0
+  creditsChance: 0
+  intelChance: 0
+  acceptsModule: 0
+  acceptsCredits: 0
