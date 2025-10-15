@@ -132,9 +132,12 @@ public abstract class Module : MonoBehaviour
     {
         Debug.Log("module jack clicked");
         if (transform.parent == Inventory.Instance.transform)
-        {
             return;
-        }
+
+        // input jacks are not allowed to spawn new wires
+        // this may change in the future depending on wire behavior
+        if (inputJacks.Contains(jack) || jack.CompareTag("InputJack"))
+            return;
         
         // is there already a wire there?
         if (childWires.Count > 0)
