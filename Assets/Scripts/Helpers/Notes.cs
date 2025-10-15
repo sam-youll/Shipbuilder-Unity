@@ -275,5 +275,5 @@ public static class Notes
         var i = Random.Range(0, chord.Length);
         return GetPitch(root, mode, i);
     }
-
+    
 }

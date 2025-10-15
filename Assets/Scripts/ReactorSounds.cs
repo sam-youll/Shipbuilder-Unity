@@ -128,7 +128,7 @@ public class ReactorSounds : MonoBehaviour
         Conductor.Instance.onHalf.AddListener(EnemyPad);
 
         //idk setting current chord to 0 
-        changesIndex = changes[0];
+        changesIndex = 0;
 
 
     }
@@ -153,16 +153,17 @@ public class ReactorSounds : MonoBehaviour
         //add
         changesIndex++;
         //this function updates the current chord every bar 
-        if (changesIndex >= changes.Count)
+        if (changesIndex > changes.Count)
         {
             //SHOULD reset it to 0... this shit is broken tho it doesnt change the number of currentChord at all. the values work fine tho
-            changesIndex = changes[0];
+            changesIndex = 0;
         }
         //THIS NEEDS TO BE FIXED OH MY GOD i'm just making the list longer every bar this is not ok lmfao 
-        SetTestChanges();
+        //SetTestChanges();
 
         UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
-        UnityEngine.Debug.Log("currentChord: " + changesIndex);
+        //UnityEngine.Debug.Log("currentChord: " + changesIndex);
+
         
     }
 
