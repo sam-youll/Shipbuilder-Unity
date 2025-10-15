@@ -1,18 +1,21 @@
+using TMPro;
 using UnityEngine;
 
 public class HideShopButton : Button2D
 {
 
     public GameObject shopMenu;
-    private SpriteRenderer[] children;
+    private SpriteRenderer[] childrenSprites;
+    private TextMeshPro[] childrenText;
     private Color newColor;
-    private Color[] oldColor;
+    private Color[] oldSpriteColor;
+    private Color[] oldTextColor;
     private Color panelColor;
-    private float alpha = 0.5f;
+    private float alpha = 0.1f;
     
    
 
-    protected override void OnMouseDown()
+    protected void OnMouseDrag()
     {
         //shop menu
         panelColor = shopMenu.GetComponent<SpriteRenderer>().color;
@@ -21,12 +24,24 @@ public class HideShopButton : Button2D
         shopMenu.GetComponent<SpriteRenderer>().color = newColor;
         
         //children
-        children = shopMenu.GetComponentsInChildren<SpriteRenderer>();
-        oldColor = new Color[children.Length];
-        for (var index = 0; index < children.Length; index++)
+        childrenSprites = shopMenu.GetComponentsInChildren<SpriteRenderer>();
+        oldSpriteColor = new Color[childrenSprites.Length];
+        for (var index = 0; index < childrenSprites.Length; index++)
         {
-            var child = children[index];
-            oldColor[index] = child.color;
+            var child = childrenSprites[index];
+            oldSpriteColor[index] = child.color;
+            newColor = child.color;
+            newColor.a = alpha;
+            child.color = newColor;
+        }
+        
+        //children text
+        childrenText = shopMenu.GetComponentsInChildren<TextMeshPro>();
+        oldTextColor = new Color[childrenText.Length];
+        for (var index = 0; index < childrenText.Length; index++)
+        {
+            var child = childrenText[index];
+            oldTextColor[index] = child.color;
             newColor = child.color;
             newColor.a = alpha;
             child.color = newColor;
@@ -35,12 +50,21 @@ public class HideShopButton : Button2D
 
     protected void OnMouseUp()
     {
+        panelColor.a = 1;
         shopMenu.GetComponent<SpriteRenderer>().color = panelColor;
-        children = shopMenu.GetComponentsInChildren<SpriteRenderer>();
-        for (var index = 0; index < children.Length; index++)
+        childrenSprites = shopMenu.GetComponentsInChildren<SpriteRenderer>();
+        for (var index = 0; index < childrenSprites.Length; index++)
         {
-            var child = children[index];
-            child.color = oldColor[index];
+            var child = childrenSprites[index];
+            oldSpriteColor[index].a = 1;
+            child.color = oldSpriteColor[index];
+        }
+        childrenText = shopMenu.GetComponentsInChildren<TextMeshPro>();
+        for (var index = 0; index < childrenText.Length; index++)
+        {
+            var child = childrenText[index];
+            oldTextColor[index].a = 1;
+            child.color = oldTextColor[index];
         }
     }
 }
