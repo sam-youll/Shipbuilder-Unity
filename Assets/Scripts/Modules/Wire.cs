@@ -75,6 +75,10 @@ public class Wire : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(mousePos,Vector2.zero,Mathf.Infinity, LayerMask.GetMask("Jacks"));
             if (hit)
             {
+                // plugging a module into itself crashes everything, so we don't want to let it happen
+                if (hit.collider.gameObject.transform.parent.gameObject == previousModule)
+                    DeleteSelf();
+                
                 // hit weapon output
                 if (hit.collider.gameObject.transform.parent.gameObject.CompareTag("Weapon"))
                 {
