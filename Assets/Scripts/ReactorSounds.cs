@@ -153,7 +153,7 @@ public class ReactorSounds : MonoBehaviour
         //add
         changesIndex++;
         //this function updates the current chord every bar 
-        if (changesIndex > changes.Count)
+        if (changesIndex >= changes.Count)
         {
             //SHOULD reset it to 0... this shit is broken tho it doesnt change the number of currentChord at all. the values work fine tho
             changesIndex = 0;
