@@ -267,7 +267,7 @@ public class Weapon : MonoBehaviour
 
 
 
-        int currentChord = ReactorSounds.Instance.currentChord;
+        int currentChord = ReactorSounds.Instance.changesIndex;
         var chord = ReactorSounds.Instance.changes[currentChord];
         string chordString = ReactorSounds.Instance.chords[chord];
 

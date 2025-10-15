@@ -4,6 +4,7 @@ using FMODUnity;
 using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 public class ReactorSounds : MonoBehaviour
@@ -41,7 +42,7 @@ public class ReactorSounds : MonoBehaviour
     public EventReference playerPercRef;
 
     //currentChord variable is the position in the changes list. 
-    public int currentChord;
+    public int changesIndex;
 
     //THIS is a placeholder list. It's just a I IV II- V I progression. We will move this logic into the map and nav system when we get there.
     public List<int> changes = new List<int>()
@@ -127,7 +128,7 @@ public class ReactorSounds : MonoBehaviour
         Conductor.Instance.onHalf.AddListener(EnemyPad);
 
         //idk setting current chord to 0 
-        currentChord = changes[0];
+        changesIndex = changes[0];
 
 
     }
@@ -149,25 +150,20 @@ public class ReactorSounds : MonoBehaviour
 
     void UpdateChord()
     {
+        //add
+        changesIndex++;
         //this function updates the current chord every bar 
-        if (Conductor.Instance.quarter == 0)
+        if (changesIndex >= changes.Count)
         {
-           if (currentChord >= changes.Count)
-            {
-                //SHOULD reset it to 0... this shit is broken tho it doesnt change the number of currentChord at all. the values work fine tho
-                currentChord = changes[0];
-            }
-            else
-            {
-                //add
-                currentChord++;
-            }
-           //THIS NEEDS TO BE FIXED OH MY GOD i'm just making the list longer every bar this is not ok lmfao 
-           SetTestChanges();
-
-            UnityEngine.Debug.Log("chord: " + changes[currentChord]);
-            UnityEngine.Debug.Log("currentChord: " + currentChord);
+            //SHOULD reset it to 0... this shit is broken tho it doesnt change the number of currentChord at all. the values work fine tho
+            changesIndex = changes[0];
         }
+        //THIS NEEDS TO BE FIXED OH MY GOD i'm just making the list longer every bar this is not ok lmfao 
+        SetTestChanges();
+
+        UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
+        UnityEngine.Debug.Log("currentChord: " + changesIndex);
+        
     }
 
     void SetTestParams()
@@ -536,7 +532,7 @@ public class ReactorSounds : MonoBehaviour
         {
 
             //if it should play, get the pitch of the root of the current chord, drop it 2 octaves
-            bassPitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[currentChord])))/4;
+            bassPitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])))/4;
             //sets the pitch
             playerBass.setParameterByName("basspitch", bassPitch);
             //plays the note
@@ -568,7 +564,7 @@ public class ReactorSounds : MonoBehaviour
         if (shouldPlay)
         {
             //same as before but drops it a couple more octaves
-            bassPitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, changes[currentChord])) / 8;
+            bassPitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, changes[changesIndex])) / 8;
             playerBass.setParameterByName("basspitch", bassPitch);
             StartCoroutine(PlayBassCoroutine(playerBass, notelength));
 
@@ -581,7 +577,7 @@ public class ReactorSounds : MonoBehaviour
         if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
         {
             //gets the current chord value from the changes list
-            var chord = changes[currentChord];
+            var chord = changes[changesIndex];
             //sets it to a string according to the list of chords
             string chordstring = chords[chord];
             if (playerPads.Count > 0)
@@ -601,7 +597,7 @@ public class ReactorSounds : MonoBehaviour
     {
         if (Conductor.Instance.quarter == 0 || Conductor.Instance.quarter == 2)
         {
-            var chord = changes[currentChord];
+            var chord = changes[changesIndex];
             string chordstring = chords[chord];
 
             for (int i = 0; i < enemyPads.Count; i++)
@@ -681,7 +677,7 @@ public class ReactorSounds : MonoBehaviour
         addedPad.setParameterByName("ffgain", Random.Range(0f, .1f));
         addedPad.setParameterByName("delaytime", padDelayTime);
         
-        var pitch = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chords[changes[currentChord]]]) * 2;
+        var pitch = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chords[changes[changesIndex]]]) * 2;
         addedPad.setParameterByName("pitch", pitch);
         
         addedPad.start();

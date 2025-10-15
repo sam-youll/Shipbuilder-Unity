@@ -103,7 +103,11 @@ public class Conductor : MonoBehaviour
         }
         lastWhole = whole;
 
-
+        if (bar != lastBar)
+        {
+            onBar.Invoke();
+        }
+        lastBar = bar;
 
 
     }
