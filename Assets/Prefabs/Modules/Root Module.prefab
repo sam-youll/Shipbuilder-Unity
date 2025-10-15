@@ -10,9 +10,9 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 488289753800758838, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_text
-      value: Outputs the scale degree of the root of the current chord as a number.
-        Plug this into the pitch module, or anything else you might want to follow
-        chord changes.
+      value: Outputs the root of the current chord as a number. Plug this into the
+        pitch module, or anything else you might want to follow chord changes. Must
+        be triggered by another module.
       objectReference: {fileID: 0}
     - target: {fileID: 724396268766225622, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -56,15 +56,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1596487255469997629, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_text
-      value: Pedal
+      value: Root
       objectReference: {fileID: 0}
     - target: {fileID: 1596487255469997629, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_fontSize
-      value: 2.4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2170875819057116906, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_Name
-      value: Pedal Module
+      value: Root Module
+      objectReference: {fileID: 0}
+    - target: {fileID: 4279191735505957688, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Weapon module -  Secondary
       objectReference: {fileID: 0}
     - target: {fileID: 4646251508278089549, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_text

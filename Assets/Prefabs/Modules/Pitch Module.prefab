@@ -149,6 +149,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pitch Module
       objectReference: {fileID: 0}
+    - target: {fileID: 4279191735505957688, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Weapon module - Primary
+      objectReference: {fileID: 0}
     - target: {fileID: 4646251508278089549, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_text
       value: Pitch
@@ -208,7 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954acac486ef3c24899ca251118a9205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemType: 0
   price: 5
   izki: 0
   aubo: 0
@@ -221,6 +224,7 @@ MonoBehaviour:
   childWires: []
   wirePrefab: {fileID: 3834299262851421809, guid: 30fe35db45a847b4ca2ffa480ab3a66a, type: 3}
   sampleText: {fileID: 0}
+  systemType: 0
   pitch: 0
 --- !u!4 &4608088483724046864 stripped
 Transform:

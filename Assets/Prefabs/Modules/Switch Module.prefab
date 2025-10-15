@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 488289753800758838, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: 'This module will switch between multiple outputs based on integers
+        fed to it. Must be triggered by another module. '
+      objectReference: {fileID: 0}
     - target: {fileID: 724396268766225622, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,8 +53,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1596487255469997629, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Switch
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596487255469997629, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_fontSize
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2170875819057116906, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_Name
+      value: Switch Module
+      objectReference: {fileID: 0}
+    - target: {fileID: 4279191735505957688, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Weapon module - Secondary
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646251508278089549, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
       value: Switch Module
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -77,15 +98,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dada59f5af3c59b499e33cb05730f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemType: 0
   price: 0
   izki: 0
   aubo: 0
   dwth: 0
+  inputJacks: []
+  outputJacks: []
   parentWires: []
   childWires: []
   wirePrefab: {fileID: 3834299262851421809, guid: 30fe35db45a847b4ca2ffa480ab3a66a, type: 3}
   sampleText: {fileID: 0}
   activeState: 0
+  myInputIndex: 0
   outWires: []
   currentIndex: 0

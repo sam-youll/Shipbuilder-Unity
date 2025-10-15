@@ -11,8 +11,8 @@ PrefabInstance:
     - target: {fileID: 488289753800758838, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_text
       value: Stores and outputs a number. If the counter receives a number, it will
-        increment its count by that amount.  Values over 7 will wrap back around
-        to 0.
+        increment its count by that amount.  Values over its limit will wrap back
+        around to 0. Must be triggered by another module.
       objectReference: {fileID: 0}
     - target: {fileID: 724396268766225622, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54,8 +54,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1596487255469997629, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Counter
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596487255469997629, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_fontSize
+      value: 1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 2170875819057116906, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_Name
+      value: Counter Module
+      objectReference: {fileID: 0}
+    - target: {fileID: 4279191735505957688, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Weapon module - Secondary
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646251508278089549, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
       value: Counter Module
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -88,7 +104,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03cbe44d0b8f2444186f4356e1cb837c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemType: 0
   price: 3
   izki: 0
   aubo: 0

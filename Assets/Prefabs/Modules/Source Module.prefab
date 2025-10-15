@@ -97,8 +97,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 488289753800758838, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_text
-      value: Determines the type of projectile fired from the weapon as well as the
-        basic waveform of the sound.
+      value: 'Determines the type of projectile fired from the weapon as well as
+        the basic waveform of the sound. Must be triggered by another module. '
       objectReference: {fileID: 0}
     - target: {fileID: 724396268766225622, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -144,6 +144,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Source Module
       objectReference: {fileID: 0}
+    - target: {fileID: 4279191735505957688, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Weapon module - Primary
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646251508278089549, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
+      propertyPath: m_text
+      value: Source Module
+      objectReference: {fileID: 0}
     - target: {fileID: 5161815018584240752, guid: ed39acd58f023b54d9e3fb6dbcb0f1ae, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -176,7 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dbdd57986b9f7c45a13fcd8e71b593c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemType: 0
   price: 3
   izki: 0
   aubo: 0
@@ -187,6 +194,7 @@ MonoBehaviour:
   childWires: []
   wirePrefab: {fileID: 3834299262851421809, guid: 30fe35db45a847b4ca2ffa480ab3a66a, type: 3}
   sampleText: {fileID: 0}
+  systemType: 0
   waveform: 1
 --- !u!4 &1804978175650929464 stripped
 Transform:
