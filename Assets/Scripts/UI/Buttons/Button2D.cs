@@ -35,19 +35,19 @@ public class Button2D : MonoBehaviour
         sr.color = col;
     }
 
-    private void OnMouseEnter()
+    protected virtual void OnMouseEnter()
     {
         sr.color = hoverColor;
         currentColor = hoverColor;
     }
 
-    private void OnMouseExit()
+    protected virtual void OnMouseExit()
     {
         sr.color = defaultColor;
         currentColor = defaultColor;
     }
 
-    private void OnMouseDown()
+    protected virtual void OnMouseDown()
     {
         sr.color = pressedColor;
         currentColor = hoverColor;
