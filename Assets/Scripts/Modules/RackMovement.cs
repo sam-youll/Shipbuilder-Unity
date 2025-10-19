@@ -217,14 +217,20 @@ public class RackMovement : MonoBehaviour
             var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
             
             var isItMe = false;
+            var hitComponent = false;
             foreach (var r in results)
             {
                 if (r.collider.gameObject == gameObject)
                 {
                     isItMe = true;
                 }
+
+                if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
+                {
+                    hitComponent = true;
+                }
             }
-            if (isItMe)
+            if (isItMe && !hitComponent)
             {
                 foreach (var result in results)
                 {

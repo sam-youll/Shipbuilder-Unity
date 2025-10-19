@@ -171,6 +171,7 @@ MonoBehaviour:
   sampleText: {fileID: 0}
   systemType: 0
   waveform: 2
+  waveformKnobEnabled: 0
 --- !u!1 &7287743508763722384
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,6 +355,10 @@ PrefabInstance:
     - target: {fileID: 2944834395760498017, guid: 97b9e72925a749c438fa142668e0267b, type: 3}
       propertyPath: m_text
       value: Weapon module - Subpatch (primary)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3308464710257316051, guid: 97b9e72925a749c438fa142668e0267b, type: 3}
+      propertyPath: price
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3308464710257316051, guid: 97b9e72925a749c438fa142668e0267b, type: 3}
       propertyPath: wirePrefab

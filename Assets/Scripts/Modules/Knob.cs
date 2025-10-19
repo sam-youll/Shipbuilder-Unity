@@ -5,8 +5,6 @@ using UnityEngine.Events;
 
 public class Knob : MonoBehaviour
 {
-    private UnityEvent<int> onValueChanged;
-
     private bool grabbed = false;
     
     [SerializeField]
@@ -26,16 +24,25 @@ public class Knob : MonoBehaviour
 
     public float trueValue;
     public float value;
+
+    private Vector3 startPos;
+    
+    public UnityEvent<float> valueChanged;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         UpdateMaxValue(maxValue);
+        startPos = transform.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+        UpdateLRs();
+        
+        transform.localPosition = startPos;
+        
         if (Input.GetMouseButtonDown(0))
         {
             var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
@@ -56,6 +63,7 @@ public class Knob : MonoBehaviour
             rot.z = -adjustedValue * 360;
             transform.localEulerAngles = rot;
             grabbed = false;
+            valueChanged.Invoke(value);
         }
         
         if (grabbed)
@@ -100,6 +108,26 @@ public class Knob : MonoBehaviour
             newLR.SetPosition(0, transform.position);
             newLR.SetPosition(1, newPos);
             notchLRs.Add(newGO);
+        }
+    }
+
+    private void UpdateLRs()
+    {
+        var angleOffset = (Mathf.PI - rangeAngle) * .5f;
+        for (var i = 0; i < notchLRs.Count; i++)
+        {
+            var newPos = transform.position;
+            var angle = rangeAngle / (maxValue) * (i);
+            angle += angleOffset;
+            newPos.x += transform.localScale.x * .6f * Mathf.Cos(angle);
+            newPos.y += transform.localScale.y * .6f * Mathf.Sin(angle);
+            newPos.z = -.1f;
+            notchLRs[i].GetComponent<LineRenderer>().positionCount = 2;
+            notchLRs[i].GetComponent<LineRenderer>().numCapVertices = 12;
+            notchLRs[i].GetComponent<LineRenderer>().widthMultiplier = .1f;
+            notchLRs[i].GetComponent<LineRenderer>().SetPosition(0, transform.position);
+            notchLRs[i].GetComponent<LineRenderer>().SetPosition(1, newPos);
+            // notchLRs[i].GetComponent<LineRenderer>().sortingOrder = 1;
         }
     }
 }

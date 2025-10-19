@@ -158,14 +158,14 @@ public class CombatManager : MonoBehaviour
                     // endScreenTimer = 999f; // set the timer to 999 (basically turning it off) so the player has time to choose their reward
                     
                     fightLevel++;
-                    Inventory.Instance.credits += Random.Range(3, 6);
+                    Inventory.Instance.credits += Random.Range(5, 9);
                     battleNumberLabel.text = fightLevel.ToString();
                     EnemyBeShopping();
                     
                     // increase damage of all enemy weapons
                     foreach (var weapon in enemyWeapons)
                     {
-                        weapon.GetComponent<Weapon>().damage += 1;
+                        weapon.GetComponent<Weapon>().damage += Random.value < .5f ? 1 : 0;
                     }
 
                     // increase health cause why not
