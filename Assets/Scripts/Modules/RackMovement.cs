@@ -24,7 +24,8 @@ public class RackMovement : MonoBehaviour
     public UnityEvent<GameObject> jackClick;
     public UnityEvent inventoryEnter;
     public UnityEvent inventoryExit;
-    public bool oddSize;
+    public bool oddSizeX;
+    public bool oddSizeY;
     private static Vector2[] dirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
     private Vector3 lastInvPos;
     
@@ -68,15 +69,15 @@ public class RackMovement : MonoBehaviour
             var snappedPos = new Vector2
             {
                 x = Mathf.Round(mousePos.x),
-                y = Mathf.Round(mousePos.y)
+                y = Mathf.Floor(mousePos.y) + .5f
             };
-            if (oddSize)
+            if (oddSizeX)
             {
-                snappedPos = new Vector2
-                {
-                    x = Mathf.Floor(mousePos.x) + .5f,
-                    y = Mathf.Floor(mousePos.y) + .5f
-                };
+                snappedPos.x = Mathf.Floor(mousePos.x) + .5f;
+            }
+            if (oddSizeY)
+            {
+                snappedPos.y = Mathf.Round(mousePos.y);
             }
             // check for overlap, then move if needed
             for (int i = 0; i < 100; i++) // basically a while loop
