@@ -187,9 +187,10 @@ public class PatchManager : MonoBehaviour
             { "apitch4", 880 },
             //wobble 
             { "wobble", 0 },
-            { "delaytime", 500},
             { "reson", 1},
-            { "fbgain", 0}
+            { "fbgain", 0},
+            //delay
+            { "delaytime", 500}
 
         };
         var statDict = new Dictionary<string, float>
