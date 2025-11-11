@@ -60,6 +60,13 @@ public class Wire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var lrMov = lineRenderer.material.mainTextureOffset;
+        lrMov.x -= Time.deltaTime * 2f;
+        if (lrMov.x < 0)
+        {
+            lrMov.x += 1;
+        }
+        lineRenderer.material.mainTextureOffset = lrMov;
         // this might be useful later, but it's less performant
         //
         // if (nextModule.GetComponent<RackMovement>().isInInventory ||
@@ -171,25 +178,30 @@ public class Wire : MonoBehaviour
         }
     }
 
-    private void UpdatePoints(Vector2 force)
+    private void UpdatePoints(Vector3 force)
     {
         // calculate points
-        Vector2[] targetPositions = new Vector2[points];
+        Vector3[] targetPositions = new Vector3[points];
         for (int i = 0; i < points; i++)
         {
             if (i == 0)
             {
-                targetPositions[0] = previousModuleJack.transform.position;
+                // start point should match the previous module jack
+                var startPos = previousModuleJack.transform.position;
+                startPos.z -= .2f;
+                targetPositions[0] = startPos;
             }
             else if (i == points - 1)
             {
+                // end point will either be connected to mouse position or next module
                 if (connectedToModule)
                 {
                     targetPositions[i] = nextModuleJack.transform.position;
+                    targetPositions[i].z -= 1f;
                 }
                 else
                 {
-                    var mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
                     var overJack = false;
                     GameObject jack = null;
@@ -213,25 +225,25 @@ public class Wire : MonoBehaviour
             }
             else
             {
-                Vector2 pos = lineRenderer.GetPosition(i);
-                Vector2 targetPos = (lineRenderer.GetPosition(i + 1) + lineRenderer.GetPosition(i - 1))*.5f;
+                Vector3 pos = lineRenderer.GetPosition(i);
+                Vector3 targetPos = (lineRenderer.GetPosition(i + 1) + lineRenderer.GetPosition(i - 1))*.5f;
                 targetPos += force;
-                pos = Vector2.Lerp(pos, targetPos, .6f);
+                pos = Vector3.Lerp(pos, targetPos, .6f);
                 targetPositions[i] = pos;
             }
         }
 
-        Vector3[] adjTargetPositions = new Vector3[points];
-        for (int i = 0; i < points; i++)
-        {
-            adjTargetPositions[i] = targetPositions[i];
-            adjTargetPositions[i].z = previousModule.transform.position.z -.2f;
-        }
-
+        // Vector3[] adjTargetPositions = new Vector3[points];
+        // for (int i = 0; i < points; i++)
+        // {
+        //     adjTargetPositions[i] = targetPositions[i];
+        //     adjTargetPositions[i].z = previousModule.transform.position.z -.2f;
+        // }
+        //
         // apply points
         for (int i = 0; i < points; i++)
         {
-            lineRenderer.SetPosition(i, adjTargetPositions[i]);
+            lineRenderer.SetPosition(i, targetPositions[i]);
         }
     }
     
