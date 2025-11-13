@@ -48,10 +48,10 @@ public class Knob : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        // var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         
         var isItMe = false;
-        foreach (var r in results)
+        foreach (var r in Global.Instance.raycastHits)
         {
             if (r.collider.gameObject == gameObject)
             {

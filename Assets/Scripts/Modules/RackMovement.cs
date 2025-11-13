@@ -50,7 +50,8 @@ public class RackMovement : MonoBehaviour
             return;
         
         // convert mouse position to world coordinates
-        var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        // var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        var mousePos = Global.Instance.mousePos;
 
         if (isMouseDragging)
         {
@@ -178,8 +179,8 @@ public class RackMovement : MonoBehaviour
                 else// if (isInInventory)
                 {
                     var rackCheck = false;
-                    var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
-                    foreach (var result in results)
+                    // var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
+                    foreach (var result in Global.Instance.raycastHits)
                     {
                         if (result.collider.gameObject.GetComponent(typeof(ModuleRack)) != null)
                         {
@@ -215,11 +216,11 @@ public class RackMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // we do a lil raycast
-            var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
+            // var results = Physics2D.RaycastAll(mousePos, Vector2.zero); // using Global now
             
             var isItMe = false;
             var hitComponent = false;
-            foreach (var r in results)
+            foreach (var r in Global.Instance.raycastHits)
             {
                 if (r.collider.gameObject == gameObject)
                 {
@@ -233,7 +234,7 @@ public class RackMovement : MonoBehaviour
             }
             if (isItMe && !hitComponent)
             {
-                foreach (var result in results)
+                foreach (var result in Global.Instance.raycastHits)
                 {
                     // if we hit a jack, invoke that unity event
                     if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
@@ -356,6 +357,8 @@ public class RackMovement : MonoBehaviour
             if (result.gameObject.GetComponent<ModuleRack>() != null)
                 continue;
             if (result.gameObject.GetComponent<Inventory>() != null)
+                continue;
+            if (result.gameObject.CompareTag("Wire"))
                 continue;
             // if (!InsideCol(coll, result))
             // {
