@@ -360,6 +360,8 @@ public class RackMovement : MonoBehaviour
                 continue;
             if (result.gameObject.CompareTag("Wire"))
                 continue;
+            if (result.gameObject.CompareTag("Switch"))
+                continue;
             // if (!InsideCol(coll, result))
             // {
             //     Debug.Log("not inside collider");

@@ -34,6 +34,8 @@ public class Knob : MonoBehaviour
     private Sprite[] spriteSheet;
     public bool lightDark;
     
+    public bool drawLRNotches = true;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,18 +52,23 @@ public class Knob : MonoBehaviour
     {
         // var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         
-        var isItMe = false;
-        foreach (var r in Global.Instance.raycastHits)
-        {
-            if (r.collider.gameObject == gameObject)
-            {
-                isItMe = true;
-            }
-        }
+        // var isItMe = false;
+        // foreach (var r in Global.Instance.raycastHits)
+        // {
+        //     if (r.collider.gameObject == gameObject)
+        //     {
+        //         isItMe = true;
+        //     }
+        // }
 
-        sr.color = isItMe || grabbed ? new Color(.8f,.8f,.8f) : Color.white;
+        var isItMe = Global.Instance.RaycastResultsContains(gameObject);
+
+        sr.color = isItMe || grabbed ? new Color(.7f,.7f,.7f) : Color.white;
         
-        UpdateLRs();
+        if (drawLRNotches)
+        {
+            UpdateLRs();
+        }
         
         transform.localPosition = startPos;
         
@@ -132,6 +139,9 @@ public class Knob : MonoBehaviour
 
     private void UpdateMaxValue(int value)
     {
+        if (!drawLRNotches)
+            return;
+        
         Debug.Log("Max value changed");
         for (int i = 0; i < notchLRs.Count; i++)
         {

@@ -130,18 +130,21 @@ public abstract class Module : MonoBehaviour
 
     protected virtual void OnJackClick(GameObject jack)
     {
-        Debug.Log("module jack clicked");
+        // Debug.Log("module jack clicked");
         if (transform.parent == Inventory.Instance.transform)
             return;
 
         // input jacks are not allowed to spawn new wires
         // this may change in the future depending on wire behavior
-        if (inputJacks.Contains(jack) || jack.CompareTag("InputJack"))
-            return;
+        // if (inputJacks.Contains(jack) || jack.CompareTag("InputJack"))
+        //     return;
+        //
+        // update: they're allowed
         
         // is there already a wire there?
         if (childWires.Count > 0)
         {
+            return;
             // get rid of it, unless you're holding left control
             // this way, left control + drag creates a second wire on top of the first
             // same as VCV rack
@@ -157,7 +160,14 @@ public abstract class Module : MonoBehaviour
         }
         // make a new wire
         GameObject newWire = Instantiate(wirePrefab, jack.transform);
-        childWires.Add(newWire);
+        if (jack.CompareTag("InputJack"))
+        {
+            childWires.Add(newWire);
+        }
+        else if (jack.CompareTag("OutputJack"))
+        {
+            parentWires.Add(newWire);
+        }
     }
 
     private void OnInventoryEnter()
