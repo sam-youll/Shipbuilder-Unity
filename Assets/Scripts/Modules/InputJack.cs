@@ -1,13 +1,12 @@
-using System;
 using UnityEngine;
 
-public class InputJack : MonoBehaviour
+public class InputJack : Jack
 {
-    private void Start()
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    protected void Start()
     {
-    }
-
-    public void ConnectWire()
-    {
+        base.Start();
+        var filepath = GetComponentInParent<Module>().darkTheme ? "Sprites/Jacks/jack dark in" : "Sprites/Jacks/jack light in";
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(filepath);
     }
 }

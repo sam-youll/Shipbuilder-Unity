@@ -7,25 +7,29 @@ using UnityEngine.Rendering;
 
 public class RackMovement : MonoBehaviour
 {
+    [Header("Object References")]
     public GameObject snapSquare;
+    public GameObject myModuleRack;
     private Camera cam;
+    
+    [Header("Drag Behavior")]
+    public float dragHeight = 1;
+    public bool canGoInInventory = true;
+    private bool isOverInventory;
+    public bool isInInventory;
+    private Transform lastParent;
     private bool isMouseDragging;
     private Vector3 dragOffset;
     private Vector3 dragStartPos;
     private Vector3 lastValidPos;
-    public float dragHeight = 1;
-    public bool canGoInInventory;
-    private bool isOverInventory;
-    public bool isInInventory;
-    public GameObject myModuleRack;
-    private Transform lastParent;
     
-    public UnityEvent bodyClick;
-    public UnityEvent<GameObject> jackClick;
-    public UnityEvent inventoryEnter;
-    public UnityEvent inventoryExit;
-    public bool oddSizeX;
-    public bool oddSizeY;
+    [HideInInspector] public UnityEvent bodyClick;
+    [HideInInspector] public UnityEvent<GameObject> jackClick;
+    [HideInInspector] public UnityEvent inventoryEnter;
+    [HideInInspector] public UnityEvent inventoryExit;
+    
+    [HideInInspector] public bool oddSizeX;
+    [HideInInspector] public bool oddSizeY;
     private static Vector2[] dirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
     private Vector3 lastInvPos;
     
@@ -60,6 +64,10 @@ public class RackMovement : MonoBehaviour
             // set position
             var myPos = mousePos;
             myPos.z -= dragHeight;
+            
+            // what am I over?
+            
+            
             if (isOverInventory)
             {
                 myPos.z -= 3;
@@ -70,7 +78,7 @@ public class RackMovement : MonoBehaviour
             var snappedPos = new Vector2
             {
                 x = Mathf.Round(mousePos.x),
-                y = Mathf.Floor(mousePos.y) + .5f
+                y = Mathf.Round(mousePos.y)
             };
             if (oddSizeX)
             {
@@ -78,8 +86,22 @@ public class RackMovement : MonoBehaviour
             }
             if (oddSizeY)
             {
-                snappedPos.y = Mathf.Round(mousePos.y);
+                snappedPos.y = Mathf.Floor(mousePos.y) + .5f;
             }
+
+            // if (!isInInventory && !isOverInventory)
+            // {
+            //     Vector2 parentOffset = myModuleRack.transform.position;
+            //     // parentOffset.x = Mathf.Abs(parentOffset.x);
+            //     // parentOffset.y = Mathf.Abs(parentOffset.y);
+            //     parentOffset.x -= Mathf.Floor(parentOffset.x);
+            //     parentOffset.y -= Mathf.Floor(parentOffset.y);
+            //
+            //     Debug.Log(parentOffset);
+            //
+            //     snappedPos += parentOffset;
+            // }
+            
             // check for overlap, then move if needed
             for (int i = 0; i < 100; i++) // basically a while loop
             {
@@ -94,6 +116,8 @@ public class RackMovement : MonoBehaviour
 
 
                     // TODO: THIS BASICALLY NEEDS TO BE A FLOOD FILL ALGO BUT I DON'T WANT TO DO THAT RIGHT NOW
+                    // does it really need to be a flood fill?
+                    // idk how i want this to work yet
                     var roundedMousePos = new Vector2
                     {
                         x = Mathf.Round(mousePos.x),
@@ -115,7 +139,7 @@ public class RackMovement : MonoBehaviour
 
                     if (i == 99)
                     {
-                        Debug.Log("too many loop");
+                        // Debug.Log("too many loop");
                         snappedPos = lastValidPos;
                     }
                 }
@@ -218,66 +242,49 @@ public class RackMovement : MonoBehaviour
             // we do a lil raycast
             // var results = Physics2D.RaycastAll(mousePos, Vector2.zero); // using Global now
             
-            var isItMe = false;
+            var isItMe = Global.Instance.RaycastResultsContains(gameObject);
             var hitComponent = false;
-            foreach (var r in Global.Instance.raycastHits)
+            var hitJack = false;
+            if (isItMe)
             {
-                if (r.collider.gameObject == gameObject)
+                foreach (var r in Global.Instance.raycastHits)
                 {
-                    isItMe = true;
-                }
+                    if (r.collider.gameObject == gameObject)
+                    {
+                        isItMe = true;
+                    }
 
-                if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
-                {
-                    hitComponent = true;
+                    if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
+                    {
+                        hitComponent = true;
+                    }
+
+                    if (r.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
+                    {
+                        hitJack = true;
+                        jackClick.Invoke(r.collider.gameObject);
+                    }
                 }
             }
-            if (isItMe && !hitComponent)
+            if (isItMe && !hitComponent && !hitJack)
             {
-                foreach (var result in Global.Instance.raycastHits)
+                if (Global.Instance.RaycastResultsContains(gameObject))
                 {
-                    // if we hit a jack, invoke that unity event
-                    if (result.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
+                    if (isInInventory)
                     {
-                        
-                        jackClick.Invoke(result.collider.gameObject);
-                        break;
+                        lastInvPos = transform.localPosition;
                     }
-
-                    // if we don't hit a jack, but we do hit the body, turn on dragging
-                    if (result.collider.gameObject.layer == LayerMask.NameToLayer("Rack Objects"))
-                    {
-                        if (result.collider.gameObject == gameObject)
-                        {
-                            if (isInInventory)
-                            {
-                                lastInvPos = transform.localPosition;
-                            }
-                            AudioManager.Instance.PickUpModuleSFX();
-                            dragOffset = transform.position - mousePos;
-                            snapSquare.SetActive(true);
-                            isMouseDragging = true;
-                            lastParent = transform.parent;
-                            transform.SetParent(cam.transform);
-                            bodyClick.Invoke();
-                            // var adjPos = transform.position;
-                            // adjPos.z = -1;
-                            // transform.position = adjPos;
-                            dragStartPos = transform.position;
-                        }
-                        // if (onConveyor)
-                        // {
-                        //     var snappedPos = new Vector2
-                        //     {
-                        //         x = Mathf.Round(mousePos.x),
-                        //         y = Mathf.Round(mousePos.y)
-                        //     };
-                        //     var conveyor = OverlapCheck(snappedPos, new Vector2(.5f, .5f));
-                        //     onConveyor = false;
-                        //     transform.SetParent(ModuleRack.Instance.transform);
-                        //     conveyor.GetComponent<Conveyor>().OnModuleDetached(this);
-                        // }
-                    }
+                    AudioManager.Instance.PickUpModuleSFX();
+                    dragOffset = transform.position - mousePos;
+                    snapSquare.SetActive(true);
+                    isMouseDragging = true;
+                    lastParent = transform.parent;
+                    transform.SetParent(cam.transform);
+                    bodyClick.Invoke();
+                    // var adjPos = transform.position;
+                    // adjPos.z = -1;
+                    // transform.position = adjPos;
+                    dragStartPos = transform.position;
                 }
             }
         }
@@ -341,6 +348,8 @@ public class RackMovement : MonoBehaviour
             if (result.gameObject.CompareTag("Bullet"))
                 continue;
             if (result.gameObject == snapSquare)
+                continue;
+            if (result.gameObject.layer == LayerMask.NameToLayer("Particles"))
                 continue;
             if (result.gameObject.layer == LayerMask.NameToLayer("Module Racks"))
             {

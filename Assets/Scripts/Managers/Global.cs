@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Global : MonoBehaviour
@@ -15,7 +17,7 @@ public class Global : MonoBehaviour
         }
     }
 
-    public RaycastHit2D[] raycastHits = new RaycastHit2D[0];
+    public RaycastHit2D[] raycastHits = Array.Empty<RaycastHit2D>();
     public Vector3 mousePos = Vector3.zero;
     public Camera cam;
     
@@ -32,6 +34,11 @@ public class Global : MonoBehaviour
     public CursorState cursorState = CursorState.Default;
 
     private SpriteRenderer sr;
+
+    [Header("Object Lists")] 
+    public List<GameObject> hoverList = new();
+    public List<GameObject> allModules = new();
+    public List<GameObject> allJacks = new();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -54,11 +61,18 @@ public class Global : MonoBehaviour
         // Cursor
         transform.position = mousePos;
         var hitGrabbable = false;
+        hoverList.Clear();
         foreach (var result in raycastHits)
         {
-            if (result.collider.gameObject.CompareTag("Wire") ||
-                result.collider.gameObject.layer == LayerMask.NameToLayer("Rack Objects") ||
-                result.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
+            var coll = result.collider;
+            if (coll.compositeOperation == Collider2D.CompositeOperation.Merge)
+            {
+                coll = coll.composite;
+            }
+            hoverList.Add(coll.gameObject);
+            if (coll.gameObject.CompareTag("Wire") ||
+                coll.gameObject.layer == LayerMask.NameToLayer("Rack Objects") ||
+                coll.gameObject.layer == LayerMask.NameToLayer("Module Components"))
             {
                 hitGrabbable = true;
             }

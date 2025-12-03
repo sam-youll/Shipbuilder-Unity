@@ -120,7 +120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7518711601976789698
 RectTransform:
   m_ObjectHideFlags: 0
@@ -484,6 +484,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 318066806935114962, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 517609652069545948, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -648,6 +652,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2259629495672256003, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2779378506702245213, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3310942462640939605, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
       propertyPath: m_MotionVectors
       value: 1
@@ -744,6 +756,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: ccc5ec67961d30c4a8774b884f5cb9c6, type: 3}
+    - target: {fileID: 8213486984018003874, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+      propertyPath: 'inputJacks.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5375417083240584808}
+    - target: {fileID: 8213486984018003874, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+      propertyPath: 'outputJacks.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1284458271539563827}
     - target: {fileID: 8336948470956879275, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
       value: 2
@@ -788,6 +808,10 @@ PrefabInstance:
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[3].y
       value: -2.96875
       objectReference: {fileID: 0}
+    - target: {fileID: 9068077718144636422, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -799,8 +823,18 @@ PrefabInstance:
       addedObject: {fileID: 8933456907208463646}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+--- !u!1 &1284458271539563827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2779378506702245213, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+  m_PrefabInstance: {fileID: 3981492101597249646}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2645096155663517655 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1437876473278564281, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
+  m_PrefabInstance: {fileID: 3981492101597249646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5375417083240584808 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9068077718144636422, guid: 4f1a01b14ae75e6449299f833716f33e, type: 3}
   m_PrefabInstance: {fileID: 3981492101597249646}
   m_PrefabAsset: {fileID: 0}

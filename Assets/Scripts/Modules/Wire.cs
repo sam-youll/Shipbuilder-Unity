@@ -83,38 +83,15 @@ public class Wire : MonoBehaviour
             // Collision
             var edge = gameObject.AddComponent<EdgeCollider2D>();
             edge.edgeRadius = .07f;
+            
+            UpdateJackHighlights();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        // flip texture as needed to maintain appearance of being lit from above
-        if (lineRenderer.GetPosition(points - 1).x < lineRenderer.GetPosition(0).x)
-        {
-            lineRenderer.material.mainTexture = baseTexture;
-        }
-        else
-        {
-            lineRenderer.material.mainTexture = flippedTexture;
-        }
-        
-        
-        var lrMov = lineRenderer.material.mainTextureOffset;
-        lrMov.x -= Time.deltaTime * 2f;
-        if (lrMov.x < 0)
-        {
-            lrMov.x += 1;
-        }
-        lineRenderer.material.mainTextureOffset = lrMov;
-        // this might be useful later, but it's less performant
-        //
-        // if (nextModule.GetComponent<RackMovement>().isInInventory ||
-        //     previousModule.GetComponent<RackMovement>().isInInventory)
-        // {
-        //     DeleteSelf();
-        // }
-
+        #region Grabbing
         bool overWire = false;
         if (connectedToModule)
         {
@@ -126,7 +103,7 @@ public class Wire : MonoBehaviour
                 }
             }
         }
-
+        
         if (overWire && connectedToModule || grabbed)
         {
 
@@ -146,16 +123,19 @@ public class Wire : MonoBehaviour
                     }
                 }
 
-                if (grabbedIndex == 0)
+                if (Global.Instance.RaycastResultsContains(previousModuleJack))
                 {
+                    grabbedIndex = 0;
                     grabbed = false;
                     previousModule.GetComponent<Module>().childWires.Remove(gameObject);
                     previousModuleJack = null;
                     previousModule = null;
                     connectedToModule = false;
+                    UpdateJackHighlights();
                 }
-                else if (grabbedIndex == points - 1)
+                else if (Global.Instance.RaycastResultsContains(nextModuleJack))
                 {
+                    grabbedIndex = points - 1;
                     grabbed = false;
                     if (nextModule.CompareTag("Weapon"))
                     {
@@ -172,12 +152,66 @@ public class Wire : MonoBehaviour
                     nextModule = null;
                     nextModuleJack = null;
                     connectedToModule = false;
+                    UpdateJackHighlights();
                 }
+                else if (grabbedIndex == 0)
+                {
+                    grabbedIndex++;
+                }
+                else if (grabbedIndex == points - 1)
+                {
+                    grabbedIndex--;
+                }
+
+                // if (grabbedIndex == 0)
+                // {
+                //     
+                // }
+                // else if (grabbedIndex == points - 1)
+                // {
+                //     
+                // }
             }
 
             if (Input.GetMouseButtonDown(1))
             {
                 DeleteSelf();
+            }
+        }
+        // edge case where you grab the jack but you're not technically hitting the wire itself
+        // we still want to grab the end of the wire
+        else if (connectedToModule && Input.GetMouseButtonDown(0))
+        {
+            if (Global.Instance.RaycastResultsContains(previousModuleJack))
+            {
+                grabbedIndex = 0;
+                grabbed = false;
+                previousModule.GetComponent<Module>().childWires.Remove(gameObject);
+                previousModuleJack = null;
+                previousModule = null;
+                connectedToModule = false;
+                UpdateJackHighlights();
+            }
+            else if (Global.Instance.RaycastResultsContains(nextModuleJack))
+            {
+                grabbedIndex = points - 1;
+                grabbed = false;
+                if (nextModule.CompareTag("Weapon"))
+                {
+                    nextModule.GetComponent<Weapon>().previousModule = null;
+                }
+                else if (nextModule.CompareTag("Reactor"))
+                {
+                    nextModule.GetComponent<Reactor>().previousModule = null;
+                }
+                else
+                {
+                    nextModule.GetComponent<Module>().parentWires.Remove(gameObject);
+                }
+                nextModule = null;
+                nextModuleJack = null;
+                connectedToModule = false;
+                UpdateJackHighlights();
             }
         }
 
@@ -198,24 +232,20 @@ public class Wire : MonoBehaviour
                 DeleteSelf();
             }
         }
-        
-        lineRenderer.colorGradient = ColorGradient(color, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0, grabbed || overWire);
-        
+        #endregion
+
+        #region Dropping
         // when letting go of mouse click, either connect or destroy wire
         if (Input.GetMouseButtonUp(0) && !connectedToModule)
         {
+            // Look for jacks under the mouse
             RaycastHit2D hit = Physics2D.Raycast(Global.Instance.mousePos,Vector2.zero,Mathf.Infinity, LayerMask.GetMask("Jacks"));
             if (hit && !dying)
             {
-                // plugging a module into itself crashes everything, so we don't want to let it happen
-                // if (nextModule == null && hit.collider.gameObject.transform.parent.gameObject == previousModule ||
-                //     previousModule == null && hit.collider.gameObject.transform.parent.gameObject == nextModule)
-                //     DeleteSelf();
-                
                 // hit weapon output
                 if (hit.collider.gameObject.transform.parent.gameObject.CompareTag("Weapon"))
                 {
-                    if (previousModule == null)
+                    if (previousModule == null) // not sure how this would ever happen
                     {
                         DeleteSelf();
                     }
@@ -225,12 +255,6 @@ public class Wire : MonoBehaviour
                         nextModule = nextModuleJack.transform.parent.gameObject;
                         nextModule.GetComponent<Weapon>().previousModule = previousModule;
                     }
-                    // if (nextModule.GetComponent<Weapon>().previousModule != null)
-                    // {
-                    //     nextModule.GetComponent<Weapon>().previousModule.GetComponent<Module>().outputJack.transform.GetChild(0).gameObject.GetComponent<Wire>().DeleteSelf();
-                    // }
-                    // nextModule.gameObject.GetComponent<Weapon>().previousModule = previousModule;
-                    // previousModule.GetComponent<Module>().nextModule = nextModule;
                     PatchManager.Instance.UpdateAllPatches();
                     
                     connectedToModule = true;
@@ -250,12 +274,16 @@ public class Wire : MonoBehaviour
                 // hit a module
                 else if (hit.collider.gameObject.CompareTag("InputJack"))
                 {
+                    // is it the module I'm already connected to?
+                    // is there already a wire there?
                     if (nextModule != null ||
                         hit.collider.gameObject.transform.parent.gameObject == previousModule ||
-                        hit.collider.gameObject.transform.parent.gameObject == nextModule)
+                        hit.collider.gameObject.transform.parent.gameObject == nextModule ||
+                        hit.collider.gameObject.GetComponentInParent<Module>().parentWires.Count > 0)
                     {
                         DeleteSelf();
                     }
+                    // ok we're good
                     else
                     {
                         nextModuleJack = hit.collider.gameObject;
@@ -268,12 +296,16 @@ public class Wire : MonoBehaviour
                 }
                 else if (hit.collider.gameObject.CompareTag("OutputJack"))
                 {
+                    // is it the module I'm already connected to?
+                    // is there already a wire there?
                     if (previousModule != null ||
                         hit.collider.gameObject.transform.parent.gameObject == previousModule ||
-                        hit.collider.gameObject.transform.parent.gameObject == nextModule)
+                        hit.collider.gameObject.transform.parent.gameObject == nextModule ||
+                        hit.collider.gameObject.GetComponentInParent<Module>().childWires.Count > 0)
                     {
                         DeleteSelf();
                     }
+                    // alright go ahead
                     else
                     {
                         previousModuleJack = hit.collider.gameObject;
@@ -295,6 +327,7 @@ public class Wire : MonoBehaviour
                 
                 // determine wire type
                 UpdateWireType();
+                UpdateJackHighlights();
             }
             else
             {
@@ -302,6 +335,29 @@ public class Wire : MonoBehaviour
                 DeleteSelf();
             }
         }
+        #endregion
+        
+        #region Visuals
+        // flip texture as needed to maintain appearance of being lit from above
+        if (lineRenderer.GetPosition(points - 1).x < lineRenderer.GetPosition(0).x)
+        {
+            lineRenderer.material.mainTexture = baseTexture;
+        }
+        else
+        {
+            lineRenderer.material.mainTexture = flippedTexture;
+        }
+        
+        // scrolling texture
+        var lrMov = lineRenderer.material.mainTextureOffset;
+        lrMov.x -= Time.deltaTime * 2f;
+        if (lrMov.x < 0)
+        {
+            lrMov.x += 1;
+        }
+        lineRenderer.material.mainTextureOffset = lrMov;
+        lineRenderer.colorGradient = ColorGradient(color, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0, grabbed || overWire);
+        #endregion
     }
 
     private void FixedUpdate()
@@ -316,6 +372,7 @@ public class Wire : MonoBehaviour
                 }
                 else if (nextModule == null)
                 {
+                    
                     UpdatePoints(Vector2.down * .1f, previousModuleJack.transform.position, Global.Instance.mousePos, false, true, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0);
                 }
                 else if (previousModule == null)
@@ -461,6 +518,7 @@ public class Wire : MonoBehaviour
                 subpatch.childWires.Remove(gameObject);
             }
         }
+        UpdateJackHighlights();
         PatchManager.Instance.UpdateAllPatches();
         Vector3[] positions = new Vector3[points];
         Vector2 deletePos = Global.Instance.mousePos;
@@ -475,6 +533,54 @@ public class Wire : MonoBehaviour
             yield return new WaitForSeconds(.01f);
         }
         Destroy(gameObject);
+    }
+
+    private void UpdateJackHighlights()
+    {
+        // TODO: move this function into Jack.cs and call it through the Global list of all jacks
+        
+        if (connectedToModule || dying)
+        {
+            // reset all highlights
+            foreach (var jack in Global.Instance.allJacks)
+            {
+                jack.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
+        else if (nextModule == null)
+        {
+            // highlight all input jacks
+            foreach (var jack in Global.Instance.allJacks)
+            {
+                if (jack.CompareTag("OutputJack") ||
+                    jack.transform.parent.gameObject == previousModule ||
+                    jack.GetComponentInParent<Module>().parentWires.Count > 0)
+                {
+                    jack.GetComponent<SpriteRenderer>().color = new Color(.5f, .5f, .5f, 1);
+                }
+                else
+                {
+                    jack.GetComponent<SpriteRenderer>().color = Color.white;
+                }
+            }
+        }
+        else if (previousModule == null)
+        {
+            // highlight all output jacks
+            foreach (var jack in Global.Instance.allJacks)
+            {
+                if (jack.CompareTag("InputJack") ||
+                    jack.transform.parent.gameObject == nextModule ||
+                    jack.GetComponentInParent<Module>().childWires.Count > 0)
+                {
+                    jack.GetComponent<SpriteRenderer>().color = new Color(.5f, .5f, .5f, 1);
+                }
+                else
+                {
+                    jack.GetComponent<SpriteRenderer>().color = Color.white;
+                }
+            }
+        }
     }
     
     void UpdateWireType()
@@ -575,10 +681,10 @@ public class Wire : MonoBehaviour
         // TODO: can i make it flash based on time, increasing intensity with stress?
         gradient.colorKeys = new[]
         {
-            new GradientColorKey(Color.black, 0),
+            new GradientColorKey(new Color(.06667f, .06667f, .06667f, 1), 0),
             new GradientColorKey(color, .1f),
             new GradientColorKey(color, .9f),
-            new GradientColorKey(Color.black, 1)
+            new GradientColorKey(new Color(.06667f, .06667f, .06667f, 1), 1)
         };
         return gradient;
     }
