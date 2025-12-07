@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -30,8 +31,11 @@ public class RackMovement : MonoBehaviour
     
     [HideInInspector] public bool oddSizeX;
     [HideInInspector] public bool oddSizeY;
-    private static Vector2[] dirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
+    private static Vector2[] dirs = {Vector2.zero, Vector2.up, Vector2.right, Vector2.down, Vector2.left};
     private Vector3 lastInvPos;
+
+    [Header("Temporary Debug Bullshit")] 
+    public List<Collider2D> collisionResults;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -53,238 +57,225 @@ public class RackMovement : MonoBehaviour
         if (transform.parent.GetComponent<ShopSlotButton>() != null)
             return;
         
-        // convert mouse position to world coordinates
-        // var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        var mousePos = Global.Instance.mousePos;
-
         if (isMouseDragging)
         {
-            // add offset from center of module to mouse position
-            mousePos += dragOffset;
-            // set position
-            var myPos = mousePos;
-            myPos.z -= dragHeight;
-            
-            // what am I over?
-            
-            
-            if (isOverInventory)
-            {
-                myPos.z -= 3;
-            }
-            transform.position = myPos;
-            
-            // set potential position of snap square
-            var snappedPos = new Vector2
-            {
-                x = Mathf.Round(mousePos.x),
-                y = Mathf.Round(mousePos.y)
-            };
-            if (oddSizeX)
-            {
-                snappedPos.x = Mathf.Floor(mousePos.x) + .5f;
-            }
-            if (oddSizeY)
-            {
-                snappedPos.y = Mathf.Floor(mousePos.y) + .5f;
-            }
-
-            // if (!isInInventory && !isOverInventory)
-            // {
-            //     Vector2 parentOffset = myModuleRack.transform.position;
-            //     // parentOffset.x = Mathf.Abs(parentOffset.x);
-            //     // parentOffset.y = Mathf.Abs(parentOffset.y);
-            //     parentOffset.x -= Mathf.Floor(parentOffset.x);
-            //     parentOffset.y -= Mathf.Floor(parentOffset.y);
-            //
-            //     Debug.Log(parentOffset);
-            //
-            //     snappedPos += parentOffset;
-            // }
-            
-            // check for overlap, then move if needed
-            for (int i = 0; i < 100; i++) // basically a while loop
-            {
-                if (IsOverlapping(snapSquare.GetComponent<Collider2D>(), snappedPos)) // THIS IS PROBABLY A BAD IDEA
-                {
-                    // if (OverlapCheck(snappedPos, new Vector2(.5f, .5f)).GetComponent<Conveyor>() != null)
-                    // {
-                    //     isOverConveyor = true;
-                    //     break;
-                    // }
-                    // isOverConveyor = false;
-
-
-                    // TODO: THIS BASICALLY NEEDS TO BE A FLOOD FILL ALGO BUT I DON'T WANT TO DO THAT RIGHT NOW
-                    // does it really need to be a flood fill?
-                    // idk how i want this to work yet
-                    var roundedMousePos = new Vector2
-                    {
-                        x = Mathf.Round(mousePos.x),
-                        y = Mathf.Round(mousePos.y)
-                    };
-                    var dir = ((Vector2)transform.position - roundedMousePos).normalized;
-                    var dots = new float[3];
-                    for (var j = 0; j < 3; j++)
-                    {
-                        dots[j] = Vector2.Dot(dir, dirs[j]);
-                    }
-                    var highestDot = dots[0];
-                    for (var j = 0; j < dots.Length; j++)
-                    {
-                        highestDot = Mathf.Max(highestDot, dots[j]);
-                    }
-                    dir = dirs[Array.IndexOf(dots, highestDot)];
-                    snappedPos += dir;
-
-                    if (i == 99)
-                    {
-                        // Debug.Log("too many loop");
-                        snappedPos = lastValidPos;
-                    }
-                }
-                else
-                {
-                    lastValidPos = snappedPos;
-                    break;
-                }
-            }
-            // if (!IsOverlapping(snapSquare.GetComponent<Collider2D>()))
-            // {
-            //     isOverConveyor = false;
-            // }
-
-            var newPos = new Vector3(snappedPos.x, snappedPos.y, transform.position.z + .1f);
-            if (isOverInventory)
-            {
-                newPos.z -= 3;
-            }
-            snapSquare.transform.position = newPos;
+            DragMove();
             
             HoverInventory();
             
-            // drop module
             if (Input.GetMouseButtonUp(0))
             {
-                // reset mouse drag
-                isMouseDragging = false;
-                transform.position = snapSquare.transform.position;
-                snapSquare.SetActive(false);
-                dragOffset = Vector3.zero;
-
-                AudioManager.Instance.PutDownModuleSFX();
-            
-                // var adjPos = transform.position;
-                // adjPos.z = 0;
-                // if (isOverInventory)
-                // {
-                //     adjPos.z -= 3;
-                // }
-                // transform.position = adjPos;
-
-                // if (isOverConveyor)
-                // {
-                //     var conveyor = OverlapCheck(snappedPos, new Vector2(.5f, .5f));
-                //     onConveyor = true;
-                //     transform.SetParent(conveyor.transform);
-                //     conveyor.GetComponent<Conveyor>().OnModuleAttached(this);
-                // }
-                
-                // isInInventory = transform.parent == Inventory.Instance.transform;
-                if (isOverInventory)
-                {
-                    isInInventory = true;
-                    transform.SetParent(Inventory.Instance.transform);
-                    var pos = transform.position;
-                    pos.z = transform.parent.transform.position.z - 1f;
-                    transform.position = pos;
-                    inventoryEnter.Invoke();
-                }
-                else// if (isInInventory)
-                {
-                    var rackCheck = false;
-                    // var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
-                    foreach (var result in Global.Instance.raycastHits)
-                    {
-                        if (result.collider.gameObject.GetComponent(typeof(ModuleRack)) != null)
-                        {
-                            // theoretically, this is the module rack I'm hovering over
-                            transform.SetParent(result.collider.gameObject.transform);
-                            var pos = transform.position;
-                            pos.z = transform.parent.position.z - .1f;
-                            transform.position = pos;
-                            myModuleRack = result.collider.gameObject;
-                            rackCheck = true;
-                            isInInventory = false;
-                            inventoryExit.Invoke();
-                        }
-                    }
-
-                    if (!rackCheck)
-                    {
-                        if (isInInventory)
-                        {
-                            transform.SetParent(Inventory.Instance.transform);
-                            transform.localPosition = lastInvPos;
-                        }
-                        else
-                        {
-                            transform.position = dragStartPos;
-                        }
-                    }
-                }
+                DropModule();
             }
+            
         }
         
         // when the left mb is clicked
         if (Input.GetMouseButtonDown(0))
         {
-            // we do a lil raycast
-            // var results = Physics2D.RaycastAll(mousePos, Vector2.zero); // using Global now
-            
-            var isItMe = Global.Instance.RaycastResultsContains(gameObject);
-            var hitComponent = false;
-            var hitJack = false;
-            if (isItMe)
+            // pick up module if not also clicking a module component
+            ClickyClicky();
+        }
+    }
+
+    void ClickyClicky()
+    {
+        var mousePos = Global.Instance.mousePos;
+        var isItMe = Global.Instance.RaycastResultsContains(gameObject);
+        var hitComponent = false;
+        var hitJack = false;
+        if (isItMe)
+        {
+            foreach (var r in Global.Instance.raycastHits)
             {
-                foreach (var r in Global.Instance.raycastHits)
+                if (r.collider.gameObject == gameObject)
                 {
-                    if (r.collider.gameObject == gameObject)
-                    {
-                        isItMe = true;
-                    }
+                    isItMe = true;
+                }
 
-                    if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
-                    {
-                        hitComponent = true;
-                    }
+                if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
+                {
+                    hitComponent = true;
+                }
 
-                    if (r.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
+                if (r.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
+                {
+                    hitJack = true;
+                    jackClick.Invoke(r.collider.gameObject);
+                }
+            }
+        }
+        if (isItMe && !hitComponent && !hitJack)
+        {
+            if (Global.Instance.RaycastResultsContains(gameObject))
+            {
+                if (isInInventory)
+                {
+                    lastInvPos = transform.localPosition;
+                }
+                AudioManager.Instance.PickUpModuleSFX();
+                dragOffset = transform.position - mousePos;
+                snapSquare.SetActive(true);
+                isMouseDragging = true;
+                lastParent = transform.parent;
+                transform.SetParent(cam.transform);
+                bodyClick.Invoke();
+                // var adjPos = transform.position;
+                // adjPos.z = -1;
+                // transform.position = adjPos;
+                dragStartPos = transform.position;
+            }
+        }
+    }
+
+    void DragMove()
+    {
+        var mousePos = Global.Instance.mousePos;
+        // add offset from center of module to mouse position
+        mousePos += dragOffset;
+        
+        #region module
+        // set position of actual module, so it gets dragged with mouse
+        var myPos = mousePos;
+        myPos.z -= dragHeight;
+        // what am I over?
+        if (isOverInventory)
+        {
+            myPos.z -= 3;
+        }
+        transform.position = myPos;
+        #endregion
+        
+        #region snap square
+        
+        // TODO: OKAY HERE"S THE PLAN
+        // WE"RE GONNA FLOOD FILL OUT FROM THE MOUSE POS
+        // AND THEN THE CLOSEST VALUE IS GONNA BE THE SNAP SQUARE POS
+
+        Debug.Log("New frame, dragging module.");
+        
+        var snappedPos = new Vector2
+        {
+            x = Mathf.Round(mousePos.x),
+            y = Mathf.Round(mousePos.y)
+        };
+        if (oddSizeX)
+        {
+            snappedPos.x = Mathf.Floor(mousePos.x) + .5f;
+        }
+        if (oddSizeY)
+        {
+            snappedPos.y = Mathf.Floor(mousePos.y) + .5f;
+        }
+        snapSquare.transform.position = snappedPos;
+        var positionsChecked = new List<Vector2>();
+        positionsChecked.Add(snappedPos);
+        // Debug.Log($"Mouse is at {snappedPos}.");
+        var valid = false;
+        for (var i = 0; i < 500; i++)
+        {
+            if (valid)
+                break;
+            
+            foreach (var dir in dirs)
+            {
+                // Check in the cardinal directions out from the current position
+                var dirPos = positionsChecked[i] + dir;
+                // If we've already checked this position, move on
+                if (i != 0 || dir != Vector2.zero)
+                {
+                    if (positionsChecked.Contains(dirPos))
+                        continue;
+                    positionsChecked.Add(dirPos);
+                }
+                // Set snap square to that position so we can perform collision checks
+                snapSquare.transform.position = dirPos;
+
+                // Perform collision checks
+                if (OnModuleRack() && !IsOverlapping())
+                {
+                    valid = true;
+                    // Debug.Log("Found valid snap square position.");
+                    var newPos = new Vector3(snapSquare.transform.position.x, snapSquare.transform.position.y, transform.position.z + .1f);
+                    if (isOverInventory)
                     {
-                        hitJack = true;
-                        jackClick.Invoke(r.collider.gameObject);
+                        newPos.z -= 3;
+                    }
+                    snapSquare.transform.position = newPos;
+                    lastValidPos = snapSquare.transform.position;
+                    // Debug.Log($"Setting lastValidPos to {lastValidPos}.");
+
+                    break;
+                }
+            }
+            
+        }
+        if (!valid)
+        {
+            // Debug.Log("Did not find a valid space.");
+            snapSquare.transform.position = lastValidPos;
+            // Debug.Log($"Moving snap square back to lastValidPos at {lastValidPos}.");
+        }
+        
+        #endregion
+    }
+    
+    void DropModule()
+    {
+        // Debug.Log("DropModule()");
+        // reset mouse drag
+        isMouseDragging = false;
+        transform.position = snapSquare.transform.position;
+        lastValidPos = transform.position;
+        // Debug.Log($"Setting lastValidPos to {lastValidPos}");
+        snapSquare.SetActive(false);
+        dragOffset = Vector3.zero;
+
+        AudioManager.Instance.PutDownModuleSFX();
+        
+        if (isOverInventory)
+        {
+            // put the module in the inventory
+            isInInventory = true;
+            transform.SetParent(Inventory.Instance.transform);
+            var pos = transform.position;
+            pos.z = transform.parent.transform.position.z - 1f;
+            transform.position = pos;
+            inventoryEnter.Invoke();
+        }
+        else // either drop the module on a rack, or return it to its previous position
+        {
+            // are we over a rack we can drop onto?
+            var rackCheck = false;
+            foreach (var result in Global.Instance.raycastHits)
+            {
+                if (result.collider.gameObject.GetComponent(typeof(ModuleRack)) != null)
+                {
+                    // theoretically, this is the module rack I'm hovering over
+                    transform.SetParent(result.collider.gameObject.transform);
+                    var pos = transform.position;
+                    pos.z = transform.parent.position.z - .1f;
+                    transform.position = pos;
+                    myModuleRack = result.collider.gameObject;
+                    rackCheck = true;
+                    if (isInInventory)
+                    {
+                        isInInventory = false;
+                        inventoryExit.Invoke();
                     }
                 }
             }
-            if (isItMe && !hitComponent && !hitJack)
+
+            if (!rackCheck)
             {
-                if (Global.Instance.RaycastResultsContains(gameObject))
+                if (isInInventory)
                 {
-                    if (isInInventory)
-                    {
-                        lastInvPos = transform.localPosition;
-                    }
-                    AudioManager.Instance.PickUpModuleSFX();
-                    dragOffset = transform.position - mousePos;
-                    snapSquare.SetActive(true);
-                    isMouseDragging = true;
-                    lastParent = transform.parent;
-                    transform.SetParent(cam.transform);
-                    bodyClick.Invoke();
-                    // var adjPos = transform.position;
-                    // adjPos.z = -1;
-                    // transform.position = adjPos;
-                    dragStartPos = transform.position;
+                    transform.SetParent(Inventory.Instance.transform);
+                    transform.localPosition = lastInvPos;
+                }
+                else
+                {
+                    transform.position = lastValidPos;
                 }
             }
         }
@@ -322,23 +313,17 @@ public class RackMovement : MonoBehaviour
     /// <param name="coll">The collider of the snap square.</param>
     /// <param name="pos">Position of collider/rigidbody.</param>
     /// <returns>True or false.</returns>
-    private bool IsOverlapping(Collider2D coll, Vector2 pos)
+    private bool IsOverlapping()
     {
-        // Debug.Log("checking overlap");
-        
-        // are we on the rack
-        var onRack = false;
-        var colliding = false;
-        
-        var results = new List<Collider2D>();
+        // var results = new List<Collider2D>();
         // we only care about checking against objects on the rack
         var filter = new ContactFilter2D
         {
             layerMask = LayerMask.GetMask("Rack Objects", "Module Racks")
         };
         // check the collider for overlaps on that layer
-        coll.Overlap(pos, 0, filter, results);
-        foreach (var result in results)
+        snapSquare.GetComponent<Collider2D>().Overlap(snapSquare.transform.position, 0, filter, collisionResults);
+        foreach (var result in collisionResults)
         {
             // Debug.Log(result.gameObject.name);
             // Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
@@ -352,15 +337,7 @@ public class RackMovement : MonoBehaviour
             if (result.gameObject.layer == LayerMask.NameToLayer("Particles"))
                 continue;
             if (result.gameObject.layer == LayerMask.NameToLayer("Module Racks"))
-            {
-                if (InsideCol(coll, result))
-                {
-                    // Debug.Log("inside rack");
-                }
-                // Debug.Log("I hit a " + result.gameObject.name);
-                onRack = true;
                 continue;
-            }
             if (result.CompareTag("Weapon"))
                 continue;
             if (result.gameObject.GetComponent<ModuleRack>() != null)
@@ -377,37 +354,43 @@ public class RackMovement : MonoBehaviour
             //     continue;
             // }
             
-            colliding = true;
+            return true;
             // otherwise if we hit something, return true
         }
-        // receiving no hits means false
-        if (!onRack && !isInInventory && !isOverInventory)
+        
+        return false;
+    }
+
+    bool OnModuleRack()
+    {
+        var results = Physics2D.RaycastAll(snapSquare.transform.position, Vector2.zero);
+        foreach (var r in results)
         {
-            // Debug.Log("My module rack is " + myModuleRack.gameObject.name + " on " + myModuleRack.transform.parent.gameObject.name);
+            if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Racks"))
+            {
+                if (InsideCollider(snapSquare.GetComponent<Collider2D>(), r.collider))
+                {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    bool InsideCollider(Collider2D mycol, Collider2D other)
+    {
+        Physics2D.SyncTransforms();
+        var myColMinPos = mycol.bounds.min;
+        myColMinPos.z = 0;
+        var myColMaxPos = mycol.bounds.max;
+        myColMaxPos.z = 0;
+        Debug.Log($"Checking InsideCollider at {mycol.transform.position}\nsnapSquare bounds are ({myColMinPos}, {myColMaxPos})\nrack bounds are ({other.bounds.min}, {other.bounds.max})");
+        if (other.bounds.Contains(myColMinPos) && other.bounds.Contains(myColMaxPos))
+        {
             return true;
         }
 
-        if (colliding)
-        {
-            // Debug.Log("colliding");
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    
-    bool InsideCol(Collider2D mycol, Collider2D other)
-    {
-        if (other.bounds.Contains(mycol.bounds.min)
-            && other.bounds.Contains(mycol.bounds.max))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 }
