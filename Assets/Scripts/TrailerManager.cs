@@ -63,8 +63,8 @@ public class TrailerManager : MonoBehaviour
     void WeaponOne()
     {
         WeaponManager.Instance.weapons[0].GetComponent<Weapon>().bulletSpread = .1f;
-        WeaponManager.Instance.weapons[0].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
-        WeaponManager.Instance.weapons[0].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
+        // WeaponManager.Instance.weapons[0].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
+        // WeaponManager.Instance.weapons[0].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         
         if (Conductor.Instance.bar == 0)
         {
@@ -91,8 +91,8 @@ public class TrailerManager : MonoBehaviour
             WeaponManager.Instance.AddWeapon();
             WeaponManager.Instance.weapons[1].GetComponent<Weapon>().bulletSpread = .2f;
             WeaponManager.Instance.weapons[1].GetComponent<Weapon>().bulletSpeed = 3;
-            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
-            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
+            // WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
+            // WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         }
 
         if (Conductor.Instance.bar >= 2 && Conductor.Instance.bar < 7)
@@ -104,7 +104,7 @@ public class TrailerManager : MonoBehaviour
 
         if (Conductor.Instance.bar == 7 && Conductor.Instance.sixteenth == 8)
         {
-            WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.gameObject.SetActive(false);
+            // WeaponManager.Instance.weapons[1].GetComponent<Weapon>().myShipWeapon.gameObject.SetActive(false);
         }
 
     }
@@ -114,8 +114,8 @@ public class TrailerManager : MonoBehaviour
         if (Conductor.Instance.bar == 3 && Conductor.Instance.quarter == 0)
         {
             WeaponManager.Instance.AddWeapon();
-            WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
-            WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
+            // WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = false;
+            // WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.transform.GetChild(2).GetComponent<SpriteRenderer>().enabled = false;
         }
 
         if (Conductor.Instance.bar >= 4 && Conductor.Instance.bar < 8)
@@ -126,7 +126,7 @@ public class TrailerManager : MonoBehaviour
 
         if (Conductor.Instance.bar == 8 && Conductor.Instance.quarter == 2)
         {
-            WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.gameObject.SetActive(false);
+            // WeaponManager.Instance.weapons[2].GetComponent<Weapon>().myShipWeapon.gameObject.SetActive(false);
         }
 
     }
@@ -227,5 +227,4 @@ public class TrailerManager : MonoBehaviour
             //Debug.Log("The tempo should change here");
         }
     }
-
 }

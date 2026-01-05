@@ -67,12 +67,12 @@ public class AudioManager: MonoBehaviour
     
     public EventInstance[] patchInstances = new EventInstance[12];
     public EventInstance[] enemyPatchInstances = new EventInstance[12];
-    public List<EventReference> enemySongs = new List<EventReference>();
-    public List<EventReference> enemySongsPlayed = new List<EventReference>();
+    public List<EventReference> enemySongs = new();
+    public List<EventReference> enemySongsPlayed = new();
 
-    private List<GameObject> weapons = new List<GameObject>();
-    private List<EventInstance> weaponsEventInstances = new List<EventInstance>();
-    private List<Coroutine> weaponsCoroutines = new List<Coroutine>();
+    private List<Weapon> weapons = new();
+    private List<EventInstance> weaponsEventInstances = new();
+    private List<Coroutine> weaponsCoroutines = new();
     
 
     private int pickedInstanceRef;
@@ -88,294 +88,8 @@ public class AudioManager: MonoBehaviour
     public float attack;
     public float decay;
     public float release;
-
-    void Start()
-    {
-        // moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-        
-        amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
-        sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
-
-        tutorialEnemyShieldInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-        tutorialEnemyWeaponInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-
-        for (int i = 0; i < 12; i++)
-        {
-            patchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-            enemyPatchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-        }
-
-        //start events
-        amb_spaceInst.start();
-
-        enemySongs.Add(test_enemySong1Ref);
-        enemySongs.Add(test_enemySong2Ref);
-        enemySongs.Add(test_enemySong3Ref);
-
-        playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
-        moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event:/Module");
-
-        noteLength = 60 / Conductor.Instance.tempo;
-        attack = noteLength * attackRatio;
-        decay = noteLength * decayRatio;
-        release = noteLength * releaseRatio;
-        // UnityEngine.Debug.Log("note length: " + noteLength + "attack: " + attack + "decay: " + decay + "release" + release);
-    }
-
-    void Update()
-    {
-        
-    }
-
-    public void SetParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
-    {
-        if (instanceIndex >= patchInstances.Length)
-        {
-            Debug.Log("Parameter index is out of range of patchInstances.");
-            // var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-            // newInst.start();
-            // patchInstances.Add(newInst);
-        }
-
-        // foreach (var pair in parameters)
-        // {
-        //     Debug.Log(pair.Key + " " + pair.Value);
-        // }
-        
-        
-        // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
-        
-        //source params
-        patchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
-        patchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
-        //AM params
-        patchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
-        patchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
-        patchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
-        patchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdepth"]);
-        //FM params
-        patchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
-        patchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
-        patchInstances[instanceIndex].setParameterByName("FMfreq", parameters["FMfreq"]);
-        patchInstances[instanceIndex].setParameterByName("FMdepth", parameters["FMdepth"]);
-        //AM on AM params
-        patchInstances[instanceIndex].setParameterByName("AM2", parameters["AM2"]);
-        patchInstances[instanceIndex].setParameterByName("AM2source", parameters["AM2source"]);
-        patchInstances[instanceIndex].setParameterByName("AM2freq", parameters["AM2freq"]);
-        patchInstances[instanceIndex].setParameterByName("AM2depth", parameters["AM2depth"]);
-        //FM on FM params - broken rn, wasn't before
-        patchInstances[instanceIndex].setParameterByName("FM2", parameters["FM2"]);
-        patchInstances[instanceIndex].setParameterByName("FM2source", parameters["FM2source"]);
-        patchInstances[instanceIndex].setParameterByName("FM2freq", parameters["FM2freq"]);
-        patchInstances[instanceIndex].setParameterByName("FM2depth", parameters["FM2depth"]);
-        //AM on FM params - this doesn't work right now
-        patchInstances[instanceIndex].setParameterByName("FMAM", parameters["FMAM"]);
-        patchInstances[instanceIndex].setParameterByName("FMAMsource", parameters["FMAMsource"]);
-        patchInstances[instanceIndex].setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
-        patchInstances[instanceIndex].setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
-        //FM on AM params - this doesn't work right now
-        patchInstances[instanceIndex].setParameterByName("AMFM", parameters["AMFM"]);
-        patchInstances[instanceIndex].setParameterByName("AMFMsource", parameters["AMFMsource"]);
-        patchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
-        patchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
-
-        //adsr params
-        patchInstances[instanceIndex].setParameterByName("adsr", parameters["adsr"]);
-        patchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
-        patchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
-        patchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
-        patchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
-        
-        //wobble params - just set wobble to 1 to activate it in place of original param, and then play w below params + AM depth
-        patchInstances[instanceIndex].setParameterByName("wobble", parameters["wobble"]);
-        patchInstances[instanceIndex].setParameterByName("delaytime", parameters["delaytime"]);
-        patchInstances[instanceIndex].setParameterByName("reson", parameters["reson"]);
-        patchInstances[instanceIndex].setParameterByName("fbgain", parameters["fbgain"]); 
-
-
-        //OLD PARAMS - just holding this in case shit breaks at a bad time
-        //patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
-        /*patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
-        patchInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
-        patchInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
-        patchInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
-        patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
-        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. */
-
-        if (!IsPlaying(patchInstances[instanceIndex]))
-        {
-            patchInstances[instanceIndex].start();
-        }
-    }
     
-    public void SetEnemyParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
-    {
-        if (instanceIndex >= patchInstances.Length)
-        {
-            Debug.Log("Parameter index is out of range of patchInstances.");
-            // var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-            // newInst.start();
-            // patchInstances.Add(newInst);
-        }
-
-        // foreach (var pair in parameters)
-        // {
-        //     Debug.Log(pair.Key + " " + pair.Value);
-        // }
-
-        
-        //source params
-        enemyPatchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
-        //AM params
-        enemyPatchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdepth"]);
-        //FM params
-        enemyPatchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FMfreq", parameters["FMfreq"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FMdepth", parameters["FMdepth"]);
-        //AM on AM params
-        enemyPatchInstances[instanceIndex].setParameterByName("AM2", parameters["AM2"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AM2source", parameters["AM2source"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AM2freq", parameters["AM2freq"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AM2depth", parameters["AM2depth"]);
-        //FM on FM params - broken rn, wasn't before
-        enemyPatchInstances[instanceIndex].setParameterByName("FM2", parameters["FM2"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FM2source", parameters["FM2source"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FM2freq", parameters["FM2freq"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FM2depth", parameters["FM2depth"]);
-        //AM on FM params - this doesn't work right now
-        enemyPatchInstances[instanceIndex].setParameterByName("FMAM", parameters["FMAM"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FMAMsource", parameters["FMAMsource"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
-        //FM on AM params - this doesn't work right now
-        enemyPatchInstances[instanceIndex].setParameterByName("AMFM", parameters["AMFM"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AMFMsource", parameters["AMFMsource"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
-
-        //adsr params
-        enemyPatchInstances[instanceIndex].setParameterByName("adsr", parameters["adsr"]);
-        enemyPatchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
-        enemyPatchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
-        enemyPatchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
-        enemyPatchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
-
-        enemyPatchInstances[instanceIndex].start();
-    }
-
-    public void PickUpModuleSFX()
-    {
-         FMODUnity.RuntimeManager.PlayOneShot(ui_pickupRef);
-    }
-
-    public void PutDownModuleSFX()
-    {
-         FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
-    }
-
-    private EventReference EnemySongPicked()
-    {
-        // pickedInstanceRef = UnityEngine.Random.Range(0, enemySongs.Count);
-        pickedInstanceRef = 0;
-
-        enemySongRef = enemySongs[pickedInstanceRef];
-
-        return enemySongRef;
-
-    }
-
-    public void PlayEnemySong()
-    {
-        //need to redo this when we reintroduce enemy puzzle
-        
-    }
-
-    
-
-    public void MutePlayerVolume()
-    {
-        playerVCA.setVolume(0);
-    }
-
-    public void UnmutePlayerVolume()
-    {
-        playerVCA.setVolume(1);
-    }
-
-    public void ResetModuleInstances()
-    {
-        moduleDescription.releaseAllInstances();
-    }
-
-    public void PlayDialogueSound()
-    {
-        FMODUnity.RuntimeManager.PlayOneShot(ui_dialogueRef);
-    }
-
-    public void PlayPaperSound()
-    {
-        FMODUnity.RuntimeManager.PlayOneShot(sfx_paperRef);
-    }
-    
-    bool IsPlaying(FMOD.Studio.EventInstance instance) {
-        FMOD.Studio.PLAYBACK_STATE state;   
-        instance.getPlaybackState(out state);
-        return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
-    }
-
-    public void PlayNote(GameObject weapon, Dictionary<string, float> noteInfo)
-    {
-        // Debug.Log("===== Playing note =====");
-        // foreach (var datum in noteInfo)
-        // {
-        //     Debug.Log(datum.Key + " : " + datum.Value);
-        // }
-        StartCoroutine(PlayNoteCoroutine(weapon, noteInfo));
-    }
-
-    IEnumerator PlayNoteCoroutine(GameObject weapon, Dictionary<string, float> noteInfo)
-    {
-        var started = false;
-        var weaponIndex = -1;
-        
-        if (!started)
-        {
-            // compare weapon against all existing weapons
-            for (int i = 0; i < weapons.Count; i++)
-            {
-                if (weapon == weapons[i])
-                {
-                    weaponIndex = i;
-                    break;
-                }
-            }
-
-            // if weapon doesn't match any existing weapons, make new weapon
-            if (weaponIndex == -1)
-            {
-                weapons.Add(weapon);
-                weaponsEventInstances.Add(RuntimeManager.CreateInstance(moduleRef));
-                weaponIndex = weapons.Count - 1;
-                SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], DefaultNoteInfo());
-                weaponsEventInstances[weaponIndex].start();
-            }
-
-            SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], noteInfo);
-            weaponsEventInstances[weaponIndex].setParameterByName("adsr", 1);
-
-            started = true;
-            yield return new WaitForSeconds(noteInfo["length"]);
-        }
-        // Debug.Log(weaponIndex);
-        weaponsEventInstances[weaponIndex].setParameterByName("adsr", 0);
-    }
-
-    Dictionary<string, float> DefaultNoteInfo()
+    private Dictionary<string, float> DefaultNoteInfo()
     {
         return new Dictionary<string, float>
         {
@@ -430,6 +144,225 @@ public class AudioManager: MonoBehaviour
         };
     }
 
+    void Start()
+    {
+        EventBus.Instance.weaponFired.AddListener(OnWeaponFired);
+        // moduleInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        
+        amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
+        sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
+
+        tutorialEnemyShieldInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        tutorialEnemyWeaponInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+
+        for (int i = 0; i < 12; i++)
+        {
+            patchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+            enemyPatchInstances[i] = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+        }
+
+        //start events
+        amb_spaceInst.start();
+
+        enemySongs.Add(test_enemySong1Ref);
+        enemySongs.Add(test_enemySong2Ref);
+        enemySongs.Add(test_enemySong3Ref);
+
+        playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
+        moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event:/Module");
+
+        noteLength = 60 / Conductor.Instance.tempo;
+        attack = noteLength * attackRatio;
+        decay = noteLength * decayRatio;
+        release = noteLength * releaseRatio;
+        // UnityEngine.Debug.Log("note length: " + noteLength + "attack: " + attack + "decay: " + decay + "release" + release);
+    }
+    
+    #region SetParams
+    // TODO: SetParametersByDict and SetEnemyParam... should be combined into one method.
+    // A target should be passed in as an argument and values set regardless of target type.
+    public void SetParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
+    {
+        if (instanceIndex >= patchInstances.Length)
+        {
+            Debug.Log("Parameter index is out of range of patchInstances.");
+            // var newInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
+            // newInst.start();
+            // patchInstances.Add(newInst);
+        }
+
+        foreach (var pair in parameters)
+        {
+            patchInstances[instanceIndex].setParameterByName(pair.Key, pair.Value);
+        }
+        
+        // TODO: the foreach loop above should replace the fuckass list below
+        // I'm gonna keep it around for a bit just in case it doesn't though
+        
+        // fmodEvents[instanceIndex].setParameterByName("shipstate", parameters["shipstate"]);
+        
+        //source params
+        // patchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
+        // patchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
+        // //AM params
+        // patchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
+        // patchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
+        // patchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
+        // patchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdepth"]);
+        // //FM params
+        // patchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
+        // patchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
+        // patchInstances[instanceIndex].setParameterByName("FMfreq", parameters["FMfreq"]);
+        // patchInstances[instanceIndex].setParameterByName("FMdepth", parameters["FMdepth"]);
+        // //AM on AM params
+        // patchInstances[instanceIndex].setParameterByName("AM2", parameters["AM2"]);
+        // patchInstances[instanceIndex].setParameterByName("AM2source", parameters["AM2source"]);
+        // patchInstances[instanceIndex].setParameterByName("AM2freq", parameters["AM2freq"]);
+        // patchInstances[instanceIndex].setParameterByName("AM2depth", parameters["AM2depth"]);
+        // //FM on FM params - broken rn, wasn't before
+        // patchInstances[instanceIndex].setParameterByName("FM2", parameters["FM2"]);
+        // patchInstances[instanceIndex].setParameterByName("FM2source", parameters["FM2source"]);
+        // patchInstances[instanceIndex].setParameterByName("FM2freq", parameters["FM2freq"]);
+        // patchInstances[instanceIndex].setParameterByName("FM2depth", parameters["FM2depth"]);
+        // //AM on FM params - this doesn't work right now
+        // patchInstances[instanceIndex].setParameterByName("FMAM", parameters["FMAM"]);
+        // patchInstances[instanceIndex].setParameterByName("FMAMsource", parameters["FMAMsource"]);
+        // patchInstances[instanceIndex].setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
+        // patchInstances[instanceIndex].setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
+        // //FM on AM params - this doesn't work right now
+        // patchInstances[instanceIndex].setParameterByName("AMFM", parameters["AMFM"]);
+        // patchInstances[instanceIndex].setParameterByName("AMFMsource", parameters["AMFMsource"]);
+        // patchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
+        // patchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
+        //
+        // //adsr params
+        // patchInstances[instanceIndex].setParameterByName("adsr", parameters["adsr"]);
+        // patchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
+        // patchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
+        // patchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
+        // patchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+        //
+        // //wobble params - just set wobble to 1 to activate it in place of original param, and then play w below params + AM depth
+        // patchInstances[instanceIndex].setParameterByName("wobble", parameters["wobble"]);
+        // patchInstances[instanceIndex].setParameterByName("delaytime", parameters["delaytime"]);
+        // patchInstances[instanceIndex].setParameterByName("reson", parameters["reson"]);
+        // patchInstances[instanceIndex].setParameterByName("fbgain", parameters["fbgain"]); 
+
+
+        //OLD PARAMS - just holding this in case shit breaks at a bad time
+        //patchInstances[instanceIndex].setParameterByName("arpstart", parameters["arpstart"]);
+        /*patchInstances[instanceIndex].setParameterByName("arp", parameters["arp"]);
+        patchInstances[instanceIndex].setParameterByName("arpspeed", parameters["arpspeed"]); //speed of arpeggiator 50-2000, higher = slower. ms between pitch changes
+        patchInstances[instanceIndex].setParameterByName("thruster", parameters["thruster"]);
+        patchInstances[instanceIndex].setParameterByName("thrusterspeed", parameters["thrusterspeed"]); //how fast thruster goes, 1-15. 15 fastest, 1 slowest (frequency of LFO)
+        patchInstances[instanceIndex].setParameterByName("ringmod", parameters["ringmod"]); 
+        patchInstances[instanceIndex].setParameterByName("shields", parameters["shields"]); //shields param: 1-4. 1 is "off" (one voice), 2 is 2 voices, etc. */
+
+        if (!IsPlaying(patchInstances[instanceIndex]))
+        {
+            patchInstances[instanceIndex].start();
+        }
+    }
+    
+    public void SetEnemyParametersByDict(int instanceIndex, Dictionary<string, float> parameters)
+    {
+        if (instanceIndex >= patchInstances.Length)
+        {
+            Debug.Log("Parameter index is out of range of patchInstances.");
+        }
+
+        foreach (var pair in parameters)
+        {
+            enemyPatchInstances[instanceIndex].setParameterByName(pair.Key, pair.Value);
+        }
+        
+        // //source params
+        // enemyPatchInstances[instanceIndex].setParameterByName("pitch", parameters["pitch"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("source", parameters["source"]);
+        // //AM params
+        // enemyPatchInstances[instanceIndex].setParameterByName("AM", parameters["AM"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMsource", parameters["AMsource"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMfreq", parameters["AMfreq"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMdepth", parameters["AMdepth"]);
+        // //FM params
+        // enemyPatchInstances[instanceIndex].setParameterByName("FM", parameters["FM"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMsource", parameters["FMsource"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMfreq", parameters["FMfreq"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMdepth", parameters["FMdepth"]);
+        // //AM on AM params
+        // enemyPatchInstances[instanceIndex].setParameterByName("AM2", parameters["AM2"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AM2source", parameters["AM2source"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AM2freq", parameters["AM2freq"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AM2depth", parameters["AM2depth"]);
+        // //FM on FM params - broken rn, wasn't before
+        // enemyPatchInstances[instanceIndex].setParameterByName("FM2", parameters["FM2"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FM2source", parameters["FM2source"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FM2freq", parameters["FM2freq"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FM2depth", parameters["FM2depth"]);
+        // //AM on FM params - this doesn't work right now
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMAM", parameters["FMAM"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMAMsource", parameters["FMAMsource"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMAMfreq", parameters["FMAMfreq"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("FMAMdepth", parameters["FMAMdepth"]);
+        // //FM on AM params - this doesn't work right now
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMFM", parameters["AMFM"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMFMsource", parameters["AMFMsource"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMFMfreq", parameters["AMFMfreq"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("AMFMdepth", parameters["AMFMdepth"]);
+        //
+        // //adsr params
+        // enemyPatchInstances[instanceIndex].setParameterByName("adsr", parameters["adsr"]);
+        // enemyPatchInstances[instanceIndex].setParameterByName("attack", parameters["attack"]); //attack in ms, 0-2000
+        // enemyPatchInstances[instanceIndex].setParameterByName("decay", parameters["decay"]); //decay in ms, 0-2000
+        // enemyPatchInstances[instanceIndex].setParameterByName("sustain", parameters["sustain"]); //sustain amount, 0-1
+        // enemyPatchInstances[instanceIndex].setParameterByName("release", parameters["release"]); //release in ms, 0-2000
+
+        enemyPatchInstances[instanceIndex].start();
+    }
+    #endregion
+    
+    private void OnWeaponFired(Weapon weapon)
+    {
+        StartCoroutine(PlayNoteCoroutine(weapon, weapon.noteInfo));
+    }
+
+    private IEnumerator PlayNoteCoroutine(Weapon weapon, Dictionary<string, float> noteInfo)
+    {
+        var started = false;
+        var weaponIndex = -1;
+        
+        if (!started)
+        {
+            // compare weapon against all existing weapons
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                if (weapon == weapons[i])
+                {
+                    weaponIndex = i;
+                    break;
+                }
+            }
+
+            // if weapon doesn't match any existing weapons, make new weapon
+            if (weaponIndex == -1)
+            {
+                weapons.Add(weapon);
+                weaponsEventInstances.Add(RuntimeManager.CreateInstance(moduleRef));
+                weaponIndex = weapons.Count - 1;
+                SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], DefaultNoteInfo());
+                weaponsEventInstances[weaponIndex].start();
+            }
+
+            SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], noteInfo);
+            weaponsEventInstances[weaponIndex].setParameterByName("adsr", 1);
+
+            started = true;
+            yield return new WaitForSeconds(noteInfo["length"]);
+        }
+        // Debug.Log(weaponIndex);
+        weaponsEventInstances[weaponIndex].setParameterByName("adsr", 0);
+    }
+
     public void StartStorm()
     {
         sfx_stormInst = FMODUnity.RuntimeManager.CreateInstance(sfx_stormRef);
@@ -447,6 +380,70 @@ public class AudioManager: MonoBehaviour
         sfx_stormInst.stop(0);
     }
 
+    void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)
+    {
+        foreach (var parameter in parameters)
+        {
+            inst.setParameterByName(parameter.Key, parameter.Value);
+        }
+        
+    }
+    
+    private EventReference EnemySongPicked()
+    {
+        // pickedInstanceRef = UnityEngine.Random.Range(0, enemySongs.Count);
+        pickedInstanceRef = 0;
+
+        enemySongRef = enemySongs[pickedInstanceRef];
+
+        return enemySongRef;
+
+    }
+
+    public void PlayEnemySong()
+    {
+        //need to redo this when we reintroduce enemy puzzle
+        
+    }
+
+    
+
+    public void MutePlayerVolume()
+    {
+        playerVCA.setVolume(0);
+    }
+
+    public void UnmutePlayerVolume()
+    {
+        playerVCA.setVolume(1);
+    }
+
+    public void ResetModuleInstances()
+    {
+        moduleDescription.releaseAllInstances();
+    }
+
+    #region Soundboard
+    public void PlayDialogueSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(ui_dialogueRef);
+    }
+
+    public void PlayPaperSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_paperRef);
+    }
+    
+    public void PickUpModuleSFX()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(ui_pickupRef);
+    }
+
+    public void PutDownModuleSFX()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(ui_putdownRef);
+    }
+    
     public void PlayExplosionSFX()
     {
         FMODUnity.RuntimeManager.PlayOneShot(sfx_explosionRef);
@@ -456,13 +453,11 @@ public class AudioManager: MonoBehaviour
     {
         FMODUnity.RuntimeManager.PlayOneShot(ui_chime);
     }
-
-    void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)
-    {
-        foreach (var parameter in parameters)
-        {
-            inst.setParameterByName(parameter.Key, parameter.Value);
-        }
-        
+    #endregion
+    
+    bool IsPlaying(FMOD.Studio.EventInstance instance) {
+        FMOD.Studio.PLAYBACK_STATE state;   
+        instance.getPlaybackState(out state);
+        return state != FMOD.Studio.PLAYBACK_STATE.STOPPED;
     }
 }

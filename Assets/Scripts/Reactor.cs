@@ -23,6 +23,7 @@ public class Reactor : MonoBehaviour
     public List<Module> myPatch;
 
     public GameObject previousModule;
+    public GameObject parentWire;
 
     private EventInstance[] pads = new EventInstance[8];
 

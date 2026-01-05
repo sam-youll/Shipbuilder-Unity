@@ -28,6 +28,10 @@ public class StatBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (transform.parent != null && transform.parent.parent != null && transform.parent.parent.TryGetComponent(out Weapon weapon))
+        {
+            value = weapon.charge;
+        }
         value = Mathf.Clamp(value, 0, 1);
         
         var myScale = transform.localScale;

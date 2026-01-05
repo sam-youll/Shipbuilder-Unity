@@ -16,6 +16,8 @@ public class ModuleInspector : Editor
     
     public override void OnInspectorGUI()
     {
+        Undo.RecordObject(target, "Module Inspector");
+        
         var module = (Module)target;
         
         EditorGUILayout.BeginVertical();
@@ -109,6 +111,20 @@ public class ModuleInspector : Editor
             paletteSelection = Module.ModuleComponent.Knob;
         }
         
+        // LABEL
+        if (paletteSelection == Module.ModuleComponent.Label)
+        {
+            GUI.color = Color.white;
+        }
+        else
+        {
+            GUI.color = Color.gray;
+        }
+        if (GUILayout.Button("Label", GUILayout.Width(40), GUILayout.Height(20)))
+        {
+            paletteSelection = Module.ModuleComponent.Label;
+        }
+        
         GUI.color = Color.red;
         if (GUILayout.Button("CLEAR", GUILayout.Width(50), GUILayout.Height(20)))
         {
@@ -176,6 +192,14 @@ public class ModuleInspector : Editor
                         }
 
                         break;
+                    case Module.ModuleComponent.Label:
+                        GUI.color = Color.cyan;
+                        if (GUILayout.Button("L", GUILayout.Width(40), GUILayout.Height(40)))
+                        {
+                            module.moduleShape[x, y] = paletteSelection;
+                        }
+
+                        break;
                 }
                 
             }
@@ -214,7 +238,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         Output,
         Switch,
         Knob,
-        TypeIcon
+        Label
     }
     
     [Header("Changing dimensions will reset grid. Dimensions can be between 1 and 8.")]
@@ -237,7 +261,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     public Theme theme = Theme.CarbonFiber;
     public bool darkTheme;
     private string tilesheetPath;
-    public Sprite snapSquareSprite;
     
     #if UNITY_EDITOR
     private void OnValidate()
@@ -254,6 +277,8 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     
     public void BuildModule()
     {
+        Undo.RecordObject(gameObject, "Build Module");
+        // EditorUtility.SetDirty(gameObject);
         ClearModule();
         
         gameObject.layer = LayerMask.NameToLayer("Rack Objects");
@@ -460,12 +485,14 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
                         var newInputJack = Instantiate(Resources.Load<GameObject>("Module Components/Input Jack"), transform);
                         newInputJack.transform.SetParent(transform);
                         newInputJack.transform.localPosition = new Vector3(x, y, -.1f);
+                        newInputJack.GetComponent<Jack>().darkTheme = darkTheme;
                         inputJacks.Add(newInputJack);
                         break;
                     case ModuleComponent.Output:
                         var newOutputJack = Instantiate(Resources.Load<GameObject>("Module Components/Output Jack"), transform);
                         newOutputJack.transform.SetParent(transform);
                         newOutputJack.transform.localPosition = new Vector3(x, y, -.1f);
+                        newOutputJack.GetComponent<Jack>().darkTheme = darkTheme;
                         outputJacks.Add(newOutputJack);
                         break;
                     case ModuleComponent.Switch:
@@ -478,10 +505,18 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
                         newKnob.transform.SetParent(transform);
                         newKnob.transform.localPosition = new Vector3(x, y, -.1f);
                         break;
-                    case ModuleComponent.TypeIcon:
-                        var newTypeIcon = new GameObject($"TypeIcon ({x}, {y})");
+                    case ModuleComponent.Label:
+                        var newTypeIcon = new GameObject($"Label ({x}, {y})");
                         newTypeIcon.transform.SetParent(transform);
                         newTypeIcon.transform.localPosition = new Vector3(x, y, -.1f);
+                        newTypeIcon.AddComponent<MeshRenderer>();
+                        var textComponent = newTypeIcon.AddComponent<TextMeshPro>();
+                        textComponent.fontSize = 5;
+                        textComponent.rectTransform.sizeDelta = new Vector2(.75f, .75f);
+                        textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/mythic-pixels");
+                        textComponent.alignment = TextAlignmentOptions.BottomLeft;
+                        textComponent.text = gameObject.name.Split(" ")[0];
+                        textComponent.color = darkTheme ? new Color(.56f, .78f, .78f) : new Color(.2f, .2f, .2f);
                         break;
                 }
             }
@@ -490,8 +525,8 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         
         #region Rack movement and snap square
         var rackMovement = gameObject.AddComponent<RackMovement>();
-        rackMovement.oddSizeX = dimensions.x % 2 == 0;
-        rackMovement.oddSizeY = dimensions.y % 2 == 0;
+        rackMovement.oddSizeX = dimensions.x % 2 == 1;
+        rackMovement.oddSizeY = dimensions.y % 2 == 1;
         
         var snapSquare = new GameObject("Snap Square");
         snapSquare.transform.parent = gameObject.transform;
@@ -511,10 +546,11 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
                 snapSquareComponent.transform.parent = snapSquare.transform;
                 snapSquareComponent.transform.localPosition = new Vector3(x, y, -.01f);
                 snapSquareComponent.AddComponent<SpriteRenderer>();
-                snapSquareComponent.GetComponent<SpriteRenderer>().sprite = snapSquareSprite;
+                snapSquareComponent.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Square");
                 snapSquareComponent.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0.7f);
                 var coll = snapSquareComponent.AddComponent<BoxCollider2D>();
                 coll.compositeOperation = Collider2D.CompositeOperation.Merge;
+                coll.size = new Vector2(.9f, .9f);
             }
         }
         #endregion
@@ -623,35 +659,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
             GetComponent<RackMovement>().inventoryEnter.AddListener(OnInventoryEnter);
             GetComponent<RackMovement>().inventoryExit.AddListener(OnInventoryExit);
         }
-        
-        // setting sample text tmp guy
-        sampleText = GetComponentInChildren<TextMeshPro>();
-    }
-
-    // Update is called once per frame
-    protected virtual void Update()
-    {
-        if (sampleText != null)
-        {
-            //sample text stuff 
-            if (GetComponent<AddModule>())
-            {
-                sampleText.text = "+" + GetComponent<AddModule>().stepSize;
-            }
-            else if (GetComponent<CounterModule>())
-            {
-                sampleText.text = "counter: " + GetComponent<CounterModule>().currentValue;
-            }
-            else if (GetComponent<SwitchModule>())
-            {
-                sampleText.text = "switch: " + GetComponent<SwitchModule>().currentIndex;
-            }
-            else if (GetComponent<RandomModule>())
-            {
-                sampleText.text = "random: " + GetComponent<RandomModule>().randomNumber;
-            }
-        }
-        
     }
     
     #region Trigger Method + Overloads
@@ -702,6 +709,8 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
 
     protected virtual void OnJackClick(GameObject jack)
     {
+        return;
+        
         // Debug.Log("module jack clicked");
         if (transform.parent == Inventory.Instance.transform)
             return;
@@ -766,7 +775,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
 
         return result;
     }
-    
+
+    protected virtual void Update()
+    {
+        
+    }
+
     public void ClearWires()
     {
         if (parentWires.Count > 0)

@@ -32,8 +32,7 @@ public class Wire : MonoBehaviour
     
     private LineRenderer lineRenderer;
 
-    public bool connectedToModule = false;
-    public bool connectedToWeapon = false;
+    public bool isConnected = false;
 
     public bool invisible = false;
 
@@ -47,7 +46,7 @@ public class Wire : MonoBehaviour
     public Texture2D baseTexture;
     public Texture2D flippedTexture;
     
-    private bool dying; // this gets flipped when a wire deletes itself
+    public bool dying; // this gets flipped when a wire deletes itself
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -83,8 +82,8 @@ public class Wire : MonoBehaviour
             // Collision
             var edge = gameObject.AddComponent<EdgeCollider2D>();
             edge.edgeRadius = .07f;
-            
-            UpdateJackHighlights();
+
+            EventBus.Instance.updateJackValidity.Invoke(this);
         }
     }
 
@@ -93,7 +92,7 @@ public class Wire : MonoBehaviour
     {
         #region Grabbing
         bool overWire = false;
-        if (connectedToModule)
+        if (isConnected)
         {
             foreach (var result in Global.Instance.raycastHits)
             {
@@ -104,7 +103,7 @@ public class Wire : MonoBehaviour
             }
         }
         
-        if (overWire && connectedToModule || grabbed)
+        if (overWire && isConnected || grabbed)
         {
 
             if (Input.GetMouseButtonDown(0))
@@ -130,8 +129,8 @@ public class Wire : MonoBehaviour
                     previousModule.GetComponent<Module>().childWires.Remove(gameObject);
                     previousModuleJack = null;
                     previousModule = null;
-                    connectedToModule = false;
-                    UpdateJackHighlights();
+                    isConnected = false;
+                    EventBus.Instance.updateJackValidity.Invoke(this);
                 }
                 else if (Global.Instance.RaycastResultsContains(nextModuleJack))
                 {
@@ -140,10 +139,12 @@ public class Wire : MonoBehaviour
                     if (nextModule.CompareTag("Weapon"))
                     {
                         nextModule.GetComponent<Weapon>().previousModule = null;
+                        nextModule.GetComponent<Weapon>().parentWire = null;
                     }
                     else if (nextModule.CompareTag("Reactor"))
                     {
                         nextModule.GetComponent<Reactor>().previousModule = null;
+                        nextModule.GetComponent<Reactor>().parentWire = null;
                     }
                     else
                     {
@@ -151,8 +152,8 @@ public class Wire : MonoBehaviour
                     }
                     nextModule = null;
                     nextModuleJack = null;
-                    connectedToModule = false;
-                    UpdateJackHighlights();
+                    isConnected = false;
+                    EventBus.Instance.updateJackValidity.Invoke(this);
                 }
                 else if (grabbedIndex == 0)
                 {
@@ -180,7 +181,7 @@ public class Wire : MonoBehaviour
         }
         // edge case where you grab the jack but you're not technically hitting the wire itself
         // we still want to grab the end of the wire
-        else if (connectedToModule && Input.GetMouseButtonDown(0))
+        else if (isConnected && Input.GetMouseButtonDown(0))
         {
             if (Global.Instance.RaycastResultsContains(previousModuleJack))
             {
@@ -189,8 +190,8 @@ public class Wire : MonoBehaviour
                 previousModule.GetComponent<Module>().childWires.Remove(gameObject);
                 previousModuleJack = null;
                 previousModule = null;
-                connectedToModule = false;
-                UpdateJackHighlights();
+                isConnected = false;
+                EventBus.Instance.updateJackValidity.Invoke(this);
             }
             else if (Global.Instance.RaycastResultsContains(nextModuleJack))
             {
@@ -210,8 +211,8 @@ public class Wire : MonoBehaviour
                 }
                 nextModule = null;
                 nextModuleJack = null;
-                connectedToModule = false;
-                UpdateJackHighlights();
+                isConnected = false;
+                EventBus.Instance.updateJackValidity.Invoke(this);
             }
         }
 
@@ -236,98 +237,68 @@ public class Wire : MonoBehaviour
 
         #region Dropping
         // when letting go of mouse click, either connect or destroy wire
-        if (Input.GetMouseButtonUp(0) && !connectedToModule)
+        if (Input.GetMouseButtonUp(0) && !isConnected)
         {
             // Look for jacks under the mouse
             RaycastHit2D hit = Physics2D.Raycast(Global.Instance.mousePos,Vector2.zero,Mathf.Infinity, LayerMask.GetMask("Jacks"));
             if (hit && !dying)
             {
-                // hit weapon output
-                if (hit.collider.gameObject.transform.parent.gameObject.CompareTag("Weapon"))
+                if (!hit.collider.gameObject.GetComponent<Jack>().valid)
                 {
-                    if (previousModule == null) // not sure how this would ever happen
+                    DeleteSelf();
+                }
+                else
+                {
+                    var parentGameObject = hit.collider.transform.parent.gameObject;
+                    if (parentGameObject.TryGetComponent(out Module module))
                     {
-                        DeleteSelf();
+                        if (hit.collider.TryGetComponent(out InputJack inputJack))
+                        {
+                            nextModuleJack = hit.collider.gameObject;
+                            nextModule = parentGameObject;
+                            module.parentWires.Add(gameObject);
+                        }
+                        else if (hit.collider.TryGetComponent(out OutputJack outputJack))
+                        {
+                            previousModuleJack = hit.collider.gameObject;
+                            previousModule = parentGameObject;
+                            module.childWires.Add(gameObject);
+                        }
                     }
-                    else
+                    else if (parentGameObject.TryGetComponent(out Weapon weapon))
                     {
                         nextModuleJack = hit.collider.gameObject;
-                        nextModule = nextModuleJack.transform.parent.gameObject;
-                        nextModule.GetComponent<Weapon>().previousModule = previousModule;
+                        nextModule = parentGameObject;
+                        weapon.previousModule = previousModule;
+                        weapon.parentWire = gameObject;
                     }
-                    PatchManager.Instance.UpdateAllPatches();
+                    else if (parentGameObject.TryGetComponent(out Reactor reactor))
+                    {
+                        nextModuleJack = hit.collider.gameObject;
+                        nextModule = parentGameObject;
+                        reactor.previousModule = previousModule;
+                        reactor.parentWire = gameObject;
+                    }
                     
-                    connectedToModule = true;
-                    connectedToWeapon = true;
-                    connected.Invoke();
+                    isConnected = true;
                 }
-                // hit reactor output
-                else if (hit.collider.transform.parent.CompareTag("Reactor"))
+
+                // TODO: what am I doing here
+                if (isConnected && (previousModule == null || nextModule == null))
                 {
-                    nextModuleJack = hit.collider.gameObject;
-                    nextModule = nextModuleJack.transform.parent.gameObject;
-                    nextModule.GetComponent<Reactor>().previousModule = previousModule;
-                    PatchManager.Instance.UpdateAllPatches();
-                    connectedToModule = true;
-                    connected.Invoke();
-                }
-                // hit a module
-                else if (hit.collider.gameObject.CompareTag("InputJack"))
-                {
-                    // is it the module I'm already connected to?
-                    // is there already a wire there?
-                    if (nextModule != null ||
-                        hit.collider.gameObject.transform.parent.gameObject == previousModule ||
-                        hit.collider.gameObject.transform.parent.gameObject == nextModule ||
-                        hit.collider.gameObject.GetComponentInParent<Module>().parentWires.Count > 0)
-                    {
-                        DeleteSelf();
-                    }
-                    // ok we're good
-                    else
-                    {
-                        nextModuleJack = hit.collider.gameObject;
-                        nextModule = nextModuleJack.transform.parent.gameObject;
-                        nextModule.GetComponent<Module>().parentWires.Add(gameObject);
-                        connectedToModule = true;
-                        connected.Invoke();
-                        PatchManager.Instance.UpdateAllPatches();
-                    }
-                }
-                else if (hit.collider.gameObject.CompareTag("OutputJack"))
-                {
-                    // is it the module I'm already connected to?
-                    // is there already a wire there?
-                    if (previousModule != null ||
-                        hit.collider.gameObject.transform.parent.gameObject == previousModule ||
-                        hit.collider.gameObject.transform.parent.gameObject == nextModule ||
-                        hit.collider.gameObject.GetComponentInParent<Module>().childWires.Count > 0)
-                    {
-                        DeleteSelf();
-                    }
-                    // alright go ahead
-                    else
-                    {
-                        previousModuleJack = hit.collider.gameObject;
-                        previousModule = previousModuleJack.transform.parent.gameObject;
-                        previousModule.GetComponent<Module>().childWires.Add(gameObject);
-                        connectedToModule = true;
-                        connected.Invoke();
-                        PatchManager.Instance.UpdateAllPatches();
-                    }
+                    throw new Exception("what the fuck");
                 }
                 
-                if (!dying && previousModule != null && previousModule.TryGetComponent(out SecondaryModule secondaryModule))
+                if (!dying && isConnected && previousModule.TryGetComponent(out SecondaryModule secondaryModule))
                 {
                     // might not work if you plug into primary input jack, not sure though
                     var inputIndex = nextModule.GetComponent<Module>().inputJacks.FindIndex(x => x == nextModuleJack);
                     secondaryModule.myInputIndex = inputIndex;
                 }
                 
-                
-                // determine wire type
-                UpdateWireType();
-                UpdateJackHighlights();
+                connected.Invoke();
+                PatchManager.Instance.UpdateAllPatches();
+                EventBus.Instance.updateJackValidity.Invoke(this);
             }
             else
             {
@@ -366,7 +337,7 @@ public class Wire : MonoBehaviour
         {
             if (!dying)
             {
-                if (connectedToModule)
+                if (isConnected || isConnected)
                 {
                     UpdatePoints(Vector2.down * .1f, previousModuleJack.transform.position, nextModuleJack.transform.position, false, false, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0);
                 }
@@ -518,7 +489,7 @@ public class Wire : MonoBehaviour
                 subpatch.childWires.Remove(gameObject);
             }
         }
-        UpdateJackHighlights();
+        EventBus.Instance.updateJackValidity.Invoke(this);
         PatchManager.Instance.UpdateAllPatches();
         Vector3[] positions = new Vector3[points];
         Vector2 deletePos = Global.Instance.mousePos;
@@ -539,7 +510,7 @@ public class Wire : MonoBehaviour
     {
         // TODO: move this function into Jack.cs and call it through the Global list of all jacks
         
-        if (connectedToModule || dying)
+        if (isConnected || dying)
         {
             // reset all highlights
             foreach (var jack in Global.Instance.allJacks)
@@ -554,7 +525,7 @@ public class Wire : MonoBehaviour
             {
                 if (jack.CompareTag("OutputJack") ||
                     jack.transform.parent.gameObject == previousModule ||
-                    jack.GetComponentInParent<Module>().parentWires.Count > 0)
+                    jack.GetComponentInParent<Module>() != null && jack.GetComponentInParent<Module>().parentWires.Count > 0)
                 {
                     jack.GetComponent<SpriteRenderer>().color = new Color(.5f, .5f, .5f, 1);
                 }
@@ -627,49 +598,49 @@ public class Wire : MonoBehaviour
 
     public void Trigger()
     {
-        if (!connectedToModule && !connectedToWeapon)
+        if (!isConnected)
             return;
         
         Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with no arguments.");
-        if (connectedToWeapon)
+        if (nextModule.TryGetComponent(out Weapon weapon))
         {
-            nextModule.GetComponent<Weapon>().Fire();
+            weapon.Fire();
         }
-        else
+        else if (nextModule.TryGetComponent(out Module module))
         {
-            nextModule.GetComponent<Module>().Trigger();
+            module.Trigger();
         }
     }
 
     public void Trigger(float value)
     {
-        if (!connectedToModule && !connectedToWeapon)
+        if (!isConnected)
             return;
         
         Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value}");
-        if (connectedToWeapon)
+        if (nextModule.TryGetComponent(out Weapon weapon))
         {
-            nextModule.GetComponent<Weapon>().Fire();
+            weapon.Fire();
         }
-        else
+        else if (nextModule.TryGetComponent(out Module module))
         {
-            nextModule.GetComponent<Module>().Trigger(value);
+            module.Trigger();
         }
     }
     
     public void Trigger(float value, int inputIndex)
     {
-        if (!connectedToModule && !connectedToWeapon)
+        if (!isConnected)
             return;
         
         Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value} to secondary input jack {inputIndex}");
-        if (connectedToWeapon)
+        if (nextModule.TryGetComponent(out Weapon weapon))
         {
-            nextModule.GetComponent<Weapon>().Fire();
+            weapon.Fire();
         }
-        else
+        else if (nextModule.TryGetComponent(out Module module))
         {
-            nextModule.GetComponent<Module>().Trigger(value, inputIndex);
+            module.Trigger();
         }
     }
 

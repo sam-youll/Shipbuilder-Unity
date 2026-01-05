@@ -29,8 +29,8 @@ public class RackMovement : MonoBehaviour
     [HideInInspector] public UnityEvent inventoryEnter;
     [HideInInspector] public UnityEvent inventoryExit;
     
-    [HideInInspector] public bool oddSizeX;
-    [HideInInspector] public bool oddSizeY;
+    public bool oddSizeX;
+    public bool oddSizeY;
     private static Vector2[] dirs = {Vector2.zero, Vector2.up, Vector2.right, Vector2.down, Vector2.left};
     private Vector3 lastInvPos;
 
@@ -152,12 +152,12 @@ public class RackMovement : MonoBehaviour
         // WE"RE GONNA FLOOD FILL OUT FROM THE MOUSE POS
         // AND THEN THE CLOSEST VALUE IS GONNA BE THE SNAP SQUARE POS
 
-        Debug.Log("New frame, dragging module.");
+        // Debug.Log("New frame, dragging module.");
         
         var snappedPos = new Vector2
         {
-            x = Mathf.Round(mousePos.x),
-            y = Mathf.Round(mousePos.y)
+            x = Mathf.Floor(mousePos.x) + .5f,
+            y = Mathf.Floor(mousePos.y) + .5f
         };
         if (oddSizeX)
         {
@@ -174,11 +174,13 @@ public class RackMovement : MonoBehaviour
         var valid = false;
         for (var i = 0; i < 500; i++)
         {
+            // Debug.Log($"Loop: {i}");
             if (valid)
                 break;
             
             foreach (var dir in dirs)
             {
+                // Debug.Log($"Checking dir: {dir}");
                 // Check in the cardinal directions out from the current position
                 var dirPos = positionsChecked[i] + dir;
                 // If we've already checked this position, move on
@@ -319,14 +321,15 @@ public class RackMovement : MonoBehaviour
         // we only care about checking against objects on the rack
         var filter = new ContactFilter2D
         {
-            layerMask = LayerMask.GetMask("Rack Objects", "Module Racks")
+            // layerMask = LayerMask.GetMask("Rack Objects", "Module Racks")
         };
+        filter.NoFilter();
         // check the collider for overlaps on that layer
         snapSquare.GetComponent<Collider2D>().Overlap(snapSquare.transform.position, 0, filter, collisionResults);
+        // Debug.Log($"Checking if snapSquare is overlapping at {snapSquare.transform.position}.");
         foreach (var result in collisionResults)
         {
             // Debug.Log(result.gameObject.name);
-            // Debug.Log("colliding with " + result.gameObject.name + " at " + pos);
             // ignore self
             if (result.gameObject == gameObject)
                 continue;
@@ -339,6 +342,8 @@ public class RackMovement : MonoBehaviour
             if (result.gameObject.layer == LayerMask.NameToLayer("Module Racks"))
                 continue;
             if (result.CompareTag("Weapon"))
+                continue;
+            if (result.gameObject.layer == LayerMask.NameToLayer("Jacks"))
                 continue;
             if (result.gameObject.GetComponent<ModuleRack>() != null)
                 continue;
@@ -353,6 +358,7 @@ public class RackMovement : MonoBehaviour
             //     Debug.Log("not inside collider");
             //     continue;
             // }
+            // Debug.Log("colliding with " + result.gameObject.name + " at " + snapSquare.transform.position);
             
             return true;
             // otherwise if we hit something, return true
@@ -382,10 +388,10 @@ public class RackMovement : MonoBehaviour
     {
         Physics2D.SyncTransforms();
         var myColMinPos = mycol.bounds.min;
-        myColMinPos.z = 0;
+        myColMinPos.z = other.transform.position.z;
         var myColMaxPos = mycol.bounds.max;
-        myColMaxPos.z = 0;
-        Debug.Log($"Checking InsideCollider at {mycol.transform.position}\nsnapSquare bounds are ({myColMinPos}, {myColMaxPos})\nrack bounds are ({other.bounds.min}, {other.bounds.max})");
+        myColMaxPos.z = other.transform.position.z;
+        // Debug.Log($"Checking InsideCollider at {mycol.transform.position}\nsnapSquare bounds are ({myColMinPos}, {myColMaxPos})\nrack bounds are ({other.bounds.min}, {other.bounds.max})");
         if (other.bounds.Contains(myColMinPos) && other.bounds.Contains(myColMaxPos))
         {
             return true;

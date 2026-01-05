@@ -32,19 +32,26 @@ public class Knob : MonoBehaviour
     private SpriteRenderer sr;
 
     private Sprite[] spriteSheet;
-    public bool lightDark;
     
     public bool drawLRNotches = true;
+
+    #if UNITY_EDITOR
+    void OnValidate()
+    { 
+        var pathString = GetComponentInParent<Module>() != null && GetComponentInParent<Module>().darkTheme 
+            ? "Spritesheets/knob sprite sheet dark" 
+            : "Spritesheets/knob sprite sheet light";
+        spriteSheet = Resources.LoadAll<Sprite>(pathString);
+        sr = GetComponent<SpriteRenderer>();
+        sr.sprite = spriteSheet[0];
+    }
+    #endif
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        var pathString = lightDark ? "Spritesheets/knob sprite sheet light" : "Spritesheets/knob sprite sheet dark";
-        spriteSheet = Resources.LoadAll<Sprite>(pathString);
-        
         UpdateMaxValue(maxValue);
         startPos = transform.localPosition;
-        sr = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame

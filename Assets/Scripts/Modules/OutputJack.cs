@@ -2,11 +2,26 @@ using UnityEngine;
 
 public class OutputJack : Jack
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected void Start()
+    #if UNITY_EDITOR
+    protected override void SetSprite(bool dt)
     {
-        base.Start();
-        var filepath = GetComponentInParent<Module>().darkTheme ? "Sprites/Jacks/jack dark out" : "Sprites/Jacks/jack light out";
+        var filepath = dt ? "Sprites/Jacks/jack dark out" : "Sprites/Jacks/jack light out";
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(filepath);
+    }
+    #endif
+
+    protected override void UpdateValidity(Wire activeWire)
+    {
+        base.UpdateValidity(activeWire);
+        if (activeWire.nextModule == null)
+        {
+            valid = false;
+        }
+        if (activeWire.dying)
+        {
+            valid = true;
+        }
+        
+        UpdateHighlights();
     }
 }

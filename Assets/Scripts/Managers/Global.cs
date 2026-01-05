@@ -71,7 +71,9 @@ public class Global : MonoBehaviour
             }
             hoverList.Add(coll.gameObject);
             if (coll.gameObject.CompareTag("Wire") ||
+				coll.gameObject.CompareTag("Button") ||
                 coll.gameObject.layer == LayerMask.NameToLayer("Rack Objects") ||
+				coll.gameObject.layer == LayerMask.NameToLayer("Jacks") ||
                 coll.gameObject.layer == LayerMask.NameToLayer("Module Components"))
             {
                 hitGrabbable = true;

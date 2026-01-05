@@ -109,8 +109,8 @@ public class Subpatch : Module
                     newWireObj.name = $"Wire to {subpatchDict[subpatchDict[i].outputIndices[j]].module.name}";
                     
                     // tell the module it's connected so it doesn't delete itself
-                    newWire.connectedToModule = true;
-                    Debug.Log($"(i,j):({i},{j})\nCreated a new wire targeting {subpatchDict[subpatchDict[i].outputIndices[j]]} as a child of {subpatchDict[i].module.name}.");
+                    newWire.isConnected = true;
+                    // Debug.Log($"(i,j):({i},{j})\nCreated a new wire targeting {subpatchDict[subpatchDict[i].outputIndices[j]]} as a child of {subpatchDict[i].module.name}.");
                 }
             }
             // if this is the last module in the list

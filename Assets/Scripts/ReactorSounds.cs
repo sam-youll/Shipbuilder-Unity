@@ -161,7 +161,7 @@ public class ReactorSounds : MonoBehaviour
         //THIS NEEDS TO BE FIXED OH MY GOD i'm just making the list longer every bar this is not ok lmfao 
         //SetTestChanges();
 
-        UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
+        // UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
         //UnityEngine.Debug.Log("currentChord: " + changesIndex);
 
         

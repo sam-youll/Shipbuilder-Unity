@@ -1,59 +1,45 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Button2D : MonoBehaviour
 {
-    public Color defaultColor = Color.white;
-    public Color hoverColor = Color.white;
-    public Color pressedColor = Color.white;
-    private Color currentColor = Color.white;
+    public Sprite defaultSprite;
+    public Sprite pressedSprite;
 
-    public SpriteRenderer sr;
+    private SpriteRenderer sr;
+
+    public UnityEvent click;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        sr.color = defaultColor;
-        currentColor = sr.color;
+        sr.sprite = defaultSprite;
     }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        if (currentColor == Color.clear)
-        {
-            currentColor = sr.color;
-        }
-
-        if (sr.color == Color.clear)
-        {
-            sr.color = defaultColor;
-        }
-        
-        var col = sr.color;
-        col = Color.Lerp(col, currentColor, .1f);
-        sr.color = col;
-    }
-
     protected virtual void OnMouseEnter()
     {
-        sr.color = hoverColor;
-        currentColor = hoverColor;
+        // sr.color = new Color(.9f, .9f, .9f, 1);
     }
 
     protected virtual void OnMouseExit()
     {
-        sr.color = defaultColor;
-        currentColor = defaultColor;
+        // sr.color = Color.white;
+        sr.sprite = defaultSprite;
     }
 
     protected virtual void OnMouseDown()
     {
-        sr.color = pressedColor;
-        currentColor = hoverColor;
-        OnClick();
+        sr.sprite = pressedSprite;
+        // sr.color = Color.white;
+        click.Invoke();
     }
 
+    protected virtual void OnMouseUp()
+    {
+        sr.sprite = defaultSprite;
+        // sr.color = Color.white;
+    }
+    
     protected virtual void OnClick()
     {
         Debug.Log("Button2D.OnClick");
