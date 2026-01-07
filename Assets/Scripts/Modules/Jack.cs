@@ -65,7 +65,6 @@ public abstract class Jack : MonoBehaviour
         //     return;
         //
         // update: they're allowed
-        
         if (transform.parent.TryGetComponent(out Module module))
         {
             SpawnWire(module);

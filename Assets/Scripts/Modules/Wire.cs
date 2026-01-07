@@ -286,7 +286,8 @@ public class Wire : MonoBehaviour
                 // TODO: what am I doing here
                 if (isConnected && (previousModule == null || nextModule == null))
                 {
-                    throw new Exception("what the fuck");
+                    // throw new Exception("what the fuck");
+                    DeleteSelf();
                 }
                 
                 if (!dying && isConnected && previousModule.TryGetComponent(out SecondaryModule secondaryModule))
@@ -624,7 +625,7 @@ public class Wire : MonoBehaviour
         }
         else if (nextModule.TryGetComponent(out Module module))
         {
-            module.Trigger();
+            module.Trigger(value);
         }
     }
     
@@ -640,7 +641,7 @@ public class Wire : MonoBehaviour
         }
         else if (nextModule.TryGetComponent(out Module module))
         {
-            module.Trigger();
+            module.Trigger(value, inputIndex);
         }
     }
 

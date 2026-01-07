@@ -29,9 +29,11 @@ public class InputJack : Jack
     protected override void Start()
     {
         base.Start();
-        GetComponentInChildren<TextMeshPro>().color = !darkTheme ? Color.white : Color.black;
-        if (transform.parent.TryGetComponent(out Module module))
+        if (transform.childCount > 0 && 
+            transform.GetChild(0).TryGetComponent(out TextMeshPro tmp) &&
+            transform.parent.TryGetComponent(out Module module))
         {
+            tmp.color = darkTheme ? Color.white : Color.black;
             GetComponentInChildren<TextMeshPro>().text = module.inputJacks.FindIndex(x => x.GetComponent<InputJack>() == this).ToString();
         }
     }

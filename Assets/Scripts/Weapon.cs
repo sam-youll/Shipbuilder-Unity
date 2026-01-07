@@ -1,11 +1,33 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+
+[CustomEditor(typeof(Weapon))]
+public class WeaponEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        var weapon = (Weapon)target;
+        EditorGUILayout.BeginVertical();
+        GUILayout.Label("Note Info",  EditorStyles.boldLabel);
+        foreach (var kvp in weapon.noteInfo)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(kvp.Key, GUILayout.Width(60));
+            // GUILayout.FlexibleSpace();
+            GUILayout.Label(kvp.Value.ToString());
+            GUILayout.EndHorizontal();
+        }
+        EditorGUILayout.EndVertical();
+        DrawDefaultInspector();
+    }
+}
 
 public class Weapon : MonoBehaviour
 {
@@ -21,7 +43,6 @@ public class Weapon : MonoBehaviour
     public float stunTimer;
     public Combat.SoundType soundType;
     public Dictionary<Combat.SoundType, int> soundTypePoints = new();
-    
     public enum Effect
     {
         Stun, // disables weapons/systems

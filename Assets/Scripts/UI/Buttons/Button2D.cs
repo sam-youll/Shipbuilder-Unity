@@ -1,14 +1,54 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Reflection;
+
+[CustomEditor(typeof(Button2D))]
+public class Button2DEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        var button = target as Button2D;
+        var eventBus = button.eventBus;
+        if (eventBus == null)
+        {
+            EditorGUILayout.HelpBox("No event bus assigned", MessageType.Error);
+            DrawDefaultInspector();
+            return;
+        }
+        EditorGUILayout.LabelField("Event");
+        if (EditorGUILayout.DropdownButton(new GUIContent(button.eventString), FocusType.Passive,GUILayout.ExpandWidth(true)))
+        {
+            GenericMenu menu = new();
+            for (int i = 0; i < eventBus.eventsNoArgs.Count; i++)
+            {
+                var text = eventBus.eventsNoArgs.ElementAt(i).Key;
+                menu.AddItem(new GUIContent(text), false, ConnectEvent, text);
+            }
+            menu.ShowAsContext();
+        }
+        DrawDefaultInspector();
+    }
+
+    private void ConnectEvent(object obj)
+    {
+        var button = target as Button2D;
+        button.eventString = obj as string;
+    }
+}
 
 public class Button2D : MonoBehaviour
 {
+    public EventBus eventBus;
+    
     public Sprite defaultSprite;
     public Sprite pressedSprite;
 
     private SpriteRenderer sr;
 
-    public UnityEvent click;
+    [HideInInspector] public string eventString = "Select event";
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,7 +71,9 @@ public class Button2D : MonoBehaviour
     {
         sr.sprite = pressedSprite;
         // sr.color = Color.white;
-        click.Invoke();
+        // click.Invoke();
+
+        OnClick();
     }
 
     protected virtual void OnMouseUp()
@@ -39,9 +81,9 @@ public class Button2D : MonoBehaviour
         sr.sprite = defaultSprite;
         // sr.color = Color.white;
     }
-    
+
     protected virtual void OnClick()
     {
-        Debug.Log("Button2D.OnClick");
+        EventBus.Instance.eventsNoArgs[eventString].Invoke();
     }
 }
