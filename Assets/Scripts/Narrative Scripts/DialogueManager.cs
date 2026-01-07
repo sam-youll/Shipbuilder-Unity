@@ -1,29 +1,153 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
-
+    [Header("UI Objects")]
+    //textmeshpro object that holds character name
     public TextMeshPro nameplateText;
+    //tmp object that holds dialogue text
     public TextMeshPro dialogueText;
     
-    public GameObject dialoguePanel;
+    //UI panel that holds the tmp objects
+    public GameObject dialogueBox;
+    
+    [Header("ScriptableObjects")]
+    //all existing dialogue lists -- probably a better way to do this
+    public List<DialogueList> dialogueLists = new List<DialogueList>();
+    //list of dialogue lists that are available 
+    private List<DialogueList> availableLists =  new List<DialogueList>();
+    
+    private DialogueList currentList;
+
+    private bool dialogueStarted = false;
+    private int index = 0;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        //this is for testing only, startdialogue should be called when dialogue should be started. duh
+        StartDialogue();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (dialogueStarted)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                    index++;
+                    if (index < currentList.lines.Count)
+                    {
+                        dialogueText.text = currentList.lines[index];
+                    }
+                    else if (index >= currentList.lines.Count)
+                    {
+                        Debug.Log(index + " list done");
+                        dialogueBox.SetActive(false);
+                        index = 0;
+                    }
+            }
+        }
     }
 
     public void StartDialogue()
     {
-        dialoguePanel.SetActive(true);
+        dialogueBox.SetActive(true);
+        //should be set in a more elegant way since sometimes we'll want to force events, this is just here for now
+        SetCurrentListRandomly();
+        dialogueStarted = true;
+        //TODO: figure out what happens when dialogue ends 
+    }
+
+    /// <summary>
+    /// Creates a list of all currently available lists, and picks a random one from that list
+    /// </summary>
+    public void SetCurrentListRandomly()
+    {
+        Debug.Log("Dialogue list size: " + dialogueLists.Count);
+        //for each list in the big ol list of dialogue lists
+        for (int i = 0; i < dialogueLists.Count; i++)
+        {
+            //set each list's ability, and if it's available, add it to the list
+            SetAvailability(dialogueLists[i]);
+        }
+
+        foreach (DialogueList list in dialogueLists)
+        {
+            if (list.isAvailable)
+            {
+                availableLists.Add(list);
+            }
+        }
+            
         
+        //set the current list
+        currentList = availableLists[Random.Range(0, availableLists.Count)];
+        Debug.Log(currentList.name);
+    }
+    
+    /// <summary>
+    /// Sets the availability of each scriptable object 
+    /// </summary>
+    /// <param name="checkedList"></param>
+    public void SetAvailability(DialogueList checkedList)
+    {
+        //for each gamestate trigger listed here
+        for (int i = 0; i < checkedList.gamestateTriggers.Count; i++)
+        {
+            //if it isn't true
+            if (GamestateManager.Instance.Gamestate[checkedList.gamestateTriggers[i]] == false)
+            {
+                //this list isn't available
+                checkedList.isAvailable = false;
+            }
+        }
+
+        //for each node listed here
+        for (int i = 0; i < checkedList.nodes.Count; i++)
+        {
+            //if any of them are the current node
+            if (GamestateManager.Instance.currentNode == checkedList.nodes[i])
+            {
+                //there's a match
+                checkedList.nodeMatch = true;
+            }
+        }
+
+        //for each constellation in this list
+        for (int i = 0; i < checkedList.constellations.Count; i++)
+        {
+            //if any of them are the current constellation
+            if (GamestateManager.Instance.currentConstellation == checkedList.constellations[i])
+            {
+                //there's a match
+                checkedList.constellationMatch = true;
+            }
+        }
+        
+        //for each stage in this list
+        for (int i = 0; i < checkedList.stages.Count; i++)
+        {
+            //if any of them are the current stage
+            if (GamestateManager.Instance.currentStage == checkedList.stages[i])
+            {
+                //there's a match
+                checkedList.stageMatch = true;
+            }
+        }
+
+        //if either the node, stage, or the constellation don't have a match
+        if (!checkedList.nodeMatch || !checkedList.constellationMatch || !checkedList.stageMatch)
+        {
+            //this list isn't available
+            checkedList.isAvailable = false;
+        }
+        
+        //debug to check
+        Debug.Log(checkedList.ToString() + " " + checkedList.isAvailable);
     }
 }
