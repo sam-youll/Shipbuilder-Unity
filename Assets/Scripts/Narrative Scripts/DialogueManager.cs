@@ -89,7 +89,7 @@ public class DialogueManager : MonoBehaviour
         foreach (DialogueList list in dialogueLists)
         {
             //set each list's ability, and if it's available, add it to the list
-            SetAvailability(dialogueLists[list]);
+            SetAvailability(list);
             if (list.isAvailable)
             {
                 availableLists.Add(list);
