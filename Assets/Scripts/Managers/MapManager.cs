@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    //existing sectors
     public enum Sector
     {
         Null,
@@ -33,8 +35,11 @@ public class MapManager : MonoBehaviour
         Pisces
     }
     
+    //current sector
     public Sector sector;
-
+    
+    
+    //existing node types
     public enum Node
     {
         Null,
@@ -49,17 +54,18 @@ public class MapManager : MonoBehaviour
         Shop
     }
     
+    //current node
     public Node node;
 
-    //corresponds to each node's nodeIndex - which stage of the map is avail
-    public int progressIndex;
+    //list of nodemap game objects
+    public List<GameObject> nodeMaps = new List<GameObject>();
     
     //should probably add stuff later to track what planets visited vs not, if a planet is targeted, etc
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        progressIndex = 0;
+        
     }
 
     // Update is called once per frame
@@ -67,11 +73,23 @@ public class MapManager : MonoBehaviour
     {
         
     }
+    
 
-    public void AdvanceNodeProgress()
+    public void UpdateNodeMap()
     {
-        progressIndex++;
-        //need to add some logic for picking branch here probs
+        foreach (GameObject nodeMap in nodeMaps)
+        {
+            if (nodeMap.GetComponent<Constellation>().isActive)
+            {
+                nodeMap.SetActive(true);
+                //Debug.Log("setting " + nodeMap.name + " active");
+            }
+            else
+            {
+                nodeMap.SetActive(false);
+                //Debug.Log("setting " + nodeMap.name + " inactive");
+            }
+        }
     }
     
 }
