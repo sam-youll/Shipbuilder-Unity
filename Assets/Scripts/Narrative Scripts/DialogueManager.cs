@@ -16,12 +16,15 @@ public class DialogueManager : MonoBehaviour
     [Header("ScriptableObjects")]
     //all existing dialogue lists -- probably a better way to do this
     public List<DialogueList> dialogueLists = new List<DialogueList>();
-    //list of dialogue lists that are available 
+    //list of dialogue lists (SOs) that are available 
     private List<DialogueList> availableLists =  new List<DialogueList>();
     
+    //The dialogue list (SO) that is selected to set text and other info 
     private DialogueList currentList;
-
+    
+    //whether or not dialogue is happening
     private bool dialogueStarted = false;
+    //index of which line in the dialogue list's "lines" list is currently active
     private int index = 0;
     
     
@@ -35,19 +38,26 @@ public class DialogueManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //when dialogue is active
         if (dialogueStarted)
         {
+            //if you press the space bar
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                    //it advances the line of dialogue
                     index++;
+                    //and sets that line of text if it's within the size of the list
                     if (index < currentList.lines.Count)
                     {
                         dialogueText.text = currentList.lines[index];
                     }
+                    //if it's bigger than the list
                     else if (index >= currentList.lines.Count)
                     {
                         Debug.Log(index + " list done");
+                        //the dialogue ends and the text box gets set inactive
                         dialogueBox.SetActive(false);
+                        //and the index resets to 0
                         index = 0;
                     }
             }
@@ -59,7 +69,13 @@ public class DialogueManager : MonoBehaviour
         dialogueBox.SetActive(true);
         //should be set in a more elegant way since sometimes we'll want to force events, this is just here for now
         SetCurrentListRandomly();
+        //dialogue enabled
         dialogueStarted = true;
+        //should set the first line of dialogue at 0 
+        dialogueText.text = currentList.lines[index];
+        //should set the character name 
+        nameplateText.text = currentList.characterName;
+        
         //TODO: figure out what happens when dialogue ends 
     }
 
@@ -69,15 +85,11 @@ public class DialogueManager : MonoBehaviour
     public void SetCurrentListRandomly()
     {
         Debug.Log("Dialogue list size: " + dialogueLists.Count);
-        //for each list in the big ol list of dialogue lists
-        for (int i = 0; i < dialogueLists.Count; i++)
-        {
-            //set each list's ability, and if it's available, add it to the list
-            SetAvailability(dialogueLists[i]);
-        }
-
+        //for each list in the big ol list of dialogue lists (which we should probably handle diff) 
         foreach (DialogueList list in dialogueLists)
         {
+            //set each list's ability, and if it's available, add it to the list
+            SetAvailability(list);
             if (list.isAvailable)
             {
                 availableLists.Add(list);
@@ -87,7 +99,7 @@ public class DialogueManager : MonoBehaviour
         
         //set the current list
         currentList = availableLists[Random.Range(0, availableLists.Count)];
-        Debug.Log(currentList.name);
+        Debug.Log("Current List: " + currentList.name);
     }
     
     /// <summary>
