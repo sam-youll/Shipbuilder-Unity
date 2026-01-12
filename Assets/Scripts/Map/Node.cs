@@ -30,10 +30,10 @@ public class Node : MonoBehaviour
     };
     
     //this node's sprite renderer
-    private SpriteRenderer sr;
+    public SpriteRenderer sr;
     
     //this node's color
-    private Color color;
+    public Color color;
 
     [Header("Navigation")]
 
@@ -83,7 +83,7 @@ public class Node : MonoBehaviour
     /// <summary>
     /// Makes nodes available to select
     /// </summary>
-    private void MakeAvailable()
+    public void MakeAvailable()
     {
         //sets node's availability
         isAvailable = true;
@@ -95,7 +95,7 @@ public class Node : MonoBehaviour
     /// <summary>
     /// Makes nodes unavailable
     /// </summary>
-    private void MakeUnavailable()
+    public void MakeUnavailable()
     {
         //set's node's availability and deselects it
         isAvailable = false;

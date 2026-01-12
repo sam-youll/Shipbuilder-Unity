@@ -60,16 +60,18 @@ public class MapManager : MonoBehaviour
     //list of nodemap game objects
     public List<GameObject> nodeMaps = new List<GameObject>();
 
-    public struct Planet
+    //planet struct for planet location and movement
+    public struct PlanetStruct
     {
         public Node node;
         public Sector location;
         public int speed;
+        public Color color;
     }
     
     
-    
-    public Planet[] planets = new Planet[4];
+    //array of planets for movement
+    public PlanetStruct[] planets = new PlanetStruct[4];
     
     
     //should probably add stuff later to track what planets visited vs not, if a planet is targeted, etc
@@ -91,6 +93,22 @@ public class MapManager : MonoBehaviour
         planets[1].speed = 2;
         planets[2].speed = 3;
         planets[3].speed = 4;
+        
+        planets[0].color = new Color(0.627451f, 0.1254902f, 0.9411765f, 1f);
+        planets[1].color = Color.green;
+        planets[2].color = Color.red;
+        planets[3].color = Color.blue;
+
+        foreach (GameObject nodeMap in nodeMaps)
+        {
+            //if there's a planet in the child of the constellation
+            if (nodeMap.GetComponentInChildren<Planet>() != null)
+            {
+                //set the planet (this has to be here otherwise that gets called before the array is put together)
+                nodeMap.GetComponentInChildren<Planet>().SetPlanet();
+            }
+        }
+
     }
 
     // Update is called once per frame
