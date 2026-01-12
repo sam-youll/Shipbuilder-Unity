@@ -13,11 +13,11 @@ public class DialogueList : ScriptableObject
     
     //checked against gamestate manager to determine if this list is available
     public List<String> gamestateTriggers = new List<String>();
-    public List<GamestateManager.Stage> stages = new List<GamestateManager.Stage>();
+    public List<GameStateManager.Stage> stages = new List<GameStateManager.Stage>();
     
     //checked against (gamestate manager for now, but should be) map manager to determine if available
-    public List<GamestateManager.Node> nodes = new List<GamestateManager.Node>();
-    public List<GamestateManager.Constellation> constellations = new List<GamestateManager.Constellation>();
+    public List<GameStateManager.Node> nodes = new List<GameStateManager.Node>();
+    public List<GameStateManager.Constellation> constellations = new List<GameStateManager.Constellation>();
     //bools to check for matches so we can check if something is a positive while keeping w assuming list is available
     public bool nodeMatch = false;
     public bool constellationMatch = false;

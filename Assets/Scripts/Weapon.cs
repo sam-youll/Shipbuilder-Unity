@@ -41,17 +41,10 @@ public class Weapon : MonoBehaviour
     public float bulletSpread;
     public float dir;
     public float stunTimer;
-    public Combat.SoundType soundType;
-    public Dictionary<Combat.SoundType, int> soundTypePoints = new();
-    public enum Effect
-    {
-        Stun, // disables weapons/systems
-        Slow, // slows weapons
-        Splash, // hits multiple systems
-        Skip, // ignores shields
-        Sustain // damage over time
-    }
-    public List<Effect> effects;
+    public Common.SoundType soundType;
+    public Dictionary<Common.SoundType, int> soundTypePoints = new();
+    
+    public List<Common.Effect> effects;
     
     [Header("Properties")]
     public bool warming = false;
@@ -59,11 +52,12 @@ public class Weapon : MonoBehaviour
     public float charge = 0;
     public bool quantized;
     public bool inCombat;
-    public bool testing;
+    // public bool testing;
     public bool firing;
 
     public GameObject previousModule;
     public GameObject parentWire;
+    public SwitchComponent testFireSwitch;
     
     public Dictionary<string, float> noteInfo = new()
     {
@@ -105,7 +99,7 @@ public class Weapon : MonoBehaviour
         // is the CombatManager in combat?
         inCombat = CombatManager.Instance.state == CombatManager.State.inCombat;
         // are we either testing or in combat? If yes to either, we're firing
-        firing = testing || inCombat;
+        firing = testFireSwitch.on || inCombat;
         // if we're facing right (only true if player ship) and the patch is not complete, turn it off
         if (dir == 1 && !CompletePatch())
         {
@@ -236,14 +230,6 @@ public class Weapon : MonoBehaviour
         
         // AudioManager.Instance.PlayNote(gameObject, noteInfo);
         EventBus.Instance.weaponFired.Invoke(this);
-    }
-
-    private void OnMouseDown()
-    {
-        if (inCombat)
-            return;
-        
-        testing = !testing;
     }
 
     public void SetPatch()

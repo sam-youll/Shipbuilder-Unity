@@ -226,6 +226,7 @@ public class Wire : MonoBehaviour
             if (Input.GetMouseButtonUp(0))
             {
                 grabbed = false;
+                EventBus.Instance.updateJackValidity.Invoke(this);
             }
 
             if ((grabStartPos - Global.Instance.mousePos).magnitude > grabBreakDistance)
@@ -304,6 +305,7 @@ public class Wire : MonoBehaviour
             else
             {
                 PatchManager.Instance.UpdateAllPatches();
+                EventBus.Instance.updateJackValidity.Invoke(this);
                 DeleteSelf();
             }
         }

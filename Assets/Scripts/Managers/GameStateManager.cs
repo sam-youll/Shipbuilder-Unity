@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class GamestateManager : MonoBehaviour
+public class GameStateManager : MonoBehaviour
 {
-    public static GamestateManager Instance;
+    public static GameStateManager Instance;
 
     private void Awake()
     {
@@ -36,7 +37,7 @@ public class GamestateManager : MonoBehaviour
 
     public enum Constellation
     {
-        Null,
+        None,
         Aries,
         Taurus,
         Gemini,
@@ -69,13 +70,34 @@ public class GamestateManager : MonoBehaviour
     
     public Stage currentStage;
 
+    /// <summary>
+    /// Some ships require the player to reach a certain milestone to unlock.
+    /// The Ship Manager will check these tags against the milestones that the
+    /// player has reached, which will be recorded in the player's save file.
+    /// </summary>
+    public enum UnlockMilestones
+    {
+        None,
+        GameEnd,
+        TrueEnd,
+        PanQuest,
+        PallasQuest // TODO: add the ones that actually exist, delete the ones that don't
+    }
+
     public void Start()
     {
         //Dummy gamestates, should add and test complexity and how to set moving forward.
         //This is just here to get the narrative stuff functioning
         Gamestate.Add("gameStarted", true);
         currentNode = Node.Base;
-        currentConstellation = Constellation.Null;
+        currentConstellation = Constellation.None;
         currentStage = Stage.Testing;
+        
+        EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
+    }
+
+    private void OnPlayerDefeated()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

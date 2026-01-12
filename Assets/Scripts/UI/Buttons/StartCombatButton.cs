@@ -46,7 +46,7 @@ public class StartCombatButton : MonoBehaviour
 
         if (CombatManager.Instance.state != CombatManager.State.inCombat)
         {
-            CombatManager.Instance.StartCombat();
+            // CombatManager.Instance.StartCombat();
         }
     }
 }
