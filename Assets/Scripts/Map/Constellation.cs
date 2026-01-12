@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class Constellation : MonoBehaviour
 {
+    //this constellation's sector
     public MapManager.Sector sector;
     
+    //if this constellation is active
     public bool isActive = true;
+    
+    //list of all nodes in this constellation
+    public List<Node> nodes = new List<Node>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,4 +32,10 @@ public class Constellation : MonoBehaviour
     {
         
     }
+
+    public void NodeCleanup()
+    {
+        
+    }
+    
 }

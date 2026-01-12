@@ -6,20 +6,13 @@ using UnityEngine;
 public class NewMonoBehaviourScript : MonoBehaviour
 {
 
-    public List<MapManager.Node> Planets = new List<MapManager.Node>()
-    {
-        MapManager.Node.Pallas,
-        MapManager.Node.Pan,
-        MapManager.Node.Bailigh,
-        MapManager.Node.Zea
-    };
-
-    public Node currentPlanet;
+    public MapManager.Planet currentPlanet;
+    public MapManager.Sector currentSector;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        currentSector = GetComponentInParent<Constellation>().sector;
     }
 
     // Update is called once per frame
@@ -27,4 +20,5 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         
     }
+    
 }

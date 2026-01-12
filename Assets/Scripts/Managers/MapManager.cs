@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
@@ -20,7 +23,6 @@ public class MapManager : MonoBehaviour
     //existing sectors
     public enum Sector
     {
-        Null,
         Aries,
         Taurus,
         Gemini,
@@ -38,11 +40,9 @@ public class MapManager : MonoBehaviour
     //current sector
     public Sector sector;
     
-    
     //existing node types
     public enum Node
     {
-        Null,
         Base,
         Pallas,
         Pan,
@@ -54,24 +54,53 @@ public class MapManager : MonoBehaviour
         Shop
     }
     
-    //current node
-    public Node node;
+    //current node's type
+    public Node currentNodeType;
 
     //list of nodemap game objects
     public List<GameObject> nodeMaps = new List<GameObject>();
+
+    public struct Planet
+    {
+        public Node node;
+        public Sector location;
+        public int speed;
+    }
+    
+    
+    
+    public Planet[] planets = new Planet[4];
+    
     
     //should probably add stuff later to track what planets visited vs not, if a planet is targeted, etc
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        planets[0].node = Node.Pallas;
+        planets[1].node = Node.Pan;
+        planets[2].node = Node.Bailigh;
+        planets[3].node = Node.Zea;
         
+        planets[0].location = Sector.Aries;
+        planets[1].location = Sector.Taurus;
+        planets[2].location = Sector.Gemini;
+        planets[3].location = Sector.Libra;
+        
+        planets[0].speed = 1;
+        planets[1].speed = 2;
+        planets[2].speed = 3;
+        planets[3].speed = 4;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //just for testing
+        /*if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            UpdatePlanetLocations();
+        }*/
     }
     
 
@@ -89,6 +118,37 @@ public class MapManager : MonoBehaviour
                 nodeMap.SetActive(false);
                 //Debug.Log("setting " + nodeMap.name + " inactive");
             }
+        }
+    }
+
+    public void UpdatePlanetLocations()
+    {
+        //for each planet struct in the array
+        for (int i = 0; i < planets.Length; i++)
+        {
+            //its location increases by its speed
+            planets[i].location += planets[i].speed;
+            
+            //for each item in the list below this one
+            for (int j = 0; j < i; j++)
+            {
+                //if this location is the same as one before
+                if (planets[i].location == planets[j].location)
+                {
+                    //increment this one by one
+                    planets[i].location++;
+                    //Debug.Log("Planet " + planets[i].node + " bumped");
+                }
+            }
+            
+            //if it goes beyond the number of existing sectors
+            if (!Enum.IsDefined(typeof(Sector), planets[i].location))
+            {
+                //loop back around to the beginning of the enum
+                planets[i].location -= 12;
+            }
+            
+            Debug.Log(planets[i].node + " " +  planets[i].location);
         }
     }
     

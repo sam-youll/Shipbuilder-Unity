@@ -45,19 +45,24 @@ public class Node : MonoBehaviour
 
     //whether this node is available to travel to
     public bool isAvailable = false;
-
-    
+    //whether this node is currently selected
+    public bool isSelected = false;
+    //whether this node has been visited 
+    public bool visited = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //TODO: create function to determine node type at scene start based on sector and probability
         
-        
+        //getting spriterenderer to edit node appearance
         sr = GetComponent<SpriteRenderer>();
+        //setting node color based on node type
         color = sr.color;
         color = colors[type];
-        if (!initial)
+        //darkening nodes if they're not available on scene load
+        //TODO: test if this persists between runs
+        if (!initial || visited)
         {
             color.a = 0.2f;
         }
@@ -72,41 +77,72 @@ public class Node : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //TODO: move this somewhere it'll work and hold info between scenesd
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isAvailable)
-            {
-                MakeUnavailable();
-                AdvanceToNextNode();
-                //Debug.Log("Advancing from " + this.name + " to " + nextNodes[0].name);
-            }
-        }
+        
     }
 
-    public void MakeAvailable()
+    /// <summary>
+    /// Makes nodes available to select
+    /// </summary>
+    private void MakeAvailable()
     {
+        //sets node's availability
         isAvailable = true;
+        //makes it fully lit up
         color.a = 1;
         sr.color = color;
     }
 
-    public void MakeUnavailable()
+    /// <summary>
+    /// Makes nodes unavailable
+    /// </summary>
+    private void MakeUnavailable()
     {
+        //set's node's availability and deselects it
         isAvailable = false;
+        isSelected = false;
+        //makes it lower opacity
         color.a = 0.2f;
         sr.color = color;
     }
 
-    public void AdvanceToNextNode()
+    /// <summary>
+    /// Makes the subsequent nodes in a selected path available
+    /// </summary>
+    private void AdvanceToNextNode()
     {
-        foreach (Node node in nextNodes)
+        //NODE CLEANUP
+        //for each node in the constellation
+        foreach (Node externalNode in GetComponentInParent<Constellation>().nodes) 
         {
-            if (node != null)
+            //if that node was available but not selected
+            if (externalNode.isAvailable && !externalNode.isSelected)
             {
-                node.MakeAvailable();
+                //make it unavailable
+                externalNode.MakeUnavailable();
+            }
+                
+        }
+
+        //if this node is selected or an initial node
+        if (isSelected || initial)
+        {
+            //each node in the list of nodes that follow
+            foreach (Node node in nextNodes)
+            {
+                //as long as it exists
+                if (node != null)
+                {
+                    //and it hasn't been visited
+                    //TODO: make this info carry over throughout the run
+                    if (!node.visited)
+                    {
+                        //it's made available
+                        node.MakeAvailable();
+                    }
+                }
             }
         }
+        
     }
     
     
@@ -114,7 +150,13 @@ public class Node : MonoBehaviour
     {
         if (isAvailable)
         {
-            if (type == NodeType.Combat)
+            visited = true;
+            isSelected = true;
+            AdvanceToNextNode();
+            
+            MakeUnavailable();
+            
+            /*if (type == NodeType.Combat)
             {
                 GoToCombat();
             }
@@ -127,23 +169,32 @@ public class Node : MonoBehaviour
             if (type == NodeType.Shop)
             {
                 GoToShop();
-            }
+            }*/
         }
         
     }
     
     //these probably should move to eventbus 
+    /// <summary>
+    /// Go to the combat scene
+    /// </summary>
     public void GoToCombat()
     {
         SceneManager.LoadScene("Rack");
     }
     
+    /// <summary>
+    /// Go to the story scene
+    /// </summary>
     public void GoToStory()
     {
         //TODO: update when we have a narrative scene
         SceneManager.LoadScene("NarrativePrototype");
     }
 
+    /// <summary>
+    /// Go to the shop scene
+    /// </summary>
     public void GoToShop()
     {
         //TODO: update when we have a scene for shop
