@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Constellation : MonoBehaviour
 {
@@ -23,8 +24,12 @@ public class Constellation : MonoBehaviour
         {
             isActive = false;
         }
-        
-        MapManager.Instance.UpdateNodeMap();
+
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+        {
+            MapManager.Instance.UpdateNodeMap();
+        }
+
     }
 
     // Update is called once per frame

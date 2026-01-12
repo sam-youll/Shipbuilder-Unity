@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour
 {
@@ -67,11 +68,15 @@ public class MapManager : MonoBehaviour
         public Sector location;
         public int speed;
         public Color color;
+        //list of the sectors in order 
+        public List<Sector> path;
+        //read the list backwards wtf 
     }
     
     
     //array of planets for movement
     public PlanetStruct[] planets = new PlanetStruct[4];
+    
     
     
     //should probably add stuff later to track what planets visited vs not, if a planet is targeted, etc
@@ -98,6 +103,11 @@ public class MapManager : MonoBehaviour
         planets[1].color = Color.green;
         planets[2].color = Color.red;
         planets[3].color = Color.blue;
+        
+        planets[0].path = new List<Sector>();
+        planets[1].path = new List<Sector>();
+        planets[2].path = new List<Sector>();
+        planets[3].path = new List<Sector>();
 
         foreach (GameObject nodeMap in nodeMaps)
         {
@@ -107,6 +117,11 @@ public class MapManager : MonoBehaviour
                 //set the planet (this has to be here otherwise that gets called before the array is put together)
                 nodeMap.GetComponentInChildren<Planet>().SetPlanet();
             }
+        }
+
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
+        {
+            UpdateMainMap();
         }
 
     }
@@ -168,6 +183,50 @@ public class MapManager : MonoBehaviour
             
             Debug.Log(planets[i].node + " " +  planets[i].location);
         }
+    }
+
+    public void UpdateMainMap()
+    {
+        
+        //for each planet 
+        for (int i = 0; i < planets.Length; i++)
+        {
+            //checks the distance between your current sector and that planet
+            int distance = sector -  planets[i].location;
+            Debug.Log(planets[i].node + " is " + distance + " sectors away");
+
+            if (distance > 0)
+            {
+                //increment thru the enum of sectors negatively until u get to the destination
+                for (Sector s = sector; s > planets[i].location; s--)
+                {
+                    planets[i].path.Add(s);
+                }
+                for (int j = 0; j < planets[i].path.Count; j++)
+                {
+                    Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
+                }
+            } else if (distance < 0)
+            {
+                //increment thru the enum of sectors negatively until u get to the destination
+                for (Sector s = sector; s < planets[i].location; s++)
+                {
+                    planets[i].path.Add(s);
+                }
+                for (int j = 0; j < planets[i].path.Count; j++)
+                {
+                    Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
+                }
+            } else
+            {
+                planets[i].path.Add(sector);
+            } 
+
+            
+            
+            
+        }
+        
     }
     
 }
