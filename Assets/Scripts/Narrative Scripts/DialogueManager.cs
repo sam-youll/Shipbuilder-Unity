@@ -112,7 +112,7 @@ public class DialogueManager : MonoBehaviour
         for (int i = 0; i < checkedList.gamestateTriggers.Count; i++)
         {
             //if it isn't true
-            if (GamestateManager.Instance.Gamestate[checkedList.gamestateTriggers[i]] == false)
+            if (GameStateManager.Instance.Gamestate[checkedList.gamestateTriggers[i]] == false)
             {
                 //this list isn't available
                 checkedList.isAvailable = false;
@@ -123,7 +123,7 @@ public class DialogueManager : MonoBehaviour
         for (int i = 0; i < checkedList.nodes.Count; i++)
         {
             //if any of them are the current node
-            if (GamestateManager.Instance.currentNode == checkedList.nodes[i])
+            if (GameStateManager.Instance.currentNode == checkedList.nodes[i])
             {
                 //there's a match
                 checkedList.nodeMatch = true;
@@ -134,7 +134,7 @@ public class DialogueManager : MonoBehaviour
         for (int i = 0; i < checkedList.constellations.Count; i++)
         {
             //if any of them are the current constellation
-            if (GamestateManager.Instance.currentConstellation == checkedList.constellations[i])
+            if (GameStateManager.Instance.currentConstellation == checkedList.constellations[i])
             {
                 //there's a match
                 checkedList.constellationMatch = true;
@@ -145,7 +145,7 @@ public class DialogueManager : MonoBehaviour
         for (int i = 0; i < checkedList.stages.Count; i++)
         {
             //if any of them are the current stage
-            if (GamestateManager.Instance.currentStage == checkedList.stages[i])
+            if (GameStateManager.Instance.currentStage == checkedList.stages[i])
             {
                 //there's a match
                 checkedList.stageMatch = true;

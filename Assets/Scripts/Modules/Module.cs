@@ -616,15 +616,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     }
     
 #endif
-
-    public enum SoundType
-    {
-        None,
-        Izki,
-        Aubo,
-        Dwth
-    }
-
+    
     [Header("Values")] 
     [Tooltip("The amount charged for this module in the shop.")]
     public float price;
@@ -634,8 +626,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     public Dictionary<string, float> MusicParams = new();
     public Dictionary<string, float> CombatStats = new();
     
-    // TODO: combine connections and module components
-    // probably don't need references to modules if those references are already stored in the wires
     [Header("Connections")] 
     [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
     public List<GameObject> inputJacks = new();
@@ -643,10 +633,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     public List<GameObject> parentWires = new();
     public List<GameObject> childWires = new();
     public GameObject wirePrefab;
-    
-    // this is mostly for the early testing of the new modules, probably will delete later? idk
-    [Header("Sample Text")]
-    public TextMeshPro sampleText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()

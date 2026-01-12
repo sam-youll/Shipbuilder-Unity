@@ -14,8 +14,8 @@ public class Bullet : MonoBehaviour
     public GameObject myShip;
     public GameObject[] myShields;
     // public float speed;
-    public List<Weapon.Effect> effects;
-    public Combat.SoundType soundType;
+    public List<Common.Effect> effects;
+    public Common.SoundType soundType;
 
     public GameObject explosionPrefab;
     
@@ -50,28 +50,28 @@ public class Bullet : MonoBehaviour
         // Debug.Log(collision.gameObject.name);
         if (collision.gameObject.CompareTag("Ship") && collision.gameObject != myShip)
         {
-            var ship = collision.gameObject.GetComponent<Ship>();
+            var ship = collision.gameObject.GetComponent<ShipData>();
             
-            if (effects.Contains(Weapon.Effect.Stun))
-            {
-                ship.ApplyStun(damage);
-            }
-            if (effects.Contains(Weapon.Effect.Slow))
-            {
-                ship.ApplySlow(damage);
-            }
-            if (effects.Contains(Weapon.Effect.Splash))
-            {
-                
-            }
-            if (effects.Contains(Weapon.Effect.Skip))
-            {
-                
-            }
-            if (effects.Contains(Weapon.Effect.Sustain))
-            {
-                
-            }
+            // if (effects.Contains(Weapon.Effect.Stun))
+            // {
+            //     ship.ApplyStun(damage);
+            // }
+            // if (effects.Contains(Weapon.Effect.Slow))
+            // {
+            //     ship.ApplySlow(damage);
+            // }
+            // if (effects.Contains(Weapon.Effect.Splash))
+            // {
+            //     
+            // }
+            // if (effects.Contains(Weapon.Effect.Skip))
+            // {
+            //     
+            // }
+            // if (effects.Contains(Weapon.Effect.Sustain))
+            // {
+            //     
+            // }
             
             var explosion = Instantiate(explosionPrefab, transform.position + new Vector3(0, 0, -.3f), Quaternion.identity);
             if (SceneManager.GetActiveScene().name == "Cinematic Scene")
@@ -79,33 +79,33 @@ public class Bullet : MonoBehaviour
                 explosion.transform.localScale = new Vector3(3, 3, 3);
             }
             //AudioManager.Instance.PlayExplosionSFX();
-            ship.TakeDamage(damage);
+            // ship.TakeDamage(damage);
             Destroy(gameObject);
         }
         else if (collision.gameObject.CompareTag("Shield") &&  !myShields.Contains(collision.gameObject))
         {
             var shield = collision.gameObject.GetComponent<Shield>();
             
-            if (effects.Contains(Weapon.Effect.Stun))
-            {
-                
-            }
-            if (effects.Contains(Weapon.Effect.Slow))
-            {
-                
-            }
-            if (effects.Contains(Weapon.Effect.Splash))
-            {
-                
-            }
-            if (effects.Contains(Weapon.Effect.Skip))
-            {
-                return;
-            }
-            if (effects.Contains(Weapon.Effect.Sustain))
-            {
-                
-            }
+            // if (effects.Contains(Weapon.Effect.Stun))
+            // {
+            //     
+            // }
+            // if (effects.Contains(Weapon.Effect.Slow))
+            // {
+            //     
+            // }
+            // if (effects.Contains(Weapon.Effect.Splash))
+            // {
+            //     
+            // }
+            // if (effects.Contains(Weapon.Effect.Skip))
+            // {
+            //     return;
+            // }
+            // if (effects.Contains(Weapon.Effect.Sustain))
+            // {
+            //     
+            // }
             
             shield.TakeDamage(damage);
             Destroy(gameObject);

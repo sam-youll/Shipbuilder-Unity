@@ -46,18 +46,24 @@ public class EventBus : MonoBehaviour
     // the following fields are the actual events themselves
     public UnityEvent combatStarted;
     public UnityEvent combatEnded;
+    public UnityEvent enemyDefeated;
+    public UnityEvent playerDefeated;
+    
     public UnityEvent<Weapon> weaponFired;
+    public UnityEvent<float> playerHit; // technically this and the event below also get called on a miss, damage is just set to -1
+    public UnityEvent<float> enemyHit;
     public UnityEvent<Wire> updateJackValidity;
+    public UnityEvent displayLogUpdated;
     
     private void OnValidate()
     {
-        Debug.Log("OnValidate");
+        // Debug.Log("OnValidate");
         var fields= GetType().GetFields();
-        Debug.Log(fields.Length);
+        // Debug.Log(fields.Length);
         eventsNoArgs = new Dictionary<string, UnityEvent>();
         foreach (var field in fields)
         {
-            Debug.Log(field.FieldType.Name + " " + field.Name);
+            // Debug.Log(field.FieldType.Name + " " + field.Name);
             if (field.FieldType== typeof(UnityEvent))
             {
                 eventsNoArgs.Add(field.Name, (UnityEvent)field.GetValue(this));

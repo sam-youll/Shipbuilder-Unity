@@ -51,7 +51,7 @@ public class WeaponManager : MonoBehaviour
 
     public void OnMainSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        playerShip = CombatManager.Instance.playerShip.gameObject;
+        // playerShip = CombatManager.Instance.playerShipData.gameObject;
         
         var newShipWeapon = Instantiate(shipWeaponPrefab, playerShip.transform);
         var pos = newShipWeapon.transform.localPosition;

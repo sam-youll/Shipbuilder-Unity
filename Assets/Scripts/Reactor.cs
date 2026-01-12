@@ -69,16 +69,16 @@ public class Reactor : MonoBehaviour
         }
 
         shields = Mathf.Clamp(shields, 0, 4);
-        for (var i = 0; i < CombatManager.Instance.playerShip.shields.Length; i++)
-        {
-            var shield = CombatManager.Instance.playerShip.shields[i];
-            shield.SetActive(false);
-        }
+        // for (var i = 0; i < CombatManager.Instance.playerShipData.shields.Length; i++)
+        // {
+        //     var shield = CombatManager.Instance.playerShipData.shields[i];
+        //     shield.SetActive(false);
+        // }
 
-        for (var i = 0; i < shields; i++)
-        {
-            CombatManager.Instance.playerShip.shields[i].SetActive(true);
-        }
+        // for (var i = 0; i < shields; i++)
+        // {
+        //     CombatManager.Instance.playerShipData.shields[i].SetActive(true);
+        // }
 
 
 
