@@ -29,6 +29,7 @@ public class Node : MonoBehaviour
         { NodeType.Shop, Color.magenta},
     };
     
+    [Header("Color")]
     //this node's sprite renderer
     public SpriteRenderer sr;
     
@@ -50,6 +51,9 @@ public class Node : MonoBehaviour
     //whether this node has been visited 
     public bool visited = false;
     
+    
+    
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -61,7 +65,6 @@ public class Node : MonoBehaviour
         color = sr.color;
         color = colors[type];
         //darkening nodes if they're not available on scene load
-        //TODO: test if this persists between runs
         if (!initial || visited)
         {
             color.a = 0.2f;
@@ -81,7 +84,7 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// Makes nodes available to select
+    /// Makes nodes lit up and clickable
     /// </summary>
     public void MakeAvailable()
     {
@@ -93,7 +96,7 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// Makes nodes unavailable
+    /// Makes nodes greyed out and unclickable
     /// </summary>
     public void MakeUnavailable()
     {
@@ -106,22 +109,26 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// Makes the subsequent nodes in a selected path available
+    /// Makes the subsequent nodes in a selected path lit up and clickable
     /// </summary>
     private void AdvanceToNextNode()
     {
         //NODE CLEANUP
         //for each node in the constellation
-        foreach (Node externalNode in GetComponentInParent<Constellation>().nodes) 
+        if (!CompareTag("Planet"))
         {
-            //if that node was available but not selected
-            if (externalNode.isAvailable && !externalNode.isSelected)
+            foreach (Node externalNode in GetComponentInParent<Constellation>().nodes) 
             {
-                //make it unavailable
-                externalNode.MakeUnavailable();
-            }
+                //if that node was available but not selected
+                if (externalNode.isAvailable && !externalNode.isSelected)
+                {
+                    //make it unavailable
+                    externalNode.MakeUnavailable();
+                }
                 
+            }
         }
+        
 
         //if this node is selected or an initial node
         if (isSelected || initial)
@@ -133,11 +140,39 @@ public class Node : MonoBehaviour
                 if (node != null)
                 {
                     //and it hasn't been visited
-                    //TODO: make this info carry over throughout the run
                     if (!node.visited)
                     {
                         //it's made available
                         node.MakeAvailable();
+                    }
+                }
+                //if the node that follows is a planet
+                if (node.GetComponent<Planet>() != null)
+                {
+                    //Debug.Log("Planet found");
+                    
+                    GameObject instantiatedPlanet = GameObject.FindGameObjectWithTag("Planet");
+
+                    if (instantiatedPlanet != null)
+                    {
+                        if (node.GetComponent<Planet>().planetHere)
+                        {
+                            instantiatedPlanet.GetComponent<Planet>().MakeAvailable();
+                        }
+                    }
+                    
+                    //but the planet isn't there to click
+                    if (!node.GetComponent<Planet>().planetHere)
+                    {
+                        //Debug.Log("Advancing to next path");
+                        
+                        //go to the next path and update the node map
+                        MapManager.Instance.AdvanceThroughPath();
+                        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+                        {
+                            MapManager.Instance.UpdateNodeMap();
+                        }
+                        
                     }
                 }
             }
@@ -148,13 +183,51 @@ public class Node : MonoBehaviour
     
     void OnMouseDown()
     {
+        Debug.Log("OnMouseDown");
         if (isAvailable)
         {
+            //UNIVERSAL NODE BEHAVIOR
+            //sets whatever was clicked to visited
             visited = true;
+            //sets this to the currently selected node
             isSelected = true;
+            //makes the next nodes available
             AdvanceToNextNode();
-            
+            //makes this node unavailable 
             MakeUnavailable();
+            
+            
+            //PLANET CLICKING
+            
+            //if you click a planet in the main map
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
+            {
+                //load the sector map scene
+                SceneManager.LoadScene("SectorMap");
+                
+                MapManager.Instance.SetCurrentPath(GetComponent<Planet>().thisPlanet);
+            }
+            
+            //if you're in the sector map
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+            {
+                //and what you click on is a planet 
+                if (GetComponent<Planet>() != null)
+                {
+                    for (int i = 0; i < MapManager.Instance.planets.Length; i++)
+                    {
+                        if (MapManager.Instance.planets[i].node == GetComponent<Planet>().thisPlanet)
+                        {
+                            MapManager.Instance.planets[i].visited = true;
+                        }
+                    }
+                    Debug.Log("clicked a planet in sector map");
+                    //go back to the main menu 
+                    SceneManager.LoadScene("MainMap");
+                    //and update the nodemaps 
+                    MapManager.Instance.UpdateMainMap();
+                }
+            }
             
             /*if (type == NodeType.Combat)
             {

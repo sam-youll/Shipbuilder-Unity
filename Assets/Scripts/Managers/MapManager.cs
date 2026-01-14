@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 using UnityEngine.SceneManagement;
+using Object = System.Object;
 
 public class MapManager : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class MapManager : MonoBehaviour
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
 
@@ -60,6 +63,7 @@ public class MapManager : MonoBehaviour
 
     //list of nodemap game objects
     public List<GameObject> nodeMaps = new List<GameObject>();
+    public List<GameObject> sectorMaps = new List<GameObject>();
 
     //planet struct for planet location and movement
     public struct PlanetStruct
@@ -70,16 +74,27 @@ public class MapManager : MonoBehaviour
         public Color color;
         //list of the sectors in order 
         public List<Sector> path;
-        //read the list backwards wtf 
+
+        public bool visited;
     }
+    
+    public GameObject planet;
+    public GameObject activeNodeMap;
     
     
     //array of planets for movement
     public PlanetStruct[] planets = new PlanetStruct[4];
     
+    //current target planet
+    public PlanetStruct targetPlanet;
+    //current path index
+    public int pathIndex = 0;
     
+    private int planetIndex = 0;
     
-    //should probably add stuff later to track what planets visited vs not, if a planet is targeted, etc
+    //current path 
+    public List<Sector> currentPath = new List<Sector>();
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -108,23 +123,15 @@ public class MapManager : MonoBehaviour
         planets[1].path = new List<Sector>();
         planets[2].path = new List<Sector>();
         planets[3].path = new List<Sector>();
-
-        foreach (GameObject nodeMap in nodeMaps)
-        {
-            //if there's a planet in the child of the constellation
-            if (nodeMap.GetComponentInChildren<Planet>() != null)
-            {
-                //set the planet (this has to be here otherwise that gets called before the array is put together)
-                nodeMap.GetComponentInChildren<Planet>().SetPlanet();
-            }
-        }
-
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
-        {
-            UpdateMainMap();
-        }
+        
+        planets[0].visited = false;
+        planets[1].visited = false;
+        planets[2].visited = false;
+        planets[3].visited = false;
+        
 
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -132,29 +139,104 @@ public class MapManager : MonoBehaviour
         //just for testing
         /*if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            UpdatePlanetLocations();
+            MovePlanets();
         }*/
     }
     
-
+    /// <summary>
+    /// Updates the map of nodes in sector map with current planet locations and current active constellations
+    /// </summary>
     public void UpdateNodeMap()
     {
+        Debug.Log("UpdateNodeMap");
+        
+        //for each node map in the scene
         foreach (GameObject nodeMap in nodeMaps)
         {
-            if (nodeMap.GetComponent<Constellation>().isActive)
+                nodeMap.GetComponent<Constellation>().CheckIfActive();
+            
+                //if it is active
+                if (nodeMap.GetComponent<Constellation>().isActive)
+                {
+                    //instantiate it 
+                    activeNodeMap = Instantiate(nodeMap);
+                    Debug.Log("setting " + nodeMap.name + " active");
+                }
+        }
+        
+        UpdatePlanetNodes();
+    }
+
+    /// <summary>
+    /// Updates the constellations in the Main Map 
+    /// </summary>
+    public void UpdateMainMap()
+    {
+        foreach (GameObject sectorMap in sectorMaps)
+        {
+            Instantiate(sectorMap);
+            UpdatePlanetPaths();
+            UpdatePlanetNodes();
+        }
+    }
+
+    /// <summary>
+    /// Sets any clickable planet nodes active in the proper sectors
+    /// </summary>
+    public void UpdatePlanetNodes()
+    {
+        for (int i = 0; i < planets.Length; i++)
+        {
+            
+            //main map scene set them all like before 
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
             {
-                nodeMap.SetActive(true);
-                //Debug.Log("setting " + nodeMap.name + " active");
+                foreach (GameObject sectorMap in sectorMaps)
+                {
+                    if (sectorMap.GetComponentInChildren<Planet>() != null)
+                    {
+                        if (planets[i].location == sectorMap.GetComponent<Constellation>().sector)
+                        {
+                            GameObject sectorPlanet = sectorMap.GetComponentInChildren<Planet>().planetObject;
+                            //set its node
+                            sectorPlanet.GetComponent<Planet>().thisPlanet = planets[i].node;
+                            //and its color 
+                            sectorPlanet.GetComponent<Planet>().color = planets[i].color;
+                            //and its status
+                            sectorPlanet.GetComponent<Planet>().UpdateVisitedStatus(planets[i].visited);
+                        }
+                    }
+                }
             }
-            else
+            
+            //if we're in the sector map
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
             {
-                nodeMap.SetActive(false);
-                //Debug.Log("setting " + nodeMap.name + " inactive");
+                //and this planet is in the current sector and it is the target planet
+                if (planets[i].location == sector && planets[i].node == targetPlanet.node)
+                {
+                    //TODO: figure out setting this where i have them in the node map prefab
+                    
+                    //set its node
+                    planet.GetComponent<Planet>().thisPlanet = planets[i].node;
+                    //and its color 
+                    planet.GetComponent<Planet>().UpdateColor(planets[i].color);
+                    //make it unavailable
+                    planet.GetComponent<Planet>().MakeUnavailable();
+                    
+                    Debug.Log("target planet " + targetPlanet.node + " node : "  + planets[i].node + " color: "  + planets[i].color);
+                    
+                    //instantiate it
+                    Instantiate(planet);
+                }
             }
         }
     }
 
-    public void UpdatePlanetLocations()
+    /// <summary>
+    /// Changes planet location between runs according to their speed
+    /// </summary>
+    public void MovePlanets()
     {
         //for each planet struct in the array
         for (int i = 0; i < planets.Length; i++)
@@ -185,7 +267,10 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void UpdateMainMap()
+    /// <summary>
+    /// Sets each individual planet's path for use in UI and navigation
+    /// </summary>
+    public void UpdatePlanetPaths()
     {
         
         //for each planet 
@@ -200,33 +285,76 @@ public class MapManager : MonoBehaviour
                 //increment thru the enum of sectors negatively until u get to the destination
                 for (Sector s = sector; s > planets[i].location; s--)
                 {
-                    planets[i].path.Add(s);
+                    planets[i].path.Add(s - 1);
                 }
-                for (int j = 0; j < planets[i].path.Count; j++)
+                /*for (int j = 0; j < planets[i].path.Count; j++)
                 {
                     Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
-                }
+                }*/
             } else if (distance < 0)
             {
                 //increment thru the enum of sectors negatively until u get to the destination
                 for (Sector s = sector; s < planets[i].location; s++)
                 {
-                    planets[i].path.Add(s);
+                    planets[i].path.Add(s + 1);
                 }
-                for (int j = 0; j < planets[i].path.Count; j++)
+                /*for (int j = 0; j < planets[i].path.Count; j++)
                 {
                     Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
-                }
+                }*/
             } else
             {
                 planets[i].path.Add(sector);
             } 
-
-            
-            
-            
         }
-        
     }
+
+    public void SetCurrentPath(Node clickedNode)
+    {
+        //for each planet struct in the list 
+        for (int i = 0; i < planets.Length; i++)
+        {
+            //if the planet node is the same as the one clicked
+            if (planets[i].node == clickedNode)
+            {
+                //the target planet is that planet struct
+                targetPlanet = planets[i];
+                //its path is the current path
+                currentPath = planets[i].path;
+                
+                planetIndex = i;
+                
+                //the path index is 0 
+                pathIndex = 0;
+                //and the sector is the first one in that path 
+                sector = currentPath[pathIndex];
+                
+                //Debug.Log("Path set, headed to " + targetPlanet.node + " starting with sector " + currentPath[pathIndex] + " path length is " + currentPath.Count);
+            }
+        }
+    }
+
+    public void AdvanceThroughPath()
+    {
+        Debug.Log("AdvanceThroughPath");
+        //if the path index is less than or equal to the current size of the path
+        if (pathIndex < currentPath.Count - 1)
+        {
+            //increment the path index
+            pathIndex++;
+            
+            //set the current sector to that index 
+            sector = currentPath[pathIndex];
+            Destroy(activeNodeMap);
+            Debug.Log("Current path length: " + currentPath.Count + " current sector: " + sector + "path index is " + pathIndex);
+        }
+        else if (pathIndex == currentPath.Count - 1)
+        {
+            Debug.Log("path complete");
+            SceneManager.LoadScene("MainMap");
+        }
+           
+    }
+    
     
 }

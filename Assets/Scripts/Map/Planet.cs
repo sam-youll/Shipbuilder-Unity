@@ -1,14 +1,17 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Planet : Node
 {
-    //the sector this planet obj exists in
-    public MapManager.Sector sector;
-    
     //which planet this is
     public MapManager.Node thisPlanet;
 
-    private bool planetHere = false;
+    //whether the planet is here
+    public bool planetHere = false;
+
+    //this planet's gameobject
+    public GameObject planetObject;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,17 +20,16 @@ public class Planet : Node
         sr = gameObject.GetComponent<SpriteRenderer>();
         //sets planet node type - it will always start as a story node
         type = NodeType.Story;
-        //sets planet obj current sector
-        sector = GetComponentInParent<Constellation>().sector;
-        
-        if (!planetHere)
-        {
-            color.a = 0;
-        }
-        
-        
         //set this planet's color
         sr.color = color;
+        Debug.Log("planet's color " + color);
+
+        //if it's instantiated in the sector map, it's here
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+        {
+            planetHere = true;
+        }
+            
     }
 
     // Update is called once per frame
@@ -36,25 +38,28 @@ public class Planet : Node
         
     }
 
-    public void SetPlanet()
+    /// <summary>
+    /// Updates planet color
+    /// </summary>
+    /// <param name="newColor"></param>
+    public void UpdateColor(Color newColor)
     {
-        //for each planet in the array
-        for (int i = 0; i < MapManager.Instance.planets.Length; i++)
+        Debug.Log("new color: " + newColor);
+        color = newColor;
+        sr.color = color;
+    }
+
+    /// <summary>
+    /// Updates whether this planet has been visited and sets its availability in main map accordingly
+    /// </summary>
+    /// <param name="newStatus"></param>
+    public void UpdateVisitedStatus(bool newStatus)
+    {
+        visited = newStatus;
+        if (visited)
         {
-            //Debug.Log(MapManager.Instance.planets[i].node + "  is in " + MapManager.Instance.planets[i].location);
-            
-            //if there's a planet located in the currently available constellation
-            if (MapManager.Instance.planets[i].location == sector)
-            {
-                //set this planet's node from the planet struct
-                thisPlanet = MapManager.Instance.planets[i].node;
-                //set this planet's color from the planet struct
-                color = MapManager.Instance.planets[i].color;
-                //note that a planet is here
-                planetHere = true;
-                //make it unavailable 
-                MakeUnavailable();
-            }
+            MakeUnavailable();
         }
     }
+    
 }
