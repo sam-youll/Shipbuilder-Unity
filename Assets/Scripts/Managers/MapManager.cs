@@ -174,6 +174,8 @@ public class MapManager : MonoBehaviour
     {
         foreach (GameObject sectorMap in sectorMaps)
         {
+            sectorMap.transform.localPosition = new Vector3(0, 0, -2);
+            
             Instantiate(sectorMap);
             UpdatePlanetPaths();
             UpdatePlanetNodes();
