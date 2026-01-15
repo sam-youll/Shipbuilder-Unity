@@ -75,6 +75,7 @@ public class CombatManager : MonoBehaviour
         // geomagneticPulse.transform.parent.gameObject.SetActive(false);
         
         EventBus.Instance.combatStarted.AddListener(OnCombatStarted);
+        EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
     }
 
     /// <summary>
@@ -135,46 +136,46 @@ public class CombatManager : MonoBehaviour
             // }
 
             // if one of the ships dies, combat ends
-            if (playerHealthBar.value <= 0 || enemyHealthBar.value <= 0)
-            {
-                ReactorSounds.Instance.StopEnemyReactor();
-                state = State.endScreen;
-                endScreen.SetActive(true);
-                endScreenTimer = 3f; // close end screen in 3 seconds
-
-                // if player health is less than 0, player lost
-                if (playerHealthBar.value <= 0)
-                {
-                    endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
-                    if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Spring Showcase Tutorial"))
-                    {
-                        Invoke(nameof(GoToMainMenu), 2);
-                    }
-                }
-                // otherwise, the enemy lost and the player won
-                else if (enemyHealthBar.value <= 0)
-                {
-                    endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU WIN";
-                    // endScreenTimer = 999f; // set the timer to 999 (basically turning it off) so the player has time to choose their reward
-                    
-                    fightLevel++;
-                    Inventory.Instance.credits += Random.Range(5, 9);
-                    battleNumberLabel.text = fightLevel.ToString();
-                    EnemyBeShopping();
-
-                    // increase health cause why not
-                    // this is also something that could be good to change
-                    // theoretically we'll eventually have some actual mechanic for increasing health
-                    // enemyShipData.maxHealth += 5;
-                    // playerShipData.maxHealth += 5;
-                    
-                    if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Spring Showcase Tutorial"))
-                    {
-                        Invoke(nameof(GoToShop), 1);
-                    }
-                }
-                
-            }
+            // if (playerHealthBar.value <= 0 || enemyHealthBar.value <= 0)
+            // {
+            //     ReactorSounds.Instance.StopEnemyReactor();
+            //     state = State.endScreen;
+            //     endScreen.SetActive(true);
+            //     endScreenTimer = 3f; // close end screen in 3 seconds
+            //
+            //     // if player health is less than 0, player lost
+            //     if (playerHealthBar.value <= 0)
+            //     {
+            //         endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
+            //         if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Spring Showcase Tutorial"))
+            //         {
+            //             Invoke(nameof(GoToMainMenu), 2);
+            //         }
+            //     }
+            //     // otherwise, the enemy lost and the player won
+            //     else if (enemyHealthBar.value <= 0)
+            //     {
+            //         endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU WIN";
+            //         // endScreenTimer = 999f; // set the timer to 999 (basically turning it off) so the player has time to choose their reward
+            //         
+            //         fightLevel++;
+            //         Inventory.Instance.credits += Random.Range(5, 9);
+            //         battleNumberLabel.text = fightLevel.ToString();
+            //         EnemyBeShopping();
+            //
+            //         // increase health cause why not
+            //         // this is also something that could be good to change
+            //         // theoretically we'll eventually have some actual mechanic for increasing health
+            //         // enemyShipData.maxHealth += 5;
+            //         // playerShipData.maxHealth += 5;
+            //         
+            //         if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Spring Showcase Tutorial"))
+            //         {
+            //             Invoke(nameof(GoToShop), 1);
+            //         }
+            //     }
+            //     
+            // }
         }
         else if (state == State.endScreen)
         {
@@ -202,51 +203,18 @@ public class CombatManager : MonoBehaviour
         #endregion
     }
 
-    public void OnCombatStarted()
+    private void OnCombatStarted()
     {
-        // endScreen.GetComponentInChildren<TextMeshPro>().text = "YOU LOSE";
         ReactorSounds.Instance.StartEnemyReactor();
-        endScreen.SetActive(false);
-        
-        // reset enemy ship
-        // enemyShipData.gameObject.SetActive(true);
-        // reset enemy shields
-        // TODO: set shields to starting scale, not Vector3.one
-        // I'm also calling start coroutine here because it was an attempt to fix things
-        // This may be causing problems
-        // foreach (var shield in enemyShipData.GetComponent<ShipData>().shields)
-        // {
-        //     shield.transform.localScale = Vector3.one;
-        //     shield.GetComponent<Shield>().health = shield.GetComponent<Shield>().maxHealth;
-        //     // shield.GetComponent<Shield>().StartCoroutine("RegenShield"); // this is probably not a great idea
-        // }
-        
-        // reset player & enemy health
-        // setting the health bars is probably redundant
-        enemyHealthBar.value = 1;
-        playerHealthBar.value = 1;
-        //playerShip.health = playerShip.maxHealth;
-        // enemyShipData.health = enemyShipData.maxHealth;
-
-        // loop through all player weapons, then reset warmup status on all of them
-        // this might not be happening for the enemy weapons
-        // playerShipData.weapons = new List<GameObject>(); // wipe the weapons list and rebuild it every new combat
-        foreach (var weapon in WeaponManager.Instance.weapons)
-        {
-            if (weapon.activeSelf)
-            {
-                // playerShipData.weapons.Add(weapon); // rebuilding the list based on what weapons are active
-                weapon.GetComponent<Weapon>().warmup = 0;
-                weapon.GetComponent<Weapon>().warming = false;
-            }
-        }
-        // playerShipData.allWeaponsWarmed = false; // this is so Ship.cs can warm up the weapons one by one
-        // this whole thing should probably be happening for the enemy weapons, too
-        
         state = State.inCombat;
 
         //AudioManager.Instance.ResetPlayedList();
         //AudioManager.Instance.StopEnemySong();
+    }
+
+    private void OnEnemyDefeated()
+    {
+        state = State.outOfCombat;
     }
 
     // public IEnumerator Pulsar()

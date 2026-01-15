@@ -604,7 +604,7 @@ public class Wire : MonoBehaviour
         if (!isConnected)
             return;
         
-        Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with no arguments.");
+        // Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with no arguments.");
         if (nextModule.TryGetComponent(out Weapon weapon))
         {
             weapon.Fire();
@@ -620,7 +620,7 @@ public class Wire : MonoBehaviour
         if (!isConnected)
             return;
         
-        Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value}");
+        // Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value}");
         if (nextModule.TryGetComponent(out Weapon weapon))
         {
             weapon.Fire();
@@ -636,7 +636,7 @@ public class Wire : MonoBehaviour
         if (!isConnected)
             return;
         
-        Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value} to secondary input jack {inputIndex}");
+        // Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with a value of {value} to secondary input jack {inputIndex}");
         if (nextModule.TryGetComponent(out Weapon weapon))
         {
             weapon.Fire();

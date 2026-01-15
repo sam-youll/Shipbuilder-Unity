@@ -323,6 +323,7 @@ public class AudioManager: MonoBehaviour
     
     private void OnWeaponFired(Weapon weapon)
     {
+        Debug.Log("playing note");
         StartCoroutine(PlayNoteCoroutine(weapon, weapon.noteInfo));
     }
 

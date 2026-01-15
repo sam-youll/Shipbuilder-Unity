@@ -45,7 +45,6 @@ public class EventBus : MonoBehaviour
     public Dictionary<string, UnityEvent> eventsNoArgs = new();
     // the following fields are the actual events themselves
     public UnityEvent combatStarted;
-    public UnityEvent combatEnded;
     public UnityEvent enemyDefeated;
     public UnityEvent playerDefeated;
     
