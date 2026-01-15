@@ -220,6 +220,9 @@ MonoBehaviour:
   displayLogUpdated:
     m_PersistentCalls:
       m_Calls: []
+  loadScene:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4294989349421859828
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,6 +676,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6474073650286890672}
+  - component: {fileID: 4989335090036159023}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -705,3 +709,15 @@ Transform:
   - {fileID: 3172781343051935145}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4989335090036159023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478929437578812916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8e909861b65db64c97b22ed375595ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

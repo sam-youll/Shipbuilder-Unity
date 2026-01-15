@@ -208,11 +208,11 @@ public class Node : MonoBehaviour
             if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
             {
                 //and what you click on is a planet 
-                if (GetComponent<Planet>() != null)
+                if (TryGetComponent(out Planet planet))
                 {
                     for (int i = 0; i < MapManager.Instance.planets.Length; i++)
                     {
-                        if (MapManager.Instance.planets[i].node == GetComponent<Planet>().thisPlanet)
+                        if (MapManager.Instance.planets[i].node == planet.thisPlanet)
                         {
                             MapManager.Instance.planets[i].visited = true;
                         }
