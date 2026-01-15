@@ -673,6 +673,9 @@ MonoBehaviour:
   - {fileID: 8021314649772139098}
   - {fileID: 5900837651389253242}
   - {fileID: 5566061288888059179}
+  sr: {fileID: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  inactiveColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &5386802908513684305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,6 +1981,14 @@ PrefabInstance:
       propertyPath: nodeIndex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1763975327325857279, guid: 8bb3631dcc368a54f91e513e69415ca1, type: 3}
+      propertyPath: nextNodes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763975327325857279, guid: 8bb3631dcc368a54f91e513e69415ca1, type: 3}
+      propertyPath: 'nextNodes.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1041223547391137324}
     - target: {fileID: 4728524101560479445, guid: 8bb3631dcc368a54f91e513e69415ca1, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -2164,6 +2175,14 @@ PrefabInstance:
       propertyPath: nodeIndex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1763975327325857279, guid: 8bb3631dcc368a54f91e513e69415ca1, type: 3}
+      propertyPath: nextNodes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763975327325857279, guid: 8bb3631dcc368a54f91e513e69415ca1, type: 3}
+      propertyPath: 'nextNodes.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1041223547391137324}
     - target: {fileID: 4728524101560479445, guid: 8bb3631dcc368a54f91e513e69415ca1, type: 3}
       propertyPath: m_Color.b
       value: 1
