@@ -824,7 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sector: 4
-  isActive: 1
+  isActive: 0
   nodes:
   - {fileID: 4549012088464135418}
   - {fileID: 3851602860288114586}
@@ -835,6 +835,12 @@ MonoBehaviour:
   - {fileID: 8898790163922991330}
   - {fileID: 2082539671296414040}
   - {fileID: 1827951080203940055}
+  sr: {fileID: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  inactiveColor: {r: 0, g: 0, b: 0, a: 0}
+  combatMultiplier: 2.5
+  storyMultiplier: 0.6
+  shopMultiplier: 2
 --- !u!1 &8827337083734627905
 GameObject:
   m_ObjectHideFlags: 0
