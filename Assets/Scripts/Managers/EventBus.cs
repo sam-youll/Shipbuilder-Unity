@@ -4,6 +4,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 [CustomEditor(typeof(EventBus))]
 public class EventBusEditor : Editor
@@ -24,25 +25,29 @@ public class EventBusEditor : Editor
 
 public class EventBus : MonoBehaviour
 {
+
     public static EventBus Instance;
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
 
     // TODO: these should be grouped into more specific fields later, as we consolidate more events into the bus
-    [Header("Events")] 
+    [Header("Events")]
     // a public dictionary exists so buttons and other scripts can connect to these events and invoke them programatically
     // this dictionary is automatically updated via OnValidate()
-    public Dictionary<string, UnityEvent> eventsNoArgs = new();
+    public Dictionary<string, UnityEvent> eventsNoArgs;
+    public Dictionary<string, UnityEvent<string>> eventsStringArg;
+    
     // the following fields are the actual events themselves
     public UnityEvent combatStarted;
     public UnityEvent enemyDefeated;
@@ -53,19 +58,27 @@ public class EventBus : MonoBehaviour
     public UnityEvent<float> enemyHit;
     public UnityEvent<Wire> updateJackValidity;
     public UnityEvent displayLogUpdated;
+    public UnityEvent<string> loadScene;
+    
+    // scene changes
     
     private void OnValidate()
     {
         // Debug.Log("OnValidate");
         var fields= GetType().GetFields();
         // Debug.Log(fields.Length);
-        eventsNoArgs = new Dictionary<string, UnityEvent>();
+        eventsNoArgs = new();
+        eventsStringArg = new();
         foreach (var field in fields)
         {
             // Debug.Log(field.FieldType.Name + " " + field.Name);
-            if (field.FieldType== typeof(UnityEvent))
+            if (field.FieldType == typeof(UnityEvent))
             {
                 eventsNoArgs.Add(field.Name, (UnityEvent)field.GetValue(this));
+            }
+            else if (field.FieldType == typeof(UnityEvent<string>))
+            {
+                eventsStringArg.Add(field.Name, (UnityEvent<string>)field.GetValue(this));
             }
         }
     }

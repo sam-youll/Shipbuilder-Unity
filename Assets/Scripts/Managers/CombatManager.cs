@@ -19,11 +19,12 @@ public class CombatManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
 

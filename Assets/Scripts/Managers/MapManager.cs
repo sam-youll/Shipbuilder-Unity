@@ -15,7 +15,7 @@ public class MapManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
@@ -129,7 +129,7 @@ public class MapManager : MonoBehaviour
         planets[2].visited = false;
         planets[3].visited = false;
         
-
+        EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
     }
     
 
@@ -358,6 +358,9 @@ public class MapManager : MonoBehaviour
         }
            
     }
-    
-    
+
+    private void OnEnemyDefeated()
+    {
+        SceneManager.LoadScene("MainMap");
+    }
 }

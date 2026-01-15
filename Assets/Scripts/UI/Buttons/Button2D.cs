@@ -11,6 +11,7 @@ public class Button2DEditor : Editor
     public override void OnInspectorGUI()
     {
         var button = target as Button2D;
+        Undo.RecordObject(button, "Button");
         var eventBus = button.eventBus;
         if (eventBus == null)
         {
@@ -18,6 +19,7 @@ public class Button2DEditor : Editor
             DrawDefaultInspector();
             return;
         }
+        EditorGUILayout.BeginVertical();
         EditorGUILayout.LabelField("Event");
         if (EditorGUILayout.DropdownButton(new GUIContent(button.eventString), FocusType.Passive,GUILayout.ExpandWidth(true)))
         {
@@ -27,8 +29,21 @@ public class Button2DEditor : Editor
                 var text = eventBus.eventsNoArgs.ElementAt(i).Key;
                 menu.AddItem(new GUIContent(text), false, ConnectEvent, text);
             }
+
+            for (int i = 0; i < eventBus.eventsStringArg.Count; i++)
+            {
+                var text = eventBus.eventsStringArg.ElementAt(i).Key;
+                menu.AddItem(new GUIContent(text), false, ConnectEvent, text);
+            }
+            
             menu.ShowAsContext();
         }
+        if (eventBus.eventsStringArg.ContainsKey(button.eventString))
+        {
+            button.eventStringArg = EditorGUILayout.TextField("String argument: ", button.eventStringArg);
+        }
+        
+        EditorGUILayout.EndVertical();
         DrawDefaultInspector();
     }
 
@@ -36,6 +51,13 @@ public class Button2DEditor : Editor
     {
         var button = target as Button2D;
         button.eventString = obj as string;
+    }
+    
+    private static bool IsSceneInProject(string named)
+    {
+        
+        return EditorBuildSettings.scenes.Any(scene => scene.enabled && scene.path.Contains("/" + named + ".unity"));
+
     }
 }
 
@@ -49,6 +71,7 @@ public class Button2D : MonoBehaviour
     private SpriteRenderer sr;
 
     [HideInInspector] public string eventString = "Select event";
+    [HideInInspector] public string eventStringArg;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -84,6 +107,13 @@ public class Button2D : MonoBehaviour
 
     protected virtual void OnClick()
     {
-        EventBus.Instance.eventsNoArgs[eventString].Invoke();
+        if (eventStringArg != null)
+        {
+            EventBus.Instance.eventsStringArg[eventString].Invoke(eventStringArg);
+        }
+        else
+        {
+            EventBus.Instance.eventsNoArgs[eventString].Invoke();
+        }
     }
 }
