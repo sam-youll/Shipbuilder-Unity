@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1638626080150865623}
   - component: {fileID: 6472589971045626890}
   - component: {fileID: 1056090727305374097}
+  - component: {fileID: 4338518666034656103}
+  - component: {fileID: 1445643442904482985}
   m_Layer: 0
   m_Name: Sector
   m_TagString: Untagged
@@ -49,6 +51,9 @@ MonoBehaviour:
   sector: 0
   isActive: 1
   nodes: []
+  sr: {fileID: 1056090727305374097}
+  highlightColor: {r: 1, g: 1, b: 1, a: 0.57254905}
+  inactiveColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 0.4745098}
 --- !u!212 &1056090727305374097
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -94,7 +99,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7759809671571417716, guid: fa6b2bbc8a7e50c48b97080fd28065c3, type: 3}
-  m_Color: {r: 0.348, g: 0.348, b: 0.348, a: 0.4745098}
+  m_Color: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 0.4745098}
   m_FlipX: 0
   m_FlipY: 1
   m_DrawMode: 0
@@ -104,6 +109,54 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!65 &4338518666034656103
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361121854931365917}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.57, y: 10.74, z: 0.2}
+  m_Center: {x: 0, y: -5.37, z: 0}
+--- !u!54 &1445643442904482985
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361121854931365917}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &8305995803713732716
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -112,17 +165,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1638626080150865623}
     m_Modifications:
+    - target: {fileID: -336254629552898129, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: -336254629552898129, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 8.85
+      value: 17.28
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 8.85
+      value: 17.28
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 8.85
+      value: 17.28
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -163,6 +224,10 @@ PrefabInstance:
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1701225667645622866, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_Name

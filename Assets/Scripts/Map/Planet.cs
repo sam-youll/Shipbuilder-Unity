@@ -22,7 +22,7 @@ public class Planet : Node
         type = NodeType.Story;
         //set this planet's color
         sr.color = color;
-        Debug.Log("planet's color " + color);
+        //Debug.Log("planet's color " + color);
 
         //if it's instantiated in the sector map, it's here
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
@@ -44,7 +44,7 @@ public class Planet : Node
     /// <param name="newColor"></param>
     public void UpdateColor(Color newColor)
     {
-        Debug.Log("new color: " + newColor);
+        //Debug.Log("new color: " + newColor);
         color = newColor;
         sr.color = color;
     }

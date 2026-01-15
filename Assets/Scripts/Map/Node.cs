@@ -18,9 +18,7 @@ public class Node : MonoBehaviour
     //this node's type
     public NodeType type;
     
-    /// <summary>
-    /// Color Management
-    /// </summary>
+    [Header("Color")]
     //colors by node type
     private Dictionary<NodeType, Color> colors = new Dictionary<NodeType, Color>()
     {
@@ -29,7 +27,7 @@ public class Node : MonoBehaviour
         { NodeType.Shop, Color.magenta},
     };
     
-    [Header("Color")]
+    
     //this node's sprite renderer
     public SpriteRenderer sr;
     
@@ -111,7 +109,7 @@ public class Node : MonoBehaviour
     /// <summary>
     /// Makes the subsequent nodes in a selected path lit up and clickable
     /// </summary>
-    private void AdvanceToNextNode()
+    public void AdvanceToNextNode()
     {
         //NODE CLEANUP
         //for each node in the constellation
@@ -161,8 +159,9 @@ public class Node : MonoBehaviour
                         }
                     }
                     
+                    GameObject foundPlanet = GameObject.FindGameObjectWithTag("Planet");
                     //but the planet isn't there to click
-                    if (!node.GetComponent<Planet>().planetHere)
+                    if (foundPlanet == null)
                     {
                         //Debug.Log("Advancing to next path");
                         
@@ -199,15 +198,6 @@ public class Node : MonoBehaviour
             
             //PLANET CLICKING
             
-            //if you click a planet in the main map
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
-            {
-                //load the sector map scene
-                SceneManager.LoadScene("SectorMap");
-                
-                MapManager.Instance.SetCurrentPath(GetComponent<Planet>().thisPlanet);
-            }
-            
             //if you're in the sector map
             if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
             {
@@ -222,10 +212,23 @@ public class Node : MonoBehaviour
                         }
                     }
                     Debug.Log("clicked a planet in sector map");
-                    //go back to the main menu 
-                    SceneManager.LoadScene("MainMap");
-                    //and update the nodemaps 
+                    
+                    //make sure the sector is here
+                    MapManager.Instance.sector = MapManager.Instance.currentPath[MapManager.Instance.pathIndex];
+                    //for each planet
+                    for (int i = 0; i < MapManager.Instance.planets.Length; i++)
+                    { 
+                        //clear its list
+                       MapManager.Instance.planets[i].path.Clear();
+                    }
+                    //clear the current path list
+                    MapManager.Instance.currentPath.Clear();
+                    //update the main map
                     MapManager.Instance.UpdateMainMap();
+                    Debug.Log("path complete");
+                    //load the main map
+                    SceneManager.LoadScene("MainMap");
+                    
                 }
             }
             

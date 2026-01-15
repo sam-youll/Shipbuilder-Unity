@@ -148,7 +148,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdateNodeMap()
     {
-        Debug.Log("UpdateNodeMap");
+        //Debug.Log("UpdateNodeMap");
         
         //for each node map in the scene
         foreach (GameObject nodeMap in nodeMaps)
@@ -160,7 +160,7 @@ public class MapManager : MonoBehaviour
                 {
                     //instantiate it 
                     activeNodeMap = Instantiate(nodeMap);
-                    Debug.Log("setting " + nodeMap.name + " active");
+                    //Debug.Log("setting " + nodeMap.name + " active");
                 }
         }
         
@@ -176,10 +176,13 @@ public class MapManager : MonoBehaviour
         {
             sectorMap.transform.localPosition = new Vector3(0, 0, -2);
             
-            Instantiate(sectorMap);
             UpdatePlanetPaths();
+            
+            Instantiate(sectorMap);
+            
             UpdatePlanetNodes();
         }
+        
     }
 
     /// <summary>
@@ -187,18 +190,22 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdatePlanetNodes()
     {
+        //for every planet
         for (int i = 0; i < planets.Length; i++)
         {
-            
-            //main map scene set them all like before 
+            //if we're in the main map 
             if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
             {
+                //for every sector map
                 foreach (GameObject sectorMap in sectorMaps)
                 {
+                    //if it's got a planet
                     if (sectorMap.GetComponentInChildren<Planet>() != null)
                     {
+                        //and if a planet is there
                         if (planets[i].location == sectorMap.GetComponent<Constellation>().sector)
                         {
+                            //find the planet child
                             GameObject sectorPlanet = sectorMap.GetComponentInChildren<Planet>().planetObject;
                             //set its node
                             sectorPlanet.GetComponent<Planet>().thisPlanet = planets[i].node;
@@ -226,7 +233,6 @@ public class MapManager : MonoBehaviour
                     //make it unavailable
                     planet.GetComponent<Planet>().MakeUnavailable();
                     
-                    Debug.Log("target planet " + targetPlanet.node + " node : "  + planets[i].node + " color: "  + planets[i].color);
                     
                     //instantiate it
                     Instantiate(planet);
@@ -274,37 +280,37 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdatePlanetPaths()
     {
-        
+        Debug.Log("Updating planet path");
         //for each planet 
         for (int i = 0; i < planets.Length; i++)
         {
             //checks the distance between your current sector and that planet
             int distance = sector -  planets[i].location;
-            Debug.Log(planets[i].node + " is " + distance + " sectors away");
+            //Debug.Log(planets[i].node + " is " + distance + " sectors away");
 
-            if (distance > 0)
+            if (distance > 0 && planets[i].path.Count < distance)
             {
                 //increment thru the enum of sectors negatively until u get to the destination
                 for (Sector s = sector; s > planets[i].location; s--)
                 {
                     planets[i].path.Add(s - 1);
                 }
-                /*for (int j = 0; j < planets[i].path.Count; j++)
+                for (int j = 0; j < planets[i].path.Count; j++)
                 {
-                    Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
-                }*/
-            } else if (distance < 0)
+                    //Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
+                }
+            } else if (distance < 0 & planets[i].path.Count < Mathf.Abs(distance))
             {
                 //increment thru the enum of sectors negatively until u get to the destination
                 for (Sector s = sector; s < planets[i].location; s++)
                 {
                     planets[i].path.Add(s + 1);
                 }
-                /*for (int j = 0; j < planets[i].path.Count; j++)
+                for (int j = 0; j < planets[i].path.Count; j++)
                 {
-                    Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
-                }*/
-            } else
+                    //Debug.Log(planets[i].node + " path includes " + planets[i].path[j]);
+                }
+            } else if (distance == 0 &&  planets[i].path.Count < 1)
             {
                 planets[i].path.Add(sector);
             } 
@@ -349,11 +355,6 @@ public class MapManager : MonoBehaviour
             sector = currentPath[pathIndex];
             Destroy(activeNodeMap);
             Debug.Log("Current path length: " + currentPath.Count + " current sector: " + sector + "path index is " + pathIndex);
-        }
-        else if (pathIndex == currentPath.Count - 1)
-        {
-            Debug.Log("path complete");
-            SceneManager.LoadScene("MainMap");
         }
            
     }
