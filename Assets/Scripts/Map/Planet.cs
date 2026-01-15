@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Planet : Node
+public class Planet : MapNode
 {
     //which planet this is
     public MapManager.Node thisPlanet;
@@ -19,7 +19,7 @@ public class Planet : Node
         //sets this object's sprite renderer
         sr = gameObject.GetComponent<SpriteRenderer>();
         //sets planet node type - it will always start as a story node
-        type = NodeType.Story;
+        encounterType = EncounterType.Story;
         //set this planet's color
         sr.color = color;
         //Debug.Log("planet's color " + color);

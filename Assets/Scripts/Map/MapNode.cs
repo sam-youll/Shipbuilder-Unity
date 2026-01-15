@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
-public class Node : MonoBehaviour
+public class MapNode : MonoBehaviour
 {
     
     //the different types of nodes
-    public enum NodeType
+    public enum EncounterType
     {
         Combat,
         Story,
@@ -16,17 +17,16 @@ public class Node : MonoBehaviour
     }
     
     [Header("Type")]
-    
     //this node's type
-    public NodeType type;
+    public EncounterType encounterType;
     
     [Header("Color")]
     //colors by node type
-    private Dictionary<NodeType, Color> colors = new Dictionary<NodeType, Color>()
+    private Dictionary<EncounterType, Color> colors = new Dictionary<EncounterType, Color>()
     {
-        { NodeType.Combat , Color.yellow},
-        { NodeType.Story, Color.cyan},
-        { NodeType.Shop, Color.magenta},
+        { EncounterType.Combat , Color.yellow},
+        { EncounterType.Story, Color.cyan},
+        { EncounterType.Shop, Color.magenta},
     };
     
     
@@ -42,7 +42,7 @@ public class Node : MonoBehaviour
     public bool initial;
     
     //the list of nodes that you can travel to from this node
-    public List<Node> nextNodes = new List<Node>();
+    public List<MapNode> nextNodes = new List<MapNode>();
 
     //whether this node is available to travel to
     public bool isAvailable = false;
@@ -63,11 +63,11 @@ public class Node : MonoBehaviour
         
         SetNodeType();
         
-        //getting spriterenderer to edit node appearance
+        //getting sprite renderer to edit node appearance
         sr = GetComponent<SpriteRenderer>();
         //setting node color based on node type
         color = sr.color;
-        color = colors[type];
+        color = colors[encounterType];
         //darkening nodes if they're not available on scene load
         if (!initial || visited)
         {
@@ -121,7 +121,7 @@ public class Node : MonoBehaviour
         //for each node in the constellation
         if (!CompareTag("Planet"))
         {
-            foreach (Node externalNode in GetComponentInParent<Constellation>().nodes) 
+            foreach (MapNode externalNode in GetComponentInParent<Constellation>().nodes) 
             {
                 //if that node was available but not selected
                 if (externalNode.isAvailable && !externalNode.isSelected)
@@ -138,7 +138,7 @@ public class Node : MonoBehaviour
         if (isSelected || initial)
         {
             //each node in the list of nodes that follow
-            foreach (Node node in nextNodes)
+            foreach (MapNode node in nextNodes)
             {
                 //as long as it exists
                 if (node != null)
@@ -245,51 +245,27 @@ public class Node : MonoBehaviour
                     SceneManager.LoadScene("MainMap");
                     
                 }
+                
+                LoadEncounterScene(encounterType);
             }
-            
-            /*if (type == NodeType.Combat)
-            {
-                GoToCombat();
-            }
-
-            if (type == NodeType.Story)
-            {
-                GoToStory();
-            }
-
-            if (type == NodeType.Shop)
-            {
-                GoToShop();
-            }*/
         }
         
     }
-    
-    //these probably should move to eventbus 
-    /// <summary>
-    /// Go to the combat scene
-    /// </summary>
-    public void GoToCombat()
-    {
-        SceneManager.LoadScene("Rack");
-    }
-    
-    /// <summary>
-    /// Go to the story scene
-    /// </summary>
-    public void GoToStory()
-    {
-        //TODO: update when we have a narrative scene
-        SceneManager.LoadScene("NarrativePrototype");
-    }
 
-    /// <summary>
-    /// Go to the shop scene
-    /// </summary>
-    public void GoToShop()
+    private void LoadEncounterScene(EncounterType myEncounterType)
     {
-        //TODO: update when we have a scene for shop
-        //SceneManager.LoadScene("Shop");
+        switch (myEncounterType)
+        {
+            case EncounterType.Combat:
+                SceneManager.LoadScene("Cockpit");
+                break;
+            case EncounterType.Story:
+                SceneManager.LoadScene("NarrativePrototype");
+                break;
+            case EncounterType.Shop:
+                SceneManager.LoadScene("Shop");
+                break;
+        }
     }
 
     private void SetNodeType()
@@ -320,11 +296,11 @@ public class Node : MonoBehaviour
             
             
             //defining node types by their probability
-            Dictionary<NodeType, float> nodeTypesByProbability = new Dictionary<NodeType, float>()
+            Dictionary<EncounterType, float> nodeTypesByProbability = new Dictionary<EncounterType, float>()
             {
-                {NodeType.Combat, combatProbability},
-                {NodeType.Story, storyProbability},
-                {NodeType.Shop, shopProbability}
+                {EncounterType.Combat, combatProbability},
+                {EncounterType.Story, storyProbability},
+                {EncounterType.Shop, shopProbability}
                 
             };
             
@@ -359,11 +335,11 @@ public class Node : MonoBehaviour
                 //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
             }
 
-            foreach (NodeType nodeType in nodeTypesByProbability.Keys)
+            foreach (EncounterType nodeType in nodeTypesByProbability.Keys)
             {
                 if (nodeTypesByProbability[nodeType] == lookupValue)
                 {
-                    type = nodeType;
+                    encounterType = nodeType;
                 }
             }
 

@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb59a01c88df5543b4eee9d76a28f19, type: 3}
   m_Name: TestDialogue1
   m_EditorClassIdentifier: 
-  characterName: Mez
+  characterName: Szkava
   lines:
-  - This is some test dialogue
-  - It should be available
-  - Yippee
+  - This is some test dialogue.  Press space to advance.
+  - It's gonna be so cool once I have real things to say about the story and stuff.
+  - But you can go back to blowing ships up or whatever.
+  - Bye!
   gamestateTriggers:
   - gameStarted
   stages: 00000000
   nodes: 00000000
   constellations: 00000000
-  nodeMatch: 0
-  constellationMatch: 0
-  stageMatch: 0
+  nodeMatch: 1
+  constellationMatch: 1
+  stageMatch: 1
   isAvailable: 1

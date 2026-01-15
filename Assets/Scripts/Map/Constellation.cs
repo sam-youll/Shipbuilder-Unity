@@ -13,7 +13,7 @@ public class Constellation : MonoBehaviour
     public bool isActive = true;
     
     //list of all nodes in this constellation - needed for pathing
-    public List<Node> nodes = new List<Node>();
+    public List<MapNode> nodes = new List<MapNode>();
     
     public SpriteRenderer sr;
 

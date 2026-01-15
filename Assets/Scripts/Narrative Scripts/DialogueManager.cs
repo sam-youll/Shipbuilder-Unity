@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -59,6 +60,8 @@ public class DialogueManager : MonoBehaviour
                         dialogueBox.SetActive(false);
                         //and the index resets to 0
                         index = 0;
+
+                        SceneManager.LoadScene("SectorMap");
                     }
             }
         }
