@@ -93,7 +93,7 @@ public class GameStateManager : MonoBehaviour
         currentConstellation = Constellation.None;
         currentStage = Stage.Testing;
         
-        EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
+        //EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
     }
 
     private void OnPlayerDefeated()

@@ -150,7 +150,7 @@ public class Node : MonoBehaviour
                     //Debug.Log("Planet found");
                     
                     GameObject instantiatedPlanet = GameObject.FindGameObjectWithTag("Planet");
-
+                    
                     if (instantiatedPlanet != null)
                     {
                         if (node.GetComponent<Planet>().planetHere)
