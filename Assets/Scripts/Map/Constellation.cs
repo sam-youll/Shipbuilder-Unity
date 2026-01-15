@@ -113,6 +113,9 @@ public class Constellation : MonoBehaviour
             {
                 //load the sector map scene
                 SceneManager.LoadScene("SectorMap");
+
+                MapManager.Instance.targetPlanet = planet;
+                
                 
                 Planet clickablePlanet = GetComponentInChildren<Planet>();
                 //sets whatever was clicked to visited
@@ -122,10 +125,8 @@ public class Constellation : MonoBehaviour
                 //makes this node unavailable 
                 clickablePlanet.MakeUnavailable();
 
-                if (MapManager.Instance.currentPath.Count < planet.path.Count)
-                {
-                    MapManager.Instance.SetCurrentPath(planet.node);
-                }
+                MapManager.Instance.SetCurrentPath(planet.node);
+                
             }
         }
         

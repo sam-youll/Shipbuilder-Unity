@@ -149,7 +149,6 @@ public class MapManager : MonoBehaviour
     public void UpdateNodeMap()
     {
         //Debug.Log("UpdateNodeMap");
-        
         //for each node map in the scene
         foreach (GameObject nodeMap in nodeMaps)
         {
@@ -161,7 +160,7 @@ public class MapManager : MonoBehaviour
                     //instantiate it 
                     activeNodeMap = Instantiate(nodeMap);
                     //Debug.Log("setting " + nodeMap.name + " active");
-                }
+                } 
         }
         
         UpdatePlanetNodes();
@@ -213,6 +212,7 @@ public class MapManager : MonoBehaviour
                             sectorPlanet.GetComponent<Planet>().color = planets[i].color;
                             //and its status
                             sectorPlanet.GetComponent<Planet>().UpdateVisitedStatus(planets[i].visited);
+                            Debug.Log("Planet node updated. " + planets[i].node + " visited status: " + planets[i].visited + " and has set the node to: " + sectorPlanet.GetComponent<Planet>().visited);
                         }
                     }
                 }

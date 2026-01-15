@@ -212,9 +212,11 @@ public class Node : MonoBehaviour
                 {
                     for (int i = 0; i < MapManager.Instance.planets.Length; i++)
                     {
+                        Debug.Log(MapManager.Instance.planets[i].node);
                         if (MapManager.Instance.planets[i].node == planet.thisPlanet)
                         {
                             MapManager.Instance.planets[i].visited = true;
+                            Debug.Log(MapManager.Instance.planets[i].node + " is visited. " + MapManager.Instance.planets[i].visited);
                         }
                     }
                     Debug.Log("clicked a planet in sector map");
@@ -229,6 +231,13 @@ public class Node : MonoBehaviour
                     }
                     //clear the current path list
                     MapManager.Instance.currentPath.Clear();
+
+                    foreach (Constellation nodeMap in FindObjectsByType<Constellation>(FindObjectsSortMode.InstanceID))
+                    {
+                        Destroy(nodeMap.gameObject);
+                    }
+                    
+                    
                     //update the main map
                     MapManager.Instance.UpdateMainMap();
                     Debug.Log("path complete");
@@ -295,7 +304,7 @@ public class Node : MonoBehaviour
             float storyProbability = storyBaseProbability *  GetComponentInParent<Constellation>().storyMultiplier;
             float shopProbability =  shopBaseProbability *  GetComponentInParent<Constellation>().shopMultiplier;
             
-            Debug.Log(" combat probability: " + combatProbability + " story probability: " + storyProbability + " shop probability: " + shopProbability);
+            //Debug.Log(" combat probability: " + combatProbability + " story probability: " + storyProbability + " shop probability: " + shopProbability);
             
             
             //creating an array of probabilities to be sorted after they've been modified
@@ -332,7 +341,7 @@ public class Node : MonoBehaviour
             {
                 //then it's the lowest probable option
                 lookupValue = probabilities[0];
-                Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+                //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
             } 
             //if it's larger than the lowest probability but less than the next largest probability
             //(plus the previous probability to make its percentage more real)
@@ -340,14 +349,14 @@ public class Node : MonoBehaviour
             {
                 //then it's that option 
                 lookupValue = probabilities[1];
-                Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+                //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
             } 
             //but if it's between the second larges probability and the maximum number
             else if (typeRoll > probabilities[1] && typeRoll < max)
             {
                 //then its the most likely option
                 lookupValue = probabilities[2];
-                Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+                //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
             }
 
             foreach (NodeType nodeType in nodeTypesByProbability.Keys)
