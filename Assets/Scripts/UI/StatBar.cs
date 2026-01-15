@@ -23,6 +23,8 @@ public class StatBar : MonoBehaviour
     {
         startPos = transform.localPosition;
         startScale = transform.localScale;
+
+        lerpRate = 1;
     }
 
     // Update is called once per frame

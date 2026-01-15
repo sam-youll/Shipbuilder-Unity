@@ -22,6 +22,7 @@ public static class Common
     /// </summary>
     public enum Effect
     {
+        None,
         Stun, // disables weapons/systems
         Slow, // slows weapons
         Splash, // hits multiple systems

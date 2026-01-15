@@ -32,18 +32,16 @@ public class WeaponEditor : Editor
 public class Weapon : MonoBehaviour
 {
     [Header("Weapon Stats")]
-    public float fireRate;
-    [FormerlySerializedAs("energyRate")] public float warmupRate;
-    public float damage;
-    public float hullDamage;
-    public float shieldDamage;
-    public float bulletSpeed;
-    public float bulletSpread;
-    public float dir;
+    public float fireRate = 1;
+    public float warmupRate = 1;
+    public float damage = 1;
+    public float hullDamage = 1;
+    public float shieldDamage = 1;
+    public float bulletSpeed = 1;
+    public float accuracy = .75f;
     public float stunTimer;
     public Common.SoundType soundType;
     public Dictionary<Common.SoundType, int> soundTypePoints = new();
-    
     public List<Common.Effect> effects;
     
     [Header("Properties")]
@@ -51,9 +49,9 @@ public class Weapon : MonoBehaviour
     public float warmup = 0;
     public float charge = 0;
     public bool quantized;
-    public bool inCombat;
     // public bool testing;
     public bool firing;
+    public bool enemyWeapon; // set true if Weapon belongs to an enemy ship
 
     public GameObject previousModule;
     public GameObject parentWire;
@@ -78,7 +76,7 @@ public class Weapon : MonoBehaviour
     {
         // Enemy weapons do not have actual modules behind them (for now)
         // so we just want them to attempt to fire as often as possible
-        if (dir == -1)
+        if (!enemyWeapon)
         {
             Conductor.Instance.onSixteenth.AddListener(Fire);
         }
@@ -96,12 +94,10 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // is the CombatManager in combat?
-        inCombat = CombatManager.Instance.state == CombatManager.State.inCombat;
         // are we either testing or in combat? If yes to either, we're firing
-        firing = testFireSwitch.on || inCombat;
+        firing = (!enemyWeapon && testFireSwitch.on) || CombatManager.Instance.state == CombatManager.State.inCombat;
         // if we're facing right (only true if player ship) and the patch is not complete, turn it off
-        if (dir == 1 && !CompletePatch())
+        if (!enemyWeapon && !CompletePatch())
         {
             // Debug.Log("Is patch complete? " + CompletePatch());
             firing = false;
@@ -119,48 +115,85 @@ public class Weapon : MonoBehaviour
             }
         }
         
-        if (dir == 1 && firing && stunTimer <= 0)
+        if (!enemyWeapon && firing && stunTimer <= 0)
         {
             charge += Reactor.Instance.rate * fireRate * warmup * Time.deltaTime;
         }
-        else if (dir == -1 && firing && stunTimer <= 0)
+        else if (enemyWeapon && firing && stunTimer <= 0)
         {
             charge += fireRate * warmup * Time.deltaTime;
         }
 
         // TODO: This is temporary, we probably don't want to just turn the whole thing yellow
         // in the final version. We should make it a little fancier at least...
-        if (stunTimer > 0)
-        {
-            stunTimer -= Time.deltaTime;
-            if (gameObject.GetComponent<SpriteRenderer>().color == Color.white)
-            {
-                gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
-            }
-        }
-        else if (gameObject.GetComponent<SpriteRenderer>().color == Color.yellow)
-        {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-        }
+        // if (stunTimer > 0)
+        // {
+        //     stunTimer -= Time.deltaTime;
+        //     if (gameObject.GetComponent<SpriteRenderer>().color == Color.white)
+        //     {
+        //         gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        //     }
+        // }
+        // else if (gameObject.GetComponent<SpriteRenderer>().color == Color.yellow)
+        // {
+        //     gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        // }
     }
 
     public void Fire()
     {
-        if (dir == 1)
+        SetPatch();
+        foreach (var mod in myPatch)
         {
-            // Debug.Log($"Attempting to fire {gameObject.name}.");
+            foreach (var param in mod.MusicParams)
+            {
+                noteInfo[param.Key] = param.Value;
+            }
+
+            foreach (var stat in mod.CombatStats)
+            {
+                // fireRate
+                // damage
+                // bullet speed
+                // spread
+                // effects
+                // type
+            }
+            
         }
-        
-        if (charge < 1)
+        if (charge < 1 || !firing || !CompletePatch())
         {
             return;
         }
-
-        if (dir == 1)
-        {
-            // Debug.Log($"Firing {gameObject.name}.");
-        }
+        
         charge = 0;
+        
+        DisplayManager.Instance.Log("Fired " + name);
+        // Debug.Log(name + " fired");
+        EventBus.Instance.weaponFired.Invoke(this);
+        
+        // calculate hit/miss + damage
+        if (CombatManager.Instance.state == CombatManager.State.inCombat)
+        {
+            var hit = accuracy * (1 - ShipManager.Instance.EnemyEvasion());
+            if (hit <= 0)
+            {
+                Debug.Log("miss");
+                ShipManager.Instance.DamageEnemy(hit); // TODO: add overrides so I don't have to call useless stuff
+                EventBus.Instance.enemyHit.Invoke(hit);
+            }
+            else
+            {
+                Debug.Log("hit");
+                ShipManager.Instance.DamageEnemy(damage); // TODO: make it so that multiple effects can be sent
+                EventBus.Instance.enemyHit.Invoke(damage);
+            }
+        }
+        
+        // if hit, fire at enemy ship
+        // if miss, fire above/below
+        // need to calculate hit range/angle
+        
         
         /*
         // create bullet
@@ -197,52 +230,28 @@ public class Weapon : MonoBehaviour
         // string chordString = ReactorSounds.Instance.chords[chord];
 
         // var sensorMod = 1f;
-        
-        SetPatch();
-        
-        foreach (var mod in myPatch)
-        {
-            foreach (var param in mod.MusicParams)
-            {
-                noteInfo[param.Key] = param.Value;
-            }
-
-            foreach (var stat in mod.CombatStats)
-            {
-                // fireRate
-                // damage
-                // bullet speed
-                // spread
-                // effects
-                // type
-            }
-            
-        }
-        // newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(dir*1, Random.Range(-bulletSpread, bulletSpread)*sensorMod) * bulletSpeed;
-        
-        
-        //noteInfo["pitch"] = Notes.RandomNoteInChord(Conductor.Instance.keyRoot, Conductor.Instance.mode, Notes.SCALE_CHORD[chordString]);
-        // noteInfo["pitch"] = Notes.GetPitch(Notes.A, Notes.MODE.IONIAN, notes[currentNote]);
-        // currentNote++;
-        // currentNote = (int)Mathf.Repeat(currentNote, notes.Length);
-        // Debug.Log("current note is " + currentNote + " which is " + notes[currentNote]);
-        
-        
-        // AudioManager.Instance.PlayNote(gameObject, noteInfo);
-        EventBus.Instance.weaponFired.Invoke(this);
     }
 
     public void SetPatch()
     {
-        if (dir == -1)
+        if (enemyWeapon)
             return;
         
         // Debug.Log($"Setting patch for {gameObject.name}.");
-        if (previousModule == null)
+        if (parentWire == null)
+        {
+            myPatch.Clear();
             return;
+        }
+
+        if (parentWire.GetComponent<Wire>().previousModule == null)
+        {
+            myPatch.Clear();
+            return;
+        }
         
         myPatch = new();
-        var prev = previousModule.GetComponent<Module>();
+        var prev = parentWire.GetComponent<Wire>().previousModule.GetComponent<Module>();
         // Debug.Log($"{prev}'s previous module is {prev.PreviousModule()}");
         while (prev.PreviousModule() != null)
         {
@@ -270,6 +279,7 @@ public class Weapon : MonoBehaviour
 
     private bool CompletePatch()
     {
+        SetPatch();
         if (myPatch.Count == 0)
             return false;
         

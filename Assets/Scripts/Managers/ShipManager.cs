@@ -9,13 +9,39 @@ using UnityEngine.Serialization;
 /// </summary>
 public class ShipManager : MonoBehaviour
 {
+    public static ShipManager Instance;
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+    
     private struct Ship
     {
+        public ShipData baseShip;
+        public string name;
         public float hull;
         public float shield;
         public List<Weapon> weapons;
-        
-        
+        public float evasion;
+    }
+
+    void Start()
+    {
+        InitEnemyShip();
+        InitPlayerShip();
+    }
+
+    void Update()
+    {
+        // Debug.Log(enemy.hull);
+        // enemy.hull -= 1f;
     }
     
     #region Player Ship
@@ -64,12 +90,39 @@ public class ShipManager : MonoBehaviour
     /// <param name="baseShip"> Determines which ship the player is flying.</param>
     private void InitPlayerShip(ShipData baseShip)
     {
-        
+        player.hull = baseShip.maxHull;
+    }
+
+    private void InitPlayerShip()
+    {
+        Debug.Log("InitPlayerShip");
+        player = new Ship
+        {
+            name = "Player ship",
+            hull = 100,
+            shield = 20,
+            weapons = new()
+        };
+        var weaponRacks = GameObject.FindGameObjectsWithTag("Weapon");
+        foreach (var weapon in weaponRacks)
+        {
+            player.weapons.Add(weapon.GetComponent<Weapon>());
+        }
     }
 
     public Weapon[] PlayerWeapons()
     {
         return player.weapons.ToArray();
+    }
+
+    public float PlayerHull()
+    {
+        return player.hull;
+    }
+
+    public float PlayerMaxHull()
+    {
+        return 100;
     }
     #endregion
     
@@ -106,10 +159,56 @@ public class ShipManager : MonoBehaviour
             }
         }
     }
+
+    private void InitEnemyShip()
+    {
+        Debug.Log("InitEnemyShip");
+        enemy = new Ship
+        {
+            name = "Enemy ship",
+            hull = 50,
+            shield = 10,
+            weapons = new List<Weapon>()
+        };
+        for (var i = 0; i < 3; i++)
+        {
+            var newWeapon = new GameObject();
+            newWeapon.transform.SetParent(transform);
+            var weapon = newWeapon.AddComponent<Weapon>();
+            weapon.enemyWeapon = true;
+            enemy.weapons.Add(weapon);
+        }
+    }
+
+    public Weapon[] EnemyWeapons()
+    {
+        return enemy.weapons.ToArray();
+    }
+
+    public float EnemyHull()
+    {
+        return enemy.hull;
+    }
+
+    public float EnemyMaxHull()
+    {
+        return 50;
+    }
+    
     #endregion
     
     #region Common Ship Methods
 
+    public float PlayerEvasion()
+    {
+        return player.evasion;
+    }
+
+    public float EnemyEvasion()
+    {
+        return enemy.evasion;
+    }
+    
     /// <summary>
     /// Deals damage to player ship, and applies any associated status effects.
     /// </summary>
@@ -118,7 +217,7 @@ public class ShipManager : MonoBehaviour
     /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
     public void DamagePlayer(float damage, Common.Effect effect, float effectStrength)
     {
-        Damage(player, damage, effect, effectStrength);
+        Damage(ref player, damage, effect, effectStrength);
     }
 
     /// <summary>
@@ -129,7 +228,12 @@ public class ShipManager : MonoBehaviour
     /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
     public void DamageEnemy(float damage, Common.Effect effect, float effectStrength)
     {
-        Damage(enemy, damage, effect, effectStrength);
+        Damage(ref enemy, damage, effect, effectStrength);
+    }
+
+    public void DamageEnemy(float damage)
+    {
+        Damage(ref enemy, damage, Common.Effect.None, 0);
     }
 
     /// <summary>
@@ -140,35 +244,45 @@ public class ShipManager : MonoBehaviour
     /// <param name="damage">Amount of damage dealt.</param>
     /// <param name="effect">Status effect applied to projectile.</param>
     /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    private void Damage(Ship target, float damage, Common.Effect effect, float effectStrength)
+    private void Damage(ref Ship target, float damage, Common.Effect effect, float effectStrength)
     {
+        if (CombatManager.Instance.state == CombatManager.State.outOfCombat)
+        {
+            return;
+        }
+        
+        //TODO: Add overloads without effects and stuff
         
         target.hull -= damage;
         
+        // Debug.Log($"{target.name} was hit for {damage} damage. Hull is now {target.hull}.");
+        
         if (target.hull <= 0)
         {
-            
+            Die(target);
         }
         
-        switch (effect)
-        {
-            case Common.Effect.Stun:
-                Stun(target, effectStrength);
-                break;
-            case Common.Effect.Slow:
-                Slow(target, effectStrength);
-                break;
-            case Common.Effect.Splash:
-                break;
-            case Common.Effect.Skip:
-                break;
-            case Common.Effect.Sustain:
-                break;
-            case Common.Effect.Siphon:
-                break;
-            case Common.Effect.Scrap:
-                break;
-        }
+        // switch (effect)
+        // {
+        //     case Common.Effect.None:
+        //         break;
+        //     case Common.Effect.Stun:
+        //         Stun(target, effectStrength);
+        //         break;
+        //     case Common.Effect.Slow:
+        //         Slow(target, effectStrength);
+        //         break;
+        //     case Common.Effect.Splash:
+        //         break;
+        //     case Common.Effect.Skip:
+        //         break;
+        //     case Common.Effect.Sustain:
+        //         break;
+        //     case Common.Effect.Siphon:
+        //         break;
+        //     case Common.Effect.Scrap:
+        //         break;
+        // }
     }
 
     private IEnumerator DamageOverTime()
@@ -184,6 +298,7 @@ public class ShipManager : MonoBehaviour
         }
         else if (target.Equals(enemy))
         {
+            DisplayManager.Instance.Log("WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN");
             EventBus.Instance.enemyDefeated.Invoke();
         }
     }
