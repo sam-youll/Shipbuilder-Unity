@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Global : MonoBehaviour
 {
@@ -9,11 +10,12 @@ public class Global : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
 
@@ -48,6 +50,13 @@ public class Global : MonoBehaviour
         Cursor.visible = false;
         sr = gameObject.AddComponent<SpriteRenderer>();
         sr.sprite = cursorDefault;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        cam = Camera.main;
     }
 
     // Update is called once per frame

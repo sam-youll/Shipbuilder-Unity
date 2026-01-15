@@ -11,11 +11,12 @@ public class GameStateManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
     
@@ -94,10 +95,16 @@ public class GameStateManager : MonoBehaviour
         currentStage = Stage.Testing;
         
         EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
+        EventBus.Instance.loadScene.AddListener(OnLoadScene);
     }
 
     private void OnPlayerDefeated()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    private void OnLoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }

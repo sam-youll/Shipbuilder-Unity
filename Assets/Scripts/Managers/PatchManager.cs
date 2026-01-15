@@ -11,11 +11,12 @@ public class PatchManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
 
@@ -28,7 +29,7 @@ public class PatchManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        UpdateAllPatches();
+        // UpdateAllPatches();
     }
 
     // Update is called once per frame
@@ -39,7 +40,10 @@ public class PatchManager : MonoBehaviour
 
     public void UpdateAllPatches()
     {
-        foreach (var weapon in weapons)
+        if (ShipManager.Instance.PlayerWeapons().Length <= 0)
+            return;
+        
+        foreach (var weapon in ShipManager.Instance.PlayerWeapons())
         {
             if (!weapon.enabled)
                 continue;

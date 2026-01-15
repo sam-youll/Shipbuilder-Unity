@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Overlays;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
     
 /// <summary>
@@ -14,11 +15,12 @@ public class ShipManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
+            DontDestroyOnLoad(this);
         }
     }
     
@@ -34,14 +36,27 @@ public class ShipManager : MonoBehaviour
 
     void Start()
     {
-        InitEnemyShip();
-        InitPlayerShip();
+        // InitEnemyShip();
+        // InitPlayerShip();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Update()
     {
         // Debug.Log(enemy.hull);
         // enemy.hull -= 1f;
+    }
+
+    private bool playerShipInitialized = false;
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Cockpit" && !playerShipInitialized)
+        {
+            InitPlayerShip();
+            InitEnemyShip();
+            playerShipInitialized = true;
+        }
     }
     
     #region Player Ship
