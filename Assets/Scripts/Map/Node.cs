@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = System.Random;
 
 public class Node : MonoBehaviour
 {
@@ -48,14 +50,18 @@ public class Node : MonoBehaviour
     public bool isSelected = false;
     //whether this node has been visited 
     public bool visited = false;
-    
-    
+
+    public float combatBaseProbability = 60;
+    public float storyBaseProbability = 30;
+    public float shopBaseProbability = 10;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //TODO: create function to determine node type at scene start based on sector and probability
+        
+        SetNodeType();
         
         //getting spriterenderer to edit node appearance
         sr = GetComponent<SpriteRenderer>();
@@ -150,7 +156,7 @@ public class Node : MonoBehaviour
                     //Debug.Log("Planet found");
                     
                     GameObject instantiatedPlanet = GameObject.FindGameObjectWithTag("Planet");
-
+                    
                     if (instantiatedPlanet != null)
                     {
                         if (node.GetComponent<Planet>().planetHere)
@@ -277,5 +283,85 @@ public class Node : MonoBehaviour
         //SceneManager.LoadScene("Shop");
     }
 
+    private void SetNodeType()
+    {
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+        {
+            combatBaseProbability = 60;
+            storyBaseProbability = 30;
+            shopBaseProbability = 10;
+            //setting node types based on variable probability multipliers
+            float combatProbability = combatBaseProbability * GetComponentInParent<Constellation>().combatMultiplier;
+            float storyProbability = storyBaseProbability *  GetComponentInParent<Constellation>().storyMultiplier;
+            float shopProbability =  shopBaseProbability *  GetComponentInParent<Constellation>().shopMultiplier;
+            
+            Debug.Log(" combat probability: " + combatProbability + " story probability: " + storyProbability + " shop probability: " + shopProbability);
+            
+            
+            //creating an array of probabilities to be sorted after they've been modified
+            float[] probabilities = new float[]
+            {
+                combatProbability,
+                storyProbability,
+                shopProbability
+            };
+            
+            //sorting the probabilities so we know which is smaller and which is larger
+            Array.Sort(probabilities);
+            
+            
+            //defining node types by their probability
+            Dictionary<NodeType, float> nodeTypesByProbability = new Dictionary<NodeType, float>()
+            {
+                {NodeType.Combat, combatProbability},
+                {NodeType.Story, storyProbability},
+                {NodeType.Shop, shopProbability}
+                
+            };
+            
+
+            //see if the largest probable number is larger than 100
+            float max = Mathf.Max(100, probabilities[2]);
+            
+            //roll for a number between 0 and the largest possible number
+            float typeRoll = UnityEngine.Random.Range(0, max);
+            float lookupValue = typeRoll;
+
+            //if it's less than or equal to the lowest probability
+            if (typeRoll < probabilities[0])
+            {
+                //then it's the lowest probable option
+                lookupValue = probabilities[0];
+                Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+            } 
+            //if it's larger than the lowest probability but less than the next largest probability
+            //(plus the previous probability to make its percentage more real)
+            else if (typeRoll < (probabilities[1] + probabilities[0]))
+            {
+                //then it's that option 
+                lookupValue = probabilities[1];
+                Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+            } 
+            //but if it's between the second larges probability and the maximum number
+            else if (typeRoll > probabilities[1] && typeRoll < max)
+            {
+                //then its the most likely option
+                lookupValue = probabilities[2];
+                Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+            }
+
+            foreach (NodeType nodeType in nodeTypesByProbability.Keys)
+            {
+                if (nodeTypesByProbability[nodeType] == lookupValue)
+                {
+                    type = nodeType;
+                }
+            }
+
+
+
+        }
+    }
+    
     
 }

@@ -21,6 +21,10 @@ public class Constellation : MonoBehaviour
     
     public Color inactiveColor;
 
+    public float combatMultiplier;
+    public float storyMultiplier;
+    public float shopMultiplier;
+
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

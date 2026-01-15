@@ -742,7 +742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sector: 10
-  isActive: 1
+  isActive: 0
   nodes:
   - {fileID: 6066201074060357552}
   - {fileID: 5914480985072532205}
@@ -756,6 +756,12 @@ MonoBehaviour:
   - {fileID: 4955860492865734556}
   - {fileID: 1773250544366706823}
   - {fileID: 9171630060081444266}
+  sr: {fileID: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  inactiveColor: {r: 0, g: 0, b: 0, a: 0}
+  combatMultiplier: 1
+  storyMultiplier: 1.5
+  shopMultiplier: 1.5
 --- !u!1 &5079478294619014718
 GameObject:
   m_ObjectHideFlags: 0
@@ -866,6 +872,9 @@ MonoBehaviour:
   isAvailable: 1
   isSelected: 0
   visited: 0
+  combatBaseProbability: 0
+  storyBaseProbability: 0
+  shopBaseProbability: 0
   thisPlanet: 3
   planetHere: 0
   planetObject: {fileID: 5079478294619014718}
