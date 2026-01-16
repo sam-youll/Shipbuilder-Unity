@@ -241,7 +241,7 @@ public class MapManager : MonoBehaviour
             }
             
             //if we're in the sector map
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+            if (SceneManager.GetSceneByName("SectorMap").isLoaded)
             {
                 //and this planet is in the current sector and it is the target planet
                 if (planets[i].location == sector && planets[i].node == targetPlanet.node)
@@ -257,7 +257,16 @@ public class MapManager : MonoBehaviour
                     
                     
                     //instantiate it
-                    Instantiate(planet);
+                    var newPlanet = Instantiate(planet);
+                    SceneManager.MoveGameObjectToScene(newPlanet, SceneManager.GetSceneByName("SectorMap"));
+                    var rootGameObjects = SceneManager.GetSceneByName("SectorMap").GetRootGameObjects();
+                    foreach (var rootObj in rootGameObjects)
+                    {
+                        if (rootObj.name == "SectorMap Viewport")
+                        {
+                            transform.SetParent(rootObj.transform);
+                        }
+                    }
                 }
             }
         }
