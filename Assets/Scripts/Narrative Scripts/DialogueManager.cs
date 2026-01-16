@@ -61,7 +61,7 @@ public class DialogueManager : MonoBehaviour
                         //and the index resets to 0
                         index = 0;
 
-                        SceneManager.LoadScene("SectorMap");
+                        MapManager.Instance.GoToSectorMap();
                     }
             }
         }

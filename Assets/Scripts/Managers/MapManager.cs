@@ -264,7 +264,7 @@ public class MapManager : MonoBehaviour
                     {
                         if (rootObj.name == "SectorMap Viewport")
                         {
-                            transform.SetParent(rootObj.transform);
+                            newPlanet.transform.SetParent(rootObj.transform);
                         }
                     }
                 }
@@ -453,9 +453,18 @@ public class MapManager : MonoBehaviour
     {
         var sectorMap = SceneManager.GetSceneByName("SectorMap");
         var mainMap = SceneManager.GetSceneByName("MainMap");
+        var narrScene = SceneManager.GetSceneByName("NarrativePrototype");
 
-        SetActiveScene(mainMap, false);
-        
+
+        if (mainMap.isLoaded)
+        {
+            SetActiveScene(mainMap, false);
+            SceneManager.UnloadSceneAsync("MainMap");
+        }
+        if (narrScene.isLoaded)
+        {
+            SetActiveScene(narrScene, false);
+        }
         if (sectorMap.isLoaded)
         {
             SetActiveScene(sectorMap, true);
@@ -479,11 +488,17 @@ public class MapManager : MonoBehaviour
     {
         var sectorMap = SceneManager.GetSceneByName("SectorMap");
         var mainMap = SceneManager.GetSceneByName("MainMap");
+        var narrScene = SceneManager.GetSceneByName("NarrativePrototype");
 
-        if (mainMap.isLoaded)
+        if (sectorMap.isLoaded)
         {
-            SetActiveScene(mainMap, true);
+            SceneManager.UnloadSceneAsync("SectorMap");
+        }
+        if (mainMap.isLoaded) // This should only happen once at the beginning. If we ever have to unload the map, change this check
+        {
             SetActiveScene(sectorMap, false);
+            SetActiveScene(narrScene, false);
+            SetActiveScene(mainMap, true);
         }
         else
         {
