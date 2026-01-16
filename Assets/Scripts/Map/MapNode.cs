@@ -9,7 +9,7 @@ public class MapNode : MonoBehaviour
 {
     
     //the different types of nodes
-    public enum EncounterType
+    public enum Node
     {
         Combat,
         Story,
@@ -18,15 +18,15 @@ public class MapNode : MonoBehaviour
     
     [Header("Type")]
     //this node's type
-    public EncounterType encounterType;
+    public Node node;
     
     [Header("Color")]
     //colors by node type
-    private Dictionary<EncounterType, Color> colors = new Dictionary<EncounterType, Color>()
+    private Dictionary<Node, Color> colors = new Dictionary<Node, Color>()
     {
-        { EncounterType.Combat , Color.yellow},
-        { EncounterType.Story, Color.cyan},
-        { EncounterType.Shop, Color.magenta},
+        { Node.Combat , Color.yellow},
+        { Node.Story, Color.cyan},
+        { Node.Shop, Color.magenta},
     };
     
     
@@ -67,7 +67,7 @@ public class MapNode : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         //setting node color based on node type
         color = sr.color;
-        color = colors[encounterType];
+        color = colors[node];
         //darkening nodes if they're not available on scene load
         if (!initial || visited)
         {
@@ -246,7 +246,7 @@ public class MapNode : MonoBehaviour
 
                 }
                 
-                MapManager.Instance.GoToEncounterScene(encounterType);
+                MapManager.Instance.GoToEncounterScene(node);
             }
         }
         
@@ -254,82 +254,80 @@ public class MapNode : MonoBehaviour
     
     private void SetNodeType()
     {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+        combatBaseProbability = 60;
+        storyBaseProbability = 30;
+        shopBaseProbability = 10;
+        //setting node types based on variable probability multipliers
+        float combatProbability = combatBaseProbability * GetComponentInParent<Constellation>().combatMultiplier;
+        float storyProbability = storyBaseProbability *  GetComponentInParent<Constellation>().storyMultiplier;
+        float shopProbability =  shopBaseProbability *  GetComponentInParent<Constellation>().shopMultiplier;
+        
+        Debug.Log(" combat probability: " + combatProbability + " story probability: " + storyProbability + " shop probability: " + shopProbability);
+        
+        
+        //creating an array of probabilities to be sorted after they've been modified
+        float[] probabilities = new float[]
         {
-            combatBaseProbability = 60;
-            storyBaseProbability = 30;
-            shopBaseProbability = 10;
-            //setting node types based on variable probability multipliers
-            float combatProbability = combatBaseProbability * GetComponentInParent<Constellation>().combatMultiplier;
-            float storyProbability = storyBaseProbability *  GetComponentInParent<Constellation>().storyMultiplier;
-            float shopProbability =  shopBaseProbability *  GetComponentInParent<Constellation>().shopMultiplier;
+            combatProbability,
+            storyProbability,
+            shopProbability
+        };
+        
+        //sorting the probabilities so we know which is smaller and which is larger
+        Array.Sort(probabilities);
+        
+        
+        //defining node types by their probability
+        Dictionary<Node, float> nodeTypesByProbability = new Dictionary<Node, float>()
+        {
+            {Node.Combat, combatProbability},
+            {Node.Story, storyProbability},
+            {Node.Shop, shopProbability}
             
-            //Debug.Log(" combat probability: " + combatProbability + " story probability: " + storyProbability + " shop probability: " + shopProbability);
-            
-            
-            //creating an array of probabilities to be sorted after they've been modified
-            float[] probabilities = new float[]
-            {
-                combatProbability,
-                storyProbability,
-                shopProbability
-            };
-            
-            //sorting the probabilities so we know which is smaller and which is larger
-            Array.Sort(probabilities);
-            
-            
-            //defining node types by their probability
-            Dictionary<EncounterType, float> nodeTypesByProbability = new Dictionary<EncounterType, float>()
-            {
-                {EncounterType.Combat, combatProbability},
-                {EncounterType.Story, storyProbability},
-                {EncounterType.Shop, shopProbability}
-                
-            };
-            
+        };
+        
 
-            //see if the largest probable number is larger than 100
-            float max = Mathf.Max(100, probabilities[2]);
-            
-            //roll for a number between 0 and the largest possible number
-            float typeRoll = UnityEngine.Random.Range(0, max);
-            float lookupValue = typeRoll;
+        //see if the largest probable number is larger than 100
+        float max = Mathf.Max(100, probabilities[2]);
+        
+        //roll for a number between 0 and the largest possible number
+        float typeRoll = UnityEngine.Random.Range(0, max);
+        float lookupValue = typeRoll;
 
-            //if it's less than or equal to the lowest probability
-            if (typeRoll < probabilities[0])
-            {
-                //then it's the lowest probable option
-                lookupValue = probabilities[0];
-                //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
-            } 
-            //if it's larger than the lowest probability but less than the next largest probability
-            //(plus the previous probability to make its percentage more real)
-            else if (typeRoll < (probabilities[1] + probabilities[0]))
-            {
-                //then it's that option 
-                lookupValue = probabilities[1];
-                //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
-            } 
-            //but if it's between the second larges probability and the maximum number
-            else if (typeRoll > probabilities[1] && typeRoll < max)
-            {
-                //then its the most likely option
-                lookupValue = probabilities[2];
-                //Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
-            }
-
-            foreach (EncounterType nodeType in nodeTypesByProbability.Keys)
-            {
-                if (nodeTypesByProbability[nodeType] == lookupValue)
-                {
-                    encounterType = nodeType;
-                }
-            }
-
-
-
+        //if it's less than or equal to the lowest probability
+        if (typeRoll < probabilities[0])
+        {
+            //then it's the lowest probable option
+            lookupValue = probabilities[0];
+            Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+        } 
+        //if it's larger than the lowest probability but less than the next largest probability
+        //(plus the previous probability to make its percentage more real)
+        else if (typeRoll < (probabilities[1] + probabilities[0]))
+        {
+            //then it's that option 
+            lookupValue = probabilities[1];
+            Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
+        } 
+        //but if it's between the second larges probability and the maximum number
+        else if (typeRoll > probabilities[1] && typeRoll < max)
+        {
+            //then its the most likely option
+            lookupValue = probabilities[2];
+            Debug.Log("Roll was " + typeRoll + " and lookup value was " + lookupValue);
         }
+
+        foreach (Node nodeType in nodeTypesByProbability.Keys)
+        {
+            if (nodeTypesByProbability[nodeType] == lookupValue)
+            {
+                node = nodeType;
+                Debug.Log(nodeType);
+            }
+        }
+
+
+
     }
     
     

@@ -19,7 +19,7 @@ public class Planet : MapNode
         //sets this object's sprite renderer
         sr = gameObject.GetComponent<SpriteRenderer>();
         //sets planet node type - it will always start as a story node
-        encounterType = EncounterType.Story;
+        node = Node.Story;
         //set this planet's color
         sr.color = color;
         //Debug.Log("planet's color " + color);

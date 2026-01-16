@@ -402,9 +402,9 @@ public class MapManager : MonoBehaviour
         }
     }
     
-    public void GoToEncounterScene(MapNode.EncounterType myEncounterType)
+    public void GoToEncounterScene(MapNode.Node myNode)
     {
-        Debug.Log("Starting "  + myEncounterType + " scene");
+        Debug.Log("Starting "  + myNode + " scene");
         var sectorMap = SceneManager.GetSceneByName("SectorMap");
         var mainMap = SceneManager.GetSceneByName("MainMap");
         var narrScene = SceneManager.GetSceneByName("NarrativePrototype");
@@ -412,12 +412,12 @@ public class MapManager : MonoBehaviour
         
         SetActiveScene(sectorMap, false);
         
-        switch (myEncounterType)
+        switch (myNode)
         {
-            case MapNode.EncounterType.Combat:
+            case MapNode.Node.Combat:
                 EventBus.Instance.newCombatEncounterStarted.Invoke();
                 break;
-            case MapNode.EncounterType.Story:
+            case MapNode.Node.Story:
                 if (narrScene.isLoaded)
                 {
                     SetActiveScene(narrScene, true);
@@ -427,7 +427,7 @@ public class MapManager : MonoBehaviour
                     SceneManager.LoadScene("NarrativePrototype", LoadSceneMode.Additive);
                 }
                 break;
-            case MapNode.EncounterType.Shop:
+            case MapNode.Node.Shop:
                 if (shopScene.isLoaded)
                 {
                     SetActiveScene(shopScene, true);
