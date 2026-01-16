@@ -152,15 +152,27 @@ public class MapManager : MonoBehaviour
         //for each node map in the scene
         foreach (GameObject nodeMap in nodeMaps)
         {
-                nodeMap.GetComponent<Constellation>().CheckIfActive();
-            
-                //if it is active
-                if (nodeMap.GetComponent<Constellation>().isActive)
+            nodeMap.GetComponent<Constellation>().CheckIfActive();
+        
+            //if it is active
+            if (nodeMap.GetComponent<Constellation>().isActive)
+            {
+                var sectorMapScene = SceneManager.GetSceneByName("SectorMap");
+                //instantiate it 
+                activeNodeMap = Instantiate(nodeMap);
+                SceneManager.MoveGameObjectToScene(activeNodeMap, sectorMapScene);
+                var rootObjects = sectorMapScene.GetRootGameObjects(); // TODO: FOR SOME REASON THIS LITERALLY ONLY RETURNS THE MAP OBJECT I"M GOING INSANE
+                foreach (var rootObj in rootObjects)
                 {
-                    //instantiate it 
-                    activeNodeMap = Instantiate(nodeMap);
-                    //Debug.Log("setting " + nodeMap.name + " active");
-                } 
+                    Debug.Log(rootObj.name);
+                    if (rootObj.name == "SectorMap Viewport")
+                    {
+                        activeNodeMap.transform.SetParent(rootObj.transform);
+                    }
+                }
+                // activeNodeMap.transform.SetParent(GameObject.Find("SectorMap Viewport").transform);
+                //Debug.Log("setting " + nodeMap.name + " active");
+            } 
         }
         
         UpdatePlanetNodes();
@@ -176,8 +188,18 @@ public class MapManager : MonoBehaviour
             sectorMap.transform.localPosition = new Vector3(0, 0, -2);
             
             UpdatePlanetPaths();
-            
-            Instantiate(sectorMap);
+
+            var mapScene = SceneManager.GetSceneByName("MainMap");
+            var map = Instantiate(sectorMap);
+            SceneManager.MoveGameObjectToScene(map.gameObject, mapScene);
+            var rootObjects = mapScene.GetRootGameObjects();
+            foreach (var rootObj in rootObjects)
+            {
+                if (rootObj.name == "Map Viewport")
+                {
+                    map.transform.parent = rootObj.transform;
+                }
+            }
             
             UpdatePlanetNodes();
         }
@@ -280,7 +302,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdatePlanetPaths()
     {
-        Debug.Log("Updating planet path");
+        // Debug.Log("Updating planet path");
         //for each planet 
         for (int i = 0; i < planets.Length; i++)
         {
@@ -361,6 +383,86 @@ public class MapManager : MonoBehaviour
 
     private void OnEnemyDefeated()
     {
-        SceneManager.LoadScene("MainMap");
+        SceneManager.LoadScene("MainMap", LoadSceneMode.Additive);
+    }
+    
+    public void GoToEncounterScene(MapNode.EncounterType myEncounterType)
+    {
+        var sectorMap = SceneManager.GetSceneByName("SectorMap");
+        var mainMap = SceneManager.GetSceneByName("MainMap");
+        var narrScene = SceneManager.GetSceneByName("NarrativePrototype");
+        var shopScene = SceneManager.GetSceneByName("Shop");
+        
+        SetActiveScene(sectorMap, false);
+        
+        switch (myEncounterType)
+        {
+            case MapNode.EncounterType.Combat:
+                EventBus.Instance.newCombatEncounterStarted.Invoke();
+                break;
+            case MapNode.EncounterType.Story:
+                if (narrScene.isLoaded)
+                {
+                    SetActiveScene(narrScene, true);
+                }
+                else
+                {
+                    SceneManager.LoadScene("NarrativePrototype", LoadSceneMode.Additive);
+                }
+                break;
+            case MapNode.EncounterType.Shop:
+                if (shopScene.isLoaded)
+                {
+                    SetActiveScene(shopScene, true);
+                }
+                else
+                {
+                    SceneManager.LoadScene("Shop", LoadSceneMode.Additive);
+                }
+                break;
+        }
+    }
+
+    public void SetActiveScene(Scene scene, bool setActive)
+    {
+        var rootGameObjects = scene.GetRootGameObjects();
+        foreach (var go in rootGameObjects)
+        {
+            go.SetActive(setActive);
+        }
+    }
+
+    public void GoToSectorMap()
+    {
+        var sectorMap = SceneManager.GetSceneByName("SectorMap");
+        var mainMap = SceneManager.GetSceneByName("MainMap");
+
+        if (sectorMap.isLoaded)
+        {
+            SetActiveScene(mainMap, false);
+            SetActiveScene(sectorMap, true);
+        }
+        else
+        {
+            SceneManager.LoadScene("SectorMap", LoadSceneMode.Additive);
+        }
+        
+        UpdateNodeMap();
+    }
+    
+    public void GoToMainMap()
+    {
+        var sectorMap = SceneManager.GetSceneByName("SectorMap");
+        var mainMap = SceneManager.GetSceneByName("MainMap");
+
+        if (mainMap.isLoaded)
+        {
+            SetActiveScene(mainMap, true);
+            SetActiveScene(sectorMap, false);
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMap", LoadSceneMode.Additive);
+        }
     }
 }

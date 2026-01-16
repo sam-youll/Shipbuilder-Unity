@@ -242,32 +242,16 @@ public class MapNode : MonoBehaviour
                     MapManager.Instance.UpdateMainMap();
                     Debug.Log("path complete");
                     //load the main map
-                    SceneManager.LoadScene("MainMap");
-                    
+                    MapManager.Instance.GoToMainMap();
+
                 }
                 
-                LoadEncounterScene(encounterType);
+                MapManager.Instance.GoToEncounterScene(encounterType);
             }
         }
         
     }
-
-    private void LoadEncounterScene(EncounterType myEncounterType)
-    {
-        switch (myEncounterType)
-        {
-            case EncounterType.Combat:
-                SceneManager.LoadScene("Cockpit");
-                break;
-            case EncounterType.Story:
-                SceneManager.LoadScene("NarrativePrototype");
-                break;
-            case EncounterType.Shop:
-                SceneManager.LoadScene("Shop");
-                break;
-        }
-    }
-
+    
     private void SetNodeType()
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))

@@ -50,6 +50,7 @@ public class Global : MonoBehaviour
         Cursor.visible = false;
         sr = gameObject.AddComponent<SpriteRenderer>();
         sr.sprite = cursorDefault;
+        sr.sortingLayerName = "UI";
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }

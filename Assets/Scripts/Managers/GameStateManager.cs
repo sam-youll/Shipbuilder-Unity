@@ -96,6 +96,20 @@ public class GameStateManager : MonoBehaviour
         
         EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
         EventBus.Instance.loadScene.AddListener(OnLoadScene);
+
+        SceneManager.sceneLoaded += DeduplicateCameras;
+    }
+
+    private void DeduplicateCameras(Scene scene, LoadSceneMode mode)
+    {
+        var cameras = FindObjectsByType<Camera>(FindObjectsSortMode.None);
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            if (cameras[i] != Global.Instance.cam)
+            {
+                Destroy(cameras[i].gameObject);
+            }
+        }
     }
 
     private void OnPlayerDefeated()

@@ -107,7 +107,7 @@ public class Button2D : MonoBehaviour
 
     protected virtual void OnClick()
     {
-        if (eventStringArg != null)
+        if (!string.IsNullOrEmpty(eventStringArg))
         {
             EventBus.Instance.eventsStringArg[eventString].Invoke(eventStringArg);
         }

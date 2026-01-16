@@ -48,7 +48,7 @@ public class Constellation : MonoBehaviour
     void FixedUpdate()
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Global.Instance.cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray,  out hit) &&  hit.collider == this.GetComponent<Collider>())
         {
             //in the main map scene
@@ -112,7 +112,7 @@ public class Constellation : MonoBehaviour
             if (planet.location == sector && !planet.visited)
             {
                 //load the sector map scene
-                SceneManager.LoadScene("SectorMap");
+                MapManager.Instance.GoToSectorMap();
 
                 MapManager.Instance.targetPlanet = planet;
                 

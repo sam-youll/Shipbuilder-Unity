@@ -178,13 +178,13 @@ public class Weapon : MonoBehaviour
             var hit = accuracy * (1 - ShipManager.Instance.EnemyEvasion());
             if (hit <= 0)
             {
-                Debug.Log("miss");
+                // Debug.Log("miss");
                 ShipManager.Instance.DamageEnemy(hit); // TODO: add overrides so I don't have to call useless stuff
                 EventBus.Instance.enemyHit.Invoke(hit);
             }
             else
             {
-                Debug.Log("hit");
+                // Debug.Log("hit");
                 ShipManager.Instance.DamageEnemy(damage); // TODO: make it so that multiple effects can be sent
                 EventBus.Instance.enemyHit.Invoke(damage);
             }

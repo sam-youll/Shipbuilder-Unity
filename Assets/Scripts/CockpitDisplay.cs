@@ -94,7 +94,7 @@ public class CockpitDisplay : MonoBehaviour
 
     private void OnEnemyHit(float damage)
     {
-        Debug.Log("enemy hit for " + damage);
+        // Debug.Log("enemy hit for " + damage);
         StartCoroutine(DamageLabelCoroutine(damage, true));
         enemyHealthBar.value = ShipManager.Instance.EnemyHull() / ShipManager.Instance.EnemyMaxHull();
     }

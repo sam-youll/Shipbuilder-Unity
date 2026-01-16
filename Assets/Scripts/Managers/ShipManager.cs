@@ -36,8 +36,8 @@ public class ShipManager : MonoBehaviour
 
     void Start()
     {
-        // InitEnemyShip();
-        // InitPlayerShip();
+        InitEnemyShip();
+        InitPlayerShip();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -110,7 +110,7 @@ public class ShipManager : MonoBehaviour
 
     private void InitPlayerShip()
     {
-        Debug.Log("InitPlayerShip");
+        // Debug.Log("InitPlayerShip");
         player = new Ship
         {
             name = "Player ship",
@@ -177,7 +177,7 @@ public class ShipManager : MonoBehaviour
 
     private void InitEnemyShip()
     {
-        Debug.Log("InitEnemyShip");
+        // Debug.Log("InitEnemyShip");
         enemy = new Ship
         {
             name = "Enemy ship",
