@@ -25,7 +25,7 @@ public class Planet : MapNode
         //Debug.Log("planet's color " + color);
 
         //if it's instantiated in the sector map, it's here
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+        if (gameObject.scene.name == "SectorMap")
         {
             planetHere = true;
         }

@@ -215,7 +215,7 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < planets.Length; i++)
         {
             //if we're in the main map 
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
+            if (SceneManager.GetSceneByName("MainMap").isLoaded)
             {
                 //for every sector map
                 foreach (GameObject sectorMap in sectorMaps)

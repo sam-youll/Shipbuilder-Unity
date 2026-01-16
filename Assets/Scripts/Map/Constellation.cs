@@ -30,7 +30,7 @@ public class Constellation : MonoBehaviour
     void Start()
     {
         //in the main map scene
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
+        if (SceneManager.GetSceneByName("MainMap").isLoaded)
         {
             //set the default color to the inactive color
             sr.color = inactiveColor;
@@ -52,7 +52,7 @@ public class Constellation : MonoBehaviour
         if (Physics.Raycast(ray,  out hit) &&  hit.collider == this.GetComponent<Collider>())
         {
             //in the main map scene
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
+            if (SceneManager.GetSceneByName("MainMap").isLoaded)
             {
                 //for every planet
                 foreach (MapManager.PlanetStruct planet in MapManager.Instance.planets)
@@ -135,7 +135,7 @@ public class Constellation : MonoBehaviour
     void OnMouseExit()
     {
         //in the main map
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMap"))
+        if (SceneManager.GetSceneByName("MainMap").isLoaded)
         {
             //for every sector
             foreach (Constellation constellation in GameObject.FindObjectsByType<Constellation>(FindObjectsSortMode.InstanceID))
