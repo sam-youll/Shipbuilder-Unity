@@ -173,7 +173,7 @@ public class MapNode : MonoBehaviour
                         
                         //go to the next path and update the node map
                         MapManager.Instance.AdvanceThroughPath();
-                        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+                        if (SceneManager.GetSceneByName("SectorMap").isLoaded)
                         {
                             MapManager.Instance.UpdateNodeMap();
                         }
@@ -205,7 +205,7 @@ public class MapNode : MonoBehaviour
             //PLANET CLICKING
             
             //if you're in the sector map
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SectorMap"))
+            if (SceneManager.GetSceneByName("SectorMap").isLoaded)
             {
                 //and what you click on is a planet 
                 if (TryGetComponent(out Planet planet))

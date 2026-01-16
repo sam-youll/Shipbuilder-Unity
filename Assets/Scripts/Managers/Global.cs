@@ -58,6 +58,8 @@ public class Global : MonoBehaviour
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         cam = Camera.main;
+        
+        Debug.Log(scene.name + " loaded");
     }
 
     // Update is called once per frame

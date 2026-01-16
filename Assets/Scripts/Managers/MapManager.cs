@@ -155,7 +155,7 @@ public class MapManager : MonoBehaviour
             nodeMap.GetComponent<Constellation>().CheckIfActive();
         
             //if it is active
-            if (nodeMap.GetComponent<Constellation>().isActive)
+            if (activeNodeMap == null && nodeMap.GetComponent<Constellation>().isActive)
             {
                 var sectorMapScene = SceneManager.GetSceneByName("SectorMap");
                 //instantiate it 
@@ -164,7 +164,7 @@ public class MapManager : MonoBehaviour
                 var rootObjects = sectorMapScene.GetRootGameObjects(); // TODO: FOR SOME REASON THIS LITERALLY ONLY RETURNS THE MAP OBJECT I"M GOING INSANE
                 foreach (var rootObj in rootObjects)
                 {
-                    Debug.Log(rootObj.name);
+                    // Debug.Log(rootObj.name);
                     if (rootObj.name == "SectorMap Viewport")
                     {
                         activeNodeMap.transform.SetParent(rootObj.transform);
@@ -383,11 +383,19 @@ public class MapManager : MonoBehaviour
 
     private void OnEnemyDefeated()
     {
-        SceneManager.LoadScene("MainMap", LoadSceneMode.Additive);
+        if (SceneManager.GetSceneByName("SectorMap").isLoaded)
+        {
+            GoToSectorMap();
+        }
+        else
+        {
+            GoToMainMap();
+        }
     }
     
     public void GoToEncounterScene(MapNode.EncounterType myEncounterType)
     {
+        Debug.Log("Starting "  + myEncounterType + " scene");
         var sectorMap = SceneManager.GetSceneByName("SectorMap");
         var mainMap = SceneManager.GetSceneByName("MainMap");
         var narrScene = SceneManager.GetSceneByName("NarrativePrototype");
@@ -437,16 +445,24 @@ public class MapManager : MonoBehaviour
         var sectorMap = SceneManager.GetSceneByName("SectorMap");
         var mainMap = SceneManager.GetSceneByName("MainMap");
 
+        SetActiveScene(mainMap, false);
+        
         if (sectorMap.isLoaded)
         {
-            SetActiveScene(mainMap, false);
             SetActiveScene(sectorMap, true);
+            
+            UpdateNodeMap();
         }
         else
         {
-            SceneManager.LoadScene("SectorMap", LoadSceneMode.Additive);
+            StartCoroutine(LoadAndSetSectorMap());
         }
-        
+    }
+
+    private IEnumerator LoadAndSetSectorMap()
+    {
+        SceneManager.LoadScene("SectorMap", LoadSceneMode.Additive);
+        yield return null;
         UpdateNodeMap();
     }
     
