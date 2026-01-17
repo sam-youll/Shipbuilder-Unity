@@ -183,11 +183,15 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdateMainMap()
     {
+        UpdatePlanetPaths();
+        UpdatePlanetNodes();
+    }
+
+    public void LoadSectorsInMainMap()
+    {
         foreach (GameObject sectorMap in sectorMaps)
         {
             sectorMap.transform.localPosition = new Vector3(0, 0, -2);
-            
-            UpdatePlanetPaths();
 
             var mapScene = SceneManager.GetSceneByName("MainMap");
             var map = Instantiate(sectorMap);
@@ -200,10 +204,7 @@ public class MapManager : MonoBehaviour
                     map.transform.parent = rootObj.transform;
                 }
             }
-            
-            UpdatePlanetNodes();
         }
-        
     }
 
     /// <summary>

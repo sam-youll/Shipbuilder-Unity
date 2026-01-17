@@ -18,6 +18,7 @@ public class MapRabbit : MonoBehaviour
         if (SceneManager.GetSceneByName("MainMap").isLoaded)
         {
             MapManager.Instance.UpdateMainMap();
+            MapManager.Instance.LoadSectorsInMainMap();
         }
         else if (SceneManager.GetSceneByName("SectorMap").isLoaded)
         {
