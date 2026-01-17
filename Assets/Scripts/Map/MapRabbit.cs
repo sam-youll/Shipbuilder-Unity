@@ -20,10 +20,6 @@ public class MapRabbit : MonoBehaviour
             MapManager.Instance.UpdateMainMap();
             MapManager.Instance.LoadSectorsInMainMap();
         }
-        else if (SceneManager.GetSceneByName("SectorMap").isLoaded)
-        {
-            MapManager.Instance.UpdateNodeMap();
-        }
     }
 
     // Update is called once per frame

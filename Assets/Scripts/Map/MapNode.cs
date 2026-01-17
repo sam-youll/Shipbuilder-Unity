@@ -169,14 +169,14 @@ public class MapNode : MonoBehaviour
                     //but the planet isn't there to click
                     if (foundPlanet == null)
                     {
-                        //Debug.Log("Advancing to next path");
+                        Debug.Log("Advancing to next path");
                         
                         //go to the next path and update the node map
                         MapManager.Instance.AdvanceThroughPath();
-                        if (SceneManager.GetSceneByName("SectorMap").isLoaded)
+                        /*if (SceneManager.GetSceneByName("SectorMap").isLoaded)
                         {
-                            MapManager.Instance.UpdateNodeMap();
-                        }
+                            //MapManager.Instance.UpdateNodeMap();
+                        }*/
                         
                     }
                 }

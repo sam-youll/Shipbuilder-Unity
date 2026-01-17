@@ -148,16 +148,16 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdateNodeMap()
     {
-        //Debug.Log("UpdateNodeMap");
+        //Debug.Log("UpdateNodeMap called and active nodemap is " + activeNodeMap);
         //for each node map in the scene
         foreach (GameObject nodeMap in nodeMaps)
         {
-            nodeMap.GetComponent<Constellation>().CheckIfActive();
-        
+            nodeMap.GetComponent<Constellation>().CheckIfActive(); ;
             //if it is active
             if (activeNodeMap == null && nodeMap.GetComponent<Constellation>().isActive)
             {
                 var sectorMapScene = SceneManager.GetSceneByName("SectorMap");
+                //Debug.Log("instantiating node map");
                 //instantiate it 
                 activeNodeMap = Instantiate(nodeMap);
                 SceneManager.MoveGameObjectToScene(activeNodeMap, sectorMapScene);
@@ -258,6 +258,7 @@ public class MapManager : MonoBehaviour
                     
                     
                     //instantiate it
+                    Debug.Log("instantiated planet");
                     var newPlanet = Instantiate(planet);
                     SceneManager.MoveGameObjectToScene(newPlanet, SceneManager.GetSceneByName("SectorMap"));
                     var rootGameObjects = SceneManager.GetSceneByName("SectorMap").GetRootGameObjects();
@@ -386,7 +387,8 @@ public class MapManager : MonoBehaviour
             //set the current sector to that index 
             sector = currentPath[pathIndex];
             Destroy(activeNodeMap);
-            Debug.Log("Current path length: " + currentPath.Count + " current sector: " + sector + "path index is " + pathIndex);
+            Debug.Log("Destroyed active node map:" + activeNodeMap.name);
+            //Debug.Log("Current path length: " + currentPath.Count + " current sector: " + sector + "path index is " + pathIndex);
         }
            
     }
@@ -469,8 +471,11 @@ public class MapManager : MonoBehaviour
         if (sectorMap.isLoaded)
         {
             SetActiveScene(sectorMap, true);
-            
-            UpdateNodeMap();
+
+            if (activeNodeMap == null)
+            {
+                UpdateNodeMap();
+            };
         }
         else
         {
