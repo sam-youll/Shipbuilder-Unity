@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Weapon))]
 public class WeaponEditor : Editor
 {
@@ -28,6 +31,7 @@ public class WeaponEditor : Editor
         DrawDefaultInspector();
     }
 }
+#endif
 
 public class Weapon : MonoBehaviour
 {

@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(EventBus))]
 public class EventBusEditor : Editor
 {
@@ -22,6 +25,7 @@ public class EventBusEditor : Editor
         DrawDefaultInspector();
     }
 }
+#endif
 
 public class EventBus : MonoBehaviour
 {
@@ -39,6 +43,8 @@ public class EventBus : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this);
         }
+        
+        SetEventLists();
     }
 
     // TODO: these should be grouped into more specific fields later, as we consolidate more events into the bus
@@ -66,6 +72,11 @@ public class EventBus : MonoBehaviour
     // scene changes
     
     private void OnValidate()
+    {
+        SetEventLists();
+    }
+
+    private void SetEventLists()
     {
         // Debug.Log("OnValidate");
         var fields= GetType().GetFields();

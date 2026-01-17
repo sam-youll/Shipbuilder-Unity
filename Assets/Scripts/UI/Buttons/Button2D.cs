@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Reflection;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Button2D))]
 public class Button2DEditor : Editor
 {
@@ -60,6 +63,7 @@ public class Button2DEditor : Editor
 
     }
 }
+#endif
 
 public class Button2D : MonoBehaviour
 {

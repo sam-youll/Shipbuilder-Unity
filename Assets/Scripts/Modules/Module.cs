@@ -2,13 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
+
+#if UNITY_EDITOR
 [CustomEditor(typeof(Module), true)]
 public class ModuleInspector : Editor
 {
@@ -226,6 +230,7 @@ public class ModuleInspector : Editor
         DrawDefaultInspector();
     }
 }
+#endif
 
 [SelectionBase]
 public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
@@ -577,6 +582,8 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         outputJacks.Clear();
     }
 
+    #endif
+    
     [Serializable]
     private struct Package<TElement>
     {
@@ -591,7 +598,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
             this.element = element;
         }
     }
-
+    
     public void OnBeforeSerialize()
     {
         moduleShapeSerialized = new();
@@ -614,8 +621,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
             moduleShape[x, y] = moduleShapeSerialized[i].element;
         }
     }
-    
-#endif
     
     [Header("Values")] 
     [Tooltip("The amount charged for this module in the shop.")]
