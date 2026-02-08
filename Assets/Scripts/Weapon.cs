@@ -33,7 +33,7 @@ public class WeaponEditor : Editor
 }
 #endif
 
-public class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour, ITooltipInfo
 {
     [Header("Weapon Stats")]
     public Common.SoundType soundType;
@@ -79,7 +79,18 @@ public class Weapon : MonoBehaviour
     private int currentNote;
     
     public List<Module> myPatch = new();
-    
+
+    public string Info()
+    {
+        var text = "Weapon stats: \n";
+        foreach (var kvp in weaponStats)
+        {
+            text += kvp.Key + ": " + kvp.Value + "\n";
+        }
+
+        return text;
+    }
+
     public void Start()
     {
         // Enemy weapons do not have actual modules behind them (for now)

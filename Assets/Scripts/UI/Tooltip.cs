@@ -2,6 +2,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public interface ITooltipInfo
+{
+    public string Info();
+}
+
 public class Tooltip : MonoBehaviour
 {
     private Vector2 panelSize;
@@ -26,9 +31,9 @@ public class Tooltip : MonoBehaviour
     public void UpdateTooltip(GameObject target)
     {
         tmp.text = target.name;
-        if (target.TryGetComponent(out TooltipInfo info))
+        if (target.TryGetComponent(out ITooltipInfo tooltip))
         {
-            tmp.text += "\n" + info.text;
+            tmp.text += "\n---\n" + tooltip.Info();
         }
 
         // csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
