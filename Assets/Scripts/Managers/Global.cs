@@ -23,9 +23,14 @@ public class Global : MonoBehaviour
     public Vector3 mousePos = Vector3.zero;
     public Camera cam;
     
+    [Header("UI Sprites")]
     public Sprite cursorDefault;
     public Sprite cursorGrabOpen;
     public Sprite cursorGrabClose;
+    public Sprite selectionReticleSprite;
+    private GameObject cursor;
+    private GameObject selectionReticle;
+    private GameObject tooltip;
 
     public enum CursorState
     {
@@ -34,8 +39,6 @@ public class Global : MonoBehaviour
         GrabClose
     }
     public CursorState cursorState = CursorState.Default;
-
-    private SpriteRenderer sr;
 
     [Header("Object Lists")] 
     public List<GameObject> hoverList = new();
@@ -48,9 +51,29 @@ public class Global : MonoBehaviour
         cam = Camera.main;
         
         Cursor.visible = false;
-        sr = gameObject.AddComponent<SpriteRenderer>();
-        sr.sprite = cursorDefault;
-        sr.sortingLayerName = "UI";
+
+        cursor = new GameObject("Cursor", typeof(SpriteRenderer))
+        {
+            transform =
+            {
+                parent = transform
+            },
+            layer = LayerMask.NameToLayer("UI")
+        };
+        cursor.GetComponent<SpriteRenderer>().sprite = cursorDefault;
+        
+        selectionReticle = new GameObject("Selection Reticle", typeof(SpriteRenderer))
+        {
+            transform =
+            {
+                parent = transform
+            },
+            layer = LayerMask.NameToLayer("UI")
+        };
+        selectionReticle.GetComponent<SpriteRenderer>().sprite = selectionReticleSprite;
+        selectionReticle.GetComponent<SpriteRenderer>().drawMode = SpriteDrawMode.Tiled;
+        
+        tooltip = Instantiate(Resources.Load<GameObject>("Prefabs/Tooltip"), transform);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -71,7 +94,7 @@ public class Global : MonoBehaviour
         raycastHits = Physics2D.RaycastAll(mousePos, Vector2.zero);
 
         // Cursor
-        transform.position = mousePos;
+        cursor.transform.position = mousePos;
         var hitGrabbable = false;
         hoverList.Clear();
         foreach (var result in raycastHits)
@@ -81,6 +104,8 @@ public class Global : MonoBehaviour
             {
                 coll = coll.composite;
             }
+            if (coll.gameObject.layer == LayerMask.NameToLayer("Particles"))
+                continue;
             hoverList.Add(coll.gameObject);
             if (coll.gameObject.CompareTag("Wire") ||
 				coll.gameObject.CompareTag("Button") ||
@@ -91,6 +116,7 @@ public class Global : MonoBehaviour
                 hitGrabbable = true;
             }
         }
+        var sr = cursor.GetComponent<SpriteRenderer>();
         switch (cursorState)
         {
             case CursorState.Default:
@@ -119,6 +145,31 @@ public class Global : MonoBehaviour
                     cursorState = CursorState.GrabOpen;
                 }
                 break;
+        }
+        
+        // Selection Reticle
+        var tooltipsActive = hoverList.Count > 0 && Input.GetKey(KeyCode.LeftAlt);
+        selectionReticle.SetActive(tooltipsActive);
+        tooltip.SetActive(tooltipsActive);
+        if (hoverList.Count > 0)
+        {
+            var selectedItem = hoverList[0];
+            foreach (var item in hoverList)
+            {
+                if (selectedItem.transform.position.z >= item.transform.position.z)
+                {
+                    selectedItem = item;
+                    selectionReticle.GetComponent<SpriteRenderer>().size = new Vector2(
+                        item.GetComponent<Collider2D>().bounds.size.x + 1,
+                        item.GetComponent<Collider2D>().bounds.size.y + 1);
+                    selectionReticle.transform.position = item.GetComponent<Collider2D>().bounds.center;
+                    var vector3 = selectionReticle.transform.position;
+                    vector3.z = -1;
+                    selectionReticle.transform.position = vector3;
+                }
+            }
+            
+            tooltip.GetComponent<Tooltip>().UpdateTooltip(selectedItem);
         }
     }
 

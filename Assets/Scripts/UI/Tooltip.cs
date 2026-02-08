@@ -1,53 +1,89 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tooltip : MonoBehaviour
 {
-    public GameObject tooltip;
-    public bool hover;
-    private float hoverTimer;
-    private Vector3 defaultScale;
+    private Vector2 panelSize;
+    private SpriteRenderer sr;
+    private TextMeshPro tmp;
+    private BetterCSF csf;
+    public float maxWidth = 5;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        tooltip.SetActive(false);
-        defaultScale = tooltip.transform.localScale;
+        sr = GetComponent<SpriteRenderer>();
+        tmp = GetComponentInChildren<TextMeshPro>();
+        csf = GetComponentInChildren<BetterCSF>();
+        csf.maxWidth = maxWidth;
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Update all parameters of tooltip.
+    /// </summary>
+    /// <param name="target">GameObject the tooltip will display info about.</param>
+    public void UpdateTooltip(GameObject target)
     {
-        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var results = Physics2D.RaycastAll(mousePos, Vector2.zero);
-            
-        var isItMe = false;
-        foreach (var r in results)
+        tmp.text = target.name;
+        if (target.TryGetComponent(out TooltipInfo info))
         {
-            if (r.collider.gameObject == gameObject)
-            {
-                isItMe = true;
-            }
+            tmp.text += "\n" + info.text;
         }
 
-        if (isItMe)
-        {
-            hoverTimer += Time.deltaTime;
-        }
-        else
-        {
-            hoverTimer = 0;
-        }
-        if (hoverTimer > 0.2f)
-        {
-            tooltip.SetActive(true);
-            var sr = tooltip.GetComponent<SpriteRenderer>();
-            tooltip.transform.localScale = Vector3.Lerp(tooltip.transform.localScale, defaultScale, .1f);
-            tooltip.transform.position = new Vector3(mousePos.x + sr.size.x * .5f + .6f, mousePos.y - sr.size.y * .5f - .6f, transform.position.z - 1);
-        }
-        else
-        {
-            tooltip.transform.localScale = Vector3.zero;
-            tooltip.SetActive(false);
-        }
+        // csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        
+        sr.size = new Vector2(tmp.bounds.size.x + .5f, tmp.bounds.size.y + .5f);
+
+        var coll = target.GetComponent<Collider2D>();
+        
+        var pos = coll.bounds.center;
+        pos.x += .5f * coll.bounds.size.x;
+        pos.x += .5f * sr.bounds.size.x + .5f;
+        pos.y += .5f * coll.bounds.size.y + .39f;
+        pos.y -= .5f * sr.bounds.size.y;
+        pos.z -= 1;
+        transform.position = pos;
+        
+        // Debug.Log($"Coll pos = {coll.transform.position}. Coll size = {coll.bounds.size}. SR size = {sr.size}. Final pos = {pos}.");
+        
+        // TODO: check to make sure tooltip doesn't go off screen
+        
     }
+    
+    // void DrawBounds(Bounds b, Color color)
+    // {
+    //     Vector3 min = b.min;
+    //     Vector3 max = b.max;
+    //
+    //     Vector3[] corners = new Vector3[8];
+    //     // Bottom
+    //     corners[0] = new Vector3(min.x, min.y, min.z);
+    //     corners[1] = new Vector3(max.x, min.y, min.z);
+    //     corners[2] = new Vector3(max.x, min.y, max.z);
+    //     corners[3] = new Vector3(min.x, min.y, max.z);
+    //     // Top
+    //     corners[4] = new Vector3(min.x, max.y, min.z);
+    //     corners[5] = new Vector3(max.x, max.y, min.z);
+    //     corners[6] = new Vector3(max.x, max.y, max.z);
+    //     corners[7] = new Vector3(min.x, max.y, max.z);
+    //
+    //     // Bottom rectangle
+    //     Debug.DrawLine(corners[0], corners[1], color);
+    //     Debug.DrawLine(corners[1], corners[2], color);
+    //     Debug.DrawLine(corners[2], corners[3], color);
+    //     Debug.DrawLine(corners[3], corners[0], color);
+    //
+    //     // Top rectangle
+    //     Debug.DrawLine(corners[4], corners[5], color);
+    //     Debug.DrawLine(corners[5], corners[6], color);
+    //     Debug.DrawLine(corners[6], corners[7], color);
+    //     Debug.DrawLine(corners[7], corners[4], color);
+    //
+    //     // Vertical edges
+    //     Debug.DrawLine(corners[0], corners[4], color);
+    //     Debug.DrawLine(corners[1], corners[5], color);
+    //     Debug.DrawLine(corners[2], corners[6], color);
+    //     Debug.DrawLine(corners[3], corners[7], color);
+    // }
 }

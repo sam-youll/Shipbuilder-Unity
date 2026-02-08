@@ -246,7 +246,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         Label
     }
     
-    [Header("Changing dimensions will reset grid. Dimensions can be between 1 and 8.")]
+    [Header("Changing dimensions will reset grid.\nDimensions can be between 1 and 8.")]
     public Vector2Int dimensions = new(3, 3);
     public ModuleComponent[,] moduleShape = new ModuleComponent[3, 3];
     [SerializeField] private List<Package<ModuleComponent>> moduleShapeSerialized = new();
@@ -653,6 +653,9 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     }
     
     #region Trigger Method + Overloads
+    /// <summary>
+    /// Calls Trigger() on each child wire, which in turn will call Trigger() on any attached modules.
+    /// </summary>
     public virtual void Trigger()
     {
         // Debug.Log($"Attempting to call Trigger() from base Module class on {gameObject.name}");
@@ -664,6 +667,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         // Other behavior should be extended in inherited classes
     }
 
+    // TODO: is this overload ever *actually* used?
+    /// <summary>
+    /// Calls Trigger() on each child wire, which in turn will call Trigger() on any attached modules.
+    /// Calling Trigger() with a value is typically used for secondary modules.
+    /// </summary>
+    /// <param name="value">The value to pass to the next module.</param>
     public virtual void Trigger(float value)
     {
         foreach (GameObject wire in childWires)
@@ -673,6 +682,13 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         }
     }
 
+    /// <summary>
+    /// Calls Trigger() on each child wire, which in turn will call Trigger() on any attached modules.
+    /// Any secondary modules triggering primary modules, as well as some secondary modules triggering some
+    /// secondary modules will require passing a value and input index.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="inputIndex"></param>
     public virtual void Trigger(float value, int inputIndex)
     {
         foreach (GameObject wire in childWires)

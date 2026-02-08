@@ -36,14 +36,6 @@ public class WeaponEditor : Editor
 public class Weapon : MonoBehaviour
 {
     [Header("Weapon Stats")]
-    public float fireRate = 1;
-    public float warmupRate = 1;
-    public float damage = 1;
-    public float hullDamage = 1;
-    public float shieldDamage = 1;
-    public float bulletSpeed = 1;
-    public float accuracy = .75f;
-    public float stunTimer;
     public Common.SoundType soundType;
     public Dictionary<Common.SoundType, int> soundTypePoints = new();
     public List<Common.Effect> effects;
@@ -52,6 +44,7 @@ public class Weapon : MonoBehaviour
     public bool warming = false;
     public float warmup = 0;
     public float charge = 0;
+    public float stunTimer;
     public bool quantized;
     // public bool testing;
     public bool firing;
@@ -68,6 +61,17 @@ public class Weapon : MonoBehaviour
         { "attack", 100 },
         { "decay", 70 },
         { "release", 100 },
+    };
+
+    public Dictionary<string, float> weaponStats = new()
+    {
+        { "warmupRate", 1 },
+        { "fireRate", 1 },
+        { "damage", 1 },
+        { "hullDamage", 1 },
+        { "shieldDamage", 1 },
+        { "bulletSpeed", 1 },
+        { "accuracy", 1 }
     };
     
     public int currentNoteMeter = 0;
@@ -111,7 +115,7 @@ public class Weapon : MonoBehaviour
         {
             if (warmup < 1)
             {
-                warmup += warmupRate * .1f * Time.deltaTime;
+                warmup += weaponStats["warmupRate"] * .1f * Time.deltaTime;
             }
             else if (warmup > 1)
             {
@@ -121,15 +125,16 @@ public class Weapon : MonoBehaviour
         
         if (!enemyWeapon && firing && stunTimer <= 0)
         {
-            charge += Reactor.Instance.rate * fireRate * warmup * Time.deltaTime;
+            charge += Reactor.Instance.rate * weaponStats["fireRate"] * warmup * Time.deltaTime;
         }
         else if (enemyWeapon && firing && stunTimer <= 0)
         {
-            charge += fireRate * warmup * Time.deltaTime;
+            charge += weaponStats["fireRate"] * warmup * Time.deltaTime;
         }
 
         // TODO: This is temporary, we probably don't want to just turn the whole thing yellow
         // in the final version. We should make it a little fancier at least...
+        
         // if (stunTimer > 0)
         // {
         //     stunTimer -= Time.deltaTime;
@@ -147,8 +152,12 @@ public class Weapon : MonoBehaviour
     public void Fire()
     {
         SetPatch();
+        
         foreach (var mod in myPatch)
         {
+            // TODO: add logic for calculating a final value based on multiple input values,
+            // not just the most recent value.
+            
             foreach (var param in mod.MusicParams)
             {
                 noteInfo[param.Key] = param.Value;
@@ -156,15 +165,11 @@ public class Weapon : MonoBehaviour
 
             foreach (var stat in mod.CombatStats)
             {
-                // fireRate
-                // damage
-                // bullet speed
-                // spread
-                // effects
-                // type
+                weaponStats[stat.Key] = stat.Value;
             }
             
         }
+        
         if (charge < 1 || !firing || !CompletePatch())
         {
             return;
@@ -179,7 +184,7 @@ public class Weapon : MonoBehaviour
         // calculate hit/miss + damage
         if (CombatManager.Instance.state == CombatManager.State.inCombat)
         {
-            var hit = accuracy * (1 - ShipManager.Instance.EnemyEvasion());
+            var hit = weaponStats["accuracy"] * (1 - ShipManager.Instance.EnemyEvasion());
             if (hit <= 0)
             {
                 // Debug.Log("miss");
@@ -189,8 +194,8 @@ public class Weapon : MonoBehaviour
             else
             {
                 // Debug.Log("hit");
-                ShipManager.Instance.DamageEnemy(damage); // TODO: make it so that multiple effects can be sent
-                EventBus.Instance.enemyHit.Invoke(damage);
+                ShipManager.Instance.DamageEnemy(weaponStats["damage"]); // TODO: make it so that multiple effects can be sent
+                EventBus.Instance.enemyHit.Invoke(weaponStats["damage"]);
             }
         }
         

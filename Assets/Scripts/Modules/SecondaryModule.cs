@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class SecondaryModule : Module
 {
+    // TODO: is always vs triggered still relevant to current systems design?
+    // Should it be removed entirely, or changed to something like a selfTrigger bool?
     public enum ActiveState
     {
         Triggered,
@@ -9,6 +11,11 @@ public abstract class SecondaryModule : Module
     }
     public ActiveState activeState = ActiveState.Triggered;
 
+    /// <summary>
+    /// Input index lets the triggered module know how to interpret the Trigger() call,
+    /// the index typically corresponding to a specific input function reserved for secondary modules.
+    /// The input index is set by the wire when a module is attached.
+    /// </summary>
     public int myInputIndex;
     
     protected override void Update()
@@ -20,10 +27,4 @@ public abstract class SecondaryModule : Module
             Trigger();
         }
     }
-    
-    // public override void Trigger(float value,  int inputIndex)
-    // {
-    //     Debug.Log($"SecondaryModule on {gameObject.name} called base.Trigger().");
-    //     base.Trigger(value, inputIndex);
-    // }
 }
