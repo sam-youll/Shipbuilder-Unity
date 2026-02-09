@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
-public class Knob : MonoBehaviour
+public class Knob : MonoBehaviour, ITooltipInfo
 {
     private bool grabbed = false;
     
@@ -46,6 +46,11 @@ public class Knob : MonoBehaviour
         sr.sprite = spriteSheet[0];
     }
     #endif
+
+    public string Info()
+    {
+        return value.ToString();
+    }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -82,7 +87,10 @@ public class Knob : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (isItMe)
+            {
                 grabbed = true;
+                Global.Instance.LockCursor(true);
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -110,6 +118,7 @@ public class Knob : MonoBehaviour
             
             grabbed = false;
             valueChanged.Invoke(value);
+            Global.Instance.LockCursor(false);
         }
         
         if (grabbed)

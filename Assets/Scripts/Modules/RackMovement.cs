@@ -148,12 +148,6 @@ public class RackMovement : MonoBehaviour
         
         #region snap square
         
-        // TODO: OKAY HERE"S THE PLAN
-        // WE"RE GONNA FLOOD FILL OUT FROM THE MOUSE POS
-        // AND THEN THE CLOSEST VALUE IS GONNA BE THE SNAP SQUARE POS
-
-        // Debug.Log("New frame, dragging module.");
-        
         var snappedPos = new Vector2
         {
             x = Mathf.Floor(mousePos.x) + .5f,
@@ -249,9 +243,12 @@ public class RackMovement : MonoBehaviour
         {
             // are we over a rack we can drop onto?
             var rackCheck = false;
-            foreach (var result in Global.Instance.raycastHits)
+            var results = Physics2D.RaycastAll(lastValidPos, Vector2.zero);
+            // Debug.Log(results.Length + " at " + lastValidPos);
+            foreach (var result in results)
             {
-                if (result.collider.gameObject.GetComponent(typeof(ModuleRack)) != null)
+                // Debug.Log(result.transform.name);
+                if (result.collider.gameObject.TryGetComponent(out ModuleRack rack))
                 {
                     // theoretically, this is the module rack I'm hovering over
                     transform.SetParent(result.collider.gameObject.transform);

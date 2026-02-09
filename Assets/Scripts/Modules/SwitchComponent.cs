@@ -1,12 +1,17 @@
 using UnityEngine;
 
-public class SwitchComponent : MonoBehaviour
+public class SwitchComponent : MonoBehaviour, ITooltipInfo
 {
     public Sprite upSprite;
     public Sprite downSprite;
 
     public bool on;
     private SpriteRenderer sr;
+
+    public string Info()
+    {
+        return on ? "On" : "Off";
+    }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

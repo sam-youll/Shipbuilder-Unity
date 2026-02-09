@@ -24,6 +24,12 @@ public class Tooltip : MonoBehaviour
         csf.maxWidth = maxWidth;
     }
 
+    public void SetText(string text)
+    {
+        tmp.text = text;
+        sr.size = new Vector2(tmp.bounds.size.x + .5f, tmp.bounds.size.y + .5f);
+    }
+
     /// <summary>
     /// Update all parameters of tooltip.
     /// </summary>
@@ -42,12 +48,20 @@ public class Tooltip : MonoBehaviour
 
         var coll = target.GetComponent<Collider2D>();
         
+        // position tooltip just outside (top right) of target's collider
         var pos = coll.bounds.center;
         pos.x += .5f * coll.bounds.size.x;
         pos.x += .5f * sr.bounds.size.x + .5f;
         pos.y += .5f * coll.bounds.size.y + .39f;
         pos.y -= .5f * sr.bounds.size.y;
+        pos.z = target.transform.position.z;
         pos.z -= 1;
+        // make sure collider is visible (within bounds of camera)
+        var cam = Global.Instance.cam;
+        var height = cam.orthographicSize;
+        var width = cam.aspect * height;
+        pos.x = Mathf.Clamp(pos.x, -width + .5f * sr.bounds.size.x + .25f, width - .5f * sr.bounds.size.x - .25f);
+        pos.y = Mathf.Clamp(pos.y, -height + .5f * sr.bounds.size.y + .25f, height - .5f * sr.bounds.size.y - .25f);
         transform.position = pos;
         
         // Debug.Log($"Coll pos = {coll.transform.position}. Coll size = {coll.bounds.size}. SR size = {sr.size}. Final pos = {pos}.");

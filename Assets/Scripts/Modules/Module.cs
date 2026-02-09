@@ -235,6 +235,7 @@ public class ModuleInspector : Editor
 [SelectionBase]
 public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
 {
+    #region Module Builder
     public enum ModuleComponent
     {
         Empty,
@@ -621,6 +622,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
             moduleShape[x, y] = moduleShapeSerialized[i].element;
         }
     }
+    #endregion
     
     [Header("Values")] 
     [Tooltip("The amount charged for this module in the shop.")]
@@ -769,15 +771,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
             {
                 result = wire.GetComponent<Wire>().previousModule;
             }
-            
-            // if (wire.GetComponent<Wire>().type == Wire.Type.Primary)
-            // {
-            //     result = wire.GetComponent<Wire>().previousModule;
-            // }
-            // else if (wire.GetComponent<Wire>().type == Wire.Type.Trigger && wire.GetComponent<Wire>().previousModule.GetComponent<Weapon>() != null)
-            // {
-            //     result = wire.GetComponent<Wire>().previousModule;
-            // }
         }
 
         return result;
