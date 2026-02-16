@@ -53,26 +53,10 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     public GameObject previousModule;
     public GameObject parentWire;
     public SwitchComponent testFireSwitch;
-    
-    public Dictionary<string, float> noteInfo = new()
-    {
-        { "pitch", 440 },
-        { "length", .17f },
-        { "attack", 100 },
-        { "decay", 70 },
-        { "release", 100 },
-    };
 
-    public Dictionary<string, float> weaponStats = new()
-    {
-        { "warmupRate", 1 },
-        { "fireRate", 1 },
-        { "damage", 1 },
-        { "hullDamage", 1 },
-        { "shieldDamage", 1 },
-        { "bulletSpeed", 1 },
-        { "accuracy", 1 }
-    };
+    public Dictionary<string, float> noteInfo = Common.NoteInfo;
+
+    public Dictionary<string, float> weaponStats = Common.CombatStats;
     
     public int currentNoteMeter = 0;
     private int[] notes = new int[1];
@@ -87,7 +71,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         {
             text += kvp.Key + ": " + kvp.Value + "\n";
         }
-
+    
         return text;
     }
 
@@ -95,7 +79,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     {
         // Enemy weapons do not have actual modules behind them (for now)
         // so we just want them to attempt to fire as often as possible
-        if (!enemyWeapon)
+        if (enemyWeapon)
         {
             Conductor.Instance.onSixteenth.AddListener(Fire);
         }
@@ -176,7 +160,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
 
             foreach (var stat in mod.CombatStats)
             {
-                weaponStats[stat.Key] = stat.Value;
+                weaponStats[stat.Key] += stat.Value;
             }
             
         }

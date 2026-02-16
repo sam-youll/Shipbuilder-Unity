@@ -294,8 +294,11 @@ public class Wire : MonoBehaviour
                 if (!dying && isConnected && previousModule.TryGetComponent(out SecondaryModule secondaryModule))
                 {
                     // might not work if you plug into primary input jack, not sure though
-                    var inputIndex = nextModule.GetComponent<Module>().inputJacks.FindIndex(x => x == nextModuleJack);
-                    secondaryModule.myInputIndex = inputIndex;
+                    if (!nextModule.TryGetComponent(out Weapon weapon))
+                    {
+                        var inputIndex = nextModule.GetComponent<Module>().inputJacks.FindIndex(x => x == nextModuleJack);
+                        secondaryModule.myInputIndex = inputIndex;
+                    }
                 }
                 
                 connected.Invoke();
@@ -459,6 +462,7 @@ public class Wire : MonoBehaviour
     
     public void DeleteSelf()
     {
+        transform.SetParent(null);
         if (!dying)
         {
             dying = true;

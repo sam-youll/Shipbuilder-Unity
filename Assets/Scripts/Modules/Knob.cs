@@ -95,30 +95,34 @@ public class Knob : MonoBehaviour, ITooltipInfo
 
         if (Input.GetMouseButtonUp(0))
         {
-            trueValue = (value - .5f * maxValue) / (maxValue * .5f);
-            var adjustedValue = trueValue * rangeAngle / (4 * Mathf.PI);
-            
-            // Old rotation-based method, here for posterity
-            // var rot = transform.localEulerAngles;
-            // rot.z = -adjustedValue * 360;
-            // transform.localEulerAngles = rot;
-            
-            var index = Mathf.RoundToInt(adjustedValue * spriteSheet.Length);
-            // index = Mathf.Clamp(index, 0, spriteSheet.Length - 1);
-            // index -= 16;
-            if (index < 0)
+            if (isItMe)
             {
-                index += 32;
+                trueValue = (value - .5f * maxValue) / (maxValue * .5f);
+                var adjustedValue = trueValue * rangeAngle / (4 * Mathf.PI);
+
+                // Old rotation-based method, here for posterity
+                // var rot = transform.localEulerAngles;
+                // rot.z = -adjustedValue * 360;
+                // transform.localEulerAngles = rot;
+
+                var index = Mathf.RoundToInt(adjustedValue * spriteSheet.Length);
+                // index = Mathf.Clamp(index, 0, spriteSheet.Length - 1);
+                // index -= 16;
+                if (index < 0)
+                {
+                    index += 32;
+                }
+                else if (index >= spriteSheet.Length)
+                {
+                    index -= 32;
+                }
+
+                sr.sprite = spriteSheet[index];
+
+                grabbed = false;
+                valueChanged.Invoke(value);
+                Global.Instance.LockCursor(false);
             }
-            else if (index >= spriteSheet.Length)
-            {
-                index -= 32;
-            }
-            sr.sprite = spriteSheet[index];
-            
-            grabbed = false;
-            valueChanged.Invoke(value);
-            Global.Instance.LockCursor(false);
         }
         
         if (grabbed)

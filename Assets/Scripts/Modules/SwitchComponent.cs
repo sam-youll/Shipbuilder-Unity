@@ -22,19 +22,7 @@ public class SwitchComponent : MonoBehaviour, ITooltipInfo
     // Update is called once per frame
     void Update()
     {
-        // we do a lil raycast
-        var results = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        
-        var isItMe = false;
-        foreach (var r in results)
-        {
-            if (r.collider.gameObject == gameObject)
-            {
-                isItMe = true;
-            }
-        }
-
-        if (isItMe)
+        if (Global.Instance.TopRaycastResult() == gameObject)
         {
             if (Input.GetMouseButtonDown(0))
             {

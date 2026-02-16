@@ -46,7 +46,7 @@ public abstract class Jack : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Global.Instance.RaycastResultsContains(gameObject))
+            if (Global.Instance.TopRaycastResult() == gameObject)
             {
                 OnMouseDown();
             }

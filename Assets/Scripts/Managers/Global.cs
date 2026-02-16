@@ -63,6 +63,7 @@ public class Global : MonoBehaviour
             layer = LayerMask.NameToLayer("UI")
         };
         cursor.GetComponent<SpriteRenderer>().sprite = cursorDefault;
+        cursor.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
         
         selectionReticle = new GameObject("Selection Reticle", typeof(SpriteRenderer))
         {
@@ -74,8 +75,11 @@ public class Global : MonoBehaviour
         };
         selectionReticle.GetComponent<SpriteRenderer>().sprite = selectionReticleSprite;
         selectionReticle.GetComponent<SpriteRenderer>().drawMode = SpriteDrawMode.Tiled;
+        selectionReticle.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
         
         tooltip = Instantiate(Resources.Load<GameObject>("Prefabs/Tooltip"), transform);
+        tooltip.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
+        tooltip.GetComponentInChildren<MeshRenderer>().sortingLayerName = "UI";
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -117,6 +121,8 @@ public class Global : MonoBehaviour
             
             tooltip.GetComponent<Tooltip>().UpdateTooltip(selectedItem);
         }
+        
+        // Debug.Log(TopRaycastResult().name);
     }
 
     private void UpdateCursor()
@@ -142,11 +148,11 @@ public class Global : MonoBehaviour
             if (coll.gameObject.layer == LayerMask.NameToLayer("Particles"))
                 continue;
             hoverList.Add(coll.gameObject);
-            if (coll.gameObject.CompareTag("Wire") ||
-                coll.gameObject.CompareTag("Button") ||
-                coll.gameObject.layer == LayerMask.NameToLayer("Rack Objects") ||
-                coll.gameObject.layer == LayerMask.NameToLayer("Jacks") ||
-                coll.gameObject.layer == LayerMask.NameToLayer("Module Components"))
+            if (TopRaycastResult().CompareTag("Wire") ||
+                TopRaycastResult().CompareTag("Button") ||
+                TopRaycastResult().layer == LayerMask.NameToLayer("Rack Objects") ||
+                TopRaycastResult().layer == LayerMask.NameToLayer("Jacks") ||
+                TopRaycastResult().layer == LayerMask.NameToLayer("Module Components"))
             {
                 hitGrabbable = true;
             }
@@ -204,6 +210,23 @@ public class Global : MonoBehaviour
         return containsObj;
     }
 
+    public GameObject TopRaycastResult()
+    {
+        if (hoverList.Count == 0) return null;
+
+        if (hoverList.Count == 1) return hoverList[0];
+
+        var topObj = hoverList[0];
+        foreach (var result in hoverList)
+        {
+            if (result.transform.position.z <= topObj.transform.position.z)
+            {
+                topObj = result;
+            }
+        }
+        return topObj;
+    }
+
     /// <summary>
     /// Instantiates a tooltip at the desired position.
     /// </summary>
@@ -225,6 +248,7 @@ public class Global : MonoBehaviour
         if (!locked)
         {
             Mouse.current.WarpCursorPosition(cam.WorldToScreenPoint(cursor.transform.position));
+            // Debug.Log($"Returning actual cursor ({Mouse.current}) to {cursor.transform.position}");
         }
     }
 }

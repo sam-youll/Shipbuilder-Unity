@@ -62,6 +62,14 @@ public class EventBus : MonoBehaviour
     public UnityEvent startedDialogue;
     public UnityEvent enteredShop;
     
+    // in combat events
+    public UnityEvent enemyShieldBroken;
+    public UnityEvent playerShieldBroken;
+    public UnityEvent enemyEffectApplied; // effect applied to enemy
+    public UnityEvent playerEffectApplied; //      ""       to player
+    public UnityEvent enemyHullDamaged;
+    public UnityEvent playerHullDamaged;
+    
     public UnityEvent<Weapon> weaponFired;
     public UnityEvent<float> playerHit; // technically this and the event below also get called on a miss, damage is just set to -1
     public UnityEvent<float> enemyHit;

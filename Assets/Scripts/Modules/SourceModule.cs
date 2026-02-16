@@ -20,8 +20,12 @@ public class SourceModule : PrimaryModule
         Waveform.Saw,
         Waveform.Noise
     };
+    
+    public Common.BulletType bulletType = Common.BulletType.Slug;
 
     public bool waveformKnobEnabled;
+
+    public float bonusDamage = 1;
     
     protected override void Start()
     {
@@ -32,6 +36,8 @@ public class SourceModule : PrimaryModule
         {
             GetComponentInChildren<Knob>().valueChanged.AddListener(UpdateWaveform);
         }
+        CombatStats["bulletType"] = (float)bulletType;
+        CombatStats["damage"] = (float)bonusDamage;
     }
 
     void UpdateWaveform(float value)

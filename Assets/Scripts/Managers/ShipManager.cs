@@ -39,6 +39,7 @@ public class ShipManager : MonoBehaviour
         InitPlayerShip();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        EventBus.Instance.combatStarted.AddListener(InitEnemyShip);
     }
 
     void Update()

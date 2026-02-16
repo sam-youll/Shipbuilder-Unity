@@ -74,57 +74,45 @@ public class RackMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // pick up module if not also clicking a module component
-            ClickyClicky();
+            LeftClicky();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            RightClicky();
         }
     }
 
-    void ClickyClicky()
+    void LeftClicky()
     {
-        var mousePos = Global.Instance.mousePos;
-        var isItMe = Global.Instance.RaycastResultsContains(gameObject);
-        var hitComponent = false;
-        var hitJack = false;
-        if (isItMe)
+        if (Global.Instance.TopRaycastResult() == gameObject)
         {
-            foreach (var r in Global.Instance.raycastHits)
+            AudioManager.Instance.PickUpModuleSFX();
+            dragOffset = transform.position - Global.Instance.mousePos;
+            snapSquare.SetActive(true);
+            isMouseDragging = true;
+            lastParent = transform.parent;
+            transform.SetParent(cam.transform);
+            bodyClick.Invoke();
+            dragStartPos = transform.position;
+            if (isInInventory)
             {
-                if (r.collider.gameObject == gameObject)
+                inventoryExit.Invoke();
+                Inventory.Instance.modulesInInventory.Remove(gameObject);
+                Inventory.Instance.ArrangeModules();
+                for (int i = 0; i < Inventory.Instance.transform.childCount; i++)
                 {
-                    isItMe = true;
-                }
-
-                if (r.collider.gameObject.layer == LayerMask.NameToLayer("Module Components"))
-                {
-                    hitComponent = true;
-                }
-
-                if (r.collider.gameObject.layer == LayerMask.NameToLayer("Jacks"))
-                {
-                    hitJack = true;
-                    jackClick.Invoke(r.collider.gameObject);
+                    Inventory.Instance.transform.GetChild(i).gameObject.SetActive(false);
                 }
             }
         }
-        if (isItMe && !hitComponent && !hitJack)
+    }
+
+    void RightClicky()
+    {
+        if (Global.Instance.TopRaycastResult() == gameObject)
         {
-            if (Global.Instance.RaycastResultsContains(gameObject))
-            {
-                if (isInInventory)
-                {
-                    lastInvPos = transform.localPosition;
-                }
-                AudioManager.Instance.PickUpModuleSFX();
-                dragOffset = transform.position - mousePos;
-                snapSquare.SetActive(true);
-                isMouseDragging = true;
-                lastParent = transform.parent;
-                transform.SetParent(cam.transform);
-                bodyClick.Invoke();
-                // var adjPos = transform.position;
-                // adjPos.z = -1;
-                // transform.position = adjPos;
-                dragStartPos = transform.position;
-            }
+            SendToInventory();
         }
     }
 
@@ -229,18 +217,18 @@ public class RackMovement : MonoBehaviour
 
         AudioManager.Instance.PutDownModuleSFX();
         
-        if (isOverInventory)
-        {
-            // put the module in the inventory
-            isInInventory = true;
-            transform.SetParent(Inventory.Instance.transform);
-            var pos = transform.position;
-            pos.z = transform.parent.transform.position.z - 1f;
-            transform.position = pos;
-            inventoryEnter.Invoke();
-        }
-        else // either drop the module on a rack, or return it to its previous position
-        {
+        // if (isOverInventory)
+        // {
+        //     // put the module in the inventory
+        //     isInInventory = true;
+        //     transform.SetParent(Inventory.Instance.transform);
+        //     var pos = transform.position;
+        //     pos.z = transform.parent.transform.position.z - 1f;
+        //     transform.position = pos;
+        //     inventoryEnter.Invoke();
+        // }
+        // else // either drop the module on a rack, or return it to its previous position
+        // {
             // are we over a rack we can drop onto?
             var rackCheck = false;
             var results = Physics2D.RaycastAll(lastValidPos, Vector2.zero);
@@ -277,33 +265,49 @@ public class RackMovement : MonoBehaviour
                     transform.position = lastValidPos;
                 }
             }
-        }
+        // }
     }
     
     void HoverInventory()
     {
-        if (!canGoInInventory)
-        {
-            return;
-        }
+        // if (!canGoInInventory)
+        // {
+        //     return;
+        // }
         
-        if (Inventory.Instance.sr.color == Inventory.Instance.highlightColor)
-        {
-            if (!Inventory.Instance.isPulledDown)
-            {
-                Inventory.Instance.isPulledDown = true;
-            }
+        // if (Inventory.Instance.sr.color == Inventory.Instance.highlightColor)
+        // {
+        //     if (!Inventory.Instance.isPulledDown)
+        //     {
+        //         Inventory.Instance.isPulledDown = true;
+        //     }
+        //
+        //     isOverInventory = true;
+        // }
+        // else
+        // {
+        //     if (Inventory.Instance.isPulledDown)
+        //     {
+        //         Inventory.Instance.isPulledDown = false;
+        //     }
+        //     isOverInventory = false;
+        // }
+    }
 
-            isOverInventory = true;
-        }
-        else
-        {
-            if (Inventory.Instance.isPulledDown)
-            {
-                Inventory.Instance.isPulledDown = false;
-            }
-            isOverInventory = false;
-        }
+    void SendToInventory()
+    {
+        if (isInInventory) return;
+        
+        Inventory.Instance.modulesInInventory.Add(gameObject);
+        transform.SetParent(Inventory.Instance.transform);
+        transform.localPosition = Vector3.zero;
+        gameObject.SetActive(Inventory.Instance.hotbar.activeSelf);
+        isInInventory = true;
+        inventoryEnter.Invoke();
+        
+        Inventory.Instance.ArrangeModules();
+        
+        Inventory.Instance.ArrangeModules();
     }
 
     /// <summary>
@@ -329,6 +333,8 @@ public class RackMovement : MonoBehaviour
             // Debug.Log(result.gameObject.name);
             // ignore self
             if (result.gameObject == gameObject)
+                continue;
+            if (result.gameObject.layer == LayerMask.NameToLayer("Module Components"))
                 continue;
             if (result.gameObject.CompareTag("Bullet"))
                 continue;

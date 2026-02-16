@@ -1,10 +1,21 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
+[CustomEditor(typeof(BetterCSF))]
+public class CSFEditor : Editor
+{
+    public void OnInspectorGUI()
+    {
+        var csf = (BetterCSF)target;
+        csf.maxWidth = EditorGUILayout.FloatField(csf.maxWidth);
+    }
+}
+
 public class BetterCSF : ContentSizeFitter
 {
-    public float maxWidth = 5;
+    [SerializeField] public float maxWidth = 5;
     
     public override void SetLayoutHorizontal()
     {

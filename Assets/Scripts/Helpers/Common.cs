@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Common
@@ -15,6 +16,18 @@ public static class Common
         Dwth,
         Hysh
     }
+
+    /// <summary>
+    /// Type of projectile fired from a weapon. This can have impacts on ship
+    /// vulnerabilities, shields, bullet effects, and more.
+    /// </summary>
+    public enum BulletType
+    {
+        None,
+        Slug,
+        Energy,
+        Explosive
+    }
     
     /// <summary>
     /// Certain weapons can impart effects on ships their projectiles hit.
@@ -31,4 +44,24 @@ public static class Common
         Siphon, // steal energy/hull TODO: decide which one
         Scrap // drop scrap on hit
     }
+    
+    public static readonly Dictionary<string, float> NoteInfo = new()
+    {
+        { "pitch", 440 },
+        { "length", .17f },
+        { "attack", 100 },
+        { "decay", 70 },
+        { "release", 100 },
+    };
+
+    public static readonly Dictionary<string, float> CombatStats = new()
+    {
+        { "warmupRate", 0 },
+        { "fireRate", 0 },
+        { "damage", 0 },
+        { "hullDamage", 0 },
+        { "shieldDamage", 0 },
+        { "bulletSpeed", 0 },
+        { "accuracy", 0 }
+    };
 }

@@ -767,9 +767,13 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
 
         foreach (GameObject wire in parentWires)
         {
-            if (wire.GetComponent<Wire>().previousModule.GetComponent<Module>() is not SecondaryModule)
+            if (wire.GetComponent<Wire>().previousModule != null &&
+                wire.GetComponent<Wire>().previousModule.TryGetComponent(out Module module))
             {
-                result = wire.GetComponent<Wire>().previousModule;
+                if (module is not SecondaryModule)
+                {
+                    result = wire.GetComponent<Wire>().previousModule;
+                }
             }
         }
 
