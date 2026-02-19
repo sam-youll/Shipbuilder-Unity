@@ -1,37 +1,39 @@
 using System;
 using System.Collections.Generic;
+using SaintsField;
+using SaintsField.Playa;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+// #if UNITY_EDITOR
+// using UnityEditor;
+// #endif
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(Weapon))]
-public class WeaponEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        var weapon = (Weapon)target;
-        EditorGUILayout.BeginVertical();
-        GUILayout.Label("Note Info",  EditorStyles.boldLabel);
-        foreach (var kvp in weapon.noteInfo)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(kvp.Key, GUILayout.Width(60));
-            // GUILayout.FlexibleSpace();
-            GUILayout.Label(kvp.Value.ToString());
-            GUILayout.EndHorizontal();
-        }
-        EditorGUILayout.EndVertical();
-        DrawDefaultInspector();
-    }
-}
-#endif
+// #if UNITY_EDITOR
+// [CustomEditor(typeof(Weapon))]
+// public class WeaponEditor : Editor
+// {
+//     public override void OnInspectorGUI()
+//     {
+//         var weapon = (Weapon)target;
+//         EditorGUILayout.BeginVertical();
+//         GUILayout.Label("Note Info",  EditorStyles.boldLabel);
+//         foreach (var kvp in weapon.noteInfo)
+//         {
+//             GUILayout.BeginHorizontal();
+//             GUILayout.Label(kvp.Key, GUILayout.Width(60));
+//             // GUILayout.FlexibleSpace();
+//             GUILayout.Label(kvp.Value.ToString());
+//             GUILayout.EndHorizontal();
+//         }
+//         EditorGUILayout.EndVertical();
+//         DrawDefaultInspector();
+//     }
+// }
+// #endif
 
 public class Weapon : MonoBehaviour, ITooltipInfo
 {
@@ -54,9 +56,9 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     public GameObject parentWire;
     public SwitchComponent testFireSwitch;
 
-    public Dictionary<string, float> noteInfo = Common.NoteInfo;
-
-    public Dictionary<string, float> weaponStats = Common.CombatStats;
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> noteInfo = Common.NoteInfo;
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> weaponStats = Common.CombatStats;
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new();
     
     public int currentNoteMeter = 0;
     private int[] notes = new int[1];
@@ -183,7 +185,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
             if (hit <= 0)
             {
                 // Debug.Log("miss");
-                ShipManager.Instance.DamageEnemy(hit); // TODO: add overrides so I don't have to call useless stuff
+                ShipManager.Instance.DamageEnemy(hit); // TODO: add overloads so I don't have to call useless stuff
                 EventBus.Instance.enemyHit.Invoke(hit);
             }
             else

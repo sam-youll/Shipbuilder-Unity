@@ -62,6 +62,7 @@ public static class Common
         { "hullDamage", 0 },
         { "shieldDamage", 0 },
         { "bulletSpeed", 0 },
-        { "accuracy", 0 }
+        { "accuracy", 0 },
+        { "bulletType", 0 }
     };
 }

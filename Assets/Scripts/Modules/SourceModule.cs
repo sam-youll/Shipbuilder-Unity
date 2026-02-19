@@ -25,7 +25,7 @@ public class SourceModule : PrimaryModule
 
     public bool waveformKnobEnabled;
 
-    public float bonusDamage = 1;
+    public float damage = 1;
     
     protected override void Start()
     {
@@ -37,7 +37,7 @@ public class SourceModule : PrimaryModule
             GetComponentInChildren<Knob>().valueChanged.AddListener(UpdateWaveform);
         }
         CombatStats["bulletType"] = (float)bulletType;
-        CombatStats["damage"] = (float)bonusDamage;
+        CombatStats["damage"] = damage;
     }
 
     void UpdateWaveform(float value)

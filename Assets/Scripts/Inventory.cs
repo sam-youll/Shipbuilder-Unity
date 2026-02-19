@@ -32,7 +32,7 @@ public class Inventory : MonoBehaviour
     public float credits;
     public TextMeshPro creditsLabel;
 
-    public GameObject hotbar;
+    public GameObject inventoryOverlay;
     
     public List<GameObject> modulesInInventory;
     
@@ -47,22 +47,22 @@ public class Inventory : MonoBehaviour
 
     private void CreateHotbar()
     {
-        hotbar = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryBackground"), transform);
-        hotbar.transform.position = new Vector3(-9, 0, -2);
-        hotbar.SetActive(false);
+        inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryBackground"), transform);
+        inventoryOverlay.transform.position = new Vector3(-9, 0, -2);
+        inventoryOverlay.SetActive(false);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            hotbar.SetActive(!hotbar.activeSelf);
+            inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
 
             for (int i = 0; i < transform.childCount; i++)
             {
                 if (transform.GetChild(i).TryGetComponent(out Module module))
                 {
-                    transform.GetChild(i).gameObject.SetActive(hotbar.activeSelf);
+                    transform.GetChild(i).gameObject.SetActive(inventoryOverlay.activeSelf);
                 }
             }
             
