@@ -58,6 +58,7 @@ public class MapManager : MonoBehaviour
         Shop
     }
     
+    [Header("Nodes")]
     //current node's type
     public Node currentNodeType;
 
@@ -71,9 +72,10 @@ public class MapManager : MonoBehaviour
         public Node node;
         public Sector location;
         public int speed;
-        public Color color;
+        //public Color color;
         //list of the sectors in order 
         public List<Sector> path;
+        public Sprite sprite;
 
         public bool visited;
     }
@@ -94,7 +96,8 @@ public class MapManager : MonoBehaviour
     
     //current path 
     public List<Sector> currentPath = new List<Sector>();
-    
+
+    public Sprite[] planetSprites;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -114,10 +117,10 @@ public class MapManager : MonoBehaviour
         planets[2].speed = 3;
         planets[3].speed = 4;
         
-        planets[0].color = new Color(0.627451f, 0.1254902f, 0.9411765f, 1f);
-        planets[1].color = Color.green;
-        planets[2].color = Color.red;
-        planets[3].color = Color.blue;
+        //planets[0].color = new Color(0.627451f, 0.1254902f, 0.9411765f, 1f);
+        //planets[1].color = Color.green;
+        //planets[2].color = Color.red;
+        //planets[3].color = Color.blue;
         
         planets[0].path = new List<Sector>();
         planets[1].path = new List<Sector>();
@@ -128,6 +131,11 @@ public class MapManager : MonoBehaviour
         planets[1].visited = false;
         planets[2].visited = false;
         planets[3].visited = false;
+        
+        planets[0].sprite = planetSprites[0];
+        planets[1].sprite = planetSprites[1];
+        planets[2].sprite = planetSprites[2];
+        planets[3].sprite = planetSprites[3];
         
         EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
     }
@@ -232,7 +240,9 @@ public class MapManager : MonoBehaviour
                             //set its node
                             sectorPlanet.GetComponent<Planet>().thisPlanet = planets[i].node;
                             //and its color 
-                            sectorPlanet.GetComponent<Planet>().color = planets[i].color;
+                            //sectorPlanet.GetComponent<Planet>().color = planets[i].color;
+                            //and its sprite
+                            sectorPlanet.GetComponent<Planet>().sr.sprite = planets[i].sprite;
                             //and its status
                             sectorPlanet.GetComponent<Planet>().UpdateVisitedStatus(planets[i].visited);
                             Debug.Log("Planet node updated. " + planets[i].node + " visited status: " + planets[i].visited + " and has set the node to: " + sectorPlanet.GetComponent<Planet>().visited);
@@ -252,7 +262,9 @@ public class MapManager : MonoBehaviour
                     //set its node
                     planet.GetComponent<Planet>().thisPlanet = planets[i].node;
                     //and its color 
-                    planet.GetComponent<Planet>().UpdateColor(planets[i].color);
+                    //planet.GetComponent<Planet>().UpdateColor(planets[i].color);
+                    //and its sprite
+                    planet.GetComponent<Planet>().UpdateSprite(planets[i].sprite);
                     //make it unavailable
                     planet.GetComponent<Planet>().MakeUnavailable();
                     

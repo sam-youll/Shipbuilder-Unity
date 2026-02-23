@@ -54,6 +54,9 @@ MonoBehaviour:
   sr: {fileID: 1056090727305374097}
   highlightColor: {r: 1, g: 1, b: 1, a: 0.57254905}
   inactiveColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 0.4745098}
+  combatMultiplier: 0
+  storyMultiplier: 0
+  shopMultiplier: 0
 --- !u!212 &1056090727305374097
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -175,15 +178,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 17.28
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 17.28
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 17.28
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 826152447147182829, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
       propertyPath: m_LocalPosition.x

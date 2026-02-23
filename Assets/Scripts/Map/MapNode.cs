@@ -19,14 +19,14 @@ public class MapNode : MonoBehaviour
     [Header("Type")]
     //this node's type
     public Node node;
-    
-    [Header("Color")]
+
+    [Header("Sprites")]
     //colors by node type
     private Dictionary<Node, Color> colors = new Dictionary<Node, Color>()
     {
-        { Node.Combat , Color.yellow},
-        { Node.Story, Color.cyan},
-        { Node.Shop, Color.magenta},
+        { Node.Combat, Color.yellow },
+        { Node.Story, Color.cyan },
+        { Node.Shop, Color.magenta },
     };
     
     
@@ -34,7 +34,18 @@ public class MapNode : MonoBehaviour
     public SpriteRenderer sr;
     
     //this node's color
+    //TODO: get rid of this 
     public Color color;
+    
+    //sprites available
+    public Sprite[] nodeSprites;
+
+    private Dictionary<Node, int> spriteInts = new Dictionary<Node, int>()
+    {
+        {Node.Combat, 0},
+        {Node.Story, 1},
+        {Node.Shop, 2},
+    };
 
     [Header("Navigation")]
 
@@ -55,11 +66,14 @@ public class MapNode : MonoBehaviour
     public float storyBaseProbability = 30;
     public float shopBaseProbability = 10;
     
+    [Header("Paths")]
+    public LineRenderer path;
+    
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //TODO: create function to determine node type at scene start based on sector and probability
         
         SetNodeType();
         
@@ -68,6 +82,8 @@ public class MapNode : MonoBehaviour
         //setting node color based on node type
         color = sr.color;
         color = colors[node];
+
+        sr.sprite = nodeSprites[spriteInts[node]];
         //darkening nodes if they're not available on scene load
         if (!initial || visited)
         {
@@ -79,6 +95,19 @@ public class MapNode : MonoBehaviour
         }
         
         sr.color = color;
+        
+        path.SetPosition(0, transform.position);
+        foreach (MapNode nextNode in nextNodes)
+        {
+            if (nextNode.GetComponent<Planet>() == null)
+            {
+                path.SetPosition(1, nextNode.transform.position);
+            }
+            else
+            {
+                path.SetPosition(1, transform.position);
+            }
+        }
     }
 
     // Update is called once per frame

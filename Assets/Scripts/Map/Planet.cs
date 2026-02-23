@@ -12,7 +12,6 @@ public class Planet : MapNode
     //this planet's gameobject
     public GameObject planetObject;
     
-    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,6 +46,12 @@ public class Planet : MapNode
         //Debug.Log("new color: " + newColor);
         color = newColor;
         sr.color = color;
+    }
+
+    public void UpdateSprite(Sprite newSprite)
+    {
+        sr.sprite = newSprite;
+        Debug.Log("sprite updated");
     }
 
     /// <summary>

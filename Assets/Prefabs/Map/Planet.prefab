@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.52, y: 3.63, z: -3.31}
-  m_LocalScale: {x: 13.23, y: 13.23, z: 13.23}
+  m_LocalScale: {x: 1.9999999, y: 1.9999999, z: 1.9999999}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -79,12 +79,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 1, b: 0, a: 0.2}
+  m_Sprite: {fileID: -5092523712460967588, guid: 26d2146c89e16024b876b24f4c595e71, type: 3}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.2}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 1.52, y: 1.52}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -104,7 +104,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node: 0
   sr: {fileID: 3353704704025969818}
-  color: {r: 0, g: 1, b: 0, a: 0.2}
+  color: {r: 1, g: 0, b: 0, a: 0.2}
+  nodeSprites: []
   initial: 0
   nextNodes: []
   isAvailable: 0
@@ -113,7 +114,8 @@ MonoBehaviour:
   combatBaseProbability: 0
   storyBaseProbability: 0
   shopBaseProbability: 0
-  thisPlanet: 2
+  path: {fileID: 0}
+  thisPlanet: 3
   planetHere: 0
   planetObject: {fileID: 1701225667645622866}
 --- !u!65 &-336254629552898129
