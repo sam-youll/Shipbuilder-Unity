@@ -70,6 +70,10 @@ public class EventBus : MonoBehaviour
     public UnityEvent enemyHullDamaged;
     public UnityEvent playerHullDamaged;
     
+    // player value changes
+    public UnityEvent playerHullValueChanged;
+    public UnityEvent playerScrapValueChanged;
+    
     public UnityEvent<Weapon> weaponFired;
     public UnityEvent<float> playerHit; // technically this and the event below also get called on a miss, damage is just set to -1
     public UnityEvent<float> enemyHit;

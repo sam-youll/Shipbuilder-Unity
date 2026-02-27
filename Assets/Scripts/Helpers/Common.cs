@@ -56,13 +56,13 @@ public static class Common
 
     public static readonly Dictionary<string, float> CombatStats = new()
     {
-        { "warmupRate", 0 },
-        { "fireRate", 0 },
-        { "damage", 0 },
-        { "hullDamage", 0 },
-        { "shieldDamage", 0 },
-        { "bulletSpeed", 0 },
-        { "accuracy", 0 },
+        { "warmupRate", 1 },
+        { "fireRate", 1 },
+        { "damage", 1 },
+        { "hullDamage", 1 },
+        { "shieldDamage", 1 },
+        { "bulletSpeed", 1 },
+        { "accuracy", .75f },
         { "bulletType", 0 }
     };
 }

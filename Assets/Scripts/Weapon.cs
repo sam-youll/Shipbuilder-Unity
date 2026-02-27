@@ -112,7 +112,14 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         {
             if (warmup < 1)
             {
-                warmup += weaponStats["warmupRate"] * .1f * Time.deltaTime;
+                if (enemyWeapon)
+                {
+                    warmup += .2f * Time.deltaTime;
+                }
+                else
+                {
+                    warmup += weaponStats["warmupRate"] * .1f * Time.deltaTime;
+                }
             }
             else if (warmup > 1)
             {
@@ -146,28 +153,33 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         // }
     }
 
-    public void Fire()
+    private Dictionary<string, float> FiringStats()
     {
-        SetPatch();
+        var dict = weaponStats;
         
         foreach (var mod in myPatch)
         {
-            // TODO: add logic for calculating a final value based on multiple input values,
-            // not just the most recent value.
             
+            // TODO: vvv MOVE THIS SOMEWHERE ELSE vvv
             foreach (var param in mod.MusicParams)
             {
                 noteInfo[param.Key] = param.Value;
             }
+            // TODO: ^^^ MOVE THIS SOMEWHERE ELSE ^^^
 
             foreach (var stat in mod.CombatStats)
             {
-                weaponStats[stat.Key] += stat.Value;
+                dict[stat.Key] += stat.Value;
             }
             
         }
-        
-        if (charge < 1 || !firing || !CompletePatch())
+
+        return dict;
+    }
+
+    public void Fire()
+    {
+        if (charge < 1 || !firing || !enemyWeapon && !CompletePatch())
         {
             return;
         }
@@ -175,24 +187,45 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         charge = 0;
         
         DisplayManager.Instance.Log("Fired " + name);
-        // Debug.Log(name + " fired");
+        
         EventBus.Instance.weaponFired.Invoke(this);
         
         // calculate hit/miss + damage
         if (CombatManager.Instance.state == CombatManager.State.inCombat)
         {
-            var hit = weaponStats["accuracy"] * (1 - ShipManager.Instance.EnemyEvasion());
-            if (hit <= 0)
+            if (enemyWeapon)
             {
-                // Debug.Log("miss");
-                ShipManager.Instance.DamageEnemy(hit); // TODO: add overloads so I don't have to call useless stuff
-                EventBus.Instance.enemyHit.Invoke(hit);
+                var hit = FiringStats()["accuracy"] * (1 - ShipManager.Instance.PlayerEvasion());
+                if (hit <= 0)
+                {
+                    // Debug.Log("miss");
+                    ShipManager.Instance.DamagePlayer(hit); // TODO: add overloads so I don't have to call useless stuff
+                    EventBus.Instance.playerHit.Invoke(hit);
+                }
+                else
+                {
+                    // Debug.Log("hit");
+                    ShipManager.Instance.DamagePlayer(
+                        weaponStats["damage"]); // TODO: make it so that multiple effects can be sent
+                    EventBus.Instance.playerHit.Invoke(weaponStats["damage"]);
+                }
             }
             else
             {
-                // Debug.Log("hit");
-                ShipManager.Instance.DamageEnemy(weaponStats["damage"]); // TODO: make it so that multiple effects can be sent
-                EventBus.Instance.enemyHit.Invoke(weaponStats["damage"]);
+                var hit = FiringStats()["accuracy"] * (1 - ShipManager.Instance.EnemyEvasion());
+                if (hit <= 0)
+                {
+                    // Debug.Log("miss");
+                    ShipManager.Instance.DamageEnemy(hit); // TODO: add overloads so I don't have to call useless stuff
+                    EventBus.Instance.enemyHit.Invoke(hit);
+                }
+                else
+                {
+                    // Debug.Log("hit");
+                    ShipManager.Instance.DamageEnemy(
+                        weaponStats["damage"]); // TODO: make it so that multiple effects can be sent
+                    EventBus.Instance.enemyHit.Invoke(weaponStats["damage"]);
+                }
             }
         }
         

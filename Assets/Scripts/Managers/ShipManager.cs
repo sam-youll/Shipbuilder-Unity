@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -181,8 +182,8 @@ public class ShipManager : MonoBehaviour
         enemy = new Ship
         {
             name = "Enemy ship",
-            hull = 50,
-            shield = 10,
+            hull = 50 * CombatManager.Instance.fightLevel,
+            shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
         for (var i = 0; i < 3; i++)
@@ -191,6 +192,8 @@ public class ShipManager : MonoBehaviour
             newWeapon.transform.SetParent(transform);
             var weapon = newWeapon.AddComponent<Weapon>();
             weapon.enemyWeapon = true;
+            weapon.weaponStats = Common.CombatStats;
+            weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             enemy.weapons.Add(weapon);
         }
     }
@@ -233,6 +236,15 @@ public class ShipManager : MonoBehaviour
     public void DamagePlayer(float damage, Common.Effect effect, float effectStrength)
     {
         Damage(ref player, damage, effect, effectStrength);
+
+        EventBus.Instance.playerHullValueChanged.Invoke();
+    }
+
+    public void DamagePlayer(float damage)
+    {
+        Damage(ref player, damage, Common.Effect.None, 0);
+        
+        EventBus.Instance.playerHullValueChanged.Invoke();
     }
 
     /// <summary>
