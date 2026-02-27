@@ -115,8 +115,8 @@ public class Wire : MonoBehaviour
                 lineRenderer.GetPositions(positions);
                 for (var i = 0; i < positions.Length; i++)
                 {
-                    if ((positions[i] - Global.Instance.mousePos).magnitude <
-                        (positions[grabbedIndex] - Global.Instance.mousePos).magnitude)
+                    if (((Vector2)positions[i] - (Vector2)Global.Instance.mousePos).magnitude <
+                        ((Vector2)positions[grabbedIndex] - (Vector2)Global.Instance.mousePos).magnitude)
                     {
                         grabbedIndex = i;
                     }
