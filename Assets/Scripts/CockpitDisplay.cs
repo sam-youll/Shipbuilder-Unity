@@ -52,7 +52,7 @@ public class CockpitDisplay : MonoBehaviour
             playerWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.PlayerWeapons()[i].charge;
         }
 
-        for (var i = 0; i < enemyWeapons.Count; i++)
+        for (var i = 0; i < ShipManager.Instance.EnemyWeapons().Length; i++)
         {
             enemyWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.EnemyWeapons()[i].charge;
         }

@@ -159,19 +159,25 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         foreach (var mod in myPatch)
         {
-            
-            // TODO: vvv MOVE THIS SOMEWHERE ELSE vvv
-            foreach (var param in mod.MusicParams)
-            {
-                noteInfo[param.Key] = param.Value;
-            }
-            // TODO: ^^^ MOVE THIS SOMEWHERE ELSE ^^^
-
             foreach (var stat in mod.CombatStats)
             {
                 dict[stat.Key] += stat.Value;
             }
-            
+        }
+
+        return dict;
+    }
+
+    private Dictionary<string, float> NoteInfo()
+    {
+        var dict = noteInfo;
+        
+        foreach (var mod in myPatch)
+        {
+            foreach (var param in mod.MusicParams)
+            {
+                noteInfo[param.Key] = param.Value;
+            }
         }
 
         return dict;
@@ -187,8 +193,6 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         charge = 0;
         
         DisplayManager.Instance.Log("Fired " + name);
-        
-        EventBus.Instance.weaponFired.Invoke(this);
         
         // calculate hit/miss + damage
         if (CombatManager.Instance.state == CombatManager.State.inCombat)
@@ -228,6 +232,11 @@ public class Weapon : MonoBehaviour, ITooltipInfo
                 }
             }
         }
+        
+        noteInfo = NoteInfo();
+        
+        EventBus.Instance.weaponFired.Invoke(this);
+        
         
         // if hit, fire at enemy ship
         // if miss, fire above/below

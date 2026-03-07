@@ -233,6 +233,30 @@ MonoBehaviour:
   playerHullDamaged:
     m_PersistentCalls:
       m_Calls: []
+  rackEditXUp:
+    m_PersistentCalls:
+      m_Calls: []
+  rackEditXDown:
+    m_PersistentCalls:
+      m_Calls: []
+  rackEditYUp:
+    m_PersistentCalls:
+      m_Calls: []
+  rackEditYDown:
+    m_PersistentCalls:
+      m_Calls: []
+  weaponAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  weaponDeleted:
+    m_PersistentCalls:
+      m_Calls: []
+  playerHullValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  playerScrapValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
   weaponFired:
     m_PersistentCalls:
       m_Calls: []
@@ -767,7 +791,7 @@ GameObject:
   - component: {fileID: 295943754136448914}
   m_Layer: 0
   m_Name: Inventory Manager
-  m_TagString: Untagged
+  m_TagString: Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -805,8 +829,14 @@ MonoBehaviour:
   downPos: {x: 0, y: 0}
   isPulledDown: 0
   sr: {fileID: 0}
-  modulePrefabs: []
-  credits: 0
+  scrap: 0
   creditsLabel: {fileID: 0}
   inventoryOverlay: {fileID: 0}
-  modulesInInventory: []
+  creativeMode: 0
+  moduleContainer: {fileID: 0}
+  triggerModulesLabel: {fileID: 0}
+  primaryModulesLabel: {fileID: 0}
+  secondaryModulesLabel: {fileID: 0}
+  triggerModules: []
+  primaryModules: []
+  secondaryModules: []

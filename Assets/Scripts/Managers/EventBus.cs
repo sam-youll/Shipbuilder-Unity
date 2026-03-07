@@ -53,6 +53,7 @@ public class EventBus : MonoBehaviour
     // this dictionary is automatically updated via OnValidate()
     public Dictionary<string, UnityEvent> eventsNoArgs;
     public Dictionary<string, UnityEvent<string>> eventsStringArg;
+    public Dictionary<string, UnityEvent<GameObject>> eventsGameObjectArg;
     
     // the following fields are the actual events themselves
     public UnityEvent combatStarted;
@@ -69,6 +70,14 @@ public class EventBus : MonoBehaviour
     public UnityEvent playerEffectApplied; //      ""       to player
     public UnityEvent enemyHullDamaged;
     public UnityEvent playerHullDamaged;
+    
+    // rack layout editing
+    public UnityEvent<GameObject> rackEditXUp;
+    public UnityEvent<GameObject> rackEditXDown;
+    public UnityEvent<GameObject> rackEditYUp;
+    public UnityEvent<GameObject> rackEditYDown;
+    public UnityEvent weaponAdded;
+    public UnityEvent<GameObject> weaponDeleted;
     
     // player value changes
     public UnityEvent playerHullValueChanged;
@@ -95,6 +104,7 @@ public class EventBus : MonoBehaviour
         // Debug.Log(fields.Length);
         eventsNoArgs = new();
         eventsStringArg = new();
+        eventsGameObjectArg = new();
         foreach (var field in fields)
         {
             // Debug.Log(field.FieldType.Name + " " + field.Name);
@@ -105,6 +115,10 @@ public class EventBus : MonoBehaviour
             else if (field.FieldType == typeof(UnityEvent<string>))
             {
                 eventsStringArg.Add(field.Name, (UnityEvent<string>)field.GetValue(this));
+            }
+            else if (field.FieldType == typeof(UnityEvent<GameObject>))
+            {
+                eventsGameObjectArg.Add(field.Name, (UnityEvent<GameObject>)field.GetValue(this));
             }
         }
     }

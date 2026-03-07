@@ -75,7 +75,10 @@ public class Knob : MonoBehaviour, ITooltipInfo
 
         var isItMe = Global.Instance.RaycastResultsContains(gameObject);
 
-        sr.color = isItMe || grabbed ? new Color(.7f,.7f,.7f) : Color.white;
+        if (sr != null)
+        {
+            sr.color = isItMe || grabbed ? new Color(.7f, .7f, .7f) : Color.white;
+        }
         
         if (drawLRNotches)
         {

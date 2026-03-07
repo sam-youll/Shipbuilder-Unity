@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,28 +28,81 @@ public class Inventory : MonoBehaviour
     public bool isPulledDown = false;
     public SpriteRenderer sr;
 
-    public List<GameObject> modulePrefabs;
-
-    public float credits;
+    public float scrap;
     public TextMeshPro creditsLabel;
 
     public GameObject inventoryOverlay;
-    
-    public List<GameObject> modulesInInventory;
+
+    public bool creativeMode;
+
+    public GameObject moduleContainer;
+
+    public GameObject triggerModulesLabel;
+    public GameObject primaryModulesLabel;
+    public GameObject secondaryModulesLabel;
+    public List<GameObject> triggerModules = new();
+    public List<GameObject> primaryModules = new();
+    public List<GameObject> secondaryModules = new();
     
     void Start()
     {
-        // sr = GetComponent<SpriteRenderer>();
-        // sr.color = defaultColor;
-
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        
         
         CreateHotbar();
+        
+        if (creativeMode)
+        {
+            LoadCreativeModeModules();
+        }
+
+    }
+
+    private void LoadCreativeModeModules()
+    {
+        triggerModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Trigger Modules").ToList();
+        for (var i = 0; i < triggerModules.Count; i++)
+        {
+            triggerModules[i] = Instantiate(triggerModules[i]);
+            triggerModules[i].SetActive(gameObject.activeSelf);
+            triggerModules[i].transform.SetParent(triggerModulesLabel.transform);
+        }
+        primaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Primary Modules").ToList();
+        for (var i = 0; i < primaryModules.Count; i++)
+        {
+            primaryModules[i] = Instantiate(primaryModules[i]);
+            primaryModules[i].SetActive(gameObject.activeSelf);
+            primaryModules[i].transform.SetParent(primaryModulesLabel.transform);
+        }
+        secondaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Secondary Modules").ToList();
+        for (var i = 0; i < secondaryModules.Count; i++)
+        {
+            secondaryModules[i] = Instantiate(secondaryModules[i]);
+            secondaryModules[i].SetActive(gameObject.activeSelf);
+            secondaryModules[i].transform.SetParent(secondaryModulesLabel.transform);
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Creative Mode")
+        {
+            creativeMode = true;
+        }
+        else
+        {
+            creativeMode = false;
+        }
     }
 
     private void CreateHotbar()
     {
-        inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryBackground"), transform);
-        inventoryOverlay.transform.position = new Vector3(-9, 0, -2);
+        inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryOverlay"), transform);
+        inventoryOverlay.transform.position = new Vector3(-9, 0, -2.5f);
+        triggerModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Trigger Modules").gameObject;
+        primaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Primary Modules").gameObject;
+        secondaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Secondary Modules").gameObject;
         inventoryOverlay.SetActive(false);
     }
 
@@ -68,69 +122,6 @@ public class Inventory : MonoBehaviour
             
             ArrangeModules();
         }
-        
-        // if (creditsLabel != null)
-        // {
-        //     creditsLabel.text = "Credits: " + credits;
-        // }
-        // if (Input.GetMouseButtonDown(0) && sr.color == defaultColor) // if click when not over collider
-        // {
-        //     // close tray
-        //     isPulledDown = false;
-        // }
-        //
-        // Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, LayerMask.GetMask("Inventory"));
-        // if (hit)
-        // {
-        //     sr.color = highlightColor;
-        //     if (Input.GetMouseButtonDown(0))
-        //     {
-        //         isPulledDown = true;
-        //     }
-        // }
-        // else
-        // {
-        //     sr.color = defaultColor;
-        // }
-    }
-
-    private void FixedUpdate()
-    {
-        // if (isPulledDown)
-        // {
-        //     if (transform.position.y > downPos.y)
-        //     {
-        //         var pos = transform.position;
-        //         pos = Vector3.Lerp(pos, downPos, .2f);
-        //         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Spring Showcase Tutorial"))
-        //         {
-        //             pos.z = -5;
-        //         } else
-        //         {
-        //             pos.z = -2;
-        //         }
-        //         transform.position = pos;
-        //     }
-        // }
-        // else
-        // {
-        //     if (transform.position.y < upPos.y)
-        //     {
-        //         var pos = transform.position;
-        //         pos = Vector3.Lerp(pos, upPos, .2f);
-        //         pos.z = -2;
-        //         transform.position = pos;
-        //     }
-        // }
-    }
-
-    public void AddNewRandomModule()
-    {
-        var pos = new Vector3(-6.5f, -1f, -3f);
-        var roll = UnityEngine.Random.Range(0, modulePrefabs.Count);
-        var module = Instantiate(modulePrefabs[roll], transform);
-        module.transform.localPosition = pos;
     }
 
     public void AddModule(GameObject module)
@@ -165,60 +156,199 @@ public class Inventory : MonoBehaviour
 
     public void ArrangeModules()
     {
+        var triggerPos = triggerModulesLabel.transform.position;
+        triggerPos.x -= triggerModulesLabel.GetComponent<RectTransform>().rect.width;
+        ArrangeModulesOfType(triggerModules, triggerPos);
+        if (triggerModules.Count > 0)
+        {
+            primaryModulesLabel.transform.position = new Vector3(-9,
+                triggerModules[^1].transform.position.y - 1 -
+                triggerModules[^1].GetComponent<Module>().dimensions.y * .5f, -3);
+        }
+        var primaryPos = primaryModulesLabel.transform.position;
+        primaryPos.x -= primaryModulesLabel.GetComponent<RectTransform>().rect.width;
+        ArrangeModulesOfType(primaryModules, primaryPos);
+        if (primaryModules.Count > 0)
+        {
+            secondaryModulesLabel.transform.position = new Vector3(-9,
+                primaryModules[^1].transform.position.y - 1 -
+                primaryModules[^1].GetComponent<Module>().dimensions.y * .5f, -3);
+        }
+        var secondaryPos = secondaryModulesLabel.transform.position;
+        secondaryPos.x -= secondaryModulesLabel.GetComponent<RectTransform>().rect.width;
+        ArrangeModulesOfType(secondaryModules, secondaryPos);
+    }
+
+    public void ArrangeModulesOfType(List<GameObject> modulesInInventory, Vector3 headerPos)
+    {
+        // don't bother if inventory is empty
         if (modulesInInventory.Count == 0) return;
         
-        Physics2D.SyncTransforms();
-        var width = 9;
-        var colls = new List<Collider2D>();
-        modulesInInventory[0].transform.position = new Vector3(-14f, 4, -3);
-        colls.Add(modulesInInventory[0].GetComponent<CompositeCollider2D>());
-        if (modulesInInventory.Count > 1)
+        // deactivate modules, so we can activate them one at a time and avoid overlaps
+        foreach (var module in modulesInInventory)
         {
-            for (var i = 1; i < modulesInInventory.Count; i++)
+            module.SetActive(false);
+        }
+        
+        // force update of all colliders
+        Physics2D.SyncTransforms();
+        
+        // width of allowed space in inventory before moving down a row
+        var width = 10;
+
+        for (var i = 0; i < modulesInInventory.Count; i++)
+        {
+            // initial setup & placement of module
+            var module = modulesInInventory[i];
+            module.SetActive(true);
+            var startPos = new Vector3(-5, -1 - module.GetComponent<Module>().dimensions.y + 1, -.5f);
+            module.transform.localPosition = startPos;
+            
+            Debug.Log($"===== CHECKING {module.name} ======");
+            
+            // loop through items that have already been placed
+            for (var j = 0; j < i; j++)
             {
                 Physics2D.SyncTransforms();
-                var module = modulesInInventory[i];
-                module.transform.position = new Vector3(-14.5f, 4, -3);
-                var loopCount = 0;
-                while (!colls.TrueForAll(coll => !coll.bounds.Intersects(module.GetComponent<CompositeCollider2D>().bounds)))
-                {
-                    Physics2D.SyncTransforms();
-                    loopCount++;
-                    if (loopCount > 999)
-                    {
-                        Debug.Log("too many loop");
-                        break;
-                    }
-                    
-                    var newPos = module.transform.position;
-                    newPos.x += .5f;
-                    if (newPos.x > width-14.5f)
-                    {
-                        newPos.x = -14.5f;
-                        newPos.y -= .5f;
-                    }
-                    module.transform.position = newPos;
-                }
                 
-                Physics2D.SyncTransforms();
-                colls.Add(module.GetComponent<CompositeCollider2D>());
+                // do the modules overlap?
+                var otherModule = modulesInInventory[j];
+                var myBounds = module.GetComponent<CompositeCollider2D>().bounds;
+                var otherBounds = otherModule.GetComponent<CompositeCollider2D>().bounds;
+                otherBounds.size += Vector3.one * .5f;
+                var loops = 0;
+                while (myBounds.Intersects(otherBounds))
+                {
+                    Debug.Log($"{module.name} is overlapping {otherModule.name}");
+                    var newPos = module.transform.localPosition;
+                    newPos.x += 1f;
+                    if (newPos.x > width * .5f - myBounds.size.x + 1)
+                    {
+                        newPos.x = -width * .5f;
+                        newPos.y -= 1;
+                    }
+                    module.transform.localPosition = newPos;
+                    Physics2D.SyncTransforms();
+                    myBounds = module.GetComponent<CompositeCollider2D>().bounds;
+                    
+                    // this might be really stupid, it might be really smart
+                    j = -1;
+
+                    loops++;
+                    if (loops > 100) break;
+                }
             }
         }
+        // set first module to starting position
+        // modulesInInventory[0].transform.localPosition = new Vector3(-5, -1 - modulesInInventory[0].GetComponent<Module>().dimensions.y + 1, -.5f);
+        //
+        // if (modulesInInventory.Count > 1)
+        // {
+        //     for (var i = 1; i < modulesInInventory.Count; i++)
+        //     {
+        //         Physics2D.SyncTransforms();
+        //         var module = modulesInInventory[i];
+        //         Debug.Log($"Placing {module.name}.");
+        //         module.transform.localPosition = new Vector3(-5, -1 - module.GetComponent<Module>().dimensions.y + 1, -.5f);
+        //         var loopCount = 0;
+        //         while (!colls.TrueForAll(coll => !coll.bounds.Intersects(module.GetComponent<CompositeCollider2D>().bounds)))
+        //         {
+        //             
+        //             Physics2D.SyncTransforms();
+        //             loopCount++;
+        //             if (loopCount > 999)
+        //             {
+        //                 Debug.Log("too many loop");
+        //                 break;
+        //             }
+        //             
+        //             var newPos = module.transform.position;
+        //             newPos.x += .5f;
+        //             if (newPos.x > width - 5)
+        //             {
+        //                 newPos.x = startPos.x;
+        //                 newPos.y -= .5f;
+        //             }
+        //             module.transform.localPosition = newPos;
+        //         }
+        //
+        //         for (var j = 0; j < i; j++)
+        //         {
+        //             
+        //         }
+        //         
+        //         Physics2D.SyncTransforms();
+        //         colls.Add(module.GetComponent<CompositeCollider2D>());
+        //     }
+        // }
     }
     
-    //
-    // private void OnMouseEnter()
-    // {
-    //     sr.color = highlightColor;
-    // }
-    //
-    // private void OnMouseExit()
-    // {
-    //     sr.color = defaultColor;
-    // }
-    //
-    // private void OnMouseDown()
-    // {
-    //     isPulledDown = true;
-    // }
+    public void SendToInventory(GameObject moduleObj)
+    {
+        var module = moduleObj.GetComponent<Module>();
+        var moduleMov = moduleObj.GetComponent<RackMovement>();
+        
+        if (moduleMov.isInInventory) return;
+
+        if (module is TriggerModule)
+        {
+            triggerModules.Add(moduleObj);
+            moduleObj.transform.SetParent(triggerModulesLabel.transform);
+        }
+        else if (module is PrimaryModule)
+        {
+            primaryModules.Add(moduleObj);
+            moduleObj.transform.SetParent(primaryModulesLabel.transform);
+        }
+        else if (module is SecondaryModule)
+        {
+            secondaryModules.Add(moduleObj);
+            moduleObj.transform.SetParent(secondaryModulesLabel.transform);
+        }
+        
+        transform.localPosition = Vector3.zero;
+        moduleMov.isInInventory = true;
+        moduleMov.inventoryEnter.Invoke();
+        moduleMov.lastParent = transform.parent;
+        ArrangeModules();
+    }
+
+    public void RemoveModule(GameObject module)
+    {
+        if (creativeMode)
+        {
+            var replacement = Instantiate(module, module.transform.parent);
+            if (module.GetComponent<Module>() is TriggerModule)
+            {
+                triggerModules[triggerModules.FindIndex(x => x == module)] = replacement;
+            }
+            else if (module.GetComponent<Module>() is PrimaryModule)
+            {
+                primaryModules[primaryModules.FindIndex(x => x == module)] = replacement;
+            }
+            else if (module.GetComponent<Module>() is SecondaryModule)
+            {
+                secondaryModules[secondaryModules.FindIndex(x => x == module)] = replacement;
+            }
+        }
+        else
+        {
+            if (module.GetComponent<Module>() is TriggerModule)
+            {
+                triggerModules.Remove(module);
+            }
+            else if (module.GetComponent<Module>() is PrimaryModule)
+            {
+                primaryModules.Remove(module);
+            }
+            else if (module.GetComponent<Module>() is SecondaryModule)
+            {
+                secondaryModules.Remove(module);
+            }
+        }
+        
+        ArrangeModules();
+        
+        inventoryOverlay.SetActive(false);
+    }
 }

@@ -216,6 +216,12 @@ public class CombatManager : MonoBehaviour
     private void OnEnemyDefeated()
     {
         state = State.outOfCombat;
+
+        DisplayManager.Instance.Log("Enemy defeated!");
+        var scrapWon = Random.Range(5, 10);
+        Inventory.Instance.scrap += scrapWon;
+        EventBus.Instance.playerScrapValueChanged.Invoke();
+        DisplayManager.Instance.Log($"Found {scrapWon} scrap.");
     }
 
     // public IEnumerator Pulsar()

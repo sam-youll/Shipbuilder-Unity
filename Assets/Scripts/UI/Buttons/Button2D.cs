@@ -38,12 +38,24 @@ public class Button2DEditor : Editor
                 var text = eventBus.eventsStringArg.ElementAt(i).Key;
                 menu.AddItem(new GUIContent(text), false, ConnectEvent, text);
             }
+
+            for (int i = 0; i < eventBus.eventsGameObjectArg.Count; i++)
+            {
+                var text = eventBus.eventsGameObjectArg.ElementAt(i).Key;
+                menu.AddItem(new GUIContent(text), false, ConnectEvent, text);
+            }
             
             menu.ShowAsContext();
         }
         if (eventBus.eventsStringArg.ContainsKey(button.eventString))
         {
             button.eventStringArg = EditorGUILayout.TextField("String argument: ", button.eventStringArg);
+        }
+
+        if (eventBus.eventsGameObjectArg.ContainsKey(button.eventString))
+        {
+            button.eventStringArg = null;
+            // button.eventGameObjectArg = EditorGUILayout.ObjectField("GameObject argument: ", button.eventGameObjectArg, typeof (GameObject), true) as GameObject;
         }
         
         EditorGUILayout.EndVertical();
@@ -76,6 +88,7 @@ public class Button2D : MonoBehaviour
 
     [HideInInspector] public string eventString = "Select event";
     [HideInInspector] public string eventStringArg;
+    public GameObject eventGameObjectArg;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -114,6 +127,10 @@ public class Button2D : MonoBehaviour
         if (!string.IsNullOrEmpty(eventStringArg))
         {
             EventBus.Instance.eventsStringArg[eventString].Invoke(eventStringArg);
+        }
+        else if (eventGameObjectArg != null)
+        {
+            EventBus.Instance.eventsGameObjectArg[eventString].Invoke(eventGameObjectArg);
         }
         else
         {

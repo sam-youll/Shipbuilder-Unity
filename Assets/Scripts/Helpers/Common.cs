@@ -58,7 +58,7 @@ public static class Common
     {
         { "warmupRate", 1 },
         { "fireRate", 1 },
-        { "damage", 1 },
+        { "damage", .1f },
         { "hullDamage", 1 },
         { "shieldDamage", 1 },
         { "bulletSpeed", 1 },

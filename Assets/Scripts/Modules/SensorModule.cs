@@ -71,7 +71,7 @@ using UnityEngine;
 // }
 // #endif
 
-public class SensorModule : Module, ITooltipInfo
+public class SensorModule : TriggerModule, ITooltipInfo
 {
     public List<string> availableEventTriggers = new();
     public string currentEventTrigger;

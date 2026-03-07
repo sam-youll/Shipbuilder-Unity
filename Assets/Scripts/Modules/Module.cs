@@ -651,6 +651,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
             GetComponent<RackMovement>().jackClick.AddListener(OnJackClick);
             GetComponent<RackMovement>().inventoryEnter.AddListener(OnInventoryEnter);
             GetComponent<RackMovement>().inventoryExit.AddListener(OnInventoryExit);
+            GetComponent<RackMovement>().destroyed.AddListener(OnDestroyed);
         }
     }
     
@@ -714,6 +715,19 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     private void OnBodyClick()
     {
         
+    }
+
+    private void OnDestroyed()
+    {
+        foreach (var wire in parentWires)
+        {
+            wire.GetComponent<Wire>().DeleteSelf();
+        }
+
+        foreach (var wire in childWires)
+        {
+            wire.GetComponent<Wire>().DeleteSelf();
+        }
     }
 
     protected virtual void OnJackClick(GameObject jack)

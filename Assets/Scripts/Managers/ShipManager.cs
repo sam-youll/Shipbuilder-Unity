@@ -186,7 +186,7 @@ public class ShipManager : MonoBehaviour
             shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < 1; i++)
         {
             var newWeapon = new GameObject();
             newWeapon.transform.SetParent(transform);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ClockModule : Module
+public class ClockModule : TriggerModule
 {
     [SerializeField]
     int frequency = 2;

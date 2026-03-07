@@ -4,13 +4,19 @@ using FMOD.Studio;
 using TMPro;
 using UnityEngine;
 
-public class Reactor : MonoBehaviour
+public class Reactor : MonoBehaviour, ITooltipInfo
 {
     public static Reactor Instance;
 
     private void Awake()
     {
         Instance = this;
+    }
+
+    public string Info()
+    {
+        return "Total power: " + power.ToString() +
+               "\nTempo: " + (120 + rate * 100).ToString();
     }
 
     public float power; // default power module adds 1, can be more or less (upper limit 30-40 maybe?)
@@ -38,7 +44,7 @@ public class Reactor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        SetPatch();
     }
     
     public void SetPatch()

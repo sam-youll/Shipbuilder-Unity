@@ -18,7 +18,7 @@ public class RackMovement : MonoBehaviour
     public bool canGoInInventory = true;
     private bool isOverInventory;
     public bool isInInventory;
-    private Transform lastParent;
+    public Transform lastParent;
     private bool isMouseDragging;
     private Vector3 dragOffset;
     private Vector3 dragStartPos;
@@ -36,6 +36,8 @@ public class RackMovement : MonoBehaviour
 
     [Header("Temporary Debug Bullshit")] 
     public List<Collider2D> collisionResults;
+
+    public UnityEvent destroyed;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -44,7 +46,7 @@ public class RackMovement : MonoBehaviour
         {
             myModuleRack = transform.parent.gameObject;
         }
-        else if (transform.parent.GetComponent<Inventory>() != null)
+        else if (transform.parent.CompareTag("Inventory"))
         {
             isInInventory = true;
         }
@@ -60,8 +62,6 @@ public class RackMovement : MonoBehaviour
         if (isMouseDragging)
         {
             DragMove();
-            
-            HoverInventory();
             
             if (Input.GetMouseButtonUp(0))
             {
@@ -89,6 +89,11 @@ public class RackMovement : MonoBehaviour
     {
         if (Global.Instance.TopRaycastResult() == gameObject)
         {
+            if (isInInventory)
+            {
+                inventoryExit.Invoke();
+                Inventory.Instance.RemoveModule(gameObject);
+            }
             AudioManager.Instance.PickUpModuleSFX();
             dragOffset = transform.position - Global.Instance.mousePos;
             snapSquare.SetActive(true);
@@ -97,16 +102,6 @@ public class RackMovement : MonoBehaviour
             transform.SetParent(cam.transform);
             bodyClick.Invoke();
             dragStartPos = transform.position;
-            if (isInInventory)
-            {
-                inventoryExit.Invoke();
-                Inventory.Instance.modulesInInventory.Remove(gameObject);
-                Inventory.Instance.ArrangeModules();
-                for (int i = 0; i < Inventory.Instance.transform.childCount; i++)
-                {
-                    Inventory.Instance.transform.GetChild(i).gameObject.SetActive(false);
-                }
-            }
         }
     }
 
@@ -114,7 +109,15 @@ public class RackMovement : MonoBehaviour
     {
         if (Global.Instance.TopRaycastResult() == gameObject)
         {
-            SendToInventory();
+            if (Inventory.Instance.creativeMode)
+            {
+                destroyed.Invoke();
+                Destroy(gameObject);
+            }
+            else
+            {
+                Inventory.Instance.SendToInventory(gameObject);
+            }
         }
     }
 
@@ -212,106 +215,56 @@ public class RackMovement : MonoBehaviour
         // reset mouse drag
         isMouseDragging = false;
         transform.position = snapSquare.transform.position;
-        lastValidPos = transform.position;
         // Debug.Log($"Setting lastValidPos to {lastValidPos}");
         snapSquare.SetActive(false);
         dragOffset = Vector3.zero;
 
         AudioManager.Instance.PutDownModuleSFX();
         
-        // if (isOverInventory)
-        // {
-        //     // put the module in the inventory
-        //     isInInventory = true;
-        //     transform.SetParent(Inventory.Instance.transform);
-        //     var pos = transform.position;
-        //     pos.z = transform.parent.transform.position.z - 1f;
-        //     transform.position = pos;
-        //     inventoryEnter.Invoke();
-        // }
-        // else // either drop the module on a rack, or return it to its previous position
-        // {
-            // are we over a rack we can drop onto?
-            var rackCheck = false;
-            var results = Physics2D.RaycastAll(lastValidPos, Vector2.zero);
-            // Debug.Log(results.Length + " at " + lastValidPos);
-            foreach (var result in results)
+        // either drop the module on a rack, or return it to its previous position
+        // are we over a rack we can drop onto?
+        var rackCheck = false;
+        var results = Physics2D.RaycastAll(lastValidPos, Vector2.zero);
+        // Debug.Log(results.Length + " at " + lastValidPos);
+        foreach (var result in results)
+        {
+            // Debug.Log(result.transform.name);
+            if (result.collider.gameObject.TryGetComponent(out ModuleRack rack))
             {
-                // Debug.Log(result.transform.name);
-                if (result.collider.gameObject.TryGetComponent(out ModuleRack rack))
-                {
-                    // theoretically, this is the module rack I'm hovering over
-                    transform.SetParent(result.collider.gameObject.transform);
-                    var pos = transform.position;
-                    pos.z = transform.parent.position.z - .1f;
-                    transform.position = pos;
-                    myModuleRack = result.collider.gameObject;
-                    rackCheck = true;
-                    if (isInInventory)
-                    {
-                        isInInventory = false;
-                        inventoryExit.Invoke();
-                    }
-                }
-            }
-
-            if (!rackCheck)
-            {
+                // theoretically, this is the module rack I'm hovering over
+                transform.SetParent(result.collider.gameObject.transform);
+                var pos = transform.position;
+                pos.z = transform.parent.position.z - .1f;
+                transform.position = pos;
+                myModuleRack = result.collider.gameObject;
+                rackCheck = true;
                 if (isInInventory)
                 {
-                    transform.SetParent(Inventory.Instance.transform);
-                    transform.localPosition = lastInvPos;
+                    isInInventory = false;
+                    inventoryExit.Invoke();
                 }
-                else
-                {
-                    transform.position = lastValidPos;
-                }
+                
+                
+                lastValidPos = transform.position;
+                lastParent = transform.parent;
             }
-        // }
+        }
+
+        if (!rackCheck)
+        {
+            if (Inventory.Instance.creativeMode)
+            {
+                destroyed.Invoke();
+                Destroy(gameObject);
+            }
+            else
+            {
+                transform.position = lastValidPos;
+                transform.parent = lastParent;
+            }
+        }
     }
     
-    void HoverInventory()
-    {
-        // if (!canGoInInventory)
-        // {
-        //     return;
-        // }
-        
-        // if (Inventory.Instance.sr.color == Inventory.Instance.highlightColor)
-        // {
-        //     if (!Inventory.Instance.isPulledDown)
-        //     {
-        //         Inventory.Instance.isPulledDown = true;
-        //     }
-        //
-        //     isOverInventory = true;
-        // }
-        // else
-        // {
-        //     if (Inventory.Instance.isPulledDown)
-        //     {
-        //         Inventory.Instance.isPulledDown = false;
-        //     }
-        //     isOverInventory = false;
-        // }
-    }
-
-    void SendToInventory()
-    {
-        if (isInInventory) return;
-        
-        Inventory.Instance.modulesInInventory.Add(gameObject);
-        transform.SetParent(Inventory.Instance.transform);
-        transform.localPosition = Vector3.zero;
-        gameObject.SetActive(Inventory.Instance.inventoryOverlay.activeSelf);
-        isInInventory = true;
-        inventoryEnter.Invoke();
-        
-        Inventory.Instance.ArrangeModules();
-        
-        Inventory.Instance.ArrangeModules();
-    }
-
     /// <summary>
     /// Function for checking if the snap square is overlapping any other rack objects.
     /// </summary>
