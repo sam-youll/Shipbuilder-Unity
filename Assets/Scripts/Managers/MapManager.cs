@@ -214,6 +214,7 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+        UpdateMainMap();
     }
 
     /// <summary>
@@ -221,33 +222,35 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public void UpdatePlanetNodes()
     {
+        Debug.Log("Updated planet nodes");
         //for every planet
         for (int i = 0; i < planets.Length; i++)
         {
             //if we're in the main map 
             if (SceneManager.GetSceneByName("MainMap").isLoaded)
             {
+                Debug.Log("Main map is loaded");
                 //for every sector map
                 foreach (GameObject sectorMap in sectorMaps)
                 {
-                    //if it's got a planet
-                    if (sectorMap.GetComponentInChildren<Planet>() != null)
+                    Debug.Log(sectorMap.name + " has been updated");
+                    
+                    //and if a planet is there
+                    if (planets[i].location == sectorMap.GetComponent<Constellation>().sector)
                     {
-                        //and if a planet is there
-                        if (planets[i].location == sectorMap.GetComponent<Constellation>().sector)
-                        {
-                            //find the planet child
-                            GameObject sectorPlanet = sectorMap.GetComponentInChildren<Planet>().planetObject;
-                            //set its node
-                            sectorPlanet.GetComponent<Planet>().thisPlanet = planets[i].node;
-                            //and its color 
-                            //sectorPlanet.GetComponent<Planet>().color = planets[i].color;
-                            //and its sprite
-                            sectorPlanet.GetComponent<Planet>().sr.sprite = planets[i].sprite;
-                            //and its status
-                            sectorPlanet.GetComponent<Planet>().UpdateVisitedStatus(planets[i].visited);
-                            Debug.Log("Planet node updated. " + planets[i].node + " visited status: " + planets[i].visited + " and has set the node to: " + sectorPlanet.GetComponent<Planet>().visited);
-                        }
+                        Debug.Log("A planet " + planets[i].node +  " is in " + sectorMap.name);
+                        //find the planet child
+                        GameObject sectorPlanet = sectorMap.GetComponent<Constellation>().mainmapPlanet;
+                        //set its node
+                        sectorPlanet.GetComponent<Planet>().thisPlanet = planets[i].node;
+                        //and its color 
+                        //sectorPlanet.GetComponent<Planet>().color = planets[i].color;
+                        //and its sprite
+                        sectorPlanet.GetComponent<Planet>().sr.sprite = planets[i].sprite;
+                        //and its status
+                        sectorPlanet.GetComponent<Planet>().UpdateVisitedStatus(planets[i].visited);
+                        sectorPlanet.SetActive(true);
+                        Debug.Log("Planet node updated. " + planets[i].node + " visited status: " + planets[i].visited + " and has set the node to: " + sectorPlanet.GetComponent<Planet>().visited);
                     }
                 }
             }

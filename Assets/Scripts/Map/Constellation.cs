@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,12 @@ public class Constellation : MonoBehaviour
     public float combatMultiplier;
     public float storyMultiplier;
     public float shopMultiplier;
+
+    //public TextMeshPro label;
+    public GameObject labelObject;
+    
+    //plane object for main map sectors
+    public GameObject mainmapPlanet;
 
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -61,7 +68,7 @@ public class Constellation : MonoBehaviour
                     if (planet.location == sector && !planet.visited)
                     {
                         //Debug.Log(planet.node + " is in " + planet.location);
-                
+                        GetComponentInChildren<Planet>().textObject.SetActive(true);
                         //check every sector 
                         foreach (Constellation constellation in GameObject.FindObjectsByType<Constellation>(FindObjectsSortMode.InstanceID))
                         {
@@ -74,6 +81,7 @@ public class Constellation : MonoBehaviour
                                     //Debug.Log(constellation.sector + " is in the path and should be highlighted");
                                     //then highlight it
                                     constellation.HighlightSector(constellation);
+                                    constellation.labelObject.SetActive(true);
                                 } 
                             }
                         }
@@ -142,6 +150,11 @@ public class Constellation : MonoBehaviour
             {
                 //unhighlight it 
                 constellation.UnHighlightSector();
+                constellation.labelObject.SetActive(false);
+                if (GetComponentInChildren<Planet>() != null)
+                {
+                    GetComponentInChildren<Planet>().textObject.SetActive(false);
+                }
             }
         }
         

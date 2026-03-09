@@ -1,3 +1,5 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +13,11 @@ public class Planet : MapNode
 
     //this planet's gameobject
     public GameObject planetObject;
+    public GameObject textObject;
+    
+    //text label
+    public TextMeshPro planetText;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,13 +29,16 @@ public class Planet : MapNode
         //set this planet's color
         sr.color = color;
         //Debug.Log("planet's color " + color);
+        //set label
+        planetText.text = thisPlanet.ToString();
 
         //if it's instantiated in the sector map, it's here
         if (gameObject.scene.name == "SectorMap")
         {
             planetHere = true;
+            textObject.SetActive(true);
         }
-            
+
     }
 
     // Update is called once per frame

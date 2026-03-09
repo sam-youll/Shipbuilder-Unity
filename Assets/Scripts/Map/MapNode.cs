@@ -67,7 +67,7 @@ public class MapNode : MonoBehaviour
     public float shopBaseProbability = 10;
     
     [Header("Paths")]
-    public LineRenderer path;
+    public List<LineRenderer> paths = new List<LineRenderer>();
     
     
     
@@ -96,16 +96,18 @@ public class MapNode : MonoBehaviour
         
         sr.color = color;
         
-        path.SetPosition(0, transform.position);
-        foreach (MapNode nextNode in nextNodes)
+        //path.SetPosition(0, transform.position);
+        for (int i = 0; i < nextNodes.Count; i++)
         {
-            if (nextNode.GetComponent<Planet>() == null)
+            if (nextNodes[i].GetComponent<Planet>() == null)
             {
-                path.SetPosition(1, nextNode.transform.position);
+                paths[i].SetPosition(0, transform.position);
+                paths[i].SetPosition(1, nextNodes[i].transform.position);
             }
             else
             {
-                path.SetPosition(1, transform.position);
+                paths[i].SetPosition(0, transform.position);
+                paths[i].SetPosition(1, transform.position);
             }
         }
     }
