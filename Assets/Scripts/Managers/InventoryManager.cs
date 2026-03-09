@@ -4,11 +4,12 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
-public class Inventory : MonoBehaviour
+public class InventoryManager : MonoBehaviour
 {
-    public static Inventory Instance;
+    public static InventoryManager Instance;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,15 +22,8 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public Color defaultColor;
-    public Color highlightColor;
-    public Vector2 upPos;
-    public Vector2 downPos;
-    public bool isPulledDown = false;
-    public SpriteRenderer sr;
-
     public float scrap;
-    public TextMeshPro creditsLabel;
+    [FormerlySerializedAs("creditsLabel")] public TextMeshPro scrapLabel;
 
     public GameObject inventoryOverlay;
 
@@ -57,6 +51,33 @@ public class Inventory : MonoBehaviour
             LoadCreativeModeModules();
         }
 
+        EventBus.Instance.shopSlotPurchased.AddListener(OnShopSlotPurchased);
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
+
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).TryGetComponent(out Module module))
+                {
+                    transform.GetChild(i).gameObject.SetActive(inventoryOverlay.activeSelf);
+                }
+            }
+            
+            ArrangeModules();
+        }
+
+        if (Input.mouseScrollDelta.y != 0)
+        {
+            var pos = moduleContainer.transform.localPosition;
+            pos.y -= Input.mouseScrollDelta.y * .075f;
+            pos.y = Mathf.Max(0, pos.y);
+            moduleContainer.transform.localPosition = pos;
+        }
     }
 
     private void LoadCreativeModeModules()
@@ -82,6 +103,27 @@ public class Inventory : MonoBehaviour
             secondaryModules[i].SetActive(gameObject.activeSelf);
             secondaryModules[i].transform.SetParent(secondaryModulesLabel.transform);
         }
+        
+        foreach (var module in triggerModules)
+        {
+            SetToRenderInsideMask(module, true);
+        }
+        foreach (var module in primaryModules)
+        {
+            SetToRenderInsideMask(module, true);
+        }
+        foreach (var module in secondaryModules)
+        {
+            SetToRenderInsideMask(module, true);
+        }
+    }
+
+    private void SetToRenderInsideMask(GameObject moduleObj, bool insideMask)
+    {
+        foreach (var sr in moduleObj.GetComponentsInChildren<SpriteRenderer>())
+        {
+            sr.maskInteraction = insideMask ? SpriteMaskInteraction.VisibleInsideMask : SpriteMaskInteraction.None;
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -100,28 +142,11 @@ public class Inventory : MonoBehaviour
     {
         inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryOverlay"), transform);
         inventoryOverlay.transform.position = new Vector3(-9, 0, -2.5f);
+        moduleContainer = inventoryOverlay.transform.Find("Sprite Mask/Module Container").gameObject;
         triggerModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Trigger Modules").gameObject;
         primaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Primary Modules").gameObject;
         secondaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Secondary Modules").gameObject;
         inventoryOverlay.SetActive(false);
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
-
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (transform.GetChild(i).TryGetComponent(out Module module))
-                {
-                    transform.GetChild(i).gameObject.SetActive(inventoryOverlay.activeSelf);
-                }
-            }
-            
-            ArrangeModules();
-        }
     }
 
     public void AddModule(GameObject module)
@@ -310,6 +335,7 @@ public class Inventory : MonoBehaviour
         moduleMov.isInInventory = true;
         moduleMov.inventoryEnter.Invoke();
         moduleMov.lastParent = transform.parent;
+        SetToRenderInsideMask(moduleObj, true);
         ArrangeModules();
     }
 
@@ -347,8 +373,26 @@ public class Inventory : MonoBehaviour
             }
         }
         
+        SetToRenderInsideMask(module, false);
+        
         ArrangeModules();
         
         inventoryOverlay.SetActive(false);
+    }
+
+    private void OnShopSlotPurchased(GameObject shopSlotObj)
+    {
+        if (shopSlotObj.TryGetComponent(out ShopSlot shopSlot))
+        {
+            if (scrap < shopSlot.scrapPrice || shopSlot.saleItem == null) 
+                return;
+            
+            scrap -= shopSlot.scrapPrice;
+            EventBus.Instance.playerScrapValueChanged.Invoke();
+            var newMod = Instantiate(shopSlot.saleItem);
+            newMod.transform.localScale = Vector3.one;
+            SendToInventory(newMod);
+            DisplayManager.Instance.Log($"Purchased {shopSlot.saleItem.name}!");
+        }
     }
 }

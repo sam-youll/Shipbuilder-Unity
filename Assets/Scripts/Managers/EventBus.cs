@@ -54,6 +54,8 @@ public class EventBus : MonoBehaviour
     public Dictionary<string, UnityEvent> eventsNoArgs;
     public Dictionary<string, UnityEvent<string>> eventsStringArg;
     public Dictionary<string, UnityEvent<GameObject>> eventsGameObjectArg;
+    public Dictionary<string, UnityEvent<int>> eventsIntArg;
+    public Dictionary<string, UnityEvent<float>> eventsFloatArg;
     
     // the following fields are the actual events themselves
     public UnityEvent combatStarted;
@@ -62,6 +64,7 @@ public class EventBus : MonoBehaviour
     public UnityEvent newCombatEncounterStarted;
     public UnityEvent startedDialogue;
     public UnityEvent enteredShop;
+    public UnityEvent playerHullRepairAttempted;
     
     // in combat events
     public UnityEvent enemyShieldBroken;
@@ -70,6 +73,10 @@ public class EventBus : MonoBehaviour
     public UnityEvent playerEffectApplied; //      ""       to player
     public UnityEvent enemyHullDamaged;
     public UnityEvent playerHullDamaged;
+    
+    // shop events
+    public UnityEvent<GameObject> shopSlotPurchased;
+    public UnityEvent leftShop;
     
     // rack layout editing
     public UnityEvent<GameObject> rackEditXUp;
@@ -88,7 +95,6 @@ public class EventBus : MonoBehaviour
     public UnityEvent<float> enemyHit;
     public UnityEvent<Wire> updateJackValidity;
     public UnityEvent displayLogUpdated;
-    public UnityEvent<string> loadScene;
     
     // scene changes
     
@@ -105,6 +111,7 @@ public class EventBus : MonoBehaviour
         eventsNoArgs = new();
         eventsStringArg = new();
         eventsGameObjectArg = new();
+        eventsIntArg = new();
         foreach (var field in fields)
         {
             // Debug.Log(field.FieldType.Name + " " + field.Name);
@@ -120,6 +127,14 @@ public class EventBus : MonoBehaviour
             {
                 eventsGameObjectArg.Add(field.Name, (UnityEvent<GameObject>)field.GetValue(this));
             }
+            // else if (field.FieldType == typeof(UnityEvent<int>))
+            // {
+            //     eventsIntArg.Add(field.Name, (UnityEvent<int>)field.GetValue(this));
+            // }
+            // else if (field.FieldType == typeof(UnityEvent<float>))
+            // {
+            //     eventsFloatArg.Add(field.Name, (UnityEvent<float>)field.GetValue(this));
+            // }
         }
     }
 }

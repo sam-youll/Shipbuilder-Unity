@@ -77,7 +77,7 @@ public class JulyTutorial : MonoBehaviour
     void Start()
     {
         fakeCursorPos = new Vector3(fakeCursor.transform.position.x, fakeCursor.transform.position.y, -6f);
-        inventoryPos = Inventory.Instance.transform.position;
+        inventoryPos = InventoryManager.Instance.transform.position;
         battleScreenPos = battleScreen.transform.position;
         reactorPos = reactor.transform.parent.transform.position;
         weaponPos = weaponRack.transform.parent.transform.position;
@@ -120,7 +120,7 @@ public class JulyTutorial : MonoBehaviour
             tutorialText.text = "Open your inventory";
 
             HighlightInventory();
-            if (funnel.transform.parent = Inventory.Instance.transform)
+            if (funnel.transform.parent = InventoryManager.Instance.transform)
             {
                 UpdateCurrentModule(funnel);
             }
@@ -135,14 +135,14 @@ public class JulyTutorial : MonoBehaviour
             fakeCursor.SetActive(true);
 
 
-            if (Inventory.Instance.isPulledDown)
-            {
-                inventoryHighlight.SetActive(false);
-                fakeCursor.SetActive(false);
-                HighlightCurrentModuleInv();
-                isComplete = true;
-                CompleteStep();
-            }
+            // if (InventoryManager.Instance.isPulledDown)
+            // {
+            //     inventoryHighlight.SetActive(false);
+            //     fakeCursor.SetActive(false);
+            //     HighlightCurrentModuleInv();
+            //     isComplete = true;
+            //     CompleteStep();
+            // }
         }
         if (currentStep == 1)
         {
@@ -240,20 +240,20 @@ public class JulyTutorial : MonoBehaviour
 
             tutorialText.text = "Open your inventory.";
 
-            if (fuel.transform.parent = Inventory.Instance.transform)
+            if (fuel.transform.parent = InventoryManager.Instance.transform)
             {
                 UpdateCurrentModule(fuel);
             }
             HighlightInventory();
 
-            if (Inventory.Instance.isPulledDown)
-            {
-                inventoryHighlight.SetActive(false);
-                fakeCursor.SetActive(false);
-                isComplete = true;
-                HighlightCurrentModuleInv();
-                CompleteStep();
-            }
+            // if (InventoryManager.Instance.isPulledDown)
+            // {
+            //     inventoryHighlight.SetActive(false);
+            //     fakeCursor.SetActive(false);
+            //     isComplete = true;
+            //     HighlightCurrentModuleInv();
+            //     CompleteStep();
+            // }
         }
 
         if (currentStep == 4)
@@ -354,19 +354,19 @@ public class JulyTutorial : MonoBehaviour
             tutorialText.text = "Open your inventory.";
 
             HighlightInventory();
-            if (sourceModule.transform.parent = Inventory.Instance.transform)
+            if (sourceModule.transform.parent = InventoryManager.Instance.transform)
             {
                 UpdateCurrentModule(sourceModule);
             }
             
 
-            if (Inventory.Instance.isPulledDown)
-            {
-                inventoryHighlight.SetActive(false);
-                fakeCursor.SetActive(false);
-                isComplete = true;
-                CompleteStep();
-            }
+            // if (InventoryManager.Instance.isPulledDown)
+            // {
+            //     inventoryHighlight.SetActive(false);
+            //     fakeCursor.SetActive(false);
+            //     isComplete = true;
+            //     CompleteStep();
+            // }
         }
 
         if (currentStep == 7)
@@ -523,13 +523,13 @@ public class JulyTutorial : MonoBehaviour
     void HighlightInventory()
     {
         inventoryPos.z = -5;
-        Inventory.Instance.transform.position = inventoryPos;
+        InventoryManager.Instance.transform.position = inventoryPos;
     }
 
     void HideInventory()
     {
         inventoryPos.z = -1;
-        Inventory.Instance.transform.position = inventoryPos;
+        InventoryManager.Instance.transform.position = inventoryPos;
     }
 
     void UpdateCurrentModule(GameObject module)

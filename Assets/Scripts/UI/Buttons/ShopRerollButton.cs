@@ -18,10 +18,10 @@ public class ShopRerollButton : Button2D
 
     protected override void OnClick()
     {
-        if (Inventory.Instance.scrap < 1)
+        if (InventoryManager.Instance.scrap < 1)
             return;
         
-        Inventory.Instance.scrap -= 1;
+        InventoryManager.Instance.scrap -= 1;
         
         shop.GetComponent<Shop>().Reroll();
     }

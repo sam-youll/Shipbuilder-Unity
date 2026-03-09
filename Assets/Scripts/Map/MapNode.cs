@@ -22,7 +22,7 @@ public class MapNode : MonoBehaviour
 
     [Header("Sprites")]
     //colors by node type
-    private Dictionary<Node, Color> colors = new Dictionary<Node, Color>()
+    private Dictionary<Node, Color> colors = new()
     {
         { Node.Combat, Color.yellow },
         { Node.Story, Color.cyan },

@@ -56,7 +56,7 @@ public class RackMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.parent.GetComponent<ShopSlotButton>() != null)
+        if (transform.parent.GetComponent<ShopSlot>() != null)
             return;
         
         if (isMouseDragging)
@@ -92,7 +92,7 @@ public class RackMovement : MonoBehaviour
             if (isInInventory)
             {
                 inventoryExit.Invoke();
-                Inventory.Instance.RemoveModule(gameObject);
+                InventoryManager.Instance.RemoveModule(gameObject);
             }
             AudioManager.Instance.PickUpModuleSFX();
             dragOffset = transform.position - Global.Instance.mousePos;
@@ -109,14 +109,14 @@ public class RackMovement : MonoBehaviour
     {
         if (Global.Instance.TopRaycastResult() == gameObject)
         {
-            if (Inventory.Instance.creativeMode)
+            if (InventoryManager.Instance.creativeMode)
             {
                 destroyed.Invoke();
                 Destroy(gameObject);
             }
             else
             {
-                Inventory.Instance.SendToInventory(gameObject);
+                InventoryManager.Instance.SendToInventory(gameObject);
             }
         }
     }
@@ -252,7 +252,7 @@ public class RackMovement : MonoBehaviour
 
         if (!rackCheck)
         {
-            if (Inventory.Instance.creativeMode)
+            if (InventoryManager.Instance.creativeMode)
             {
                 destroyed.Invoke();
                 Destroy(gameObject);
@@ -305,7 +305,7 @@ public class RackMovement : MonoBehaviour
                 continue;
             if (result.gameObject.GetComponent<ModuleRack>() != null)
                 continue;
-            if (result.gameObject.GetComponent<Inventory>() != null)
+            if (result.gameObject.GetComponent<InventoryManager>() != null)
                 continue;
             if (result.gameObject.CompareTag("Wire"))
                 continue;

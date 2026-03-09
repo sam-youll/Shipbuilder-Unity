@@ -95,7 +95,7 @@ public class GameStateManager : MonoBehaviour
         currentStage = Stage.Testing;
         
         EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
-        EventBus.Instance.loadScene.AddListener(OnLoadScene);
+        EventBus.Instance.leftShop.AddListener(OnPlayerLeftShop);
 
         SceneManager.sceneLoaded += DeduplicateCameras;
     }
@@ -117,8 +117,7 @@ public class GameStateManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    private void OnLoadScene(string sceneName)
+    private void OnPlayerLeftShop()
     {
-        SceneManager.LoadScene(sceneName);
     }
 }

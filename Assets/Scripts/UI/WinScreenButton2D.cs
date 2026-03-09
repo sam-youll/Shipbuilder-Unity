@@ -28,9 +28,9 @@ public class WinScreenButton2D : Button2D
         switch (type)
         {
             case Type.NewWeapon:
-                if (Inventory.Instance.scrap < 10)
+                if (InventoryManager.Instance.scrap < 10)
                     break;
-                Inventory.Instance.scrap -= 10;
+                InventoryManager.Instance.scrap -= 10;
                 WeaponManager.Instance.AddWeapon();
                 break;
             case Type.NewModule:

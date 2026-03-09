@@ -65,4 +65,16 @@ public static class Common
         { "accuracy", .75f },
         { "bulletType", 0 }
     };
+
+    public static Dictionary<string, float> RandomEnemyWeaponStats(int difficulty)
+    {
+        var dict = new Dictionary<string, float>(CombatStats);
+
+        dict["warmupRate"] = Random.value * .2f + .1f * difficulty + .5f;
+        dict["fireRate"] = Random.value * .2f + .1f * difficulty + .5f;
+        dict["damage"] = 2 + Random.value * .2f + .1f * difficulty + .5f;
+        
+
+        return dict;
+    }
 }

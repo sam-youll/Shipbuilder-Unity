@@ -52,6 +52,16 @@ public class Button2DEditor : Editor
             button.eventStringArg = EditorGUILayout.TextField("String argument: ", button.eventStringArg);
         }
 
+        // if (eventBus.eventsIntArg.ContainsKey(button.eventString))
+        // {
+        //     button.eventIntArg = EditorGUILayout.IntField("Int argument: ", button.eventIntArg);
+        // }
+        //
+        // if (eventBus.eventsFloatArg.ContainsKey(button.eventString))
+        // {
+        //     button.eventFloatArg = EditorGUILayout.FloatField("Float argument: ", button.eventFloatArg);
+        // }
+        
         if (eventBus.eventsGameObjectArg.ContainsKey(button.eventString))
         {
             button.eventStringArg = null;
@@ -89,6 +99,8 @@ public class Button2D : MonoBehaviour
     [HideInInspector] public string eventString = "Select event";
     [HideInInspector] public string eventStringArg;
     public GameObject eventGameObjectArg;
+    [HideInInspector] public int eventIntArg;
+    [HideInInspector] public float eventFloatArg;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

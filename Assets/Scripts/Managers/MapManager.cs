@@ -138,6 +138,7 @@ public class MapManager : MonoBehaviour
         planets[3].sprite = planetSprites[3];
         
         EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
+        EventBus.Instance.leftShop.AddListener(OnLeftShop);
     }
     
 
@@ -416,6 +417,20 @@ public class MapManager : MonoBehaviour
             GoToMainMap();
         }
     }
+
+    private void OnLeftShop()
+    {
+        SceneManager.UnloadSceneAsync("Shop");
+        
+        if (SceneManager.GetSceneByName("SectorMap").isLoaded)
+        {
+            GoToSectorMap();
+        }
+        else
+        {
+            GoToMainMap();
+        }
+    }
     
     public void GoToEncounterScene(MapNode.Node myNode)
     {
@@ -478,7 +493,8 @@ public class MapManager : MonoBehaviour
         }
         if (narrScene.isLoaded)
         {
-            SetActiveScene(narrScene, false);
+            // SetActiveScene(narrScene, false);
+            SceneManager.UnloadSceneAsync(narrScene);
         }
         if (sectorMap.isLoaded)
         {
@@ -515,8 +531,9 @@ public class MapManager : MonoBehaviour
         if (mainMap.isLoaded) // This should only happen once at the beginning. If we ever have to unload the map, change this check
         {
             SetActiveScene(sectorMap, false);
-            SetActiveScene(narrScene, false);
+            // SetActiveScene(narrScene, false);
             SetActiveScene(mainMap, true);
+            SceneManager.UnloadSceneAsync(narrScene);
         }
         else
         {

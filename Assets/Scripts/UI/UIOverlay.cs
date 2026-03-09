@@ -35,6 +35,6 @@ public class UIOverlay : MonoBehaviour
 
     private void OnPlayerScrapValueChanged()
     {
-        scrapText.text = Inventory.Instance.scrap.ToString();
+        scrapText.text = InventoryManager.Instance.scrap.ToString();
     }
 }

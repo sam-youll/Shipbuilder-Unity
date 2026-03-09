@@ -56,7 +56,7 @@ public abstract class Jack : MonoBehaviour
     protected void OnMouseDown()
     {
         // Debug.Log("module jack clicked");
-        if (transform.parent.parent == Inventory.Instance.transform)
+        if (transform.parent.parent == InventoryManager.Instance.transform)
             return;
 
         // input jacks are not allowed to spawn new wires

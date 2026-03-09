@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,6 +35,8 @@ public class ShipManager : MonoBehaviour
         public float evasion;
     }
 
+    public float hullRepairCost = 15;
+
     void Start()
     {
         InitEnemyShip();
@@ -41,6 +44,7 @@ public class ShipManager : MonoBehaviour
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         EventBus.Instance.combatStarted.AddListener(InitEnemyShip);
+        EventBus.Instance.playerHullRepairAttempted.AddListener(OnPlayerHullRepairAttempted);
     }
 
     void Update()
@@ -178,21 +182,31 @@ public class ShipManager : MonoBehaviour
 
     private void InitEnemyShip()
     {
+        for (var i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).TryGetComponent(out Weapon weapon))
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+        }
         // Debug.Log("InitEnemyShip");
         enemy = new Ship
         {
             name = "Enemy ship",
-            hull = 50 * CombatManager.Instance.fightLevel,
+            hull = 50 + 5 * CombatManager.Instance.fightLevel,
             shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
-        for (var i = 0; i < 1; i++)
+        var numWeapons = Random.Range(1, 2);
+        if (Random.value < (float)CombatManager.Instance.fightLevel / 10) numWeapons++;
+        for (var i = 0; i < numWeapons; i++)
         {
             var newWeapon = new GameObject();
             newWeapon.transform.SetParent(transform);
+            newWeapon.name = "Enemy Weapon";
             var weapon = newWeapon.AddComponent<Weapon>();
             weapon.enemyWeapon = true;
-            weapon.weaponStats = Common.CombatStats;
+            weapon.weaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel));
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             enemy.weapons.Add(weapon);
         }
@@ -210,7 +224,7 @@ public class ShipManager : MonoBehaviour
 
     public float EnemyMaxHull()
     {
-        return 50;
+        return 50 + 10 * CombatManager.Instance.fightLevel;
     }
     
     #endregion
@@ -325,7 +339,6 @@ public class ShipManager : MonoBehaviour
         }
         else if (target.Equals(enemy))
         {
-            DisplayManager.Instance.Log("WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN WIN");
             EventBus.Instance.enemyDefeated.Invoke();
         }
     }
@@ -341,4 +354,13 @@ public class ShipManager : MonoBehaviour
     }
     
     #endregion
+
+    private void OnPlayerHullRepairAttempted()
+    {
+        if (InventoryManager.Instance.scrap < hullRepairCost)
+            return;
+        
+        InventoryManager.Instance.scrap -= hullRepairCost;
+        player.hull = PlayerMaxHull();
+    }
 }

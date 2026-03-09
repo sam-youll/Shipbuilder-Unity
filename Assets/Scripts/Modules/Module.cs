@@ -735,7 +735,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
         return;
         
         // Debug.Log("module jack clicked");
-        if (transform.parent == Inventory.Instance.transform)
+        if (transform.parent == InventoryManager.Instance.transform)
             return;
 
         // input jacks are not allowed to spawn new wires

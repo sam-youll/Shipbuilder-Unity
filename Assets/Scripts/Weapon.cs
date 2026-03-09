@@ -56,8 +56,8 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     public GameObject parentWire;
     public SwitchComponent testFireSwitch;
 
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> noteInfo = Common.NoteInfo;
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> weaponStats = Common.CombatStats;
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> noteInfo = new(Common.NoteInfo);
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> weaponStats = new(Common.CombatStats);
     [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new();
     
     public int currentNoteMeter = 0;
@@ -69,7 +69,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     public string Info()
     {
         var text = "Weapon stats: \n";
-        foreach (var kvp in weaponStats)
+        foreach (var kvp in FiringStats())
         {
             text += kvp.Key + ": " + kvp.Value + "\n";
         }
@@ -153,9 +153,9 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         // }
     }
 
-    private Dictionary<string, float> FiringStats()
+    public Dictionary<string, float> FiringStats()
     {
-        var dict = weaponStats;
+        var dict = new Dictionary<string, float>(weaponStats);
         
         foreach (var mod in myPatch)
         {
@@ -168,7 +168,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         return dict;
     }
 
-    private Dictionary<string, float> NoteInfo()
+    public Dictionary<string, float> NoteInfo()
     {
         var dict = noteInfo;
         
@@ -227,8 +227,8 @@ public class Weapon : MonoBehaviour, ITooltipInfo
                 {
                     // Debug.Log("hit");
                     ShipManager.Instance.DamageEnemy(
-                        weaponStats["damage"]); // TODO: make it so that multiple effects can be sent
-                    EventBus.Instance.enemyHit.Invoke(weaponStats["damage"]);
+                        FiringStats()["damage"]); // TODO: make it so that multiple effects can be sent
+                    EventBus.Instance.enemyHit.Invoke(FiringStats()["damage"]);
                 }
             }
         }
