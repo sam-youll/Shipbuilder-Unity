@@ -28,6 +28,7 @@ public class MapNode : MonoBehaviour
         { Node.Story, Color.cyan },
         { Node.Shop, Color.magenta },
     };
+
     
     
     //this node's sprite renderer
@@ -68,8 +69,8 @@ public class MapNode : MonoBehaviour
     
     [Header("Paths")]
     public List<LineRenderer> paths = new List<LineRenderer>();
-    
-    
+
+    public GameObject playerShip;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -227,17 +228,26 @@ public class MapNode : MonoBehaviour
             visited = true;
             //sets this to the currently selected node
             isSelected = true;
+            Debug.Log("should update sprite");
             //makes the next nodes available
             AdvanceToNextNode();
             //makes this node unavailable 
             MakeUnavailable();
             
             
-            //PLANET CLICKING
+            
             
             //if you're in the sector map
             if (SceneManager.GetSceneByName("SectorMap").isLoaded)
             {
+                //player ship stuff 
+                //moves the ship to next node 
+                if (playerShip != null)
+                {
+                    playerShip.GetComponent<PlayerShipMover>().MovePlayerShip(transform.position);
+                }
+                
+                //PLANET CLICKING
                 //and what you click on is a planet 
                 if (TryGetComponent(out Planet planet))
                 {
