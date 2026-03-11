@@ -194,6 +194,20 @@ public class MapManager : MonoBehaviour
     {
         UpdatePlanetPaths();
         UpdatePlanetNodes();
+
+        foreach (GameObject sectorMap in sectorMaps)
+        {
+            
+            if (sector == sectorMap.GetComponent<Constellation>().sector)
+            {
+                Debug.Log("sectormap "+ sectorMap.name + " is the current location " + sector + " and should be set active");
+                sectorMap.GetComponent<Constellation>().ShowPlayerShip();
+            }
+            else
+            {
+                sectorMap.GetComponent<Constellation>().HidePlayerShip();
+            }
+        }
     }
 
     public void LoadSectorsInMainMap()

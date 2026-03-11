@@ -29,8 +29,10 @@ public class Constellation : MonoBehaviour
     //public TextMeshPro label;
     public GameObject labelObject;
     
-    //plane object for main map sectors
+    //planet object for main map sectors
     public GameObject mainmapPlanet;
+
+    public GameObject playerShip;
 
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,6 +43,8 @@ public class Constellation : MonoBehaviour
         {
             //set the default color to the inactive color
             sr.color = inactiveColor;
+            
+            playerShip = transform.GetChild(0).gameObject;
         }
         
     }
@@ -177,6 +181,16 @@ public class Constellation : MonoBehaviour
     {
         // set it to inactive color
         sr.color = inactiveColor;
+    }
+
+    public void ShowPlayerShip()
+    {
+        playerShip.SetActive(true);
+    }
+
+    public void HidePlayerShip()
+    {
+        playerShip.SetActive(false);
     }
     
 }

@@ -44,7 +44,7 @@ public class InventoryManager : MonoBehaviour
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         
         
-        CreateHotbar();
+        //CreateHotbar();
         
         if (creativeMode)
         {
