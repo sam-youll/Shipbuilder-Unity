@@ -215,6 +215,9 @@ MonoBehaviour:
   enteredShop:
     m_PersistentCalls:
       m_Calls: []
+  playerHullRepairAttempted:
+    m_PersistentCalls:
+      m_Calls: []
   enemyShieldBroken:
     m_PersistentCalls:
       m_Calls: []
@@ -231,6 +234,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   playerHullDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  shopSlotPurchased:
+    m_PersistentCalls:
+      m_Calls: []
+  leftShop:
     m_PersistentCalls:
       m_Calls: []
   rackEditXUp:
@@ -470,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d3fbab1eda249743a4292c508542e3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hullRepairCost: 15
   basePlayerShips: []
   baseEnemyShips: []
   baseEliteShips: []
@@ -823,14 +833,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d5a1141a44d21040ad30c9c8f265eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultColor: {r: 0, g: 0, b: 0, a: 0}
-  highlightColor: {r: 0, g: 0, b: 0, a: 0}
-  upPos: {x: 0, y: 0}
-  downPos: {x: 0, y: 0}
-  isPulledDown: 0
-  sr: {fileID: 0}
   scrap: 0
-  creditsLabel: {fileID: 0}
+  scrapLabel: {fileID: 0}
   inventoryOverlay: {fileID: 0}
   creativeMode: 0
   moduleContainer: {fileID: 0}

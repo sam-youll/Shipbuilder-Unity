@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +27,13 @@ public class SourceModule : PrimaryModule
     public bool waveformKnobEnabled;
 
     public float damage = 1;
+    
+    public override string Info()
+    {
+        var info = base.Info() + "---\n";
+        info += $"bulletType: {Enum.GetName(typeof(Common.BulletType), (int)bulletType)}\n";
+        return info;
+    }
     
     protected override void Start()
     {

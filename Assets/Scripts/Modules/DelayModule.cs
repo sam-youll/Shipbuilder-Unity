@@ -12,7 +12,7 @@ public class DelayModule : PrimaryModule
                 break;
             case 1:
                 MusicParams["delaytime"] = value * 1000;
-                base.Trigger();
+                // base.Trigger();
                 break;
         }
     }

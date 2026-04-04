@@ -14,7 +14,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            // Destroy(this);
         }
         else
         {
@@ -37,19 +37,17 @@ public class InventoryManager : MonoBehaviour
     public List<GameObject> triggerModules = new();
     public List<GameObject> primaryModules = new();
     public List<GameObject> secondaryModules = new();
+
+    public GameObject pauseMenu;
     
     void Start()
     {
+        
+        CreateHotbar();
+        CreatePauseMenu();
+        
         SceneManager.sceneLoaded += OnSceneLoaded;
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-        
-        
-        //CreateHotbar();
-        
-        if (creativeMode)
-        {
-            LoadCreativeModeModules();
-        }
 
         EventBus.Instance.shopSlotPurchased.AddListener(OnShopSlotPurchased);
     }
@@ -70,6 +68,11 @@ public class InventoryManager : MonoBehaviour
             
             ArrangeModules();
         }
+        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
 
         if (Input.mouseScrollDelta.y != 0)
         {
@@ -78,6 +81,12 @@ public class InventoryManager : MonoBehaviour
             pos.y = Mathf.Max(0, pos.y);
             moduleContainer.transform.localPosition = pos;
         }
+    }
+
+    private void CreatePauseMenu()
+    {
+        pauseMenu = Instantiate(Resources.Load<GameObject>("Prefabs/Pause Menu"), transform);
+        pauseMenu.SetActive(false);
     }
 
     private void LoadCreativeModeModules()
@@ -136,6 +145,13 @@ public class InventoryManager : MonoBehaviour
         {
             creativeMode = false;
         }
+        
+        if (creativeMode)
+        {
+            LoadCreativeModeModules();
+        }
+        
+        pauseMenu.SetActive(false);
     }
 
     private void CreateHotbar()

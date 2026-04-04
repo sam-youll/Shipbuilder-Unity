@@ -82,6 +82,19 @@ public class Global : MonoBehaviour
         tooltip.GetComponentInChildren<MeshRenderer>().sortingLayerName = "UI";
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        EventBus.Instance.loadScene.AddListener(OnLoadScene);
+        EventBus.Instance.gameExit.AddListener(OnGameExit);
+    }
+
+    private void OnLoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    private void OnGameExit()
+    {
+        Application.Quit();
     }
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -123,6 +136,10 @@ public class Global : MonoBehaviour
         }
         
         // Debug.Log(TopRaycastResult().name);
+        
+        // I'm tired of not being able to see the cursor when I'm trying to click on stuff in the
+        // hierarchy or the inspector while the game is running, so this is a fix for that.
+        Cursor.visible = !cam.rect.Contains(cam.ScreenToViewportPoint(Input.mousePosition));
     }
 
     private void UpdateCursor()

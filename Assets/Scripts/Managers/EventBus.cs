@@ -65,6 +65,7 @@ public class EventBus : MonoBehaviour
     public UnityEvent startedDialogue;
     public UnityEvent enteredShop;
     public UnityEvent playerHullRepairAttempted;
+    public UnityEvent enemyInitialized;
     
     // in combat events
     public UnityEvent enemyShieldBroken;
@@ -97,6 +98,8 @@ public class EventBus : MonoBehaviour
     public UnityEvent displayLogUpdated;
     
     // scene changes
+    public UnityEvent<string> loadScene;
+    public UnityEvent gameExit;
     
     private void OnValidate()
     {

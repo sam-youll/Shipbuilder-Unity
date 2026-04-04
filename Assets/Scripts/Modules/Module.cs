@@ -233,7 +233,7 @@ public class ModuleInspector : Editor
 #endif
 
 [SelectionBase]
-public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
+public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, ITooltipInfo
 {
     #region Module Builder
     public enum ModuleComponent
@@ -630,6 +630,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     public float izki;
     public float aubo;
     public float dwth;
+    public float hysh;
     public Dictionary<string, float> MusicParams = new();
     public Dictionary<string, float> CombatStats = new();
     
@@ -641,6 +642,32 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
     public List<GameObject> childWires = new();
     public GameObject wirePrefab;
 
+    public virtual string Info()
+    {
+        var info = "";
+        if (izki > 0)
+        {
+            info += "Izki: " + izki + "\n";
+        }
+
+        if (aubo > 0)
+        {
+            info += "Aubo: " + aubo + "\n";
+        }
+
+        if (dwth > 0)
+        {
+            info += "Dwth: " + dwth + "\n";
+        }
+
+        if (hysh > 0)
+        {
+            info += "Hysh: " + hysh + "\n";
+        }
+        
+        return info;
+    }
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
     {
@@ -719,13 +746,15 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver
 
     private void OnDestroyed()
     {
-        foreach (var wire in parentWires)
+        for (var i = 0; i < parentWires.Count; i++)
         {
+            var wire = parentWires[i];
             wire.GetComponent<Wire>().DeleteSelf();
         }
 
-        foreach (var wire in childWires)
+        for (var i = 0; i < childWires.Count; i++)
         {
+            var wire = childWires[i];
             wire.GetComponent<Wire>().DeleteSelf();
         }
     }

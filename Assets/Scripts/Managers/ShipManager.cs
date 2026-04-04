@@ -43,7 +43,7 @@ public class ShipManager : MonoBehaviour
         InitPlayerShip();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
-        EventBus.Instance.combatStarted.AddListener(InitEnemyShip);
+        EventBus.Instance.newCombatEncounterStarted.AddListener(InitEnemyShip);
         EventBus.Instance.playerHullRepairAttempted.AddListener(OnPlayerHullRepairAttempted);
     }
 
@@ -210,6 +210,8 @@ public class ShipManager : MonoBehaviour
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             enemy.weapons.Add(weapon);
         }
+
+        EventBus.Instance.enemyInitialized.Invoke();
     }
 
     public Weapon[] EnemyWeapons()
@@ -247,16 +249,16 @@ public class ShipManager : MonoBehaviour
     /// <param name="damage">Amount of damage dealt.</param>
     /// <param name="effect">Status effect applied to projectile.</param>
     /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    public void DamagePlayer(float damage, Common.Effect effect, float effectStrength)
+    public void DamagePlayer(float damage, float soundType, Common.Effect effect, float effectStrength)
     {
-        Damage(ref player, damage, effect, effectStrength);
+        Damage(ref player, damage, soundType, effect, effectStrength);
 
         EventBus.Instance.playerHullValueChanged.Invoke();
     }
 
-    public void DamagePlayer(float damage)
+    public void DamagePlayer(float damage, float soundType)
     {
-        Damage(ref player, damage, Common.Effect.None, 0);
+        Damage(ref player, damage, soundType, Common.Effect.None, 0);
         
         EventBus.Instance.playerHullValueChanged.Invoke();
     }
@@ -265,16 +267,17 @@ public class ShipManager : MonoBehaviour
     /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
     /// <param name="damage">Amount of damage dealt.</param>
+    /// <param name="soundType">Sound type of damage.</param>
     /// <param name="effect">Status effect applied to projectile.</param>
     /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    public void DamageEnemy(float damage, Common.Effect effect, float effectStrength)
+    public void DamageEnemy(float damage, float soundType, Common.Effect effect, float effectStrength)
     {
-        Damage(ref enemy, damage, effect, effectStrength);
+        Damage(ref enemy, damage, soundType, effect, effectStrength);
     }
-
-    public void DamageEnemy(float damage)
+ 
+    public void DamageEnemy(float damage, float soundType)
     {
-        Damage(ref enemy, damage, Common.Effect.None, 0);
+        Damage(ref enemy, damage, soundType, Common.Effect.None, 0);
     }
 
     /// <summary>
@@ -283,9 +286,10 @@ public class ShipManager : MonoBehaviour
     /// </summary>
     /// <param name="target">Player or enemy ship.</param>
     /// <param name="damage">Amount of damage dealt.</param>
+    /// <param name="soundType">idfhbvsiufbsiubn sound type!!! asawaawa</param>
     /// <param name="effect">Status effect applied to projectile.</param>
     /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    private void Damage(ref Ship target, float damage, Common.Effect effect, float effectStrength)
+    private void Damage(ref Ship target, float damage, float soundType, Common.Effect effect, float effectStrength)
     {
         if (CombatManager.Instance.state == CombatManager.State.outOfCombat)
         {
@@ -293,6 +297,20 @@ public class ShipManager : MonoBehaviour
         }
         
         //TODO: Add overloads without effects and stuff
+
+        switch (soundType)
+        {
+            case (float)Common.SoundType.None:
+                break;
+            case (float)Common.SoundType.Izki:
+                break;
+            case (float)Common.SoundType.Aubo:
+                break;
+            case (float)Common.SoundType.Dwth:
+                break;
+            case (float)Common.SoundType.Hysh:
+                break;
+        }
         
         target.hull -= damage;
         

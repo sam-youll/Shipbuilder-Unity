@@ -76,9 +76,9 @@ public class SensorModule : TriggerModule, ITooltipInfo
     public List<string> availableEventTriggers = new();
     public string currentEventTrigger;
     
-    public string Info()
+    public override string Info()
     {
-        var info = "Available Event Triggers:\n";
+        var info = base.Info() + "---\nAvailable Event Triggers:\n";
         foreach (var trigger in availableEventTriggers)
         {
             if (trigger == currentEventTrigger)

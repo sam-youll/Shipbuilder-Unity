@@ -41,8 +41,10 @@ public class CockpitDisplay : MonoBehaviour
         EventBus.Instance.enemyHit.AddListener(OnEnemyHit);
         EventBus.Instance.weaponFired.AddListener(OnWeaponFired);
         EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
+        EventBus.Instance.enemyInitialized.AddListener(OnEnemyInitialized);
         
         DeactivateEnemyIcons();
+        OnEnemyInitialized();
     }
 
     void Update()
@@ -92,6 +94,17 @@ public class CockpitDisplay : MonoBehaviour
         playerHealthBar.value = ShipManager.Instance.PlayerHull() / ShipManager.Instance.PlayerMaxHull();
     }
 
+    private void OnEnemyInitialized()
+    {
+        var enemyWeapons = ShipManager.Instance.EnemyWeapons();
+        statText.text = "Prepare for combat! Enemy ship approaching!\nEnemy weapon types are:\n";
+        foreach (var weapon in enemyWeapons)
+        {
+            statText.text +=  Enum.GetName(typeof(Common.SoundType), (int)weapon.weaponStats["soundType"]) + " ";
+        }
+        questionMarks.SetActive(true);
+    }
+
     private void OnEnemyHit(float damage)
     {
         // Debug.Log("enemy hit for " + damage);
@@ -110,8 +123,9 @@ public class CockpitDisplay : MonoBehaviour
         enemyShield.SetActive(true);
         enemyHealthBar.gameObject.SetActive(true);
         enemyShield.SetActive(true);
-        foreach (var w in enemyWeapons)
+        for (var i = 0; i < ShipManager.Instance.EnemyWeapons().Length; i++)
         {
+            var w = enemyWeapons[i];
             w.SetActive(true);
         }
     }

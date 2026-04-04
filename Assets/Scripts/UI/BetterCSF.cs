@@ -1,8 +1,11 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(BetterCSF))]
 public class CSFEditor : Editor
 {
@@ -12,6 +15,7 @@ public class CSFEditor : Editor
         csf.maxWidth = EditorGUILayout.FloatField(csf.maxWidth);
     }
 }
+#endif
 
 public class BetterCSF : ContentSizeFitter
 {

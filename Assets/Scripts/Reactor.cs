@@ -15,8 +15,10 @@ public class Reactor : MonoBehaviour, ITooltipInfo
 
     public string Info()
     {
-        return "Total power: " + power.ToString() +
-               "\nTempo: " + (120 + rate * 100).ToString();
+        var info =  "Total power: " + power.ToString() +
+               "\nTempo: " + (120 + rate * 100).ToString() +
+               "\nDamage mult: " + (1 + .5f * strength);
+        return info;
     }
 
     public float power; // default power module adds 1, can be more or less (upper limit 30-40 maybe?)
