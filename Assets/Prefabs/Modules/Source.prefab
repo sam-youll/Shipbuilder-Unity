@@ -799,6 +799,7 @@ MonoBehaviour:
   izki: 0
   aubo: 0
   dwth: 0
+  hysh: 0
   inputJacks:
   - {fileID: 3181877813489724046}
   outputJacks:
@@ -806,10 +807,11 @@ MonoBehaviour:
   parentWires: []
   childWires: []
   wirePrefab: {fileID: 0}
-  sampleText: {fileID: 0}
   systemType: 0
   waveform: 2
+  bulletType: 1
   waveformKnobEnabled: 0
+  damage: 1
 --- !u!50 &3671429857018578485
 Rigidbody2D:
   serializedVersion: 5
@@ -947,6 +949,7 @@ MonoBehaviour:
   dragHeight: 1
   canGoInInventory: 1
   isInInventory: 0
+  lastParent: {fileID: 0}
   bodyClick:
     m_PersistentCalls:
       m_Calls: []
@@ -962,6 +965,9 @@ MonoBehaviour:
   oddSizeX: 0
   oddSizeY: 1
   collisionResults: []
+  destroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3181877813489724046
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,6 +1014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab62e503fde8304da542d2114b4877d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  valid: 1
 --- !u!212 &738013134025215879
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1236,6 +1243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c59e772efa193141bf3e93cba3102af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  valid: 1
 --- !u!1 &3913547853725602073
 GameObject:
   m_ObjectHideFlags: 0

@@ -298,16 +298,16 @@ void process(
     this->dspexpr_03_perform(this->signals[6], this->signals[3], this->signals[8], n);
 
     this->signaladder_01_perform(
-        this->signals[1],
-        this->signals[2],
-        this->signals[8],
+        this->signals[5],
         this->signals[4],
-        this->signals[5],
-        this->signals[5],
+        this->signals[8],
+        this->signals[2],
+        this->signals[1],
+        this->signals[1],
         n
     );
 
-    this->dspexpr_01_perform(this->signals[5], this->signals[0], out1, n);
+    this->dspexpr_01_perform(this->signals[1], this->signals[0], out1, n);
     this->stackprotect_perform(n);
     this->globaltransport_advance();
     this->audioProcessSampleCount += this->vs;
@@ -465,28 +465,40 @@ void setState() {}
 
 void getPreset(PatcherStateInterface& preset) {
     preset["__presetid"] = "rnbo";
-    this->param_01_getPresetValue(getSubState(preset, "freq"));
-    this->param_02_getPresetValue(getSubState(preset, "adsr"));
-    this->param_03_getPresetValue(getSubState(preset, "attack"));
-    this->param_04_getPresetValue(getSubState(preset, "decay"));
-    this->param_05_getPresetValue(getSubState(preset, "sustain"));
-    this->param_06_getPresetValue(getSubState(preset, "release"));
-    this->param_07_getPresetValue(getSubState(preset, "amfreq"));
-    this->param_08_getPresetValue(getSubState(preset, "fmfreq"));
-    this->param_09_getPresetValue(getSubState(preset, "fm2freq"));
+    this->param_01_getPresetValue(getSubState(preset, "src"));
+    this->param_02_getPresetValue(getSubState(preset, "freq"));
+    this->param_03_getPresetValue(getSubState(preset, "dt1"));
+    this->param_04_getPresetValue(getSubState(preset, "dt2"));
+    this->param_05_getPresetValue(getSubState(preset, "sinbass"));
+    this->param_06_getPresetValue(getSubState(preset, "adsr"));
+    this->param_07_getPresetValue(getSubState(preset, "attack"));
+    this->param_08_getPresetValue(getSubState(preset, "decay"));
+    this->param_09_getPresetValue(getSubState(preset, "sustain"));
+    this->param_10_getPresetValue(getSubState(preset, "bassphas"));
+    this->param_11_getPresetValue(getSubState(preset, "release"));
+    this->param_12_getPresetValue(getSubState(preset, "midphas"));
+    this->param_13_getPresetValue(getSubState(preset, "amfreq"));
+    this->param_14_getPresetValue(getSubState(preset, "fmfreq"));
+    this->param_15_getPresetValue(getSubState(preset, "fm2freq"));
 }
 
 void setPreset(MillisecondTime time, PatcherStateInterface& preset) {
     this->updateTime(time);
-    this->param_01_setPresetValue(getSubState(preset, "freq"));
-    this->param_02_setPresetValue(getSubState(preset, "adsr"));
-    this->param_03_setPresetValue(getSubState(preset, "attack"));
-    this->param_04_setPresetValue(getSubState(preset, "decay"));
-    this->param_05_setPresetValue(getSubState(preset, "sustain"));
-    this->param_06_setPresetValue(getSubState(preset, "release"));
-    this->param_07_setPresetValue(getSubState(preset, "amfreq"));
-    this->param_08_setPresetValue(getSubState(preset, "fmfreq"));
-    this->param_09_setPresetValue(getSubState(preset, "fm2freq"));
+    this->param_01_setPresetValue(getSubState(preset, "src"));
+    this->param_02_setPresetValue(getSubState(preset, "freq"));
+    this->param_03_setPresetValue(getSubState(preset, "dt1"));
+    this->param_04_setPresetValue(getSubState(preset, "dt2"));
+    this->param_05_setPresetValue(getSubState(preset, "sinbass"));
+    this->param_06_setPresetValue(getSubState(preset, "adsr"));
+    this->param_07_setPresetValue(getSubState(preset, "attack"));
+    this->param_08_setPresetValue(getSubState(preset, "decay"));
+    this->param_09_setPresetValue(getSubState(preset, "sustain"));
+    this->param_10_setPresetValue(getSubState(preset, "bassphas"));
+    this->param_11_setPresetValue(getSubState(preset, "release"));
+    this->param_12_setPresetValue(getSubState(preset, "midphas"));
+    this->param_13_setPresetValue(getSubState(preset, "amfreq"));
+    this->param_14_setPresetValue(getSubState(preset, "fmfreq"));
+    this->param_15_setPresetValue(getSubState(preset, "fm2freq"));
 }
 
 void processTempoEvent(MillisecondTime time, Tempo tempo) {
@@ -568,6 +580,36 @@ void setParameterValue(ParameterIndex index, ParameterValue v, MillisecondTime t
         this->param_09_value_set(v);
         break;
         }
+    case 9:
+        {
+        this->param_10_value_set(v);
+        break;
+        }
+    case 10:
+        {
+        this->param_11_value_set(v);
+        break;
+        }
+    case 11:
+        {
+        this->param_12_value_set(v);
+        break;
+        }
+    case 12:
+        {
+        this->param_13_value_set(v);
+        break;
+        }
+    case 13:
+        {
+        this->param_14_value_set(v);
+        break;
+        }
+    case 14:
+        {
+        this->param_15_value_set(v);
+        break;
+        }
     }
 }
 
@@ -621,6 +663,30 @@ ParameterValue getParameterValue(ParameterIndex index)  {
         {
         return this->param_09_value;
         }
+    case 9:
+        {
+        return this->param_10_value;
+        }
+    case 10:
+        {
+        return this->param_11_value;
+        }
+    case 11:
+        {
+        return this->param_12_value;
+        }
+    case 12:
+        {
+        return this->param_13_value;
+        }
+    case 13:
+        {
+        return this->param_14_value;
+        }
+    case 14:
+        {
+        return this->param_15_value;
+        }
     default:
         {
         return 0;
@@ -637,44 +703,68 @@ ParameterIndex getNumSignalOutParameters() const {
 }
 
 ParameterIndex getNumParameters() const {
-    return 9;
+    return 15;
 }
 
 ConstCharPointer getParameterName(ParameterIndex index) const {
     switch (index) {
     case 0:
         {
-        return "freq";
+        return "src";
         }
     case 1:
         {
-        return "adsr";
+        return "freq";
         }
     case 2:
         {
-        return "attack";
+        return "dt1";
         }
     case 3:
         {
-        return "decay";
+        return "dt2";
         }
     case 4:
         {
-        return "sustain";
+        return "sinbass";
         }
     case 5:
         {
-        return "release";
+        return "adsr";
         }
     case 6:
         {
-        return "amfreq";
+        return "attack";
         }
     case 7:
         {
-        return "fmfreq";
+        return "decay";
         }
     case 8:
+        {
+        return "sustain";
+        }
+    case 9:
+        {
+        return "bassphas";
+        }
+    case 10:
+        {
+        return "release";
+        }
+    case 11:
+        {
+        return "midphas";
+        }
+    case 12:
+        {
+        return "amfreq";
+        }
+    case 13:
+        {
+        return "fmfreq";
+        }
+    case 14:
         {
         return "fm2freq";
         }
@@ -689,37 +779,61 @@ ConstCharPointer getParameterId(ParameterIndex index) const {
     switch (index) {
     case 0:
         {
-        return "freq";
+        return "src";
         }
     case 1:
         {
-        return "adsr";
+        return "freq";
         }
     case 2:
         {
-        return "attack";
+        return "dt1";
         }
     case 3:
         {
-        return "decay";
+        return "dt2";
         }
     case 4:
         {
-        return "sustain";
+        return "sinbass";
         }
     case 5:
         {
-        return "release";
+        return "adsr";
         }
     case 6:
         {
-        return "amfreq";
+        return "attack";
         }
     case 7:
         {
-        return "fmfreq";
+        return "decay";
         }
     case 8:
+        {
+        return "sustain";
+        }
+    case 9:
+        {
+        return "bassphas";
+        }
+    case 10:
+        {
+        return "release";
+        }
+    case 11:
+        {
+        return "midphas";
+        }
+    case 12:
+        {
+        return "amfreq";
+        }
+    case 13:
+        {
+        return "fmfreq";
+        }
+    case 14:
         {
         return "fm2freq";
         }
@@ -738,7 +852,7 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
             info->min = 0;
-            info->max = 20000;
+            info->max = 158;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -757,7 +871,7 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
             info->min = 0;
-            info->max = 1;
+            info->max = 20000;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -776,7 +890,7 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
             info->min = 0;
-            info->max = 2000;
+            info->max = 158;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -795,7 +909,7 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
             info->min = 0;
-            info->max = 2000;
+            info->max = 158;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -814,7 +928,7 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
             info->min = 0;
-            info->max = 2000;
+            info->max = 158;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -833,7 +947,7 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
             info->min = 0;
-            info->max = 2000;
+            info->max = 1;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -851,8 +965,8 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
-            info->min = 1;
-            info->max = 20;
+            info->min = 0;
+            info->max = 2000;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -867,6 +981,101 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             break;
             }
         case 7:
+            {
+            info->type = ParameterTypeNumber;
+            info->initialValue = 0;
+            info->min = 0;
+            info->max = 2000;
+            info->exponent = 1;
+            info->steps = 0;
+            info->debug = false;
+            info->saveable = true;
+            info->transmittable = true;
+            info->initialized = true;
+            info->visible = true;
+            info->displayName = "";
+            info->unit = "";
+            info->ioType = IOTypeUndefined;
+            info->signalIndex = INVALID_INDEX;
+            break;
+            }
+        case 8:
+            {
+            info->type = ParameterTypeNumber;
+            info->initialValue = 0;
+            info->min = 0;
+            info->max = 2000;
+            info->exponent = 1;
+            info->steps = 0;
+            info->debug = false;
+            info->saveable = true;
+            info->transmittable = true;
+            info->initialized = true;
+            info->visible = true;
+            info->displayName = "";
+            info->unit = "";
+            info->ioType = IOTypeUndefined;
+            info->signalIndex = INVALID_INDEX;
+            break;
+            }
+        case 9:
+            {
+            info->type = ParameterTypeNumber;
+            info->initialValue = 0;
+            info->min = 0;
+            info->max = 158;
+            info->exponent = 1;
+            info->steps = 0;
+            info->debug = false;
+            info->saveable = true;
+            info->transmittable = true;
+            info->initialized = true;
+            info->visible = true;
+            info->displayName = "";
+            info->unit = "";
+            info->ioType = IOTypeUndefined;
+            info->signalIndex = INVALID_INDEX;
+            break;
+            }
+        case 10:
+            {
+            info->type = ParameterTypeNumber;
+            info->initialValue = 0;
+            info->min = 0;
+            info->max = 2000;
+            info->exponent = 1;
+            info->steps = 0;
+            info->debug = false;
+            info->saveable = true;
+            info->transmittable = true;
+            info->initialized = true;
+            info->visible = true;
+            info->displayName = "";
+            info->unit = "";
+            info->ioType = IOTypeUndefined;
+            info->signalIndex = INVALID_INDEX;
+            break;
+            }
+        case 11:
+            {
+            info->type = ParameterTypeNumber;
+            info->initialValue = 0;
+            info->min = 0;
+            info->max = 158;
+            info->exponent = 1;
+            info->steps = 0;
+            info->debug = false;
+            info->saveable = true;
+            info->transmittable = true;
+            info->initialized = true;
+            info->visible = true;
+            info->displayName = "";
+            info->unit = "";
+            info->ioType = IOTypeUndefined;
+            info->signalIndex = INVALID_INDEX;
+            break;
+            }
+        case 12:
             {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
@@ -885,7 +1094,26 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             info->signalIndex = INVALID_INDEX;
             break;
             }
-        case 8:
+        case 13:
+            {
+            info->type = ParameterTypeNumber;
+            info->initialValue = 0;
+            info->min = 1;
+            info->max = 20;
+            info->exponent = 1;
+            info->steps = 0;
+            info->debug = false;
+            info->saveable = true;
+            info->transmittable = true;
+            info->initialized = true;
+            info->visible = true;
+            info->displayName = "";
+            info->unit = "";
+            info->ioType = IOTypeUndefined;
+            info->signalIndex = INVALID_INDEX;
+            break;
+            }
+        case 14:
             {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
@@ -928,7 +1156,7 @@ ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedVal
 
 ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
     switch (index) {
-    case 1:
+    case 5:
         {
         {
             value = (value < 0 ? 0 : (value > 1 ? 1 : value));
@@ -936,10 +1164,23 @@ ParameterValue convertToNormalizedParameterValue(ParameterIndex index, Parameter
             return normalizedValue;
         }
         }
+    case 0:
     case 2:
     case 3:
     case 4:
-    case 5:
+    case 9:
+    case 11:
+        {
+        {
+            value = (value < 0 ? 0 : (value > 158 ? 158 : value));
+            ParameterValue normalizedValue = (value - 0) / (158 - 0);
+            return normalizedValue;
+        }
+        }
+    case 6:
+    case 7:
+    case 8:
+    case 10:
         {
         {
             value = (value < 0 ? 0 : (value > 2000 ? 2000 : value));
@@ -947,7 +1188,7 @@ ParameterValue convertToNormalizedParameterValue(ParameterIndex index, Parameter
             return normalizedValue;
         }
         }
-    case 0:
+    case 1:
         {
         {
             value = (value < 0 ? 0 : (value > 20000 ? 20000 : value));
@@ -955,9 +1196,9 @@ ParameterValue convertToNormalizedParameterValue(ParameterIndex index, Parameter
             return normalizedValue;
         }
         }
-    case 6:
-    case 7:
-    case 8:
+    case 12:
+    case 13:
+    case 14:
         {
         {
             value = (value < 1 ? 1 : (value > 20 ? 20 : value));
@@ -976,7 +1217,7 @@ ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, Paramet
     value = (value < 0 ? 0 : (value > 1 ? 1 : value));
 
     switch (index) {
-    case 1:
+    case 5:
         {
         {
             value = (value < 0 ? 0 : (value > 1 ? 1 : value));
@@ -986,10 +1227,25 @@ ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, Paramet
             }
         }
         }
+    case 0:
     case 2:
     case 3:
     case 4:
-    case 5:
+    case 9:
+    case 11:
+        {
+        {
+            value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+
+            {
+                return 0 + value * (158 - 0);
+            }
+        }
+        }
+    case 6:
+    case 7:
+    case 8:
+    case 10:
         {
         {
             value = (value < 0 ? 0 : (value > 1 ? 1 : value));
@@ -999,7 +1255,7 @@ ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, Paramet
             }
         }
         }
-    case 0:
+    case 1:
         {
         {
             value = (value < 0 ? 0 : (value > 1 ? 1 : value));
@@ -1009,9 +1265,9 @@ ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, Paramet
             }
         }
         }
-    case 6:
-    case 7:
-    case 8:
+    case 12:
+    case 13:
+    case 14:
         {
         {
             value = (value < 0 ? 0 : (value > 1 ? 1 : value));
@@ -1065,6 +1321,30 @@ ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue valu
     case 8:
         {
         return this->param_09_value_constrain(value);
+        }
+    case 9:
+        {
+        return this->param_10_value_constrain(value);
+        }
+    case 10:
+        {
+        return this->param_11_value_constrain(value);
+        }
+    case 11:
+        {
+        return this->param_12_value_constrain(value);
+        }
+    case 12:
+        {
+        return this->param_13_value_constrain(value);
+        }
+    case 13:
+        {
+        return this->param_14_value_constrain(value);
+        }
+    case 14:
+        {
+        return this->param_15_value_constrain(value);
         }
     default:
         {
@@ -1214,7 +1494,7 @@ void param_01_value_set(number v) {
         this->param_01_lastValue = this->param_01_value;
     }
 
-    this->send_01_input_number_set(v);
+    this->gaintilde_01_input_number_set(v);
 }
 
 void param_02_value_set(number v) {
@@ -1227,7 +1507,7 @@ void param_02_value_set(number v) {
         this->param_02_lastValue = this->param_02_value;
     }
 
-    this->adsr_01_trigger_number_set(v);
+    this->send_01_input_number_set(v);
 }
 
 void param_03_value_set(number v) {
@@ -1240,7 +1520,7 @@ void param_03_value_set(number v) {
         this->param_03_lastValue = this->param_03_value;
     }
 
-    this->adsr_01_attack_set(v);
+    this->gaintilde_02_input_number_set(v);
 }
 
 void param_04_value_set(number v) {
@@ -1253,7 +1533,7 @@ void param_04_value_set(number v) {
         this->param_04_lastValue = this->param_04_value;
     }
 
-    this->adsr_01_decay_set(v);
+    this->gaintilde_03_input_number_set(v);
 }
 
 void param_05_value_set(number v) {
@@ -1266,7 +1546,7 @@ void param_05_value_set(number v) {
         this->param_05_lastValue = this->param_05_value;
     }
 
-    this->adsr_01_sustain_set(v);
+    this->gaintilde_04_input_number_set(v);
 }
 
 void param_06_value_set(number v) {
@@ -1279,7 +1559,7 @@ void param_06_value_set(number v) {
         this->param_06_lastValue = this->param_06_value;
     }
 
-    this->adsr_01_release_set(v);
+    this->adsr_01_trigger_number_set(v);
 }
 
 void param_07_value_set(number v) {
@@ -1292,7 +1572,7 @@ void param_07_value_set(number v) {
         this->param_07_lastValue = this->param_07_value;
     }
 
-    this->cycle_tilde_02_frequency_set(v);
+    this->adsr_01_attack_set(v);
 }
 
 void param_08_value_set(number v) {
@@ -1305,7 +1585,7 @@ void param_08_value_set(number v) {
         this->param_08_lastValue = this->param_08_value;
     }
 
-    this->cycle_tilde_03_frequency_set(v);
+    this->adsr_01_decay_set(v);
 }
 
 void param_09_value_set(number v) {
@@ -1316,6 +1596,84 @@ void param_09_value_set(number v) {
     if (this->param_09_value != this->param_09_lastValue) {
         this->getEngine()->presetTouched();
         this->param_09_lastValue = this->param_09_value;
+    }
+
+    this->adsr_01_sustain_set(v);
+}
+
+void param_10_value_set(number v) {
+    v = this->param_10_value_constrain(v);
+    this->param_10_value = v;
+    this->sendParameter(9, false);
+
+    if (this->param_10_value != this->param_10_lastValue) {
+        this->getEngine()->presetTouched();
+        this->param_10_lastValue = this->param_10_value;
+    }
+
+    this->gaintilde_05_input_number_set(v);
+}
+
+void param_11_value_set(number v) {
+    v = this->param_11_value_constrain(v);
+    this->param_11_value = v;
+    this->sendParameter(10, false);
+
+    if (this->param_11_value != this->param_11_lastValue) {
+        this->getEngine()->presetTouched();
+        this->param_11_lastValue = this->param_11_value;
+    }
+
+    this->adsr_01_release_set(v);
+}
+
+void param_12_value_set(number v) {
+    v = this->param_12_value_constrain(v);
+    this->param_12_value = v;
+    this->sendParameter(11, false);
+
+    if (this->param_12_value != this->param_12_lastValue) {
+        this->getEngine()->presetTouched();
+        this->param_12_lastValue = this->param_12_value;
+    }
+
+    this->gaintilde_06_input_number_set(v);
+}
+
+void param_13_value_set(number v) {
+    v = this->param_13_value_constrain(v);
+    this->param_13_value = v;
+    this->sendParameter(12, false);
+
+    if (this->param_13_value != this->param_13_lastValue) {
+        this->getEngine()->presetTouched();
+        this->param_13_lastValue = this->param_13_value;
+    }
+
+    this->cycle_tilde_02_frequency_set(v);
+}
+
+void param_14_value_set(number v) {
+    v = this->param_14_value_constrain(v);
+    this->param_14_value = v;
+    this->sendParameter(13, false);
+
+    if (this->param_14_value != this->param_14_lastValue) {
+        this->getEngine()->presetTouched();
+        this->param_14_lastValue = this->param_14_value;
+    }
+
+    this->cycle_tilde_03_frequency_set(v);
+}
+
+void param_15_value_set(number v) {
+    v = this->param_15_value_constrain(v);
+    this->param_15_value = v;
+    this->sendParameter(14, false);
+
+    if (this->param_15_value != this->param_15_lastValue) {
+        this->getEngine()->presetTouched();
+        this->param_15_lastValue = this->param_15_value;
     }
 
     this->phasor_03_freq_set(v);
@@ -1446,10 +1804,57 @@ void startup() {
         this->scheduleParamInit(8, 0);
     }
 
+    {
+        this->scheduleParamInit(9, 0);
+    }
+
+    {
+        this->scheduleParamInit(10, 0);
+    }
+
+    {
+        this->scheduleParamInit(11, 0);
+    }
+
+    {
+        this->scheduleParamInit(12, 0);
+    }
+
+    {
+        this->scheduleParamInit(13, 0);
+    }
+
+    {
+        this->scheduleParamInit(14, 0);
+    }
+
     this->processParamInitEvents();
 }
 
 static number param_01_value_constrain(number v) {
+    v = (v > 158 ? 158 : (v < 0 ? 0 : v));
+    return v;
+}
+
+void gaintilde_01_outval_set(number ) {}
+
+void gaintilde_01_value_set(number v) {
+    this->gaintilde_01_value = v;
+    number value;
+    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-15"), v, this->_currentTime);
+    this->gaintilde_01_outval_set(value);
+}
+
+void gaintilde_01_input_number_set(number v) {
+    this->gaintilde_01_input_number = v;
+
+    this->gaintilde_01_value_set(
+        this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+    );
+}
+
+static number param_02_value_constrain(number v) {
     v = (v > 20000 ? 20000 : (v < 0 ? 0 : v));
     return v;
 }
@@ -1577,7 +1982,76 @@ void send_01_input_number_set(number v) {
     this->receive_06_output_number_set(v);
 }
 
-static number param_02_value_constrain(number v) {
+static number param_03_value_constrain(number v) {
+    v = (v > 158 ? 158 : (v < 0 ? 0 : v));
+    return v;
+}
+
+void gaintilde_02_outval_set(number ) {}
+
+void gaintilde_02_value_set(number v) {
+    this->gaintilde_02_value = v;
+    number value;
+    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-19"), v, this->_currentTime);
+    this->gaintilde_02_outval_set(value);
+}
+
+void gaintilde_02_input_number_set(number v) {
+    this->gaintilde_02_input_number = v;
+
+    this->gaintilde_02_value_set(
+        this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+    );
+}
+
+static number param_04_value_constrain(number v) {
+    v = (v > 158 ? 158 : (v < 0 ? 0 : v));
+    return v;
+}
+
+void gaintilde_03_outval_set(number ) {}
+
+void gaintilde_03_value_set(number v) {
+    this->gaintilde_03_value = v;
+    number value;
+    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-20"), v, this->_currentTime);
+    this->gaintilde_03_outval_set(value);
+}
+
+void gaintilde_03_input_number_set(number v) {
+    this->gaintilde_03_input_number = v;
+
+    this->gaintilde_03_value_set(
+        this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+    );
+}
+
+static number param_05_value_constrain(number v) {
+    v = (v > 158 ? 158 : (v < 0 ? 0 : v));
+    return v;
+}
+
+void gaintilde_04_outval_set(number ) {}
+
+void gaintilde_04_value_set(number v) {
+    this->gaintilde_04_value = v;
+    number value;
+    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-27"), v, this->_currentTime);
+    this->gaintilde_04_outval_set(value);
+}
+
+void gaintilde_04_input_number_set(number v) {
+    this->gaintilde_04_input_number = v;
+
+    this->gaintilde_04_value_set(
+        this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+    );
+}
+
+static number param_06_value_constrain(number v) {
     v = (v > 1 ? 1 : (v < 0 ? 0 : v));
     return v;
 }
@@ -1593,7 +2067,7 @@ void adsr_01_trigger_number_set(number v) {
     }
 }
 
-static number param_03_value_constrain(number v) {
+static number param_07_value_constrain(number v) {
     v = (v > 2000 ? 2000 : (v < 0 ? 0 : v));
     return v;
 }
@@ -1602,7 +2076,7 @@ void adsr_01_attack_set(number v) {
     this->adsr_01_attack = v;
 }
 
-static number param_04_value_constrain(number v) {
+static number param_08_value_constrain(number v) {
     v = (v > 2000 ? 2000 : (v < 0 ? 0 : v));
     return v;
 }
@@ -1611,7 +2085,7 @@ void adsr_01_decay_set(number v) {
     this->adsr_01_decay = v;
 }
 
-static number param_05_value_constrain(number v) {
+static number param_09_value_constrain(number v) {
     v = (v > 2000 ? 2000 : (v < 0 ? 0 : v));
     return v;
 }
@@ -1620,80 +2094,9 @@ void adsr_01_sustain_set(number v) {
     this->adsr_01_sustain = v;
 }
 
-static number param_06_value_constrain(number v) {
-    v = (v > 2000 ? 2000 : (v < 0 ? 0 : v));
+static number param_10_value_constrain(number v) {
+    v = (v > 158 ? 158 : (v < 0 ? 0 : v));
     return v;
-}
-
-void adsr_01_release_set(number v) {
-    this->adsr_01_release = v;
-}
-
-static number param_07_value_constrain(number v) {
-    v = (v > 20 ? 20 : (v < 1 ? 1 : v));
-    return v;
-}
-
-void cycle_tilde_02_frequency_set(number v) {
-    this->cycle_tilde_02_frequency = v;
-}
-
-static number param_08_value_constrain(number v) {
-    v = (v > 20 ? 20 : (v < 1 ? 1 : v));
-    return v;
-}
-
-void cycle_tilde_03_frequency_set(number v) {
-    this->cycle_tilde_03_frequency = v;
-}
-
-static number param_09_value_constrain(number v) {
-    v = (v > 20 ? 20 : (v < 1 ? 1 : v));
-    return v;
-}
-
-void phasor_03_freq_set(number v) {
-    this->phasor_03_freq = v;
-}
-
-void gaintilde_01_outval_set(number ) {}
-
-void gaintilde_01_value_set(number v) {
-    this->gaintilde_01_value = v;
-    number value;
-    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
-    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-15"), v, this->_currentTime);
-    this->gaintilde_01_outval_set(value);
-}
-
-void gaintilde_02_outval_set(number ) {}
-
-void gaintilde_02_value_set(number v) {
-    this->gaintilde_02_value = v;
-    number value;
-    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
-    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-19"), v, this->_currentTime);
-    this->gaintilde_02_outval_set(value);
-}
-
-void gaintilde_03_outval_set(number ) {}
-
-void gaintilde_03_value_set(number v) {
-    this->gaintilde_03_value = v;
-    number value;
-    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
-    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-20"), v, this->_currentTime);
-    this->gaintilde_03_outval_set(value);
-}
-
-void gaintilde_04_outval_set(number ) {}
-
-void gaintilde_04_value_set(number v) {
-    this->gaintilde_04_value = v;
-    number value;
-    value = this->scale(v, 0, 157, 0, 158 - 1, 1);
-    this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-27"), v, this->_currentTime);
-    this->gaintilde_04_outval_set(value);
 }
 
 void gaintilde_05_outval_set(number ) {}
@@ -1706,6 +2109,28 @@ void gaintilde_05_value_set(number v) {
     this->gaintilde_05_outval_set(value);
 }
 
+void gaintilde_05_input_number_set(number v) {
+    this->gaintilde_05_input_number = v;
+
+    this->gaintilde_05_value_set(
+        this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+    );
+}
+
+static number param_11_value_constrain(number v) {
+    v = (v > 2000 ? 2000 : (v < 0 ? 0 : v));
+    return v;
+}
+
+void adsr_01_release_set(number v) {
+    this->adsr_01_release = v;
+}
+
+static number param_12_value_constrain(number v) {
+    v = (v > 158 ? 158 : (v < 0 ? 0 : v));
+    return v;
+}
+
 void gaintilde_06_outval_set(number ) {}
 
 void gaintilde_06_value_set(number v) {
@@ -1714,6 +2139,41 @@ void gaintilde_06_value_set(number v) {
     value = this->scale(v, 0, 157, 0, 158 - 1, 1);
     this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-63"), v, this->_currentTime);
     this->gaintilde_06_outval_set(value);
+}
+
+void gaintilde_06_input_number_set(number v) {
+    this->gaintilde_06_input_number = v;
+
+    this->gaintilde_06_value_set(
+        this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+    );
+}
+
+static number param_13_value_constrain(number v) {
+    v = (v > 20 ? 20 : (v < 1 ? 1 : v));
+    return v;
+}
+
+void cycle_tilde_02_frequency_set(number v) {
+    this->cycle_tilde_02_frequency = v;
+}
+
+static number param_14_value_constrain(number v) {
+    v = (v > 20 ? 20 : (v < 1 ? 1 : v));
+    return v;
+}
+
+void cycle_tilde_03_frequency_set(number v) {
+    this->cycle_tilde_03_frequency = v;
+}
+
+static number param_15_value_constrain(number v) {
+    v = (v > 20 ? 20 : (v < 1 ? 1 : v));
+    return v;
+}
+
+void phasor_03_freq_set(number v) {
+    this->phasor_03_freq = v;
 }
 
 void saw_tilde_01_perform(
@@ -2356,6 +2816,28 @@ void param_01_setPresetValue(PatcherStateInterface& preset) {
     this->param_01_value_set(preset["value"]);
 }
 
+void param_02_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_02_value;
+}
+
+void param_02_setPresetValue(PatcherStateInterface& preset) {
+    if ((bool)(stateIsEmpty(preset)))
+        return;
+
+    this->param_02_value_set(preset["value"]);
+}
+
+void param_03_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_03_value;
+}
+
+void param_03_setPresetValue(PatcherStateInterface& preset) {
+    if ((bool)(stateIsEmpty(preset)))
+        return;
+
+    this->param_03_value_set(preset["value"]);
+}
+
 number gaintilde_01_ramp_d_next(number x) {
     number temp = (number)(x - this->gaintilde_01_ramp_d_prev);
     this->gaintilde_01_ramp_d_prev = x;
@@ -2454,6 +2936,17 @@ void saw_tilde_01_dspsetup(bool force) {
 
     this->saw_tilde_01_setupDone = true;
     this->saw_tilde_01_dcblocker_dspsetup();
+}
+
+void param_04_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_04_value;
+}
+
+void param_04_setPresetValue(PatcherStateInterface& preset) {
+    if ((bool)(stateIsEmpty(preset)))
+        return;
+
+    this->param_04_value_set(preset["value"]);
 }
 
 number gaintilde_02_ramp_d_next(number x) {
@@ -2656,6 +3149,17 @@ void saw_tilde_03_dspsetup(bool force) {
     this->saw_tilde_03_dcblocker_dspsetup();
 }
 
+void param_05_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_05_value;
+}
+
+void param_05_setPresetValue(PatcherStateInterface& preset) {
+    if ((bool)(stateIsEmpty(preset)))
+        return;
+
+    this->param_05_value_set(preset["value"]);
+}
+
 number gaintilde_04_ramp_d_next(number x) {
     number temp = (number)(x - this->gaintilde_04_ramp_d_prev);
     this->gaintilde_04_ramp_d_prev = x;
@@ -2776,15 +3280,15 @@ void cycle_tilde_01_bufferUpdated() {
     this->cycle_tilde_01_wrap = (long)(this->cycle_tilde_01_buffer->getSize()) - 1;
 }
 
-void param_02_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_02_value;
+void param_06_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_06_value;
 }
 
-void param_02_setPresetValue(PatcherStateInterface& preset) {
+void param_06_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_02_value_set(preset["value"]);
+    this->param_06_value_set(preset["value"]);
 }
 
 void adsr_01_dspsetup(bool force) {
@@ -2795,37 +3299,48 @@ void adsr_01_dspsetup(bool force) {
     this->adsr_01_setupDone = true;
 }
 
-void param_03_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_03_value;
+void param_07_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_07_value;
 }
 
-void param_03_setPresetValue(PatcherStateInterface& preset) {
+void param_07_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_03_value_set(preset["value"]);
+    this->param_07_value_set(preset["value"]);
 }
 
-void param_04_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_04_value;
+void param_08_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_08_value;
 }
 
-void param_04_setPresetValue(PatcherStateInterface& preset) {
+void param_08_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_04_value_set(preset["value"]);
+    this->param_08_value_set(preset["value"]);
 }
 
-void param_05_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_05_value;
+void param_09_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_09_value;
 }
 
-void param_05_setPresetValue(PatcherStateInterface& preset) {
+void param_09_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_05_value_set(preset["value"]);
+    this->param_09_value_set(preset["value"]);
+}
+
+void param_10_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_10_value;
+}
+
+void param_10_setPresetValue(PatcherStateInterface& preset) {
+    if ((bool)(stateIsEmpty(preset)))
+        return;
+
+    this->param_10_value_set(preset["value"]);
 }
 
 number gaintilde_05_ramp_d_next(number x) {
@@ -2936,15 +3451,15 @@ void phasor_01_dspsetup(bool force) {
     this->phasor_01_ph_dspsetup();
 }
 
-void param_06_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_06_value;
+void param_11_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_11_value;
 }
 
-void param_06_setPresetValue(PatcherStateInterface& preset) {
+void param_11_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_06_value_set(preset["value"]);
+    this->param_11_value_set(preset["value"]);
 }
 
 number gaintilde_06_ramp_d_next(number x) {
@@ -3055,15 +3570,26 @@ void phasor_02_dspsetup(bool force) {
     this->phasor_02_ph_dspsetup();
 }
 
-void param_07_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_07_value;
+void param_12_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_12_value;
 }
 
-void param_07_setPresetValue(PatcherStateInterface& preset) {
+void param_12_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_07_value_set(preset["value"]);
+    this->param_12_value_set(preset["value"]);
+}
+
+void param_13_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_13_value;
+}
+
+void param_13_setPresetValue(PatcherStateInterface& preset) {
+    if ((bool)(stateIsEmpty(preset)))
+        return;
+
+    this->param_13_value_set(preset["value"]);
 }
 
 number cycle_tilde_02_ph_next(number freq, number reset) {
@@ -3110,15 +3636,15 @@ void cycle_tilde_02_bufferUpdated() {
     this->cycle_tilde_02_wrap = (long)(this->cycle_tilde_02_buffer->getSize()) - 1;
 }
 
-void param_08_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_08_value;
+void param_14_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_14_value;
 }
 
-void param_08_setPresetValue(PatcherStateInterface& preset) {
+void param_14_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_08_value_set(preset["value"]);
+    this->param_14_value_set(preset["value"]);
 }
 
 number cycle_tilde_03_ph_next(number freq, number reset) {
@@ -3165,15 +3691,15 @@ void cycle_tilde_03_bufferUpdated() {
     this->cycle_tilde_03_wrap = (long)(this->cycle_tilde_03_buffer->getSize()) - 1;
 }
 
-void param_09_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->param_09_value;
+void param_15_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->param_15_value;
 }
 
-void param_09_setPresetValue(PatcherStateInterface& preset) {
+void param_15_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->param_09_value_set(preset["value"]);
+    this->param_15_value_set(preset["value"]);
 }
 
 number phasor_03_ph_next(number freq, number reset) {
@@ -3434,19 +3960,22 @@ void updateTime(MillisecondTime time) {
 
 void assign_defaults()
 {
-    send_01_input_number = 0;
     param_01_value = 0;
+    send_01_input_number = 0;
+    param_02_value = 0;
+    param_03_value = 0;
     gaintilde_01_input_number = 0;
     gaintilde_01_value = 0;
     gaintilde_01_interp = 10;
     receive_01_output_number = 0;
     saw_tilde_01_frequency = 0;
     saw_tilde_01_syncPhase = 0;
-    dspexpr_01_in1 = 0;
-    dspexpr_01_in2 = 0;
+    param_04_value = 0;
     gaintilde_02_input_number = 0;
     gaintilde_02_value = 0;
     gaintilde_02_interp = 10;
+    dspexpr_01_in1 = 0;
+    dspexpr_01_in2 = 0;
     receive_02_output_number = 0;
     dspexpr_02_in1 = 0;
     dspexpr_02_in2 = 0;
@@ -3470,6 +3999,7 @@ void assign_defaults()
     expr_02_in2 = 6;
     expr_02_out1 = 0;
     receive_03_output_number = 0;
+    param_05_value = 0;
     gaintilde_04_input_number = 0;
     gaintilde_04_value = 0;
     gaintilde_04_interp = 10;
@@ -3479,16 +4009,17 @@ void assign_defaults()
     receive_04_output_number = 0;
     cycle_tilde_01_frequency = 0;
     cycle_tilde_01_phase_offset = 0;
-    param_02_value = 0;
+    param_06_value = 0;
     adsr_01_trigger_number = 0;
     adsr_01_attack = 0;
     adsr_01_decay = 0;
     adsr_01_sustain = 0;
     adsr_01_release = 0;
     adsr_01_legato = 0;
-    param_03_value = 0;
-    param_04_value = 0;
-    param_05_value = 0;
+    param_07_value = 0;
+    param_08_value = 0;
+    param_09_value = 0;
+    param_10_value = 0;
     gaintilde_05_input_number = 0;
     gaintilde_05_value = 0;
     gaintilde_05_interp = 10;
@@ -3497,7 +4028,7 @@ void assign_defaults()
     expr_04_out1 = 0;
     receive_05_output_number = 0;
     phasor_01_freq = 0;
-    param_06_value = 0;
+    param_11_value = 0;
     gaintilde_06_input_number = 0;
     gaintilde_06_value = 0;
     gaintilde_06_interp = 10;
@@ -3506,13 +4037,14 @@ void assign_defaults()
     expr_05_out1 = 0;
     receive_06_output_number = 0;
     phasor_02_freq = 0;
-    param_07_value = 0;
+    param_12_value = 0;
+    param_13_value = 0;
     cycle_tilde_02_frequency = 0;
     cycle_tilde_02_phase_offset = 0;
-    param_08_value = 0;
+    param_14_value = 0;
     cycle_tilde_03_frequency = 0;
     cycle_tilde_03_phase_offset = 0;
-    param_09_value = 0;
+    param_15_value = 0;
     phasor_03_freq = 0;
     _currentTime = 0;
     audioProcessSampleCount = 0;
@@ -3534,6 +4066,8 @@ void assign_defaults()
     sr = 44100;
     invsr = 0.00002267573696;
     param_01_lastValue = 0;
+    param_02_lastValue = 0;
+    param_03_lastValue = 0;
     gaintilde_01_lastValue = 0;
     gaintilde_01_loginc = 1;
     gaintilde_01_zval = 0;
@@ -3549,6 +4083,7 @@ void assign_defaults()
     saw_tilde_01_dcblocker_xm1 = 0;
     saw_tilde_01_dcblocker_ym1 = 0;
     saw_tilde_01_setupDone = false;
+    param_04_lastValue = 0;
     gaintilde_02_lastValue = 0;
     gaintilde_02_loginc = 1;
     gaintilde_02_zval = 0;
@@ -3579,6 +4114,7 @@ void assign_defaults()
     saw_tilde_03_dcblocker_xm1 = 0;
     saw_tilde_03_dcblocker_ym1 = 0;
     saw_tilde_03_setupDone = false;
+    param_05_lastValue = 0;
     gaintilde_04_lastValue = 0;
     gaintilde_04_loginc = 1;
     gaintilde_04_zval = 0;
@@ -3591,7 +4127,7 @@ void assign_defaults()
     cycle_tilde_01_ph_currentPhase = 0;
     cycle_tilde_01_ph_conv = 0;
     cycle_tilde_01_setupDone = false;
-    param_02_lastValue = 0;
+    param_06_lastValue = 0;
     adsr_01_phase = 3;
     adsr_01_mspersamp = 0;
     adsr_01_time = 0;
@@ -3602,9 +4138,10 @@ void assign_defaults()
     adsr_01_triggerBuf = nullptr;
     adsr_01_triggerValueBuf = nullptr;
     adsr_01_setupDone = false;
-    param_03_lastValue = 0;
-    param_04_lastValue = 0;
-    param_05_lastValue = 0;
+    param_07_lastValue = 0;
+    param_08_lastValue = 0;
+    param_09_lastValue = 0;
+    param_10_lastValue = 0;
     gaintilde_05_lastValue = 0;
     gaintilde_05_loginc = 1;
     gaintilde_05_zval = 0;
@@ -3619,7 +4156,7 @@ void assign_defaults()
     phasor_01_ph_currentPhase = 0;
     phasor_01_ph_conv = 0;
     phasor_01_setupDone = false;
-    param_06_lastValue = 0;
+    param_11_lastValue = 0;
     gaintilde_06_lastValue = 0;
     gaintilde_06_loginc = 1;
     gaintilde_06_zval = 0;
@@ -3634,17 +4171,18 @@ void assign_defaults()
     phasor_02_ph_currentPhase = 0;
     phasor_02_ph_conv = 0;
     phasor_02_setupDone = false;
-    param_07_lastValue = 0;
+    param_12_lastValue = 0;
+    param_13_lastValue = 0;
     cycle_tilde_02_wrap = 0;
     cycle_tilde_02_ph_currentPhase = 0;
     cycle_tilde_02_ph_conv = 0;
     cycle_tilde_02_setupDone = false;
-    param_08_lastValue = 0;
+    param_14_lastValue = 0;
     cycle_tilde_03_wrap = 0;
     cycle_tilde_03_ph_currentPhase = 0;
     cycle_tilde_03_ph_conv = 0;
     cycle_tilde_03_setupDone = false;
-    param_09_lastValue = 0;
+    param_15_lastValue = 0;
     phasor_03_sigbuf = nullptr;
     phasor_03_lastLockedPhase = 0;
     phasor_03_conv = 0;
@@ -3669,9 +4207,11 @@ void assign_defaults()
 
 // member variables
 
+    number param_01_value;
     number send_01_input_number;
     list send_01_input_list;
-    number param_01_value;
+    number param_02_value;
+    number param_03_value;
     number gaintilde_01_input_number;
     number gaintilde_01_value;
     number gaintilde_01_interp;
@@ -3679,11 +4219,12 @@ void assign_defaults()
     list receive_01_output_list;
     number saw_tilde_01_frequency;
     number saw_tilde_01_syncPhase;
-    number dspexpr_01_in1;
-    number dspexpr_01_in2;
+    number param_04_value;
     number gaintilde_02_input_number;
     number gaintilde_02_value;
     number gaintilde_02_interp;
+    number dspexpr_01_in1;
+    number dspexpr_01_in2;
     number receive_02_output_number;
     list receive_02_output_list;
     number dspexpr_02_in1;
@@ -3709,6 +4250,7 @@ void assign_defaults()
     number expr_02_out1;
     number receive_03_output_number;
     list receive_03_output_list;
+    number param_05_value;
     number gaintilde_04_input_number;
     number gaintilde_04_value;
     number gaintilde_04_interp;
@@ -3719,16 +4261,17 @@ void assign_defaults()
     list receive_04_output_list;
     number cycle_tilde_01_frequency;
     number cycle_tilde_01_phase_offset;
-    number param_02_value;
+    number param_06_value;
     number adsr_01_trigger_number;
     number adsr_01_attack;
     number adsr_01_decay;
     number adsr_01_sustain;
     number adsr_01_release;
     number adsr_01_legato;
-    number param_03_value;
-    number param_04_value;
-    number param_05_value;
+    number param_07_value;
+    number param_08_value;
+    number param_09_value;
+    number param_10_value;
     number gaintilde_05_input_number;
     number gaintilde_05_value;
     number gaintilde_05_interp;
@@ -3738,7 +4281,7 @@ void assign_defaults()
     number receive_05_output_number;
     list receive_05_output_list;
     number phasor_01_freq;
-    number param_06_value;
+    number param_11_value;
     number gaintilde_06_input_number;
     number gaintilde_06_value;
     number gaintilde_06_interp;
@@ -3748,13 +4291,14 @@ void assign_defaults()
     number receive_06_output_number;
     list receive_06_output_list;
     number phasor_02_freq;
-    number param_07_value;
+    number param_12_value;
+    number param_13_value;
     number cycle_tilde_02_frequency;
     number cycle_tilde_02_phase_offset;
-    number param_08_value;
+    number param_14_value;
     number cycle_tilde_03_frequency;
     number cycle_tilde_03_phase_offset;
-    number param_09_value;
+    number param_15_value;
     number phasor_03_freq;
     MillisecondTime _currentTime;
     SampleIndex audioProcessSampleCount;
@@ -3768,6 +4312,8 @@ void assign_defaults()
     number sr;
     number invsr;
     number param_01_lastValue;
+    number param_02_lastValue;
+    number param_03_lastValue;
     number gaintilde_01_lastValue;
     number gaintilde_01_loginc;
     number gaintilde_01_zval;
@@ -3783,6 +4329,7 @@ void assign_defaults()
     number saw_tilde_01_dcblocker_xm1;
     number saw_tilde_01_dcblocker_ym1;
     bool saw_tilde_01_setupDone;
+    number param_04_lastValue;
     number gaintilde_02_lastValue;
     number gaintilde_02_loginc;
     number gaintilde_02_zval;
@@ -3813,6 +4360,7 @@ void assign_defaults()
     number saw_tilde_03_dcblocker_xm1;
     number saw_tilde_03_dcblocker_ym1;
     bool saw_tilde_03_setupDone;
+    number param_05_lastValue;
     number gaintilde_04_lastValue;
     number gaintilde_04_loginc;
     number gaintilde_04_zval;
@@ -3828,7 +4376,7 @@ void assign_defaults()
     number cycle_tilde_01_ph_currentPhase;
     number cycle_tilde_01_ph_conv;
     bool cycle_tilde_01_setupDone;
-    number param_02_lastValue;
+    number param_06_lastValue;
     Int adsr_01_phase;
     number adsr_01_mspersamp;
     number adsr_01_time;
@@ -3839,9 +4387,10 @@ void assign_defaults()
     signal adsr_01_triggerBuf;
     signal adsr_01_triggerValueBuf;
     bool adsr_01_setupDone;
-    number param_03_lastValue;
-    number param_04_lastValue;
-    number param_05_lastValue;
+    number param_07_lastValue;
+    number param_08_lastValue;
+    number param_09_lastValue;
+    number param_10_lastValue;
     number gaintilde_05_lastValue;
     number gaintilde_05_loginc;
     number gaintilde_05_zval;
@@ -3856,7 +4405,7 @@ void assign_defaults()
     number phasor_01_ph_currentPhase;
     number phasor_01_ph_conv;
     bool phasor_01_setupDone;
-    number param_06_lastValue;
+    number param_11_lastValue;
     number gaintilde_06_lastValue;
     number gaintilde_06_loginc;
     number gaintilde_06_zval;
@@ -3871,7 +4420,8 @@ void assign_defaults()
     number phasor_02_ph_currentPhase;
     number phasor_02_ph_conv;
     bool phasor_02_setupDone;
-    number param_07_lastValue;
+    number param_12_lastValue;
+    number param_13_lastValue;
     Float64BufferRef cycle_tilde_02_buffer;
     long cycle_tilde_02_wrap;
     uint32_t cycle_tilde_02_phasei;
@@ -3879,7 +4429,7 @@ void assign_defaults()
     number cycle_tilde_02_ph_currentPhase;
     number cycle_tilde_02_ph_conv;
     bool cycle_tilde_02_setupDone;
-    number param_08_lastValue;
+    number param_14_lastValue;
     Float64BufferRef cycle_tilde_03_buffer;
     long cycle_tilde_03_wrap;
     uint32_t cycle_tilde_03_phasei;
@@ -3887,7 +4437,7 @@ void assign_defaults()
     number cycle_tilde_03_ph_currentPhase;
     number cycle_tilde_03_ph_conv;
     bool cycle_tilde_03_setupDone;
-    number param_09_lastValue;
+    number param_15_lastValue;
     signal phasor_03_sigbuf;
     number phasor_03_lastLockedPhase;
     number phasor_03_conv;

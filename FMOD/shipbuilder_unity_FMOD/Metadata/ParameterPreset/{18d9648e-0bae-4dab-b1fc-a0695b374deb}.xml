@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{18d9648e-0bae-4dab-b1fc-a0695b374deb}">
+		<property name="name">
+			<value>harmonics</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{928a8c5d-5cb4-4798-8a65-4b2f1488ec9b}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{928a8c5d-5cb4-4798-8a65-4b2f1488ec9b}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>neutral</value>
+			<value>comb odds</value>
+			<value>comb evens</value>
+			<value>natural curve</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
