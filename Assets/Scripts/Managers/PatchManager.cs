@@ -197,7 +197,9 @@ public class PatchManager : MonoBehaviour
             { "reson", 1},
             { "fbgain", 0},
             //delay
-            { "delaytime", 500}
+            { "delaytime", 500 },
+            //harmonics
+            { "harmonics", 0 }
 
         };
         var statDict = new Dictionary<string, float>

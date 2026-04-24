@@ -140,8 +140,9 @@ public class AudioManager: MonoBehaviour
             { "apitch1", 440 },
             { "apitch2", 554.37f },
             { "apitch3", 659.26f },
-            { "apitch4", 880 }
-
+            { "apitch4", 880 },
+            //harmonicizer params
+            {"harmonics", 0}
         };
     }
 

@@ -1967,6 +1967,7 @@ MonoBehaviour:
   izki: 0
   aubo: 0
   dwth: 0
+  hysh: 0
   inputJacks:
   - {fileID: 8320320010482582890}
   outputJacks:
@@ -1974,10 +1975,11 @@ MonoBehaviour:
   parentWires: []
   childWires: []
   wirePrefab: {fileID: 0}
-  sampleText: {fileID: 0}
   systemType: 0
-  waveform: 2
+  waveform: 8
+  bulletType: 1
   waveformKnobEnabled: 0
+  damage: 1
 --- !u!50 &1400057294038229438
 Rigidbody2D:
   serializedVersion: 5
@@ -2103,6 +2105,7 @@ MonoBehaviour:
   dragHeight: 1
   canGoInInventory: 1
   isInInventory: 0
+  lastParent: {fileID: 0}
   bodyClick:
     m_PersistentCalls:
       m_Calls: []
@@ -2118,6 +2121,9 @@ MonoBehaviour:
   oddSizeX: 0
   oddSizeY: 0
   collisionResults: []
+  destroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8320320010482582890
 GameObject:
   m_ObjectHideFlags: 0
