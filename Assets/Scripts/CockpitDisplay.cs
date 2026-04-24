@@ -49,14 +49,21 @@ public class CockpitDisplay : MonoBehaviour
 
     void Update()
     {
-        for (var i = 0; i < playerWeapons.Count; i++)
+        if (playerWeapons.Count > 0)
         {
-            playerWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.PlayerWeapons()[i].charge;
+            for (var i = 0; i < ShipManager.Instance.PlayerWeapons().Length; i++)
+            {
+                playerWeapons[i].GetComponentInChildren<StatBar>().value =
+                    ShipManager.Instance.PlayerWeapons()[i].charge;
+            }
         }
 
-        for (var i = 0; i < ShipManager.Instance.EnemyWeapons().Length; i++)
+        if (enemyWeapons.Count > 0)
         {
-            enemyWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.EnemyWeapons()[i].charge;
+            for (var i = 0; i < ShipManager.Instance.EnemyWeapons().Length; i++)
+            {
+                enemyWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.EnemyWeapons()[i].charge;
+            }
         }
         
         
@@ -91,7 +98,7 @@ public class CockpitDisplay : MonoBehaviour
     private void OnPlayerHit(float damage)
     {
         StartCoroutine(DamageLabelCoroutine(damage, false));
-        playerHealthBar.value = ShipManager.Instance.PlayerHull() / ShipManager.Instance.PlayerMaxHull();
+        playerHealthBar.value = ShipManager.Instance.PlayerCurrentHull() / ShipManager.Instance.PlayerMaxHull();
     }
 
     private void OnEnemyInitialized()

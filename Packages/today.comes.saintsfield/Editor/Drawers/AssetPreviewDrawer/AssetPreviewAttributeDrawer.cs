@@ -39,7 +39,15 @@ namespace SaintsField.Editor.Drawers.AssetPreviewDrawer
             if(_previewTexture == null || _previewTexture.width == 1)
             {
                 // Debug.Log($"load preview {target}");
-                if(AssetPreview.IsLoadingAssetPreview(target.GetInstanceID()))
+
+                if(AssetPreview.IsLoadingAssetPreview(target.
+#if UNITY_6000_4_OR_NEWER
+                       GetEntityId
+#else
+                       GetInstanceID
+#endif
+                ()))
+
                 {
                     return null;
                 }

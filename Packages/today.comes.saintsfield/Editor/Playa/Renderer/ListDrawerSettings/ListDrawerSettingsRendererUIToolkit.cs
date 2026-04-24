@@ -495,8 +495,6 @@ namespace SaintsField.Editor.Playa.Renderer.ListDrawerSettings
                             property.DeleteArrayElementAtIndex(propIndex);
                             property.serializedObject.ApplyModifiedProperties();
                         });
-
-                        evt.menu.AppendSeparator();
                     }));
                 }
             }
@@ -589,7 +587,7 @@ namespace SaintsField.Editor.Playa.Renderer.ListDrawerSettings
                 },
             };
             searchTextField.Add(loadingImage);
-            UIToolkitUtils.KeepRotate(loadingImage);
+            UIToolkitUtils.SetKeepRotate(loadingImage);
             loadingImage.schedule.Execute(() => UIToolkitUtils.TriggerRotate(loadingImage));
 
             preContent.Add(searchField);

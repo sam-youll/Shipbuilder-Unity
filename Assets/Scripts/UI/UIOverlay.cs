@@ -30,7 +30,7 @@ public class UIOverlay : MonoBehaviour
 
     private void OnPlayerHullValueChanged()
     {
-        hullText.text = Mathf.RoundToInt(ShipManager.Instance.PlayerHull()) + "/" + ShipManager.Instance.PlayerMaxHull();
+        hullText.text = Mathf.RoundToInt(ShipManager.Instance.PlayerCurrentHull()) + "/" + ShipManager.Instance.PlayerMaxHull();
     }
 
     private void OnPlayerScrapValueChanged()

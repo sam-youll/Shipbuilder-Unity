@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using SaintsField.Editor.Utils;
 using SaintsField.Utils;
 using UnityEngine;
+#if SAINTSFIELD_DEBUG
+using Unity.Profiling;
+#endif
 
 namespace SaintsField.Editor
 {
@@ -16,45 +18,48 @@ namespace SaintsField.Editor
         private static readonly Dictionary<Type, MemberInfoComparerPreParsed> TypeToPreParsedComparer =
             new Dictionary<Type, MemberInfoComparerPreParsed>();
 
-        public enum MemberType
-        {
-            Field,
-            Property,
-            Method,
-            Event,
-        }
-
-        private readonly struct MemberContainer
-        {
-            public readonly MemberType Type;
-            public readonly string Name;
-            public readonly IReadOnlyList<string> Arguments;
-            public readonly string ReturnType;
-
-            public MemberContainer(MemberType type, string name)
-            {
-                Type = type;
-                Name = name;
-                Arguments = null;
-                ReturnType = null;
-            }
-
-            public MemberContainer(string name, IEnumerable<string> arguments, string returnType)
-            {
-                Type = MemberType.Method;
-                Name = name;
-                Arguments = arguments.ToArray();
-                ReturnType = returnType;
-            }
-        }
+        // private enum MemberType
+        // {
+        //     Field,
+        //     Property,
+        //     Method,
+        //     Event,
+        // }
+        //
+        // private readonly struct MemberContainer
+        // {
+        //     public readonly MemberType Type;
+        //     public readonly string Name;
+        //     public readonly IReadOnlyList<string> Arguments;
+        //     public readonly string ReturnType;
+        //
+        //     public MemberContainer(MemberType type, string name)
+        //     {
+        //         Type = type;
+        //         Name = name;
+        //         Arguments = null;
+        //         ReturnType = null;
+        //     }
+        //
+        //     public MemberContainer(string name, IEnumerable<string> arguments, string returnType)
+        //     {
+        //         Type = MemberType.Method;
+        //         Name = name;
+        //         Arguments = arguments.ToArray();
+        //         ReturnType = returnType;
+        //     }
+        // }
 
         public static MemberInfoComparerPreParsed GetComparer(Type systemType)
         {
+#if SAINTSFIELD_DEBUG
+            using ProfilerMarker.AutoScope autoScope = new ProfilerMarker("MemberInfoComparerPreParsed.GetComparer").Auto();
+#endif
             if (TypeToPreParsedComparer.TryGetValue(systemType, out MemberInfoComparerPreParsed cache))
             {
-#if SAINTSFIELD_DEBUG
-                Debug.Log($"return cache for {systemType}: {cache}");
-#endif
+// #if SAINTSFIELD_DEBUG
+//                 Debug.Log($"return cache for {systemType}: {cache}");
+// #endif
                 return cache;
             }
 
@@ -64,7 +69,7 @@ namespace SaintsField.Editor
             // SaintsField.Samples.Scripts.SaintsEditor.NewParserTest+Part1`2+TestNestedStructForParse[System.Int32,System.Int32]: SaintsField.Samples, SaintsField.Samples.Scripts.SaintsEditor
 
             // Debug.Log($"{systemType}: {ass.GetName().Name}, {nameSpace}");
-            string baseFolder = $"{SaintsFieldConfig.PreParserRelativeFolder}/{ass.GetName().Name}";
+            string baseFolder = $"{SaintsFieldConfigUtil.Config.GetParserSavePath()}/{ass.GetName().Name}";
             if (!Directory.Exists(baseFolder))
             {
 // #if SAINTSFIELD_DEBUG
@@ -98,6 +103,16 @@ namespace SaintsField.Editor
                 return null;
             }
 
+            long lastWriteTime = File.GetLastWriteTime(parsedFile).Ticks;
+            if (MemberInfoPreParsedCache.instance.nameToFileInfo.TryGetValue(nameBase,
+                    out MemberInfoPreParsedCache.FileInfo cachedFileInfo) && cachedFileInfo.lastWriteTime == lastWriteTime)
+            {
+// #if SAINTSFIELD_DEBUG
+//                 Debug.Log($"Use cached preParse for {nameBase}");
+// #endif
+                return TypeToPreParsedComparer[systemType] = new MemberInfoComparerPreParsed(nameBase, cachedFileInfo.memberContainers);
+            }
+
             // Debug.Log($"{nameBase}.rc={File.ReadAllText(parsedFile)}");
             using FileStream fs = new FileStream(
                 parsedFile,
@@ -105,11 +120,11 @@ namespace SaintsField.Editor
                 FileAccess.Read,
                 FileShare.ReadWrite);
             using StreamReader reader = new StreamReader(fs, Encoding.UTF8);
-            string versionLine = reader.ReadLine();
-            if (versionLine != $"{SaintsFieldConfig.PreParserVersion}")
-            {
-                return TypeToPreParsedComparer[systemType] = null;
-            }
+            // string versionLine = reader.ReadLine();
+            // if (versionLine != $"{SaintsFieldConfig.PreParserVersion}")
+            // {
+            //     return TypeToPreParsedComparer[systemType] = null;
+            // }
             // skip the checksum line
             reader.ReadLine();
 
@@ -118,7 +133,7 @@ namespace SaintsField.Editor
             const string eventPrefix = "Event ";
             const string methodPrefix = "Method ";
 
-            List<MemberContainer> memberContainers = new List<MemberContainer>();
+            List<MemberInfoPreParsedCache.MemberContainer> memberContainers = new List<MemberInfoPreParsedCache.MemberContainer>();
 
             // ReSharper disable once MoveVariableDeclarationInsideLoopCondition
             string line;
@@ -127,17 +142,17 @@ namespace SaintsField.Editor
                 if (line.StartsWith(fieldPrefix))
                 {
                     string fieldName = line[fieldPrefix.Length..].Split('|')[1].Trim();
-                    memberContainers.Add(new MemberContainer(MemberType.Field, fieldName));
+                    memberContainers.Add(new MemberInfoPreParsedCache.MemberContainer(MemberInfoPreParsedCache.MemberType.Field, fieldName));
                 }
                 else if (line.StartsWith(propertyPrefix))
                 {
                     string propertyName = line[propertyPrefix.Length..].Split('|')[1].Trim();
-                    memberContainers.Add(new MemberContainer(MemberType.Property, propertyName));
+                    memberContainers.Add(new MemberInfoPreParsedCache.MemberContainer(MemberInfoPreParsedCache.MemberType.Property, propertyName));
                 }
                 else if (line.StartsWith(eventPrefix))
                 {
                     string eventName = line[eventPrefix.Length..].Split('|')[1].Trim();
-                    memberContainers.Add(new MemberContainer(MemberType.Event, eventName));
+                    memberContainers.Add(new MemberInfoPreParsedCache.MemberContainer(MemberInfoPreParsedCache.MemberType.Event, eventName));
                 }
                 else if (line.StartsWith(methodPrefix))
                 {
@@ -152,28 +167,43 @@ namespace SaintsField.Editor
                         methodArguments[index] = methodArgumentsSplit[index].Trim();
                     }
 
-                    memberContainers.Add(new MemberContainer(methodName, methodArguments, methodReturnType));
+                    memberContainers.Add(new MemberInfoPreParsedCache.MemberContainer(methodName, methodArguments, methodReturnType));
                 }
             }
+            MemberInfoPreParsedCache.instance.nameToFileInfo[nameBase] = new MemberInfoPreParsedCache.FileInfo(lastWriteTime, memberContainers.ToArray());
+            MemberInfoPreParsedCache.instance.nameToMemberIdToOrder.Remove(nameBase);
 
-            return new MemberInfoComparerPreParsed(memberContainers);
+#if SAINTSFIELD_DEBUG
+            Debug.Log($"Use new preParse for {nameBase}");
+#endif
+            return TypeToPreParsedComparer[systemType] = new MemberInfoComparerPreParsed(nameBase, memberContainers);
         }
 
-        private readonly IReadOnlyList<MemberContainer> _memberContainers;
+        private readonly string _nameBase;
+        private readonly IReadOnlyList<MemberInfoPreParsedCache.MemberContainer> _memberContainers;
+        private SaintsDictionary<string, int> _memberIdToOrderCache;
 
-        private MemberInfoComparerPreParsed(IReadOnlyList<MemberContainer> memberContainers)
+        private MemberInfoComparerPreParsed(string nameBase, IReadOnlyList<MemberInfoPreParsedCache.MemberContainer> memberContainers)
         {
+            _nameBase = nameBase;
+            if (MemberInfoPreParsedCache.instance.nameToMemberIdToOrder.TryGetValue(nameBase,
+                    out SaintsDictionary<string, int> memberIdToOrder))
+            {
+                _memberIdToOrderCache = memberIdToOrder;
+            }
             _memberContainers = memberContainers;
         }
+
+        // private readonly Dictionary<MemberInfo, int> _cachedMemberInfoToIndex = new Dictionary<MemberInfo, int>();
 
         public int Compare(MemberInfo x, MemberInfo y)
         {
             Debug.Assert(x != null);
             Debug.Assert(y != null);
 
-            int aIndex = FindMemberIndex(x, _memberContainers);
+            int aIndex = GetMemberInfoIndex(x);
             // Debug.Log($"MemberOrderComparer {a.Name} index {aIndex}");
-            int bIndex = FindMemberIndex(y, _memberContainers);
+            int bIndex = GetMemberInfoIndex(y);
             // Debug.Log($"MemberOrderComparer {b.Name} index {bIndex}");
 
             // if (aIndex == -1 || bIndex == -1)
@@ -200,8 +230,49 @@ namespace SaintsField.Editor
             // return bIndex - aIndex;
         }
 
+        private int GetMemberInfoIndex(MemberInfo x)
+        {
+            string aId = MemberInfoPreParsedCache.GetMemberInfoEssentialId(x);
+            if (_memberIdToOrderCache != null)
+            {
+// #if SAINTSFIELD_DEBUG
+//                 Debug.Log($"Use cached field order for {aId}");
+// #endif
+                lock(MemberInfoPreParsedCache.instance)
+                {
+                    if (_memberIdToOrderCache.TryGetValue(aId, out int aValue))
+                    {
+                        return aValue;
+                    }
+                }
+            }
+
+            int aIndex = FindMemberIndex(x, _memberContainers);
+            lock(MemberInfoPreParsedCache.instance)
+            {
+                if (_memberIdToOrderCache == null)
+                {
+                    _memberIdToOrderCache = MemberInfoPreParsedCache.instance.nameToMemberIdToOrder[_nameBase] =
+                        new SaintsDictionary<string, int>
+                        {
+                            { aId, aIndex },
+                        };
+
+                }
+                else
+                {
+                    _memberIdToOrderCache[aId] = aIndex;
+                }
+            }
+
+#if SAINTSFIELD_DEBUG
+            Debug.Log($"Use new field order for {aId}@{aIndex}");
+#endif
+            return aIndex;
+        }
+
         private static int FindMemberIndex(MemberInfo memberInfo,
-            IReadOnlyList<MemberContainer> codeAnalysisMembers)
+            IReadOnlyList<MemberInfoPreParsedCache.MemberContainer> codeAnalysisMembers)
         {
             // Debug.Log($"looking for member {memberInfo.Name}");
 
@@ -209,9 +280,9 @@ namespace SaintsField.Editor
 
             for (int index = 0; index < codeAnalysisMembers.Count; index++)
             {
-                MemberContainer memberContainer = codeAnalysisMembers[index];
+                MemberInfoPreParsedCache.MemberContainer memberContainer = codeAnalysisMembers[index];
 
-                if (memberContainer.Name != memberInfo.Name && RuntimeUtil.GetAutoPropertyName(memberContainer.Name) != memberInfo.Name)
+                if (memberContainer.name != memberInfo.Name && !RuntimeUtil.IsAutoPropertyNoAlloc(memberContainer.name, memberInfo.Name))
                 {
                     // Debug.Log($"{memberInfo.Name} not found, continue");
                     continue;
@@ -223,7 +294,7 @@ namespace SaintsField.Editor
                     return index;
                 }
 
-                if (memberContainer.Type != MemberType.Method)
+                if (memberContainer.type != MemberInfoPreParsedCache.MemberType.Method)
                 {
                     // Debug.Log($"{memberInfo.Name} not method ({memberContainer.Type}), continue");
                     continue;
@@ -238,13 +309,13 @@ namespace SaintsField.Editor
 
                 // string methodInfoReturnTypeString = ReflectUtils.StringifyType(methodInfo.ReturnType);
                 // if (methodInfoReturnTypeString != memberContainer.ReturnType)
-                if (!TypeStringEqual(methodInfo.ReturnType, memberContainer.ReturnType))
+                if (!TypeStringEqual(methodInfo.ReturnType, memberContainer.returnType))
                 {
                     // Debug.Log($"{memberInfo.Name} not matched return type {methodInfo.ReturnType}->{memberContainer.ReturnType}, continue");
                     continue;
                 }
 
-                if (methodInfo.GetParameters().Length != memberContainer.Arguments.Count)
+                if (methodInfo.GetParameters().Length != memberContainer.arguments.Length)
                 {
                     // Debug.Log($"{memberInfo.Name} not matched argument length {string.Join<ParameterInfo>(", ", methodInfo.GetParameters())}->{string.Join(", ", memberContainer.Arguments)}, continue");
                     continue;
@@ -260,7 +331,7 @@ namespace SaintsField.Editor
                     // Debug.Log($"[{paramIndex}] methodInfoParamTypeString={methodInfoParamTypeString}, containerParamTypeString={containerParamTypeString}");
                     // if(methodInfoParamTypeString != containerParamTypeString)
                     // ReSharper disable once InvertIf
-                    if(!TypeStringEqual(parameterInfos[paramIndex].ParameterType, memberContainer.Arguments[paramIndex]))
+                    if(!TypeStringEqual(parameterInfos[paramIndex].ParameterType, memberContainer.arguments[paramIndex]))
                     {
                         // Debug.Log($"{memberInfo.Name} [{paramIndex}] not matched argument {parameterInfos[paramIndex].ParameterType} -> {memberContainer.Arguments[paramIndex]}, continue");
                         allMatch = false;

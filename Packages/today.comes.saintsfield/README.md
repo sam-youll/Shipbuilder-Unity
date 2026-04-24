@@ -76,12 +76,12 @@ Unity: 2022.2 or higher
 
 If you have DOTween installed
 *   Please also ensure you do: `Tools` - `Demigaint` - `DOTween Utility Panel`, click `Create ASMDEF`
-*   Or disable related functions with `Window` - `Saints` - `Disable DOTween Support`
+*   Or disable related functions with `Tools` - `SaintsField` - `Disable DOTween Support`
 *   If you can not find this menu, please read the "Add a Macro" section about how to manually disable DOTween support in SaintsField.
 
-[**Optional**] To use the full functions of this project, please also do: `Window` - `Saints` - `Enable SaintsEditor`. Note this will break your existing Editor plugin like `OdinInspector`, `NaughtyAttributes`, `MyToolbox`, `Tri-Inspector`.
+[**Optional**] To use the full functions of this project, please also do: `Tools` - `SaintsField` - `Enable SaintsEditor`. Note this will break your existing Editor plugin like `OdinInspector`, `NaughtyAttributes`, `MyToolbox`, `Tri-Inspector`.
 
-If you're using `unitypackage` or git submodule, but you put this project under another folder rather than `Assets/SaintsField`, please also do the following:
+If you need to put this project under another folder rather than `Packages/today.comes.saintsfield`, please also do the following:
 
 *   Create `Assets/Editor Default Resources/SaintsField`.
 *   Copy files from the project's `Editor/Editor Default Resources/SaintsField` into your project's `Assets/Editor Default Resources/SaintsField`.
@@ -89,16 +89,17 @@ If you're using `unitypackage` or git submodule, but you put this project under 
 
 **Troubleshoot**
 
-After installation, you can use `Window` - `Saints` - `Troubleshoot` to check if some attributes do not work.
+After installation, you can use `Tools` - `SaintsField` - `Troubleshoot` to check if some attributes do not work.
 
 namespace: `SaintsField`
 
 ### Change Log ###
 
-**5.11.2**
+**5.13.3**
 
-1.  Fix: dropdown button for URP editor now can detect `SupportedOnRendererAttribute` and allows for inherented from `SaintsScriptableRendererData`. Fix URP editor title text overflow when it's too long. Fix IMGUI based editor can not be saved under URP editor. [#363](https://github.com/TylerTemp/SaintsField/issues/363)
-2.  Add a warning for Unity 6000+ about building support [#362](https://github.com/TylerTemp/SaintsField/issues/362)
+1.  Reversed: Move type of `SaintsFieldConfig` from `ScriptableSingleton` back to `ScriptableObject` as in some cases Unity will try to create `Attribute` on load time when `ScriptableSingleton` can not be deserialized at all, and crashes the editor. [#222](https://github.com/TylerTemp/SaintsField/issues/222)
+2.  Fix: `Table` foldout did not have a context menu
+3.  Improve: Better box margin for `LayoutSystem` [#366](https://github.com/TylerTemp/SaintsField/issues/366)
 
 Note: all `Handle` attributes (draw stuff in the scene view) are in stage 1, which means the arguments might change in the future.
 
@@ -143,7 +144,7 @@ Parameters:
 
     You can also use Unity Editor's built-in icons. See [UnityEditorIcons](https://github.com/nukadelic/UnityEditorIcons). e.g. `<icon=d_AudioListener Icon/>`
 
-    for `color`, you can use `Window` - `Saints` - `EColor Preview` to view all the pre-set colors. It supports:
+    for `color`, you can use `Tools` - `SaintsField` - `EColor Preview` to view all the pre-set colors. It supports:
 
     *   Standard [Unity Rich Label](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html#ColorNames) colors:
 
@@ -902,10 +903,6 @@ Draw a button for a function. If the method have arguments (required or optional
     Rich text is supported.
 *   `bool hideReturnValue = false` do not display the returned value.
 
-**Known Issue**: Using dynamic label in `SaintsRow`, the label will not update in real time. This is because a `Serializable` class/struc
-field value will be cached by Unity, and reflection can not get an updated value. This issue can not be solved unless
-there is a way to reflect the actual value from a cached container.
-
 ```csharp
 // Please ensure you already have SaintsEditor enabled in your project before trying this example
 using SaintsField.Playa;
@@ -970,6 +967,68 @@ private int ReturnIgnored() => Random.Range(0, 100);
 ```
 
 [![video](https://github.com/user-attachments/assets/8632fa84-2e69-46c2-aa1a-8cb247b3888f)](https://github.com/user-attachments/assets/b56f05a2-590f-4683-8b81-2ff4998c4578)
+
+You can use `IEnumerator` for async calling.
+
+If the yield type is `WaitForSeconds`/`AsyncOperation`, a countdown progress bar will display.
+
+If the yield type is `AsyncOperation`, a progress bar will display.
+
+
+```csharp
+[Button]
+private void NormalFunc()
+{
+
+}
+[Button]
+private void ErrorFunc()
+{
+    throw new Exception("Stop There!");
+}
+
+[Button]
+private IEnumerator IEFunc()
+{
+    yield return new WaitForSeconds(4);  // Note: Pausing the editor will NOT pause this enumerator
+}
+
+[Button]
+private IEnumerator IEFuncError()
+{
+    yield return new WaitForSecondsRealtime(2);  // same as WaitForSeconds
+    throw new Exception("Stop There!");
+}
+
+[ShowInInspector] private bool _waitUntilMe;
+
+[Button]
+private IEnumerator WaitUntilChecked()
+{
+    yield return new WaitUntil(() => _waitUntilMe);
+}
+
+[ShowInInspector] private bool _waitWhileMe = true;
+
+[Button]
+private IEnumerator WaitWhileChecked()
+{
+    yield return new WaitWhile(() => _waitWhileMe);
+}
+
+[ResourcePath(EStr.Resource, typeof(GameObject))]
+public string res;
+
+[Button]  // Loader using `AsyncOperation` is supported
+private IEnumerator AsyncOp()
+{
+    AsyncOperation op = Resources.LoadAsync(res);
+    yield return op;
+    Debug.Log("DONE");
+}
+```
+
+[![](https://github.com/user-attachments/assets/dc39b75a-2f40-4518-a1a9-bef5a59f1455)](https://github.com/user-attachments/assets/87900181-8c17-42f5-a050-01f9a945ff94)
 
 #### `AboveButton`/`BelowButton`/`PostFieldButton` ####
 
@@ -1528,7 +1587,7 @@ Known issues:
 1.  the `Foldout` will NOT be placed at the left space like a Unity's default foldout component, because Unity limited the `PropertyDrawer` to be drawn inside the rect Unity gives. Trying outside the rect will make the target non-interactable.
     But in early Unity (like 2019.1), Unity will force `Foldout` to be out of rect on top leve, but not on array/list level... so you may see different outcomes on different Unity version.
 
-    If you see unexpected space or overlap between foldout and label, use `Window` - `Saints` - `Create or Edit SaintsField Config` to change the config.
+    If you see unexpected space or overlap between foldout and label, use `Tools` - `SaintsField` - `Create or Edit SaintsField Config` to change the config.
 
 2.  `ReadOnly` (and `DisableIf`, `EnableIf`) can NOT disable the expanded fields. This is because `InspectorElement` does not work with `SetEnable(false)`, neither with `pickingMode=Ignore`. This can not be fixed unless Unity fixes it.
 
@@ -4790,7 +4849,7 @@ Add a context menu (right click) item for a target
     If `null`, use "funcName" as name.
 
     If starts with `$`, use a callback instead. Callback can must be one of:
-    
+
     ```csharp
     string MyMenuName(MyFieldType fieldValue);
     string MyMenuName();
@@ -4962,7 +5021,7 @@ using SaintsField;
 
 [FieldCustomContextMenu(nameof(Func1), "Custom/Debug")]  // use like a CustomContextMenu
 public int myInt;
-    
+
 [FieldCustomContextMenu(nameof(ClickItemRemover), "$" + nameof(ClickItemRemoverLabel))]
 public List<string> lis;
 
@@ -5241,7 +5300,7 @@ This `TextArea` will always grow its height to fit the content. (minimal height 
 
 Note: Unlike NaughtyAttributes, this does not have a text-wrap issue.
 
-*   AllowMultiple: No
+*   Allow Multiple: No
 
 ```csharp
 using SaintsField;
@@ -5265,6 +5324,37 @@ public string RawTa
 ```
 
 ![](https://github.com/user-attachments/assets/3d7ab248-b705-48d1-b324-0d8e77b85bc5)
+
+It can work with `ShowInInspector`
+
+```csharp
+[ShowInInspector, ResizableTextArea]
+private string TextArea
+{
+    get => _textArea;
+    set => _textArea = value;
+}
+```
+
+![](https://github.com/user-attachments/assets/e5796fbb-8e58-49e2-9142-d22291b1c3d1)
+
+It can work with `ShowInInspector`/`Button` parameters and return value
+
+```csharp
+[Button, ResizableTextArea]
+private string TestTextAreaBtn([ResizableTextArea] string text)
+{
+    return "Button: " + text;
+}
+
+[ShowInInspector, ResizableTextArea]
+private string TestTextAreaShowInInspector([ResizableTextArea] string text)
+{
+    return "ShowInInspector: " + text;
+}
+```
+
+![](https://github.com/user-attachments/assets/36b8312e-de32-4964-acda-3a027c80c086)
 
 #### `LeftToggle` ####
 
@@ -5729,7 +5819,7 @@ public class CustomEventExample : MonoBehaviour
 
 A simple color palette tool to select a color from a list of colors.
 
-Use `Window` - `Saints` - `Color Palette` to manage the color palette.
+Use `Tools` - `SaintsField` - `Color Palette` to manage the color palette.
 
 **Parameters**:
 
@@ -5743,7 +5833,7 @@ Use `Window` - `Saints` - `Color Palette` to manage the color palette.
 
 [![video](https://github.com/user-attachments/assets/7cec6366-e731-4cd1-9d13-a6b0f0f2fa1c)](https://github.com/user-attachments/assets/e5b93ec2-ab77-47d9-9e3b-15f87fd5cecd)
 
-`Window` - `Saints` - `Color Palette`:
+`Tools` - `SaintsField` - `Color Palette`:
 
 [![video](https://github.com/user-attachments/assets/526bb4e9-990b-4d7a-8bba-6293e880ee78)](https://github.com/user-attachments/assets/bb76243f-96cd-4452-b1c7-ae6886d08c25)
 
@@ -6941,7 +7031,7 @@ Component Header allows you to draw extra stuffs on a component like this:
 
 If you have `SaintsEditor` enabled, this works by default.
 
-(If you can not enable `SaintsEditor`, it can work as stand-alone, go `window` - `Saints` - `Enable Stand-Alone Header GUI Support`)
+(If you can not enable `SaintsEditor`, it can work as stand-alone, go `Tools` - `SaintsField` - `Enable Stand-Alone Header GUI Support`)
 
 ### `HeaderButton` / `HeaderLeftButton` ###
 
@@ -7659,6 +7749,20 @@ public ReferenceHashSet<Sub1> polymorphism;
 
 ![](https://github.com/user-attachments/assets/46ec96a6-bd11-447e-bb16-85f1b99deec8)
 
+### `SaintsDecimal` ###
+
+A serializable `decimal` type
+
+```csharp
+public SaintsDecimal saintsDecimal;
+
+// implicit converting supported
+decimal convertToDecimal = saintsDecimal;
+decimal add = decimal.One + saintsDecimal;
+```
+
+![](https://github.com/user-attachments/assets/ffa7dd1a-e048-446f-b079-7f01b42c7aae)
+
 ### `TypeReference` ###
 
 Serialize a `System.Type`
@@ -8345,7 +8449,7 @@ public Event stopEvents;
 
 ## I2 Localization ##
 
-Tools for [I2 Localization](https://inter-illusion.com/tools/i2-localization). Enable it in `Window` - `Saints` - `Enable I2 Localization Support`
+Tools for [I2 Localization](https://inter-illusion.com/tools/i2-localization). Enable it in `Tools` - `SaintsField` - `Enable I2 Localization Support`
 
 NameSpace: `SaintsField.I2Loc`
 
@@ -8671,6 +8775,12 @@ public class MyRendererFeature: SaintsScriptableRendererFeature
 }
 ```
 
+### SaintsBuild Support ##
+
+If you have [`SaintsBuild`](https://github.com/TylerTemp/SaintsBuild) support, the auto-restored asset will have a notice with all field disabled. It also allows you to one-click remove the auto-restore function and modify the asset within play mode.
+
+![SaintsBuild Toggle](https://github.com/user-attachments/assets/3a718584-ac0c-4f4e-a5f4-61afa100daac)
+
 ## Extended Serialization ##
 
 `SaintsEditor` supports some types that usually can not be serialized. To use this function:
@@ -8930,6 +9040,42 @@ public partial class SerGuidExample : MonoBehaviour
 ```
 
 ![](https://github.com/user-attachments/assets/770ffe85-91cf-4d01-94a0-28a059610d49)
+
+### `decimal` ###
+
+Serialize a `decimal` type.
+
+**IMPORTANT**: Set your `MonoBehaviour`/`ScriptableObject` to `partial` if the field is declaration inside. If it's inside a normal class/struct, you need to set all parent class/struct to `partial`
+
+```csharp
+using SaintsField;
+
+// note the partial
+public partial class SerDecimalExample : MonoBehaviour
+{
+    [SaintsSerialized]
+    private decimal _dec;
+
+    [SaintsSerialized]
+    private List<decimal> _decList;
+}
+
+// use in a normal class/struct, set parents partial recursively
+public partial class SerDecimalExample : MonoBehaviour
+{
+    [Serializable]
+    public partial class MyClass
+    {
+        [SaintsSerialized]
+        private decimal[] _decArray;
+    }
+
+    // No SaintsSerialized here
+    public MyClass myClass;
+}
+```
+
+![](https://github.com/user-attachments/assets/0f8d6994-5149-441e-b3b0-20a93aa9a421)
 
 ## `SaintsEditorWindow` ##
 
@@ -9482,7 +9628,7 @@ Pick a way that is most convenient for you:
 
 **Using Saints Menu**
 
-Go to `Window` - `Saints` to enable/disable functions you want
+Go to `Tools` - `SaintsField` to enable/disable functions you want
 
 ![Saints Menu](https://github.com/TylerTemp/SaintsField/assets/6391063/272e72c3-656c-47e4-adc6-75ba62f7f432)
 
@@ -9516,7 +9662,7 @@ Note: `csc.rsp` can override settings by Saints Menu.
 
 ### Auto Validator ###
 
-UI Toolkit: A simple validation tool under `Window` - `Saints` - `Auto Validator`, related to [#115](https://github.com/TylerTemp/SaintsField/discussions/115)
+UI Toolkit: A simple validation tool under `Tools` - `SaintsField` - `Auto Validator`, related to [#115](https://github.com/TylerTemp/SaintsField/discussions/115)
 
 This tool allows you to check if some target has `Required` but not filled, or an auto getter (e.g. `GetComponentInChildren`) but not filled or mismatched. Auto getters error will give you a button to fix it there. Note the fix function might be broken if the target is inside a prefab.
 

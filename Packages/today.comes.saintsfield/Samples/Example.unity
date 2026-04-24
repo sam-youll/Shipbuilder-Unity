@@ -476,6 +476,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 0
+  m_RequiresOpaqueTextureOption: 0
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!114 &29054849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3923,6 +3955,7 @@ MonoBehaviour:
   hasContextMenu: 1
   isChecked: 0
   isDisabled: 1
+  lis: []
 --- !u!1 &393988620
 GameObject:
   m_ObjectHideFlags: 0
@@ -4444,7 +4477,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: today.comes.saintsfield.Samples::SaintsArrayRefExample
   inters:
-    _saintsList: []
+    _saintsList:
+    - valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray:
+      - propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueList: []
+      wrapType: 2
     _saintsSerializedVersion: 2
     _wrapType: 2
   refSub1:
@@ -4453,7 +4506,9 @@ MonoBehaviour:
     _wrapType: 4
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &428673597
 GameObject:
   m_ObjectHideFlags: 0
@@ -4500,8 +4555,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assetsFolder: Assets/SaintsField/Runtime
   assetsFolders:
-  - 
-  - 
+  - Packages/today.comes.saintsfield/Samples/Script
+  - Packages/today.comes.saintsfield/Samples/EditorTest
 --- !u!1 &435171140
 GameObject:
   m_ObjectHideFlags: 0
@@ -4691,10 +4746,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a48af1b5f53e6844199170ff15c80d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourcesFolder: SubInResources
+  resourcesFolder: ResNewFolder
   resourcesFolders:
   - SubInResources
-  - 
+  - ResNewFolder
 --- !u!4 &446354017
 Transform:
   m_ObjectHideFlags: 0
@@ -5338,6 +5393,69 @@ MonoBehaviour:
           - 
         - name: 
           conditions: []
+--- !u!1 &528893599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 528893600}
+  - component: {fileID: 528893601}
+  - component: {fileID: 528893602}
+  m_Layer: 0
+  m_Name: Issue373ExpandableDefaultExpand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &528893600
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528893599}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1486592967}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &528893601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528893599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec708c01b3c56044b7d54a700e4ad73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SaintsField.Samples::SaintsField.Samples.Scripts.IssueAndTesting.Issue.Issue373.Issue373ExpandableDefaultExpand
+  e: {fileID: 528893600}
+  eArr:
+  - {fileID: 528893600}
+--- !u!114 &528893602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528893599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c84ba86ef100b634e9fabff132f9de4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SaintsField.Samples::SaintsField.Samples.Scripts.IssueAndTesting.Issue.Issue373.Issue373ExpandableDefaultExpandSaints
+  e: {fileID: 528893600}
+  eArr:
+  - {fileID: 528893600}
 --- !u!1 &529722622
 GameObject:
   m_ObjectHideFlags: 0
@@ -6480,6 +6598,9 @@ MonoBehaviour:
     mySprite: {fileID: 21300000, guid: cc3adf8682f6c60489c0a80ff150f631, type: 3}
     showImage: 
     escapedImage: 
+  multi1: {fileID: -1197195501, guid: 511993e73d6e42149ab116ead0e263cb, type: 3}
+  multi2: {fileID: -862248463, guid: 511993e73d6e42149ab116ead0e263cb, type: 3}
+  multi: 
 --- !u!1 &621351311
 GameObject:
   m_ObjectHideFlags: 0
@@ -7143,6 +7264,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parent: {fileID: 1671624918}
   grandParent: {fileID: 1830778824}
+--- !u!1 &666176603
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 666176604}
+  - component: {fileID: 666176605}
+  m_Layer: 0
+  m_Name: TestDownpour
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &666176604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666176603}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1486592967}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &666176605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666176603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0f6c4f4f3e5df546be82f6f39117cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SaintsField.Samples::SaintsField.Downpour
+  saNest1:
+    _saintsList: []
+    _saintsSerializedVersion: 2
+    _wrapType: 4
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &669193995
 GameObject:
   m_ObjectHideFlags: 0
@@ -12371,13 +12543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e64d323a8ad41341ab2ce300485e661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SaintsField.Samples::SaintsField.I2PickerExample
-  ls1:
-    mTerm: SaintsField/Config
-    mRTL_IgnoreArabicFix: 0
-    mRTL_MaxLineLength: 0
-    mRTL_ConvertNumbers: 0
-    m_DontLocalizeParameters: 0
-  lang: Chinese
 --- !u!1 &689768759
 GameObject:
   m_ObjectHideFlags: 0
@@ -16085,7 +16250,33 @@ MonoBehaviour:
     _wrapType: 4
   gameObjects4: []
   _arrSize:
-    _saintsList: []
+    _saintsList:
+    - value: 0
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
+    - value: 0
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
     _saintsSerializedVersion: 2
     _wrapType: 4
   pagging:
@@ -16094,7 +16285,9 @@ MonoBehaviour:
     _wrapType: 4
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &965251183
 GameObject:
   m_ObjectHideFlags: 0
@@ -23040,6 +23233,9 @@ Transform:
   - {fileID: 1792998045}
   - {fileID: 1389549670}
   - {fileID: 1759777062}
+  - {fileID: 1954615237}
+  - {fileID: 666176604}
+  - {fileID: 528893600}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1487457131
@@ -24688,18 +24884,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449cc37fa57b668499b6a9223559c61e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ls1:
-    mTerm: 
-    mRTL_IgnoreArabicFix: 0
-    mRTL_MaxLineLength: 0
-    mRTL_ConvertNumbers: 0
-    m_DontLocalizeParameters: 0
-  ls2:
-    mTerm: 
-    mRTL_IgnoreArabicFix: 0
-    mRTL_MaxLineLength: 0
-    mRTL_ConvertNumbers: 0
-    m_DontLocalizeParameters: 0
 --- !u!1 &1597261713
 GameObject:
   m_ObjectHideFlags: 0
@@ -29229,6 +29413,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 0
+  m_RequiresOpaqueTextureOption: 0
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &1923975090
 GameObject:
   m_ObjectHideFlags: 0
@@ -34279,6 +34495,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anyObj: {fileID: 4471533880568073372, guid: d45c77c19dd014bf4a92e835d4a95dff, type: 3}
+--- !u!4 &1954615237 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+  m_PrefabInstance: {fileID: 6614027543544521682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1957647119
 GameObject:
   m_ObjectHideFlags: 0
@@ -34966,7 +35187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: today.comes.saintsfield.Samples::SaintsField.Samples.Scripts.SceneReferenceExample
   sceneRef:
     guid: 1326ba3bbd4558245a4850948bd03f1a
-    index: 1
+    index: 2
     path: Packages/today.comes.saintsfield/Samples/Example
 --- !u!4 &2002997102 stripped
 Transform:
@@ -36615,6 +36836,8 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: c231b32559cc28646add1e501cb2d3f5, type: 3}
   - {fileID: 21300000, guid: c231b32559cc28646add1e501cb2d3f5, type: 3}
+  multi1: {fileID: -1197195501, guid: 511993e73d6e42149ab116ead0e263cb, type: 3}
+  multi2: {fileID: -862248463, guid: 511993e73d6e42149ab116ead0e263cb, type: 3}
 --- !u!4 &2118824044
 Transform:
   m_ObjectHideFlags: 0
@@ -36832,6 +37055,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &2137894679
 GameObject:
   m_ObjectHideFlags: 0
@@ -39533,7 +39773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3271665409483885876, guid: 92e25943252bce8499e438fcd88eaa51, type: 3}
       propertyPath: typeReference._typeNameAndAssembly
-      value: SaintsField.Samples.Scripts.ColorToggleTextExample, today.comes.saintsfield.Samples
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3271665409483885876, guid: 92e25943252bce8499e438fcd88eaa51, type: 3}
       propertyPath: saintsArray.Array.data[0]._wrapType
@@ -39823,6 +40063,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b3e60b555f89854cb234b0451a42f8a, type: 3}
+--- !u!1001 &6614027543544521682
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1486592967}
+    m_Modifications:
+    - target: {fileID: 674599344855000291, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_Name
+      value: Issue367EnumTreeDrop
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426105188062878523, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 395bc9165c0e0d4488cb847ff4aef10f, type: 3}
 --- !u!1001 &7004483782313389038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40039,6 +40336,75 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b9a9a67031221c4eb3c7bd702c98cf5, type: 3}
+--- !u!1001 &9093249027661256101
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1790866854144124841, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_Name
+      value: SaintsDecimal
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036699821318777337, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520737707866267799, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: saintsDecimal.lo
+      value: -930789869
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520737707866267799, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: saintsDecimal.mid
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520737707866267799, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
+      propertyPath: saintsDecimal.flags
+      value: 131072
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 99ea7c31c2a685b49b848ca1dfe3cce3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -40161,3 +40527,4 @@ SceneRoots:
   - {fileID: 1242835955}
   - {fileID: 688533479}
   - {fileID: 386699477}
+  - {fileID: 9093249027661256101}

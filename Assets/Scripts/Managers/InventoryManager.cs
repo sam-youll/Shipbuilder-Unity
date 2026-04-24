@@ -54,7 +54,7 @@ public class InventoryManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Colosseum"))
         {
             inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
 

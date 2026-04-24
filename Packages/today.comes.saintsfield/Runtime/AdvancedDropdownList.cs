@@ -102,10 +102,13 @@ namespace SaintsField
 
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static void AddByNames(AdvancedDropdownList<T> container, Queue<string> nameQuery, T value, bool disabled = false, string icon = null, ICollection<string> extraSearches=null)
         {
-            string curName = nameQuery.Dequeue();
-            if (nameQuery.Count == 0)
+            int curCount = nameQuery.Count;
+            string curName = curCount == 0 ? "": nameQuery.Dequeue();
+            int leftCount = nameQuery.Count;
+            if (leftCount == 0)
             {
                 container.Add(curName == ""? Separator(): new AdvancedDropdownList<T>(curName, value, disabled, icon)
                 {
@@ -113,6 +116,7 @@ namespace SaintsField
                 });
                 return;
             }
+
             IAdvancedDropdownList matchedChild = container.children.FirstOrDefault(each => each.displayName == curName);
             AdvancedDropdownList<T> targetChild;
             if (matchedChild != null)

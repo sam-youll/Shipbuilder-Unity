@@ -391,14 +391,65 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
             (FieldInfo keysField, object keysParent) = GetTargetInfo(propKeysNameCompact, rawType, fieldValue);
             Debug.Assert(keysField != null, $"Failed to get keys field {propKeysNameCompact} from {property.propertyPath}");
             Type keyType = ReflectUtils.GetElementType(keysField.FieldType);
-            IReadOnlyList<Attribute> injectedKeyAttributes = SaintsWrapUtils.GetInjectedPropertyAttributes(info, typeof(KeyAttributeAttribute));
-            WrapType keyWrapType = SaintsWrapUtils.EnsureWrapType(property.FindPropertyRelative("_wrapTypeKey"), keysField, injectedKeyAttributes);
+            List<InjectAttributeBase> keyInjectAttributes = new List<InjectAttributeBase>();
+            List<Attribute> keyInjectCreatedAttributes = new List<Attribute>();
+            bool keyHasSerializeReference = false;
+            foreach (KeyAttributeAttribute injectAttribute in ReflectCache.GetCustomAttributes<KeyAttributeAttribute>(info))
+            {
+                if (injectAttribute.Decorator == typeof(SerializeReference))
+                {
+                    keyHasSerializeReference = true;
+                    continue;
+                }
+                ValueAttributeAttribute less1DepthInject = new ValueAttributeAttribute(injectAttribute.Depth - 1, injectAttribute.Decorator,
+                    injectAttribute.Parameters);
+                if(less1DepthInject.Depth == 0)
+                {
+                    Attribute injectedAttribute = SaintsWrapUtils.CreateInjectedAttribute(injectAttribute);
+                    if(injectedAttribute != null)
+                    {
+                        // Debug.Log($"SaintsArray {property.propertyPath} injectCreatedAttributes1.Add={injectedAttribute}");
+                        keyInjectCreatedAttributes.Add(injectedAttribute);
+                    }
+                }
+                else
+                {
+                    keyInjectAttributes.Add(less1DepthInject);
+                }
+            }
+            WrapType keyWrapType = SaintsWrapUtils.EnsureWrapType(property.FindPropertyRelative("_wrapTypeKey"), keysField, keyHasSerializeReference);
 
             (FieldInfo valuesField, object valuesParent) = GetTargetInfo(propValuesNameCompact, rawType, fieldValue);
             Debug.Assert(valuesField != null, $"Failed to get values field from {property.propertyPath}");
             Type valueType = ReflectUtils.GetElementType(valuesField.FieldType);
-            IReadOnlyList<Attribute> injectedValueAttributes = SaintsWrapUtils.GetInjectedPropertyAttributes(info, typeof(ValueAttributeAttribute));
-            WrapType valueWrapType = SaintsWrapUtils.EnsureWrapType(property.FindPropertyRelative("_wrapTypeValue"), valuesField, injectedValueAttributes);
+            List<InjectAttributeBase> valueInjectAttributes = new List<InjectAttributeBase>();
+            List<Attribute> valueInjectCreatedAttributes = new List<Attribute>();
+            bool valueHasSerializeReference = false;
+            foreach (KeyAttributeAttribute injectAttribute in ReflectCache.GetCustomAttributes<KeyAttributeAttribute>(info))
+            {
+                if (injectAttribute.Decorator == typeof(SerializeReference))
+                {
+                    valueHasSerializeReference = true;
+                    continue;
+                }
+
+                ValueAttributeAttribute less1DepthInject = new ValueAttributeAttribute(injectAttribute.Depth - 1, injectAttribute.Decorator,
+                    injectAttribute.Parameters);
+                if(less1DepthInject.Depth == 0)
+                {
+                    Attribute injectedAttribute = SaintsWrapUtils.CreateInjectedAttribute(injectAttribute);
+                    if(injectedAttribute != null)
+                    {
+                        valueInjectCreatedAttributes.Add(injectedAttribute);
+                    }
+                }
+                else
+                {
+                    valueInjectAttributes.Add(new ValueAttributeAttribute(injectAttribute.Depth,
+                        injectAttribute.Decorator, injectAttribute.Parameters));
+                }
+            }
+            WrapType valueWrapType = SaintsWrapUtils.EnsureWrapType(property.FindPropertyRelative("_wrapTypeValue"), valuesField, valueHasSerializeReference);
             // Debug.Log($"decide valueWrapType={valueWrapType} for {valuesField.Name}/{valueType}");
 
             IntegerField totalCountFieldTop = container.Q<IntegerField>(name: NameTotalCount(property));
@@ -650,7 +701,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
                     searchTextField.style.position = Position.Relative;
 
                     searchTextField.Add(keyLoadingImage);
-                    UIToolkitUtils.KeepRotate(keyLoadingImage);
+                    UIToolkitUtils.SetKeepRotate(keyLoadingImage);
                     keyLoadingImage.RegisterCallback<AttachToPanelEvent>(_ => keyLoadingImage.schedule.Execute(() => UIToolkitUtils.TriggerRotate(keyLoadingImage)));
 
                     header.Add(keySearch);
@@ -693,7 +744,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
                     };
                     element.Add(keyContainer);
 
-                    VisualElement resultElement = SaintsWrapUtils.CreateCellElement(keyWrapType, keysField, keyType, elementProp, injectedKeyAttributes, this, this, keysParent);
+                    VisualElement resultElement = SaintsWrapUtils.CreateCellElement(keyWrapType, keysField, keyType, elementProp, keyInjectCreatedAttributes, keyInjectAttributes, keyHasSerializeReference, this, this, keysParent);
                     keyContainer.Add(resultElement);
 
                     keyContainer.TrackPropertyValue(keysProp, _ =>
@@ -788,7 +839,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
                     searchTextField.style.position = Position.Relative;
 
                     searchTextField.Add(valueLoadingImage);
-                    UIToolkitUtils.KeepRotate(valueLoadingImage);
+                    UIToolkitUtils.SetKeepRotate(valueLoadingImage);
                     valueLoadingImage.RegisterCallback<AttachToPanelEvent>(_ => valueLoadingImage.schedule.Execute(() => UIToolkitUtils.TriggerRotate(valueLoadingImage)));
 
                     header.Add(valueSearch);
@@ -832,7 +883,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
 
                     // Debug.Log($"elementProp={elementProp.propertyPath}, valueWrapType={valueWrapType}, valuesField={valuesField}, valueType={valueType}, valuesParent={valuesParent}/{valuesParent.GetType()}");
 
-                    VisualElement resultElement = SaintsWrapUtils.CreateCellElement(valueWrapType, valuesField, valueType, elementProp, injectedValueAttributes, this, this, valuesParent);
+                    VisualElement resultElement = SaintsWrapUtils.CreateCellElement(valueWrapType, valuesField, valueType, elementProp, valueInjectCreatedAttributes, valueInjectAttributes, valueHasSerializeReference, this, this, valuesParent);
 
                     element.Add(resultElement);
 

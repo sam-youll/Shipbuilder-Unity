@@ -7,7 +7,9 @@ using System.Reflection;
 using SaintsField.Editor.Core;
 using SaintsField.Editor.Linq;
 using SaintsField.Editor.Playa.Renderer.BaseRenderer;
+using SaintsField.Editor.UIToolkitElements;
 using SaintsField.Editor.Utils;
+using SaintsField.Editor.Utils.WaitableUtils;
 using SaintsField.Playa;
 using UnityEditor;
 // ReSharper disable once RedundantUsingDirective
@@ -32,13 +34,14 @@ namespace SaintsField.Editor.Playa.Renderer.ButtonFakeRenderer
             public bool UpdateOneMoreTime;
             public RichTextDrawer RichTextDrawer;
 
-            public List<IEnumerator> Enumerators = new List<IEnumerator>();
+            public List<Waiter> Enumerators = new List<Waiter>();
         }
 
         private VisualElement _returnValueContainer;
         private VisualElement _returnContainer;
 
         private Button _buttonElement;
+        private IVisualElementScheduledItem buttonTask = null;
 
         protected override (VisualElement target, bool needUpdate) CreateTargetUIToolkit(VisualElement inspectorRoot,
             VisualElement container)
@@ -161,47 +164,63 @@ namespace SaintsField.Editor.Playa.Renderer.ButtonFakeRenderer
                 Xml = buttonText,
                 Callback = _buttonAttribute.IsCallback ? _buttonAttribute.Label : "",
                 UpdateOneMoreTime = true,
-                Enumerators = new List<IEnumerator>(),
+                Enumerators = new List<Waiter>(),
             };
 
-            IVisualElementScheduledItem buttonTask = null;
-            Image buttonRotator = new Image
+            // IVisualElementScheduledItem buttonTask = null;
+            StatusIndicatorElement statusIndicatorElement = new StatusIndicatorElement
             {
-                image = Util.LoadResource<Texture2D>("refresh.png"),
                 style =
                 {
                     position = Position.Absolute,
-                    width = EditorGUIUtility.singleLineHeight - 2,
-                    height = EditorGUIUtility.singleLineHeight - 2,
-                    left = 1,
+                    // width = 16,
+                    // height = 16,
+                    // left = 1,
                     top = 1,
-                    opacity = 0.5f,
-                    display = DisplayStyle.None,
+                    left = 0,
+                    right = 0,
+                    bottom = 0,
+                    // display = DisplayStyle.None,
                 },
-                tintColor = EColor.Lime.GetColor(),
-                // name = ButtonRotatorName(FieldWithInfo.MethodInfo, FieldWithInfo.Target),
             };
-            UIToolkitUtils.KeepRotate(buttonRotator);
-            buttonRotator.schedule.Execute(() => UIToolkitUtils.TriggerRotate(buttonRotator)).StartingIn(200);
 
             bool isStruct = ReflectUtils.TypeIsStruct(FieldWithInfo.Targets[0].GetType());
 
             _buttonElement = new Button(() =>
             {
                 SaintsContext.SerializedProperty = _serializedProperty;
-                object[] returnValues = FieldWithInfo.Targets.Select(eachTarget =>
+                int targetCount = FieldWithInfo.Targets.Count;
+                object[] returnValues = new object[targetCount];
+                Exception error = null;
+                for (int index = 0; index < targetCount; index++)
                 {
+                    object eachTarget = FieldWithInfo.Targets[index];
                     (object rawMemberValue, object useTarget) = GetRefreshedTarget(FieldWithInfo, eachTarget);
 
-                    object result = methodInfo.Invoke(useTarget, parameterValues);
+                    object result;
+                    try
+                    {
+                        result = methodInfo.Invoke(useTarget, parameterValues);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                        error = e;
+                        break;
+                    }
 
+                    returnValues[index] = result;
                     if (isStruct)
                     {
                         BackWriteCallback(rawMemberValue, useTarget);
                     }
+                }
 
-                    return result;
-                }).ToArray();
+                if (error != null)
+                {
+                    statusIndicatorElement.PlayError();
+                    return;
+                }
 
                 if (hasReturnValue)
                 {
@@ -237,7 +256,20 @@ namespace SaintsField.Editor.Playa.Renderer.ButtonFakeRenderer
                 }
 
                 buttonUserData.Enumerators.Clear();
-                buttonUserData.Enumerators.AddRange(returnValues.OfType<IEnumerator>());
+                foreach (IEnumerator enumerator in returnValues.OfType<IEnumerator>())
+                {
+                    Waiter waiter = new Waiter(enumerator);
+                    buttonUserData.Enumerators.Add(waiter);
+                }
+
+                if (buttonUserData.Enumerators.Count == 0)
+                {
+                    statusIndicatorElement.PlayOk();
+                }
+                else
+                {
+                    statusIndicatorElement.PlayLoading();
+                }
                 buttonTask?.Pause();
 
                 if (buttonUserData.Enumerators.Count > 0)
@@ -245,30 +277,84 @@ namespace SaintsField.Editor.Playa.Renderer.ButtonFakeRenderer
                     // ButtonUserData buttonUserData = (ButtonUserData) buttonElement.userData;
                     buttonTask = _buttonElement.schedule.Execute(() =>
                     {
-                        List<IEnumerator> finishedEnumerators = new List<IEnumerator>();
+                        List<Waiter> finishedEnumerators = new List<Waiter>();
+                        int oldCounter = buttonUserData.Enumerators.Count;
+                        Exception movingError = null;
+                        float progress = -1f;
                         // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-                        foreach (IEnumerator bindEnumerator in buttonUserData.Enumerators)
+                        foreach (Waiter waiter in buttonUserData.Enumerators)
                         {
-                            if (!bindEnumerator.MoveNext())
+                            waiter.Update();
+
+                            if (!waiter.Done())
                             {
-                                finishedEnumerators.Add(bindEnumerator);
+                                if (waiter.Waitable != null)
+                                {
+                                    float curProcess = waiter.Waitable.Progress;
+                                    progress = Mathf.Max(progress, curProcess);
+                                }
+                                continue;
+                            }
+
+                            bool moveNext;
+                            bool thisHasMoveError = false;
+                            try
+                            {
+                                moveNext = waiter.Enumerator.MoveNext();
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.LogException(e);
+                                movingError = e;
+                                moveNext = false;
+                                thisHasMoveError = true;
+                            }
+
+                            if (thisHasMoveError)
+                            {
+                                waiter.Waitable = null;
+                            }
+                            else
+                            {
+                                waiter.CheckCurrent();
+                            }
+
+                            // Debug.Log(bindEnumerator.Current);
+                            if (!moveNext)
+                            {
+                                finishedEnumerators.Add(waiter);
                             }
                         }
 
-                        buttonUserData.Enumerators.RemoveAll(each => finishedEnumerators.Contains(each));
+                        if(movingError == null)
+                        {
+                            buttonUserData.Enumerators.RemoveAll(each => finishedEnumerators.Contains(each));
+                        }
+                        else
+                        {
+                            buttonUserData.Enumerators.Clear();
+                        }
 
                         bool stillHaveRunner = buttonUserData.Enumerators.Count > 0;
-                        DisplayStyle style = stillHaveRunner? DisplayStyle.Flex : DisplayStyle.None;
-                        if(buttonRotator.style.display != style)
-                        {
-                            buttonRotator.style.display = style;
-                        }
+                        statusIndicatorElement.EnsureLoading(stillHaveRunner, progress);
 
                         if(!stillHaveRunner)
                         {
                             // ReSharper disable once AccessToModifiedClosure
                             // ReSharper disable once PossibleNullReferenceException
                             buttonTask?.Pause();
+
+                            if (oldCounter > 0)
+                            {
+                                if(movingError == null)
+                                {
+                                    statusIndicatorElement.PlayOk();
+                                }
+                                else
+                                {
+                                    statusIndicatorElement.PlayError();
+                                }
+                            }
                         }
                     }).Every(1);
                 }
@@ -325,7 +411,12 @@ namespace SaintsField.Editor.Playa.Renderer.ButtonFakeRenderer
             // buttonRotator.transform.rotation = Quaternion.Euler(0, 0, 180);
             // buttonRotator.AddToClassList("saints-rotate-360");
 
-            _buttonElement.Add(buttonRotator);
+            // _buttonElement.Add(buttonRotator);
+            _buttonElement.Add(statusIndicatorElement);
+            // _buttonElement.clicked += () =>
+            // {
+            //     statusIndicatorElement.DoPlay();
+            // };
 
             bool needUpdate = _buttonAttribute.IsCallback;
 

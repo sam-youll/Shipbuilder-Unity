@@ -8,7 +8,6 @@ using SaintsField.Editor.Drawers.TreeDropdownDrawer;
 using SaintsField.Editor.Utils;
 using SaintsField.ScriptableRenderer;
 using UnityEditor;
-using UnityEditor.Rendering;
 using UnityEditor.Rendering.Universal;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -159,6 +158,10 @@ namespace SaintsField.Editor.Playa.ScriptableRenderer
                 AdvancedDropdownList<Type> dropdown = new AdvancedDropdownList<Type>();
                 foreach (Type t in types)
                 {
+                    if (t.IsAbstract)
+                    {
+                        continue;
+                    }
                     // Debug.Log(t);
                     // Debug.Log(RendererFeatureSupported(t));
                     if (!RendererFeatureSupported(t))
@@ -243,6 +246,7 @@ namespace SaintsField.Editor.Playa.ScriptableRenderer
             Type urd = typeof(UniversalRendererData);
             Type rendererType = _editor.target.GetType();
 
+            // ReSharper disable once UsePatternMatching
             SupportedOnRendererAttribute rendererFilterAttribute = Attribute.GetCustomAttribute(rendererFeatureType, typeof(SupportedOnRendererAttribute)) as SupportedOnRendererAttribute;
             // ReSharper disable once InvertIf
             if (rendererFilterAttribute != null)
@@ -281,7 +285,7 @@ namespace SaintsField.Editor.Playa.ScriptableRenderer
                 BindingFlags.Instance | BindingFlags.NonPublic
             );
 
-        internal bool DuplicateFeatureCheck(Type type)
+        private bool DuplicateFeatureCheck(Type type)
         {
             ScriptableRendererData data = _editor.target as ScriptableRendererData;
 
@@ -432,7 +436,9 @@ namespace SaintsField.Editor.Playa.ScriptableRenderer
                     try
                     {
                         renderFeatureProperty = _mRendererFeatures.GetArrayElementAtIndex(index);
-                        editor = _editors[index];
+                        // editor = _editors[index];
+                        editor = _editors.First(each =>
+                            each.serializedObject.targetObject == renderFeatureProperty.objectReferenceValue);
                     }
                     catch (Exception e)
                     {
@@ -568,9 +574,36 @@ namespace SaintsField.Editor.Playa.ScriptableRenderer
             {
                 titleElement.Add(new IMGUIContainer(() =>
                 {
-                    rendererFeatureEditor.serializedObject.Update();
-                    rendererFeatureEditor.OnInspectorGUI();
-                    rendererFeatureEditor.serializedObject.ApplyModifiedProperties();
+                    // WTF Unity
+                    using (new DisableUnityLogScoop())
+                    {
+                        rendererFeatureEditor.serializedObject.Update();
+                    }
+
+                    try
+                    {
+                        using EditorGUI.ChangeCheckScope changed = new EditorGUI.ChangeCheckScope();
+                        rendererFeatureEditor.OnInspectorGUI();
+                        // ReSharper disable once InvertIf
+                        if (changed.changed)
+                        {
+                            // WTF Unity
+                            using (new DisableUnityLogScoop())
+                            {
+                                rendererFeatureEditor.serializedObject.ApplyModifiedProperties();
+                            }
+                        }
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        // ... No words...
+                        if (e.Message.Contains("SerializedProperty has been Disposed"))
+                        {
+                            return;
+                        }
+
+                        throw;
+                    }
                 }));
             }
 
@@ -581,9 +614,9 @@ namespace SaintsField.Editor.Playa.ScriptableRenderer
 
         private bool IsUIToolkit(UnityEditor.Editor rendererFeatureEditor)
         {
-            var type = rendererFeatureEditor.GetType();
+            Type type = rendererFeatureEditor.GetType();
 
-            var method = type.GetMethod(
+            MethodInfo method = type.GetMethod(
                 "CreateInspectorGUI",
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
             );

@@ -1,11 +1,12 @@
+#if UNITY_EDITOR
 
 using System;
 using UnityEditor;
 using UnityEngine.Events;
-#if UNITY_EDITOR
+
 using System.IO;
 using UnityEngine;
-#endif
+
 
 // ReSharper disable once CheckNamespace
 namespace SaintsField.Utils
@@ -164,3 +165,4 @@ namespace SaintsField.Utils
         }
     }
 }
+#endif

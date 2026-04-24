@@ -1,8 +1,85 @@
 # Changelog
 
+## 5.13.3 ##
+
+1.  Reversed: Move type of `SaintsFieldConfig` from `ScriptableSingleton` back to `ScriptableObject` as in some cases Unity will try to create `Attribute` on load time when `ScriptableSingleton` can not be deserialized at all, and crashes the editor. [#222](https://github.com/TylerTemp/SaintsField/issues/222)
+2.  Fix: `Table` foldout did not have a context menu
+3.  Improve: Better box margin for `LayoutSystem` [#366](https://github.com/TylerTemp/SaintsField/issues/366)
+
+## 5.13.2 ##
+
+1.  Fix: `ResourcePath` now has the correct right-click context menu
+2.  Fix: `ResourceFolder`/`AssetFolder` now supports dragging a folder directly on the field
+3.  Fix: `ResourceFolder`/`AssetFolder` now gives an error if the resource path does not exist
+4.  Add: `ResourceFolder`/`AssetFolder` is now supported in "Auto Validator"
+5.  Add: Support `decimal` type in "Extended Serialization", you can now directly serialize a decimal type with `SaintsSerialized`
+6.  Add: `ShowInInspector` now can display/edit `decimal` type
+
+## 5.13.1 ##
+
+1.  Improve: `Button` now display a success or failed icon depending on the result of the calling function
+2.  Improve: `Button` now support `WaitForSeconds`, `WaitUtil` etc. and `AsyncOperation`, and will give a progress bar when possible
+
+## 5.13.0 ##
+
+1.  Fix: Code parser custom path was not used by field comparer.
+2.  Add: `SaintsDecimal` type for `decimal` serialization.
+
+## 5.12.5 ##
+
+1.  Fix: `SaintsRow` did not work with `OnValueChanged`
+2.  Fix: `SaintsEditor` field order cache didn't get updated when the target script changed
+3.  Fix: `InfoBox` `<field/>` tag not get updated, and did not work with non serialized fields/properties
+4.  Add: You can now set code parser's save folder in `SaintsConfig`, fix [#372](https://github.com/TylerTemp/SaintsField/issues/372)
+5.  Fix: `NavMeshAreaMask` gave an error on integer type [#376](https://github.com/TylerTemp/SaintsField/issues/376)
+
+## 5.12.4 ##
+
+1.  Fix: `AdvancedDropdownList.AddByNames` got `InvalidOperationException` [#375](https://github.com/TylerTemp/SaintsField/issues/375)
+2.  Improve: Cache SaintsEditor field order result with corssing domain reload for a bit better performance
+3.  Add: Support [`SaintsBuild`](https://github.com/TylerTemp/SaintsBuild) information for auto restored assets.
+4.  Change: Move menu from `Window/Saints` to `Tools/SaintsField`
+5.  Fix: Unity 6.5 API changes by [@nnra6864](https://github.com/nnra6864) in [#374](https://github.com/TylerTemp/SaintsField/pull/374)
+
+## 5.12.1 ##
+
+1.  Fix: context menu in old unity did not show correctly, context menu for SaintsArray/SaintsList did not show
+2.  Fix: new gameobjects being spawned whenever a property is reset [@peterdwdawe](https://github.com/peterdwdawe), [PR#371](https://github.com/TylerTemp/SaintsField/pull/371)
+3.  Add: `ResizableTextArea` support `ShowInInspector` and `Button`
+4.  Fix: reset context menu shows uppercase if a variable name starts with `_`, remove the `k__BackingField` information.
+
+About this version:
+
+The "Downpour" system is still WIP. My personal test seems the change does not affect other functions so I'm removing the "preview" tag.
+
+## 5.12.0-preview.0 ##
+
+1.  Fix: USS warning [#369](https://github.com/TylerTemp/SaintsField/issues/369)
+2.  Fix: URP IMGUI editor rendering flicking on slider [#364](https://github.com/TylerTemp/SaintsField/pull/364)
+3.  Improve: Cache SaintsEditor field order result for a bit better performance
+
+About this preview:
+
+This preview contains a new system called "downpour", with `ValueAttribute` which allows inject attribute for nested types like `SaintsArray`.
+
+This feature is still experimental and will not be documented ATM.
+
+As this release contains core code changes for rendering, it might break the rendering flow. Upgrade with cation.
+
+## 5.11.4 ##
+
+1.  Fix: Prefab view dropdown(advanceddropdwn/treedropdown) in inspector failed on second selection [#367](https://github.com/TylerTemp/SaintsField/issues/367)
+2.  Fix: `SaintsEditor` might get incorrect field order since version 5.11.3
+
+## 5.11.3 ##
+
+1.  Fix: Fixed extremely high GC alloc. Parallelized heavy sorting. [#365](https://github.com/TylerTemp/SaintsField/pull/365) by [@ZeroIQGames](https://github.com/ZeroIQGames)
+2.  Fix: `AboveImage`/`BelowImage` can correctly display a multiple sprite.
+3.  Fix: URP editor now display the correct order after draging the rendering list.
+
 ## 5.11.2 ##
 
-1.  Fix: dropdown button for URP editor now can detect `SupportedOnRendererAttribute` and allows for inherented from `SaintsScriptableRendererData`. Fix URP editor title text overflow when it's too long. Fix IMGUI based editor can not be saved under URP editor. [#363](https://github.com/TylerTemp/SaintsField/issues/363) 
+1.  Fix: dropdown button for URP editor now can detect `SupportedOnRendererAttribute` and allows for inherented from `SaintsScriptableRendererData`. Fix URP editor title text overflow when it's too long. Fix IMGUI based editor can not be saved under URP editor. [#363](https://github.com/TylerTemp/SaintsField/issues/363)
 2.  Add a warning for Unity 6000+ about building support [#362](https://github.com/TylerTemp/SaintsField/issues/362)
 
 ## 5.11.0 ##

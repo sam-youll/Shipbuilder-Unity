@@ -25,11 +25,13 @@ public class ShipManager : MonoBehaviour
         }
     }
     
+    [System.Serializable]
     private struct Ship
     {
         public ShipData baseShip;
         public string name;
-        public float hull;
+        public float currentHull;
+        public float maxHull;
         public float shield;
         public List<Weapon> weapons;
         public float evasion;
@@ -66,8 +68,8 @@ public class ShipManager : MonoBehaviour
     
     #region Player Ship
     [HideInInspector] public List<ShipData> basePlayerShips;
-    [Header("Player Ship")] 
-    private Ship player;
+    [Header("Ships")]
+    [SerializeField] private Ship player;
 
     /// <summary>
     /// Loads all ships, then filters to just ships that can be used
@@ -108,9 +110,13 @@ public class ShipManager : MonoBehaviour
     /// based on the base ship the player chooses at the start of a run.
     /// </summary>
     /// <param name="baseShip"> Determines which ship the player is flying.</param>
-    private void InitPlayerShip(ShipData baseShip)
+    public void InitPlayerShip(ShipData baseShip)
     {
-        player.hull = baseShip.maxHull;
+        player.baseShip = baseShip;
+        player.name = baseShip.name;
+        player.maxHull = baseShip.maxHull;
+        player.currentHull = baseShip.maxHull;
+        player.evasion = 1;
     }
 
     private void InitPlayerShip()
@@ -119,7 +125,8 @@ public class ShipManager : MonoBehaviour
         player = new Ship
         {
             name = "Player ship",
-            hull = 100,
+            maxHull = 100,
+            currentHull = 100,
             shield = 20,
             weapons = new()
         };
@@ -135,19 +142,47 @@ public class ShipManager : MonoBehaviour
         return player.weapons.ToArray();
     }
 
-    public float PlayerHull()
+    public string PlayerName()
     {
-        return player.hull;
+        return player.name;
+    }
+
+    public float PlayerCurrentHull()
+    {
+        return player.currentHull;
     }
 
     public float PlayerMaxHull()
     {
         return 100;
     }
+
+    public void SetPlayerName(string shipName)
+    {
+        player.name = shipName;
+    }
+
+    public void SetPlayerHull(float hull, bool currentOrMax)
+    {
+        if (currentOrMax)
+        {
+            player.maxHull = hull;
+        }
+        else
+        {
+            player.currentHull = hull;
+        }
+    }
+
+    public void SetPlayerEvasion(float evasion)
+    {
+        player.evasion = evasion;
+    }
+    
     #endregion
     
     #region Enemy Ship
-    private Ship enemy;
+    [SerializeField] private Ship enemy;
     
     [HideInInspector] public List<ShipData> baseEnemyShips;
     [HideInInspector] public List<ShipData> baseEliteShips;
@@ -193,7 +228,8 @@ public class ShipManager : MonoBehaviour
         enemy = new Ship
         {
             name = "Enemy ship",
-            hull = 50 + 5 * CombatManager.Instance.fightLevel,
+            maxHull = 50 + 5 * CombatManager.Instance.fightLevel,
+            currentHull  = 50 + 5 * CombatManager.Instance.fightLevel,
             shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
@@ -221,7 +257,7 @@ public class ShipManager : MonoBehaviour
 
     public float EnemyHull()
     {
-        return enemy.hull;
+        return enemy.currentHull;
     }
 
     public float EnemyMaxHull()
@@ -312,11 +348,11 @@ public class ShipManager : MonoBehaviour
                 break;
         }
         
-        target.hull -= damage;
+        target.currentHull -= damage;
         
         // Debug.Log($"{target.name} was hit for {damage} damage. Hull is now {target.hull}.");
         
-        if (target.hull <= 0)
+        if (target.currentHull <= 0)
         {
             Die(target);
         }
@@ -379,6 +415,6 @@ public class ShipManager : MonoBehaviour
             return;
         
         InventoryManager.Instance.scrap -= hullRepairCost;
-        player.hull = PlayerMaxHull();
+        player.currentHull = PlayerMaxHull();
     }
 }

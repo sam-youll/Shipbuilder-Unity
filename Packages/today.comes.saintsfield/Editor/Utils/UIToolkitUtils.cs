@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using SaintsField.Editor.Drawers.EnumFlagsDrawers.FlagsDropdownDrawer;
 using SaintsField.Editor.Drawers.TreeDropdownDrawer;
 using SaintsField.Editor.Playa.Renderer.BaseRenderer;
+using SaintsField.Editor.Playa.Renderer.SaintsCell;
 using SaintsField.Interfaces;
 #if UNITY_2021_3_OR_NEWER
 using SaintsField.Editor.Drawers.SaintsRowDrawer;
@@ -15,7 +15,10 @@ using System.Reflection;
 using SaintsField.Editor.Drawers.AdvancedDropdownDrawer;
 using SaintsField.Editor.Drawers.EnumFlagsDrawers.FlagsTreeDropdownDrawer;
 using SaintsField.Editor.Drawers.ReferencePicker;
+using SaintsField.Editor.Drawers.SaintsWrapTypeDrawer;
 using SaintsField.Editor.Playa;
+using SaintsField.Playa;
+using SaintsField.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 #endif
@@ -44,10 +47,17 @@ namespace SaintsField.Editor.Utils
             label.RegisterCallback<GeometryChangedEvent>(evt => FixLabelWidthUIToolkit((Label)evt.target));
         }
 
-        public static void KeepRotate(VisualElement element)
+        // will add uss for you
+        public static void SetKeepRotate(VisualElement element)
         {
             StyleSheet rotateUss = Util.LoadResource<StyleSheet>("UIToolkit/SaintsRotate.uss");
             element.styleSheets.Add(rotateUss);
+            HelpKeepRotate(element);
+        }
+
+        // already set up uss, just init the rotate processor
+        public static void HelpKeepRotate(VisualElement element)
+        {
             element.AddToClassList("saints-rotate");
             element.RegisterCallback<TransitionEndEvent>(_ =>
             {
@@ -71,16 +81,7 @@ namespace SaintsField.Editor.Utils
                         // Debug.Log($"restart to {buttonRotator.style.rotate}");
                     });
                 });
-
-                // Debug.Log(e);
             });
-
-            // element.schedule.Execute(() =>
-            // {
-            //     StyleRotate rotate = element.style.rotate;
-            //     rotate.value = new Rotate(360);
-            //     element.style.rotate = rotate;
-            // });
         }
 
         public static void TriggerRotate(VisualElement element)
@@ -324,12 +325,12 @@ namespace SaintsField.Editor.Utils
 
         private class ButtonColorWrapper
         {
-            private readonly Button button;
+            private readonly Button _button;
             private bool _init;
 
             public ButtonColorWrapper(Button button)
             {
-                this.button = button;
+                _button = button;
             }
 
             private Color _hoverColor;
@@ -344,7 +345,7 @@ namespace SaintsField.Editor.Utils
                 _hoverColor = newColor / 2;
 
                 EnsureBindColorEvent();
-                button.style.backgroundColor = _normalColor;
+                _button.style.backgroundColor = _normalColor;
             }
 
             private void EnsureBindColorEvent()
@@ -355,16 +356,16 @@ namespace SaintsField.Editor.Utils
                 }
 
                 _init = true;
-                button.RegisterCallback<PointerEnterEvent>(_ => button.style.backgroundColor = _hoverColor);
-                button.RegisterCallback<PointerLeaveEvent>(_ => button.style.backgroundColor = _normalColor);
+                _button.RegisterCallback<PointerEnterEvent>(_ => _button.style.backgroundColor = _hoverColor);
+                _button.RegisterCallback<PointerLeaveEvent>(_ => _button.style.backgroundColor = _normalColor);
 
-                button.RegisterCallback<PointerDownEvent>(_ => button.style.backgroundColor = _pressedColor,
+                _button.RegisterCallback<PointerDownEvent>(_ => _button.style.backgroundColor = _pressedColor,
                 TrickleDown.TrickleDown);
-                button.RegisterCallback<PointerUpEvent>(evt =>
+                _button.RegisterCallback<PointerUpEvent>(evt =>
                 {
                     // if pointer still over button, return hover color; otherwise normal color
-                    bool inside = button.worldBound.Contains(evt.position);
-                    button.style.backgroundColor = inside ? _hoverColor : _normalColor;
+                    bool inside = _button.worldBound.Contains(evt.position);
+                    _button.style.backgroundColor = inside ? _hoverColor : _normalColor;
                     // button.style.backgroundColor = _hoverColor;
                 },
                 TrickleDown.TrickleDown);
@@ -450,7 +451,7 @@ namespace SaintsField.Editor.Utils
 
         public static VisualElement CreateOrUpdateFieldProperty(
             SerializedProperty property,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            IReadOnlyList<Attribute> allAttributes,
             Type rawType,
             string label,
             FieldInfo fieldInfo,
@@ -484,7 +485,7 @@ namespace SaintsField.Editor.Utils
                            && property.isArray;
 
             // bool useFallbackSaintsRow = false;
-            // Debug.Log($"rendering {property.propertyPath}/{property.propertyType}/isArray={isArray}/hor={inHorizontalLayout}");
+            // Debug.Log($"rendering {property.propertyPath}/{property.propertyType}/isArray={isArray}/hor={inHorizontalLayout}/allAttributes={string.Join(",", allAttributes)}");
             if(!isArray)
             {
                 ISaintsAttribute saintsAttr = allAttributes
@@ -558,7 +559,7 @@ namespace SaintsField.Editor.Utils
 
             if (useDrawerType == null)
             {
-                // Debug.Log($"fallback {property.propertyPath}/hor={inHorizontalLayout};prop={string.Join(",", allAttributes)}; label={label}");
+                // Debug.Log($"fallback CreateOrUpdateFieldRawFallback {property.propertyPath}/hor={inHorizontalLayout};prop={string.Join(",", allAttributes)}; label={label}; allAttributes={string.Join(", ", allAttributes)}");
                 VisualElement r = CreateOrUpdateFieldRawFallback(
                     property,
                     allAttributes,
@@ -576,7 +577,7 @@ namespace SaintsField.Editor.Utils
                     return null;
                 }
 
-                return mergeDec? UIToolkitCache.MergeWithDec(r, allAttributes): r;
+                return mergeDec? UIToolkitCache.MergeWithDec(r, allAttributes.OfType<PropertyAttribute>().ToArray()): r;
             }
 
             // Nah... This didn't handle for mis-ordered case
@@ -619,12 +620,13 @@ namespace SaintsField.Editor.Utils
                 {
                     r.Bind(property.serializedObject);
                     // PropertyDrawerElementDirtyFix(property, propertyDrawer, r);
-                    return mergeDec? UIToolkitCache.MergeWithDec(r, allAttributes): r;
+                    return mergeDec? UIToolkitCache.MergeWithDec(r, allAttributes.OfType<PropertyAttribute>().ToArray()): r;
                 }
             }
 
             // SaintsPropertyDrawer won't have pure IMGUI one. Let Unity handle it.
             // We don't need to handle decorators either
+            // Debug.Log($"PropertyField for {property.propertyPath}");
             PropertyField result = new PropertyField(property, string.IsNullOrEmpty(label) ? "": label)
             {
                 style =
@@ -735,7 +737,7 @@ namespace SaintsField.Editor.Utils
         // Note: do NOT pass SerializedPropertyType.Generic type: process it externally.
         public static VisualElement CreateOrUpdateFieldRawFallback(
           SerializedProperty property,
-          IReadOnlyList<PropertyAttribute> allAttributes,
+          IReadOnlyList<Attribute> allAttributes,
           Type rawType,
           string label,
           FieldInfo fieldInfo,
@@ -746,6 +748,9 @@ namespace SaintsField.Editor.Utils
           object parent)
         {
             SerializedPropertyType propertyType = property.propertyType;
+#if SAINTSFIELD_DEBUG && SAINTSFIELD_DEBUG_DOWNPOUR
+            Debug.Log($"CreateOrUpdateFieldRawFallback {property.propertyPath} allAttributes={string.Join(", ", allAttributes)} propertyType={propertyType} property.isArray={property.isArray}");
+#endif
             int propIndex = SerializedUtils.PropertyPathIndex(property.propertyPath);
             bool canAddContextReset = propIndex == -1;
             // Debug.Log($"CreateOrUpdateFieldRawFallback process {property.propertyPath}/{property.propertyType}/{property.isArray}/hor={inHorizontalLayout}");
@@ -754,13 +759,43 @@ namespace SaintsField.Editor.Utils
                 case SerializedPropertyType.Generic:
                 case SerializedPropertyType.ManagedReference:
                 {
-                    // Debug.Log($"generic/managed process {property.propertyPath}/{property.isArray}");
+                    // Debug.Log($"generic/managed process {property.propertyPath}/{property.isArray} allAttributes={string.Join(", ", allAttributes)}");
                     if (property.isArray)
                     {
+#if SAINTSFIELD_DEBUG && SAINTSFIELD_DEBUG_DOWNPOUR
+                        Debug.Log($"array process {property.propertyPath} allAttributes={string.Join(", ", allAttributes)}");
+#endif
                         ListView listView = originalField as ListView;
                         bool listViewNotExist = listView == null;
                         if (listViewNotExist)
                         {
+                            // List<Attribute> injectedAllAttributes = new List<Attribute>();
+                            List<IPlayaAttribute> injectedIPlayaAttributes = new List<IPlayaAttribute>();
+                            // List<InjectAttributeBase> nestedInjectAttributes = new List<InjectAttributeBase>();
+                            foreach (Attribute attr in allAttributes)
+                            {
+                                // ReSharper disable once MergeIntoPattern
+                                if(attr is InjectAttributeBase injectAttributeBase && injectAttributeBase.Depth <= 1)
+                                {
+                                    Attribute injectedAttribute = SaintsWrapUtils.CreateInjectedAttribute(injectAttributeBase);
+                                    // injectedAllAttributes.Add(injectedAttribute);
+                                    if(injectedAttribute is IPlayaAttribute ip)
+                                    {
+                                        injectedIPlayaAttributes.Add(ip);
+                                        // injectedAllAttributes.Add(injectedAttribute);
+                                    }
+                                }
+                                // else
+                                // {
+                                //     // injectedAllAttributes.Add(attr);
+                                //     if(attr is IPlayaAttribute ip)
+                                //     {
+                                //         injectedIPlayaAttributes.Add(ip);
+                                //     }
+                                //     // injectedAllAttributes.Add(attr);
+                                // }
+                            }
+
                             // Debug.Log($"listView {property.propertyPath}");
                             listView = new ListView
                             {
@@ -788,21 +823,52 @@ namespace SaintsField.Editor.Utils
                                         return;
                                     }
                                     element.Clear();
-
-                                    // Debug.Log($"draw item {itemProp.propertyPath}/rawType={rawType}/itemType={ReflectUtils.GetElementType(rawType)}");
-
+#if SAINTSFIELD_DEBUG && SAINTSFIELD_DEBUG_DOWNPOUR
+                                    Debug.Log($"draw item {itemProp.propertyPath}/rawType={rawType}/itemType={ReflectUtils.GetElementType(rawType)}; allAttributes={string.Join(",", allAttributes)}");
+#endif
                                     string defaultName = itemProp.displayName;
 
                                     VisualElement result = CreateOrUpdateFieldProperty(
                                         itemProp,
-                                        allAttributes,
+                                        allAttributes.Where(each => (each is InjectAttributeBase) || each is not IPlayaAttribute).ToArray(),
                                         ReflectUtils.GetElementType(rawType),
                                         itemProp.displayName,
                                         fieldInfo, inHorizontalLayout, makeRenderer, doTweenPlayRecorder, null, false, parent);
                                     // Debug.Log($"done rendering {index}/{itemProp.propertyPath}/{result == null}/{property.arraySize}");
                                     if (result != null)
                                     {
-                                        element.Add(result);
+                                        // injectedIPlayaAttributes = allAttributes.OfType<IPlayaAttribute>().ToList();
+#if SAINTSFIELD_DEBUG && SAINTSFIELD_DEBUG_DOWNPOUR
+                                        Debug.Log($"list item process {itemProp.propertyPath} injectedIPlayaAttributes={string.Join(", ", injectedIPlayaAttributes)}");
+#endif
+                                        if (injectedIPlayaAttributes.Count > 0)
+                                        {
+                                            SaintsCellRenderer cellRenderer = new SaintsCellRenderer(
+                                                itemProp.serializedObject,
+                                                new SaintsFieldWithInfo
+                                                {
+                                                    ClassStructType = null,
+                                                    PlayaAttributes = injectedIPlayaAttributes,
+                                                    // PlayaAttributes = Array.Empty<IPlayaAttribute>(),
+                                                    TargetParent = null,
+                                                    TargetMemberInfo = null,
+                                                    TargetMemberIndex = 0,
+                                                    Targets = new[]{parent},
+
+                                                    RenderType = SaintsRenderType.SerializedField,
+                                                    SerializedProperty = itemProp,
+                                                    MemberId = itemProp.propertyPath,
+                                                    FieldInfo = fieldInfo,
+                                                    InherentDepth = 0,
+                                                }
+                                            );
+                                            element.Add(cellRenderer.GetElementAndInit(result));
+                                        }
+                                        else
+                                        {
+                                            element.Add(result);
+                                        }
+
                                         if(itemProp.propertyType == SerializedPropertyType.Generic || itemProp.propertyType == SerializedPropertyType.ManagedReference)
                                         {
                                             result.schedule.Execute(() =>
@@ -884,6 +950,13 @@ namespace SaintsField.Editor.Utils
                             }).Every(100);
 
                             AddContextualMenuReset(listViewToggle, property, fieldInfo, parent);
+
+#if !UNITY_6000_0_OR_NEWER
+                            {
+                                Toggle toggle = listView.Q<Toggle>(className: "unity-toggle");
+                                AddContextualMenuManipulator(toggle, property, () => { });
+                            }
+#endif
                         }
 
                         listView.AddToClassList(SaintsPropertyDrawer.ClassLabelFieldUIToolkit);
@@ -914,6 +987,7 @@ namespace SaintsField.Editor.Utils
                         listView.BindProperty(property);
                         listView.RegisterCallback<DetachFromPanelEvent>(_ => Unbind(listView));
 
+                        // Debug.Log($"array created {property.propertyPath} allAttributes={string.Join(", ", allAttributes)}");
                         return listViewNotExist ? listView : null;
 
                     }
@@ -927,7 +1001,7 @@ namespace SaintsField.Editor.Utils
                     {
                         ReferencePickerAttribute referencePickerAttribute = new ReferencePickerAttribute();
                         ReferencePickerAttributeDrawer referencePickerAttributeDrawer = (ReferencePickerAttributeDrawer) SaintsPropertyDrawer.MakePropertyDrawer(typeof(ReferencePickerAttributeDrawer), fieldInfo, referencePickerAttribute, label);
-                        referencePickerAttributeDrawer.OverridePropertyAttributes = new PropertyAttribute[]
+                        referencePickerAttributeDrawer.OverrideAttributes = new PropertyAttribute[]
                         {
                             referencePickerAttribute,
                             new SaintsRowAttribute(),
@@ -1303,6 +1377,8 @@ namespace SaintsField.Editor.Utils
                       return null;
                     }
 
+                    // Debug.Log($"rendering string field {property.propertyPath}");
+
                     textField = new TextField(label)
                     {
                         value = property.stringValue,
@@ -1428,7 +1504,7 @@ namespace SaintsField.Editor.Utils
 
                         FlagsTreeDropdownAttribute flagsDropdownAttribute = new FlagsTreeDropdownAttribute();
                         FlagsTreeDropdownAttributeDrawer flagsDropdownDrawer = (FlagsTreeDropdownAttributeDrawer) SaintsPropertyDrawer.MakePropertyDrawer(typeof(FlagsTreeDropdownAttributeDrawer), fieldInfo, flagsDropdownAttribute, label);
-                        flagsDropdownDrawer.OverridePropertyAttributes = new[] { flagsDropdownAttribute };
+                        flagsDropdownDrawer.OverrideAttributes = new[] { flagsDropdownAttribute };
                         flagsDropdownDrawer.InHorizontalLayout = inHorizontalLayout;
                         return flagsDropdownDrawer.CreatePropertyGUI(property);
                     }
@@ -1440,7 +1516,7 @@ namespace SaintsField.Editor.Utils
 
                     DropdownAttribute treeDropdownAttribute = new DropdownAttribute();
                     TreeDropdownAttributeDrawer treeDropdownDrawer = (TreeDropdownAttributeDrawer) SaintsPropertyDrawer.MakePropertyDrawer(typeof(TreeDropdownAttributeDrawer), fieldInfo, treeDropdownAttribute, label);
-                    treeDropdownDrawer.OverridePropertyAttributes = new[] { treeDropdownAttribute };
+                    treeDropdownDrawer.OverrideAttributes = new[] { treeDropdownAttribute };
                     treeDropdownDrawer.InHorizontalLayout = inHorizontalLayout;
                     return treeDropdownDrawer.CreatePropertyGUI(property);
                 }
@@ -2439,6 +2515,21 @@ namespace SaintsField.Editor.Utils
             }));
         }
 
+        private readonly struct TemporaryGameObject : IDisposable
+        {
+            private readonly GameObject _gameObject;
+
+            public TemporaryGameObject(GameObject go)
+            {
+                _gameObject = go;
+            }
+
+            public void Dispose()
+            {
+                UnityEngine.Object.DestroyImmediate(_gameObject);
+            }
+        }
+
         public static void AddContextualMenuReset(VisualElement element, SerializedProperty property, FieldInfo fieldInfo, object parent)
         {
             int propIndex = SerializedUtils.PropertyPathIndex(property.propertyPath);
@@ -2453,34 +2544,40 @@ namespace SaintsField.Editor.Utils
                 return;
             }
 
-            string label = $"Reset {fieldInfo.Name}";
+            string noEscapeName = SerializedUtils.TrimKBackingField(fieldInfo.Name);
+#if UNITY_EDITOR_WIN
+            noEscapeName = noEscapeName.TrimStart('_');
+#endif
+            string label = $"Reset {noEscapeName}";
 
             if (type.IsSubclassOf(typeof(Component)))
             {
                 element.AddManipulator(new ContextualMenuManipulator(evt =>
                 {
-                    evt.menu.AppendSeparator();
+                    // evt.menu.AppendSeparator();
                     evt.menu.AppendAction(label, _ =>
                     {
                         GameObject go = new GameObject();
-                        Component result = go.AddComponent(type);
-                        if (SerializedUtils.IsOk(property))
+                        using(new TemporaryGameObject(go))
                         {
-                            Undo.RecordObject(property.serializedObject.targetObject, $"SaintsField Reset {fieldInfo.Name}");
-                        }
+                            Component result = go.AddComponent(type);
+                            if (SerializedUtils.IsOk(property))
+                            {
+                                Undo.RecordObject(property.serializedObject.targetObject,
+                                    $"SaintsField Reset {fieldInfo.Name}");
+                            }
 
-                        try
-                        {
-                            object defaultValue = fieldInfo.GetValue(result);
+                            try
+                            {
+                                object defaultValue = fieldInfo.GetValue(result);
 
-                            fieldInfo.SetValue(parent, defaultValue);
+                                fieldInfo.SetValue(parent, defaultValue);
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.LogError(e);
+                            }
                         }
-                        catch (Exception e)
-                        {
-                            Debug.LogError(e);
-                        }
-
-                        // UnityEngine.Object.DestroyImmediate(go);
                     });
 
                 }));
@@ -2492,7 +2589,7 @@ namespace SaintsField.Editor.Utils
             {
                 element.AddManipulator(new ContextualMenuManipulator(evt =>
                 {
-                    evt.menu.AppendSeparator();
+                    // evt.menu.AppendSeparator();
                     evt.menu.AppendAction(label, _ =>
                     {
                         ScriptableObject result = ScriptableObject.CreateInstance(type);
@@ -2521,7 +2618,7 @@ namespace SaintsField.Editor.Utils
 
             element.AddManipulator(new ContextualMenuManipulator(evt =>
             {
-                evt.menu.AppendSeparator();
+                // evt.menu.AppendSeparator();
                 evt.menu.AppendAction(label, _ =>
                 {
                     if (SerializedUtils.IsOk(property))
