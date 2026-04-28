@@ -95,11 +95,12 @@ namespace: `SaintsField`
 
 ### Change Log ###
 
-**5.13.3**
+**5.13.5**
 
-1.  Reversed: Move type of `SaintsFieldConfig` from `ScriptableSingleton` back to `ScriptableObject` as in some cases Unity will try to create `Attribute` on load time when `ScriptableSingleton` can not be deserialized at all, and crashes the editor. [#222](https://github.com/TylerTemp/SaintsField/issues/222)
-2.  Fix: `Table` foldout did not have a context menu
-3.  Improve: Better box margin for `LayoutSystem` [#366](https://github.com/TylerTemp/SaintsField/issues/366)
+1.  Fix: Code parser custom path was not used correctly on load.
+2.  Add: `Button` now can display the error message if any error happens. This works for both normal method and `IEnumerator` method.
+3.  Add: `Button` with `IEnumerator` now can be manually terminated when it's finished yet.
+4.  Fix: `SaintsSerialized` might failed to deserialize the collection type data and resulted in empty data.
 
 Note: all `Handle` attributes (draw stuff in the scene view) are in stage 1, which means the arguments might change in the future.
 
@@ -1028,7 +1029,7 @@ private IEnumerator AsyncOp()
 }
 ```
 
-[![](https://github.com/user-attachments/assets/dc39b75a-2f40-4518-a1a9-bef5a59f1455)](https://github.com/user-attachments/assets/87900181-8c17-42f5-a050-01f9a945ff94)
+[![video](https://github.com/user-attachments/assets/dc39b75a-2f40-4518-a1a9-bef5a59f1455)](https://github.com/user-attachments/assets/87900181-8c17-42f5-a050-01f9a945ff94)
 
 #### `AboveButton`/`BelowButton`/`PostFieldButton` ####
 
