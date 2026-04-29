@@ -220,6 +220,7 @@ public class ModuleInspector : Editor
         GUI.color = Color.green;
         if (GUILayout.Button("Build Module"))
         {
+            Debug.Log("clicky button");
             module.BuildModule();
             module.OnBeforeSerialize();
         }
@@ -286,13 +287,15 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         Undo.RecordObject(gameObject, "Build Module");
         // EditorUtility.SetDirty(gameObject);
         ClearModule();
-        
+        Debug.Log("module cleared :)");
         gameObject.layer = LayerMask.NameToLayer("Rack Objects");
         
         #region Module body sprites & collision
+        Debug.Log("loading tilesheet");
         var tilesheet = Resources.LoadAll<Sprite>(tilesheetPath);
         // We're using a dual-grid system here, so we're spawning
         // one extra row & column of tiles and offsetting them by .5
+        Debug.Log("placing tiles");
         for (int x = 0; x <= dimensions.x; x++)
         {
             for (int y = 0; y <= dimensions.y; y++)
@@ -460,6 +463,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         
         // for collision, we're adding a composite collider, so we can place
         // a box collider on each tile of the module, then combine them
+        Debug.Log("Adding Components");
         gameObject.AddComponent<CompositeCollider2D>();
         gameObject.GetComponent<CompositeCollider2D>().geometryType = CompositeCollider2D.GeometryType.Polygons;
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
