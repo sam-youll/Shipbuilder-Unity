@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 // #if UNITY_EDITOR
 // using UnityEditor;
@@ -38,7 +39,6 @@ using Random = UnityEngine.Random;
 public class Weapon : MonoBehaviour, ITooltipInfo
 {
     [Header("Weapon Stats")]
-    public Common.SoundType soundType;
     public Dictionary<Common.SoundType, int> soundTypePoints = new();
     public List<Common.Effect> effects;
     
@@ -66,6 +66,13 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     
     public List<Module> myPatch = new();
 
+    public float cooldown;
+    public Image cooldownOverlay;
+
+    public Reactor myReactor;
+    public Common.SoundType soundType = Common.SoundType.None;
+    public float energyCost = 4;
+
     public string Info()
     {
         var text = "Weapon stats: \n";
@@ -90,6 +97,9 @@ public class Weapon : MonoBehaviour, ITooltipInfo
 
     public void Start()
     {
+        //TODO: ASSIGN THIS SPECIFICALLY SOMEHOW
+        myReactor = Reactor.Instance;
+        
         // Enemy weapons do not have actual modules behind them (for now)
         // so we just want them to attempt to fire as often as possible
         if (enemyWeapon)
@@ -105,6 +115,8 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         // TODO: this is temporary, maybe change it so that this is more tied to the modules or something idk
         noteInfo["pitch"] = Notes.RandomNoteInScale(Conductor.Instance.keyRoot, Conductor.Instance.mode);
+
+        cooldownOverlay.rectTransform.sizeDelta = GetComponent<ModuleRack>().dimensions + Vector2Int.one;
     }
 
     // Update is called once per frame
@@ -140,7 +152,8 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         if (!enemyWeapon && firing && stunTimer <= 0)
         {
-            charge += Reactor.Instance.rate * weaponStats["fireRate"] * warmup * Time.deltaTime;
+            // charge += myReactor.rate * weaponStats["fireRate"] * warmup * Time.deltaTime;
+            cooldownOverlay.fillAmount -= 1 / cooldown * Time.deltaTime;
         }
         else if (enemyWeapon && firing && stunTimer <= 0)
         {
@@ -209,7 +222,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
             soundTypeValue = hysh;
         }
         
-        dict["damage"] *= (1 + .5f * Reactor.Instance.strength);
+        dict["damage"] *= (1 + .5f * myReactor.strength);
 
         return dict;
     }
@@ -229,14 +242,27 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         return dict;
     }
 
+    private Dictionary<Common.SoundType, float> EnergyCost()
+    {
+        var dict = new Dictionary<Common.SoundType, float>();
+        dict[soundType] = energyCost;
+        return dict;
+    }
+
     public void Fire()
     {
-        if (charge < 1 || !firing || !enemyWeapon && !CompletePatch())
+        // Debug.Log(name);
+        if (!enemyWeapon && cooldownOverlay.fillAmount > 0 || !firing || !enemyWeapon && !CompletePatch())
         {
             return;
         }
-        
-        charge = 0;
+
+        if (!myReactor.TrySpendEnergy(EnergyCost()))
+        {
+            return;
+        }
+
+        cooldownOverlay.fillAmount = 1;
         
         DisplayManager.Instance.Log("Fired " + name);
         
@@ -298,9 +324,9 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         }
         if (dir == 1)
         {
-            newBullet.GetComponent<Bullet>().damage = damage * Reactor.Instance.strength;
-            newBullet.GetComponent<Bullet>().hullDamage = hullDamage * Reactor.Instance.strength;
-            newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage * Reactor.Instance.strength;
+            newBullet.GetComponent<Bullet>().damage = damage * myReactor.strength;
+            newBullet.GetComponent<Bullet>().hullDamage = hullDamage * myReactor.strength;
+            newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage * myReactor.strength;
             if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cinematic Scene"))
             {
                 newBullet.GetComponent<Bullet>().damage = damage * (Random.Range(1, 4));

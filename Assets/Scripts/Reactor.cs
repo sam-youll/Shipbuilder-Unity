@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FMOD.Studio;
+using SaintsField.Playa;
 using TMPro;
 using UnityEngine;
 
@@ -24,10 +25,21 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     public float power; // default power module adds 1, can be more or less (upper limit 30-40 maybe?)
     public float rate; // 1-4, but tempo is 200-600
     public float strength; // 1-4
+    
+    // ENERGY
+    [ShowInInspector] public Dictionary<Common.SoundType, float> storedEnergy = new()
+    {
+        { Common.SoundType.None, 0 },
+        { Common.SoundType.Izki, 0 },
+        { Common.SoundType.Aubo, 0 },
+        { Common.SoundType.Dwth, 0 }
+    };
+    public EnergyReservoirDisplay energyReservoirDisplay;
+    
     private float shields; // 1-4
-    public float izki;
-    public float aubo;
-    public float dwth;
+    // public float izki;
+    // public float aubo;
+    // public float dwth;
     public List<Module> myPatch;
 
     public GameObject previousModule;
@@ -47,6 +59,41 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     void Update()
     {
         SetPatch();
+        GenerateEnergy();
+    }
+
+    private void GenerateEnergy()
+    {
+        foreach (var mod in myPatch)
+        {
+            if (mod is PowerModule p)
+            {
+                storedEnergy[p.soundType] += p.power * Time.deltaTime;
+                energyReservoirDisplay.ChangeEnergy(p.soundType, power * Time.deltaTime);
+            }
+        }
+    }
+    
+    public bool TrySpendEnergy(Dictionary<Common.SoundType, float> cost)
+    {
+        foreach (var key in cost.Keys)
+        {
+            if (storedEnergy.ContainsKey(key) && storedEnergy[key] >= cost[key])
+            {
+                continue;
+            }
+
+            return false;
+        }
+
+        foreach (var key in cost.Keys)
+        {
+            storedEnergy[key] -= cost[key];
+            energyReservoirDisplay.ChangeEnergy(key, -cost[key]);
+            Debug.Log($"Removed {cost[key]} energy of type {key}.");
+        }
+
+        return true;
     }
     
     public void SetPatch()

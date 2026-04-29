@@ -236,6 +236,10 @@ public class Global : MonoBehaviour
         var topObj = hoverList[0];
         foreach (var result in hoverList)
         {
+            // TODO: fix left click + right click bug
+            // vvv this didn't really work vvv
+            // if (result == null) continue;
+            
             if (result.transform.position.z <= topObj.transform.position.z)
             {
                 topObj = result;
