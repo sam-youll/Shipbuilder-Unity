@@ -1,4 +1,4 @@
-#if (WWISE_2024_OR_LATER || WWISE_2023_OR_LATER || WWISE_2022_OR_LATER || WWISE_2021_OR_LATER || WWISE_2020_OR_LATER || WWISE_2019_OR_LATER || WWISE_2018_OR_LATER || WWISE_2017_OR_LATER || WWISE_2016_OR_LATER || SAINTSFIELD_WWISE) && !SAINTSFIELD_WWISE_DISABLE
+#if (WWISE_2030_OR_LATER || WWISE_2029_OR_LATER || WWISE_2028_OR_LATER || WWISE_2027_OR_LATER || WWISE_2026_OR_LATER || WWISE_2025_OR_LATER || WWISE_2024_OR_LATER || WWISE_2023_OR_LATER || WWISE_2022_OR_LATER || WWISE_2021_OR_LATER || WWISE_2020_OR_LATER || WWISE_2019_OR_LATER || WWISE_2018_OR_LATER || WWISE_2017_OR_LATER || WWISE_2016_OR_LATER || SAINTSFIELD_WWISE) && !SAINTSFIELD_WWISE_DISABLE
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -345,7 +345,7 @@ namespace SaintsField.Editor.Drawers.Wwise.GetWwiseDrawer
                     // Debug.Log($"xPathInfo.IsCallback={xPathInfo.IsCallback}/{xPathInfo.Callback}");
                     if (xPathInfo.IsCallback)
                     {
-                        (string error, string xPathString) = Util.GetOf(xPathInfo.Callback, "", property, info, parent, null);
+                        (string error, MemberInfo _, string xPathString) = Util.GetOf(xPathInfo.Callback, "", property, info, parent, null);
 
                         if (error != "")
                         {
