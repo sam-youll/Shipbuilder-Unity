@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwitchModule : SecondaryModule
+public class SwitchModule : TriggerModule
 {
     public List<Wire> outWires = new();
 

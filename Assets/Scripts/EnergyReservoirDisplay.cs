@@ -128,8 +128,8 @@ public class EnergyReservoirDisplay : MonoBehaviour
     private void RemoveEnergyBar(Common.SoundType type, float amount)
     {
         // if (Mathf.Abs(remainder) < 1) remainder--;
-        Debug.Log($"There were {energy[type].Count-1 + energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount} energy blocks. " +
-                  $"Removing {amount} energy of type {type}.");
+        Debug.Log($"There was {energy[type].Count-1 + energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount} {type} energy. " +
+                  $"Removing {amount}.");
         for (int i = 0; i < (int)Mathf.Abs(amount); i++)
         {
             var remainder = energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount;
@@ -137,7 +137,7 @@ public class EnergyReservoirDisplay : MonoBehaviour
             energy[type].RemoveAt(energy[type].Count - 1);
             energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount = remainder;
         }
-        Debug.Log($"There are now {energy[type].Count-1 + energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount} energy blocks.");
+        Debug.Log($"There is now {energy[type].Count-1 + energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount} {type} energy.");
         Debug.Log($"The correct value should be {Reactor.Instance.storedEnergy[type]}.");
     }
 }
