@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HarmonicModule : PrimaryModule
@@ -19,6 +20,11 @@ public class HarmonicModule : PrimaryModule
         Profile.combEvens,
         Profile.naturalCurve
     };
+
+    protected override void Start()
+    {
+        MusicParams["harmonics"] = (float)profile;
+    }
     public override void Trigger(float value, int inputIndex)
     {
         switch (inputIndex)
