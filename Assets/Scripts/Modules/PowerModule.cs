@@ -16,8 +16,8 @@ public class PowerModule : PrimaryModule
     {
         base.Start();
 
-        CombatStats["power"] = power;
-        CombatStats["rate"] = 0;
-        CombatStats["shields"] = 0;
+        combatStats["power"] = power;
+        combatStats["rate"] = 0;
+        combatStats["shields"] = 0;
     }
 }

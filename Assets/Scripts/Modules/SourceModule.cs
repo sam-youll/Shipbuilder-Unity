@@ -45,24 +45,24 @@ public class SourceModule : PrimaryModule
     {
         base.Start();
         
-        MusicParams["source"] = (float)waveform;
+        musicParams["source"] = (float)waveform;
         if (waveformKnobEnabled)
         {
             GetComponentInChildren<Knob>().valueChanged.AddListener(UpdateWaveform);
         }
-        CombatStats["bulletType"] = (float)bulletType;
-        CombatStats["damage"] = damage;
+        combatStats["bulletType"] = (float)bulletType;
+        combatStats["damage"] = damage;
     }
 
     void UpdateWaveform(float value)
     {
         waveform = waveforms[(int)value];
-        MusicParams["source"] = (float)waveform;
+        musicParams["source"] = (float)waveform;
     }
 
     void UpdateWaveform(int value)
     {
         waveform = waveforms[value];
-        MusicParams["source"] = (float)waveform;
+        musicParams["source"] = (float)waveform;
     }
 }

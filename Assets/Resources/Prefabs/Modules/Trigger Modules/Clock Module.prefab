@@ -389,6 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c59e772efa193141bf3e93cba3102af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  valid: 1
 --- !u!1 &1261844421799258766
 GameObject:
   m_ObjectHideFlags: 0
@@ -1241,17 +1242,18 @@ MonoBehaviour:
     element: 3
   theme: 2
   darkTheme: 1
-  price: 0
+  price: 3
+  energyCost: 0
   izki: 0
   aubo: 0
   dwth: 0
+  hysh: 0
   inputJacks: []
   outputJacks:
   - {fileID: 1255927455997351838}
   parentWires: []
   childWires: []
   wirePrefab: {fileID: 0}
-  sampleText: {fileID: 0}
   frequency: 2
 --- !u!50 &4568584544323000154
 Rigidbody2D:
@@ -1366,6 +1368,7 @@ MonoBehaviour:
   dragHeight: 1
   canGoInInventory: 1
   isInInventory: 0
+  lastParent: {fileID: 0}
   bodyClick:
     m_PersistentCalls:
       m_Calls: []
@@ -1381,6 +1384,9 @@ MonoBehaviour:
   oddSizeX: 0
   oddSizeY: 1
   collisionResults: []
+  destroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8190835657030070124
 GameObject:
   m_ObjectHideFlags: 0

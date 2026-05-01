@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class HarmonicModule : PrimaryModule
 {
+    public float warmupRate = 1.2f;
+    public float damage = 1.2f;
+    public float bulletSpeed = 1.2f;
+    
     public enum Profile
     {
         neutral = 0,
@@ -23,7 +27,11 @@ public class HarmonicModule : PrimaryModule
 
     protected override void Start()
     {
-        MusicParams["harmonics"] = (float)profile;
+        base.Start();
+        musicParams["harmonics"] = (float)profile;
+        combatStats["warmupRate"] = warmupRate;
+        combatStats["damage"] = damage;
+        combatStats["bulletSpeed"] = bulletSpeed;
     }
     public override void Trigger(float value, int inputIndex)
     {
@@ -34,7 +42,7 @@ public class HarmonicModule : PrimaryModule
                 break;
             case 1:
                 value %= profiles.Count;
-                MusicParams["harmonics"] = value;
+                musicParams["harmonics"] = value;
                 // base.Trigger();
                 break;
         }

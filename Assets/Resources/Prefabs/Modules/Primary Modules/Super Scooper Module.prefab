@@ -2113,6 +2113,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2559487669486464867}
   m_SourcePrefab: {fileID: 100100000, guid: 3386f2c0d7e0833449504e5a820981b2, type: 3}
+--- !u!61 &4356214235158369567 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8129477418533627913, guid: 3386f2c0d7e0833449504e5a820981b2, type: 3}
+  m_PrefabInstance: {fileID: 5523055159239572758}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4360694966984625230 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8079908051738374488, guid: 3386f2c0d7e0833449504e5a820981b2, type: 3}
@@ -2161,7 +2166,8 @@ MonoBehaviour:
     element: 0
   theme: 1
   darkTheme: 0
-  price: 0
+  price: 99
+  energyCost: 20
   izki: 0
   aubo: 0
   dwth: 0
@@ -2278,18 +2284,44 @@ CompositeCollider2D:
         Y: 5000000
       - X: 25000000
         Y: 5000000
+  - m_Collider: {fileID: 7128884017510607458}
+    m_ColliderPaths:
+    - - X: 15000000
+        Y: 5000000
+      - X: 5000000
+        Y: 5000000
+      - X: 5000000
+        Y: -5000000
+      - X: 15000000
+        Y: -5000000
+  - m_Collider: {fileID: 6181881799352429274}
+    m_ColliderPaths:
+    - - X: 5000000
+        Y: 15000000
+      - X: -5000000
+        Y: 15000000
+      - X: -5000000
+        Y: 5000000
+      - X: 5000000
+        Y: 5000000
+  - m_Collider: {fileID: 4356214235158369567}
+    m_ColliderPaths:
+    - - X: 5000000
+        Y: 5000000
+      - X: -5000000
+        Y: 5000000
+      - X: -5000000
+        Y: -5000000
+      - X: 5000000
+        Y: -5000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.4999707, y: 1.5}
-      - {x: 0.4999707, y: 2.5}
-      - {x: -0.5, y: 2.499971}
-      - {x: -0.4999707, y: 1.5}
     - - {x: 2.499971, y: -0.5}
       - {x: 2.499971, y: 1.5}
-      - {x: 0.5, y: 1.4999707}
-      - {x: 0.5000293, y: 0.5}
-      - {x: 1.5, y: 0.49997061}
-      - {x: 1.5000293, y: -0.5}
+      - {x: 0.5, y: 1.5000294}
+      - {x: 0.4999707, y: 2.5}
+      - {x: -0.5, y: 2.499971}
+      - {x: -0.4999707, y: -0.5}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -2374,6 +2406,7 @@ MonoBehaviour:
   theme: 1
   darkTheme: 0
   price: 0
+  energyCost: 0
   izki: 0
   aubo: 0
   dwth: 0
@@ -2384,8 +2417,21 @@ MonoBehaviour:
   childWires: []
   wirePrefab: {fileID: 0}
   systemType: 0
+  fireRate: 2
+  damage: 2
+  delayTime: 0
+--- !u!61 &6181881799352429274 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 1832861530979719116, guid: 3386f2c0d7e0833449504e5a820981b2, type: 3}
+  m_PrefabInstance: {fileID: 5523055159239572758}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7107613396916198334 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3316485362567849640, guid: 3386f2c0d7e0833449504e5a820981b2, type: 3}
+  m_PrefabInstance: {fileID: 5523055159239572758}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &7128884017510607458 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3335820808650037108, guid: 3386f2c0d7e0833449504e5a820981b2, type: 3}
   m_PrefabInstance: {fileID: 5523055159239572758}
   m_PrefabAsset: {fileID: 0}

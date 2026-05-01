@@ -118,9 +118,9 @@ public class Reactor : MonoBehaviour, ITooltipInfo
         shields = 0;
         foreach (var module in myPatch)
         {
-            power += module.CombatStats["power"];
-            rate += module.CombatStats["rate"];
-            shields += module.CombatStats["shields"];
+            power += module.combatStats["power"];
+            rate += module.combatStats["rate"];
+            shields += module.combatStats["shields"];
         }
 
         shields = Mathf.Clamp(shields, 0, 4);

@@ -218,12 +218,12 @@ public class PatchManager : MonoBehaviour
 
         foreach (var mod in p)
         {
-            foreach (var param in mod.GetComponent<Module>().MusicParams)
+            foreach (var param in mod.GetComponent<Module>().musicParams)
             {
                 paramDict[param.Key] = param.Value;
             }
 
-            foreach (var stat in mod.GetComponent<Module>().CombatStats)
+            foreach (var stat in mod.GetComponent<Module>().combatStats)
             {
                 statDict[stat.Key] = stat.Value;
             }

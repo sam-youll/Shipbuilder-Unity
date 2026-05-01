@@ -1312,10 +1312,12 @@ MonoBehaviour:
     element: 1
   theme: 2
   darkTheme: 1
-  price: 0
+  price: 4
+  energyCost: 0.25
   izki: 0
   aubo: 0
   dwth: 0
+  hysh: 0
   inputJacks:
   - {fileID: 2816177025038320744}
   - {fileID: 1252106392250328187}
@@ -1325,6 +1327,9 @@ MonoBehaviour:
   childWires: []
   wirePrefab: {fileID: 0}
   systemType: 0
+  fireRate: 2
+  damage: 2
+  delayTime: 0
 --- !u!50 &8174714003512088473
 Rigidbody2D:
   serializedVersion: 5

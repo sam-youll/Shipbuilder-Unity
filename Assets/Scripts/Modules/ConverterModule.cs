@@ -7,8 +7,8 @@ public class ConverterModule : PrimaryModule
     {
         base.Start();
 
-        CombatStats["power"] = 0;
-        CombatStats["rate"] = rate;
-        CombatStats["shields"] = 0;
+        combatStats["power"] = 0;
+        combatStats["rate"] = rate;
+        combatStats["shields"] = 0;
     }
 }

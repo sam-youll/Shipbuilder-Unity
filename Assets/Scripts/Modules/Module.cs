@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
+using SaintsField;
+using SaintsField.Playa;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +20,7 @@ using UnityEditor;
 public class ModuleInspector : Editor
 {
     Module.ModuleComponent paletteSelection = Module.ModuleComponent.Body;
+    public string keyToAddToDict = "test";
     
     public override void OnInspectorGUI()
     {
@@ -225,6 +229,23 @@ public class ModuleInspector : Editor
             module.OnBeforeSerialize();
         }
         GUI.color = Color.white;
+
+        // for (var i = 0; i < module.combatStats.Keys.Count; i++)
+        // {
+        //     GUILayout.BeginHorizontal();
+        //     var key = module.combatStats.Keys.ToArray()[i];
+        //     GUILayout.Label(key);
+        //     module.combatStats[key] = float.Parse(GUILayout.TextField(module.combatStats.Values.ToArray()[i].ToString()));
+        //     GUILayout.EndHorizontal();
+        // }
+        //
+        // GUILayout.BeginHorizontal();
+        // keyToAddToDict = GUILayout.TextField(keyToAddToDict);
+        // if (GUILayout.Button("Add Combat Stat"))
+        // {
+        //     module.combatStats.Add(keyToAddToDict, 0);
+        // }
+        // GUILayout.EndHorizontal();
         
         EditorGUILayout.EndVertical();
         
@@ -631,12 +652,16 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     [Header("Values")] 
     [Tooltip("The amount charged for this module in the shop.")]
     public float price;
+    public float energyCost;
     public float izki;
     public float aubo;
     public float dwth;
     public float hysh;
-    public Dictionary<string, float> MusicParams = new();
-    public Dictionary<string, float> CombatStats = new();
+    
+    [Header("Dictionaries")]
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> musicParams = new();
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> combatStats = new();
+    [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> energyCosts = new();
     
     [Header("Connections")] 
     [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
@@ -649,6 +674,13 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public virtual string Info()
     {
         var info = "";
+        
+        foreach (var pookie in combatStats)
+        {
+            info += pookie.Key + " ";
+            info += pookie.Value;
+        }
+        
         if (izki > 0)
         {
             info += "Izki: " + izki + "\n";

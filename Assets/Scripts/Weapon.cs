@@ -188,7 +188,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         foreach (var mod in myPatch)
         {
-            foreach (var stat in mod.CombatStats)
+            foreach (var stat in mod.combatStats)
             {
                 dict[stat.Key] += stat.Value;
             }
@@ -233,7 +233,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         foreach (var mod in myPatch)
         {
-            foreach (var param in mod.MusicParams)
+            foreach (var param in mod.musicParams)
             {
                 noteInfo[param.Key] = param.Value;
             }

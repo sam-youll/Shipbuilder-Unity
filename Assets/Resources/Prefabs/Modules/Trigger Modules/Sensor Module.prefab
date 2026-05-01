@@ -1932,10 +1932,12 @@ MonoBehaviour:
     element: 0
   theme: 1
   darkTheme: 1
-  price: 0
+  price: 3
+  energyCost: 0
   izki: 0
   aubo: 0
   dwth: 0
+  hysh: 0
   inputJacks: []
   outputJacks:
   - {fileID: 5673126266063723905}
@@ -2073,6 +2075,7 @@ MonoBehaviour:
   dragHeight: 1
   canGoInInventory: 1
   isInInventory: 0
+  lastParent: {fileID: 0}
   bodyClick:
     m_PersistentCalls:
       m_Calls: []
@@ -2088,6 +2091,9 @@ MonoBehaviour:
   oddSizeX: 0
   oddSizeY: 0
   collisionResults: []
+  destroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8604520272931782723
 GameObject:
   m_ObjectHideFlags: 0

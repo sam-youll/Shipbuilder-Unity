@@ -14,7 +14,7 @@ public class PitchModule : PrimaryModule
             case 1:
                 value %= 7;
                 pitch = Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (int)value);
-                MusicParams["pitch"] = pitch;
+                musicParams["pitch"] = pitch;
                 Debug.Log($"PitchModule received a value {value} and set pitch to {pitch}.");
                 // base.Trigger();
                 break;
@@ -24,6 +24,6 @@ public class PitchModule : PrimaryModule
     protected override void Start()
     {
         base.Start();
-        MusicParams["pitch"] = pitch;
+        musicParams["pitch"] = pitch;
     }
 }

@@ -1676,10 +1676,12 @@ MonoBehaviour:
     element: 3
   theme: 2
   darkTheme: 1
-  price: 0
+  price: 4
+  energyCost: 0.25
   izki: 0
   aubo: 0
   dwth: 0
+  hysh: 0
   inputJacks:
   - {fileID: 2736069507392247728}
   - {fileID: 3421684216410611713}
@@ -1688,7 +1690,6 @@ MonoBehaviour:
   parentWires: []
   childWires: []
   wirePrefab: {fileID: 0}
-  sampleText: {fileID: 0}
   systemType: 0
   pitch: 0
 --- !u!50 &2462303376808429945
@@ -1846,6 +1847,7 @@ MonoBehaviour:
   dragHeight: 1
   canGoInInventory: 1
   isInInventory: 0
+  lastParent: {fileID: 0}
   bodyClick:
     m_PersistentCalls:
       m_Calls: []
@@ -1861,6 +1863,9 @@ MonoBehaviour:
   oddSizeX: 0
   oddSizeY: 0
   collisionResults: []
+  destroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3421684216410611713
 GameObject:
   m_ObjectHideFlags: 0
