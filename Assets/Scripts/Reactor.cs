@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FMOD.Studio;
 using SaintsField.Playa;
 using TMPro;
@@ -7,13 +8,6 @@ using UnityEngine;
 
 public class Reactor : MonoBehaviour, ITooltipInfo
 {
-    public static Reactor Instance;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
     public string Info()
     {
         var info =  "Total power: " + power.ToString() +
@@ -49,10 +43,22 @@ public class Reactor : MonoBehaviour, ITooltipInfo
 
     public bool tempoOverride;
 
+    public bool invisible;
+
+    public float maxStoredEnergy = 30;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (energyReservoirDisplay == null)
+        {
+            invisible = true;
+            strength = 1;
+            power = 1;
+            rate = 1;
+        }
         
+        EventBus.Instance.combatStarted.AddListener(OnCombatStarted);
     }
 
     // Update is called once per frame
@@ -60,6 +66,11 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     {
         SetPatch();
         GenerateEnergy();
+        
+        // if (!invisible)
+        // {
+        //     Debug.Log($"There is currently {storedEnergy[Common.SoundType.None]} None energy in reactor.");
+        // }
     }
 
     private void GenerateEnergy()
@@ -68,14 +79,46 @@ public class Reactor : MonoBehaviour, ITooltipInfo
         {
             if (mod is PowerModule p)
             {
-                storedEnergy[p.soundType] += p.power * Time.deltaTime;
-                energyReservoirDisplay.ChangeEnergy(p.soundType, power * Time.deltaTime);
+                if (!EnergyFull())
+                {
+                    storedEnergy[p.soundType] += p.power * Time.deltaTime;
+                    if (!invisible)
+                    {
+                        energyReservoirDisplay.UpdateDisplay(storedEnergy);
+                    }
+                }
             }
         }
+
+        // TODO: once a system for adding invisible modules to enemy ships is in place, delete this
+        // the above code will work once that's all in place
+        if (invisible)
+        {
+            storedEnergy[Common.SoundType.None] += Time.deltaTime;
+        }
+    }
+
+    private void OnCombatStarted()
+    {
+        Debug.Log($"{name} has {storedEnergy[Common.SoundType.None]} stored energy.");
+        var allEnergy = new Dictionary<Common.SoundType, float>(storedEnergy);
+        TrySpendEnergy(allEnergy);
+        Debug.Log($"After TrySpendEnergy(), {name} has {storedEnergy[Common.SoundType.None]} stored energy.");
+    }
+
+    private bool EnergyFull()
+    {
+        float totalEnergy = 0;
+        foreach (var type in storedEnergy.Values)
+        {
+            totalEnergy += type;
+        }
+        return totalEnergy >= maxStoredEnergy;
     }
     
     public bool TrySpendEnergy(Dictionary<Common.SoundType, float> cost)
     {
+        // before we start actually removing any energy, make sure we have enough of each type
         foreach (var key in cost.Keys)
         {
             if (storedEnergy.ContainsKey(key) && storedEnergy[key] >= cost[key])
@@ -86,11 +129,16 @@ public class Reactor : MonoBehaviour, ITooltipInfo
             return false;
         }
 
+        // ok now we actually remove the energy
         foreach (var key in cost.Keys)
         {
             storedEnergy[key] -= cost[key];
-            energyReservoirDisplay.ChangeEnergy(key, -cost[key]);
-            Debug.Log($"Removed {cost[key]} energy of type {key}.");
+            // invisible reactors don't have a display, but otherwise we update the display
+            if (!invisible)
+            {
+                energyReservoirDisplay.UpdateDisplay(storedEnergy);
+            }
+            // Debug.Log($"Removed {cost[key]} energy of type {key}.");
         }
 
         return true;

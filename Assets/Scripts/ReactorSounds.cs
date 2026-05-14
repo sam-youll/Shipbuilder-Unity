@@ -136,7 +136,7 @@ public class ReactorSounds : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        strength = Reactor.Instance.strength;
+        // strength = ShipManager.Instance.PlayerReactor().strength;
     }
 
     void SetTestChanges()

@@ -50,10 +50,10 @@ public class PatchManager : MonoBehaviour
             
             weapon.SetPatch();
         }
-        if (Reactor.Instance != null)
-        {
-            Reactor.Instance.SetPatch();
-        }
+        // if (Reactor.Instance != null)
+        // {
+        //     Reactor.Instance.SetPatch();
+        // }
         
         // for (int i = 0; i < 6; i++)
         // {

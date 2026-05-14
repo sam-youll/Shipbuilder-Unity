@@ -34,6 +34,7 @@ public class ShipManager : MonoBehaviour
         public float maxHull;
         public float shield;
         public List<Weapon> weapons;
+        public Reactor reactor;
         public float evasion;
     }
 
@@ -41,9 +42,10 @@ public class ShipManager : MonoBehaviour
 
     void Start()
     {
-        InitEnemyShip();
-        InitPlayerShip();
+        // InitPlayerShip();
+        // InitEnemyShip();
 
+        Debug.Log("hey im boutta add onsceneloaded");
         SceneManager.sceneLoaded += OnSceneLoaded;
         EventBus.Instance.newCombatEncounterStarted.AddListener(InitEnemyShip);
         EventBus.Instance.playerHullRepairAttempted.AddListener(OnPlayerHullRepairAttempted);
@@ -56,9 +58,10 @@ public class ShipManager : MonoBehaviour
     }
 
     private bool playerShipInitialized = false;
-    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Cockpit" && !playerShipInitialized)
+        Debug.Log("OnSceneLoaded hi i'm shipmanager");
+        if (scene.name == "Cockpit")// && !playerShipInitialized)
         {
             InitPlayerShip();
             InitEnemyShip();
@@ -121,7 +124,7 @@ public class ShipManager : MonoBehaviour
 
     private void InitPlayerShip()
     {
-        // Debug.Log("InitPlayerShip");
+        Debug.Log("InitPlayerShip");
         player = new Ship
         {
             name = "Player ship",
@@ -135,11 +138,20 @@ public class ShipManager : MonoBehaviour
         {
             player.weapons.Add(weapon.GetComponent<Weapon>());
         }
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cockpit"))
+        {
+            player.reactor = GameObject.FindGameObjectWithTag("Reactor").GetComponent<Reactor>();
+        }
     }
 
     public Weapon[] PlayerWeapons()
     {
         return player.weapons.ToArray();
+    }
+
+    public Reactor PlayerReactor()
+    {
+        return player.reactor;
     }
 
     public string PlayerName()
@@ -219,7 +231,7 @@ public class ShipManager : MonoBehaviour
     {
         for (var i = 0; i < transform.childCount; i++)
         {
-            if (transform.GetChild(i).TryGetComponent(out Weapon weapon))
+            if (transform.GetChild(i).TryGetComponent(out Weapon weapon) || transform.GetChild(i).TryGetComponent(out Reactor reactor))
             {
                 Destroy(transform.GetChild(i).gameObject);
             }
@@ -229,7 +241,7 @@ public class ShipManager : MonoBehaviour
         {
             name = "Enemy ship",
             maxHull = 50 + 5 * CombatManager.Instance.fightLevel,
-            currentHull  = 50 + 5 * CombatManager.Instance.fightLevel,
+            currentHull = 50 + 5 * CombatManager.Instance.fightLevel,
             shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
@@ -246,13 +258,23 @@ public class ShipManager : MonoBehaviour
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             enemy.weapons.Add(weapon);
         }
-
+        var newReactorObj = new GameObject();
+        newReactorObj.transform.SetParent(transform);
+        newReactorObj.name = "Enemy Reactor";
+        var newReactor = newReactorObj.AddComponent<Reactor>();
+        enemy.reactor = newReactor;
+        
         EventBus.Instance.enemyInitialized.Invoke();
     }
 
     public Weapon[] EnemyWeapons()
     {
         return enemy.weapons.ToArray();
+    }
+
+    public Reactor EnemyReactor()
+    {
+        return enemy.reactor;
     }
 
     public float EnemyHull()

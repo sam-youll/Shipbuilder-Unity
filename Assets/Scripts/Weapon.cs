@@ -69,7 +69,6 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     public float cooldown;
     public Image cooldownOverlay;
 
-    public Reactor myReactor;
     public Common.SoundType soundType = Common.SoundType.None;
     public float energyCost = 4;
 
@@ -78,18 +77,18 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         var text = "Weapon stats: \n";
         foreach (var kvp in FiringStats())
         {
-            if (kvp.Key == "bulletType")
-            {
-                text += kvp.Key + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
-            }
-            else if (kvp.Key == "soundType")
-            {
-                text += kvp.Key + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
-            }
-            else
-            {
-                text += kvp.Key + ": " + kvp.Value + "\n";
-            }
+            // if (kvp.Key == "bulletType")
+            // {
+            //     text += kvp.Key + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
+            // }
+            // else if (kvp.Key == "soundType")
+            // {
+            //     text += kvp.Key + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
+            // }
+            // else
+            // {
+            //     text += kvp.Key + ": " + kvp.Value + "\n";
+            // }
         }
     
         return text;
@@ -97,14 +96,15 @@ public class Weapon : MonoBehaviour, ITooltipInfo
 
     public void Start()
     {
-        //TODO: ASSIGN THIS SPECIFICALLY SOMEHOW
-        myReactor = Reactor.Instance;
-        
         // Enemy weapons do not have actual modules behind them (for now)
         // so we just want them to attempt to fire as often as possible
         if (enemyWeapon)
         {
             Conductor.Instance.onSixteenth.AddListener(Fire);
+        }
+        else
+        {
+            cooldownOverlay.rectTransform.sizeDelta = GetComponent<ModuleRack>().dimensions + Vector2Int.one;
         }
         
         for (int i = 0; i < notes.Length; i++)
@@ -115,8 +115,6 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         // TODO: this is temporary, maybe change it so that this is more tied to the modules or something idk
         noteInfo["pitch"] = Notes.RandomNoteInScale(Conductor.Instance.keyRoot, Conductor.Instance.mode);
-
-        cooldownOverlay.rectTransform.sizeDelta = GetComponent<ModuleRack>().dimensions + Vector2Int.one;
     }
 
     // Update is called once per frame
@@ -221,7 +219,8 @@ public class Weapon : MonoBehaviour, ITooltipInfo
             dict["soundType"] = (float)Common.SoundType.Hysh;
             soundTypeValue = hysh;
         }
-        
+
+        var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         dict["damage"] *= (1 + .5f * myReactor.strength);
 
         return dict;
@@ -251,18 +250,36 @@ public class Weapon : MonoBehaviour, ITooltipInfo
 
     public void Fire()
     {
+        var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // Debug.Log(name);
-        if (!enemyWeapon && cooldownOverlay.fillAmount > 0 || !firing || !enemyWeapon && !CompletePatch())
+        if (!enemyWeapon && cooldownOverlay.fillAmount > 0)
         {
+            // Debug.Log($"{name} needs to cool down.");
+            return;
+        }
+
+        if (!enemyWeapon && !CompletePatch())
+        {
+            // Debug.Log($"{name} has an incomplete patch.");
+            return;
+        }
+
+        if (!firing)
+        {
+            // Debug.Log($"{name} is not firing");
             return;
         }
 
         if (!myReactor.TrySpendEnergy(EnergyCost()))
         {
+            // Debug.Log($"{name} didn't have enough energy to fire.");
             return;
         }
 
-        cooldownOverlay.fillAmount = 1;
+        if (!enemyWeapon)
+        {
+            cooldownOverlay.fillAmount = 1;
+        }
         
         DisplayManager.Instance.Log("Fired " + name);
         

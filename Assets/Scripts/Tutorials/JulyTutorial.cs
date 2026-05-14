@@ -209,15 +209,15 @@ public class JulyTutorial : MonoBehaviour
             jack1.SetActive(true);
             jack2.SetActive(true);
 
-            if (Reactor.Instance.rate > 0)
-            {
-                fakeCursor.SetActive(false);
-                jack1.SetActive(false);
-                jack2.SetActive(false);
-                isComplete = true;
-                currentModulePos.z = -1;
-                CompleteStep();
-            }
+            // if (Reactor.Instance.rate > 0)
+            // {
+            //     fakeCursor.SetActive(false);
+            //     jack1.SetActive(false);
+            //     jack2.SetActive(false);
+            //     isComplete = true;
+            //     currentModulePos.z = -1;
+            //     CompleteStep();
+            // }
         }
 
         if (currentStep == 3)
@@ -321,15 +321,15 @@ public class JulyTutorial : MonoBehaviour
             jack1.SetActive(true);
             jack2.SetActive(true);
 
-            if (Reactor.Instance.strength > 0)
-            {
-                isComplete = true;
-                jack1.SetActive(false);
-                jack2.SetActive(false);
-                fakeCursor.SetActive(false);
-                currentModulePos.z = -1;
-                CompleteStep();
-            }
+            // if (Reactor.Instance.strength > 0)
+            // {
+            //     isComplete = true;
+            //     jack1.SetActive(false);
+            //     jack2.SetActive(false);
+            //     fakeCursor.SetActive(false);
+            //     currentModulePos.z = -1;
+            //     CompleteStep();
+            // }
         }
 
         if (currentStep == 6)
