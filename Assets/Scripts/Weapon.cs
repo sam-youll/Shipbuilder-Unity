@@ -52,7 +52,6 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     public bool firing;
     public bool enemyWeapon; // set true if Weapon belongs to an enemy ship
 
-    public GameObject previousModule;
     public GameObject parentWire;
     public SwitchComponent testFireSwitch;
 
@@ -381,14 +380,14 @@ public class Weapon : MonoBehaviour, ITooltipInfo
             return;
         }
 
-        if (parentWire.GetComponent<Wire>().previousModule == null)
+        if (PreviousModule() == null)
         {
             myPatch.Clear();
             return;
         }
         
         myPatch = new();
-        var prev = parentWire.GetComponent<Wire>().previousModule.GetComponent<Module>();
+        var prev = PreviousModule().GetComponent<Module>();
         // Debug.Log($"{prev}'s previous module is {prev.PreviousModule()}");
         while (prev.PreviousModule() != null)
         {
@@ -422,5 +421,17 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         
         return true;
         // return myPatch[^1].PreviousModule();
+    }
+    
+    public GameObject PreviousModule()
+    {
+        if (parentWire == null)
+        {
+            return null;
+        }
+        else
+        {
+            return parentWire.GetComponent<Wire>().previousModule;
+        }
     }
 }

@@ -140,12 +140,10 @@ public class Wire : MonoBehaviour
                     grabbed = false;
                     if (nextModule.CompareTag("Weapon"))
                     {
-                        nextModule.GetComponent<Weapon>().previousModule = null;
                         nextModule.GetComponent<Weapon>().parentWire = null;
                     }
                     else if (nextModule.CompareTag("Reactor"))
                     {
-                        nextModule.GetComponent<Reactor>().previousModule = null;
                         nextModule.GetComponent<Reactor>().parentWire = null;
                     }
                     else
@@ -185,6 +183,7 @@ public class Wire : MonoBehaviour
         // we still want to grab the end of the wire
         else if (isConnected && Input.GetMouseButtonDown(0))
         {
+            // picking up start of wire
             if (Global.Instance.RaycastResultsContains(previousModuleJack))
             {
                 grabbedIndex = 0;
@@ -195,17 +194,18 @@ public class Wire : MonoBehaviour
                 isConnected = false;
                 EventBus.Instance.updateJackValidity.Invoke(this);
             }
+            // picking up end of wire
             else if (Global.Instance.RaycastResultsContains(nextModuleJack))
             {
                 grabbedIndex = points - 1;
                 grabbed = false;
                 if (nextModule.CompareTag("Weapon"))
                 {
-                    nextModule.GetComponent<Weapon>().previousModule = null;
+                    nextModule.GetComponent<Weapon>().parentWire = null;
                 }
                 else if (nextModule.CompareTag("Reactor"))
                 {
-                    nextModule.GetComponent<Reactor>().previousModule = null;
+                    nextModule.GetComponent<Reactor>().parentWire = null;
                 }
                 else
                 {
@@ -272,14 +272,12 @@ public class Wire : MonoBehaviour
                     {
                         nextModuleJack = hit.collider.gameObject;
                         nextModule = parentGameObject;
-                        weapon.previousModule = previousModule;
                         weapon.parentWire = gameObject;
                     }
                     else if (parentGameObject.TryGetComponent(out Reactor reactor))
                     {
                         nextModuleJack = hit.collider.gameObject;
                         nextModule = parentGameObject;
-                        reactor.previousModule = previousModule;
                         reactor.parentWire = gameObject;
                     }
                     
@@ -478,11 +476,11 @@ public class Wire : MonoBehaviour
         {
             if (nextModule.CompareTag("Weapon"))
             {
-                nextModule.GetComponent<Weapon>().previousModule = null;
+                nextModule.GetComponent<Weapon>().parentWire = null;
             }
             else if (nextModule.CompareTag("Reactor"))
             {
-                nextModule.GetComponent<Reactor>().previousModule = null;
+                nextModule.GetComponent<Reactor>().parentWire = null;
             }
             else
             {

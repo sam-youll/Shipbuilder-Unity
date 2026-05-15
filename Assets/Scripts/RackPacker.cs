@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class RackPacker : MonoBehaviour
 {
+    public static RackPacker Instance;
+    
     // index 0 is always the reactor, the rest are weapons
     public List<GameObject> racks = new();
     public List<GameObject> panels = new();
@@ -41,6 +43,8 @@ public class RackPacker : MonoBehaviour
         
         EventBus.Instance.weaponAdded.AddListener(OnWeaponAdded);
         EventBus.Instance.weaponDeleted.AddListener(OnWeaponDeleted);
+        
+        ShipManager.Instance.SetPlayerReactor(reactor.GetComponent<Reactor>());
     }
 
     private void Update()

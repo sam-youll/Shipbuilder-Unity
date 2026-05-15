@@ -49,6 +49,8 @@ public class ShipManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         EventBus.Instance.newCombatEncounterStarted.AddListener(InitEnemyShip);
         EventBus.Instance.playerHullRepairAttempted.AddListener(OnPlayerHullRepairAttempted);
+        
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
     void Update()
@@ -61,7 +63,7 @@ public class ShipManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("OnSceneLoaded hi i'm shipmanager");
-        if (scene.name == "Cockpit")// && !playerShipInitialized)
+        if (scene.name == "Cockpit" || scene.name == "Creative Mode")// && !playerShipInitialized)
         {
             InitPlayerShip();
             InitEnemyShip();
@@ -138,10 +140,17 @@ public class ShipManager : MonoBehaviour
         {
             player.weapons.Add(weapon.GetComponent<Weapon>());
         }
+        
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cockpit"))
         {
-            player.reactor = GameObject.FindGameObjectWithTag("Reactor").GetComponent<Reactor>();
+            player.reactor = GameObject.FindWithTag("Reactor").GetComponent<Reactor>();
         }
+    }
+    // Because the module racks in Creative Mode are instantiated at start, they don't exist when OnLoadScene runs
+    // so we just let the Rack Packer in the scene set it later and cross our fingers that things don't break
+    public void SetPlayerReactor(Reactor reactor)
+    {
+        player.reactor = reactor;
     }
 
     public Weapon[] PlayerWeapons()

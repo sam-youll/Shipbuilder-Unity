@@ -36,7 +36,6 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     // public float dwth;
     public List<Module> myPatch;
 
-    public GameObject previousModule;
     public GameObject parentWire;
 
     private EventInstance[] pads = new EventInstance[8];
@@ -47,9 +46,14 @@ public class Reactor : MonoBehaviour, ITooltipInfo
 
     public float maxStoredEnergy = 30;
 
+    void Awake()
+    {
+        Debug.Log("reactor awake");
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("Reactor Start");
         if (energyReservoirDisplay == null)
         {
             invisible = true;
@@ -148,9 +152,9 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     {
         myPatch = new();
         
-        if (previousModule != null)
+        if (PreviousModule() != null)
         {
-            var prev = previousModule.GetComponent<Module>();
+            var prev = PreviousModule().GetComponent<Module>();
             while (prev.PreviousModule() != null)
             {
                 // Debug.Log(prev.name);
@@ -214,5 +218,17 @@ public class Reactor : MonoBehaviour, ITooltipInfo
         // TODO: set values of ReactorSounds.Instance based on adsrValues[adsrIndex]
 
         ReactorSounds.Instance.SetReactorParams();
+    }
+    
+    public GameObject PreviousModule()
+    {
+        if (parentWire == null)
+        {
+            return null;
+        }
+        else
+        {
+            return parentWire.GetComponent<Wire>().previousModule;
+        }
     }
 }
