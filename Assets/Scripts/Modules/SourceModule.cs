@@ -10,10 +10,9 @@ public class SourceModule : PrimaryModule
         Sine = 2,
         Square = 3,
         Saw = 4,
-        Noise = 5,
-        Wobble = 6,
-        Crunce = 7,
-        Bloops = 8
+        Wobble = 5,
+        Crunce = 6,
+        Bloops = 7
     }
     public Waveform waveform = Waveform.Sine;
 
@@ -22,7 +21,6 @@ public class SourceModule : PrimaryModule
         Waveform.Sine,
         Waveform.Square,
         Waveform.Saw,
-        Waveform.Noise,
         Waveform.Wobble,
         Waveform.Crunce,
         Waveform.Bloops
