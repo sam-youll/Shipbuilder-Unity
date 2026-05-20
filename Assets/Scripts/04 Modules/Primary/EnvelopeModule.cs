@@ -7,18 +7,19 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo
     public float decay;
     public float release;
     
+    //NOTE: just making decay and release interchangeable for now. what to do long term should probably be based on playtest
     public string Info()
     {
         return $"Attack: {attack}\n" +
                $"Decay: {decay}\n" +
-               $"Release: {release}";
+               $"Release: {decay}";
     }
 
     protected override void Start()
     {
         musicParams["attack"] = attack;
         musicParams["decay"] = decay;
-        musicParams["release"] = release;
+        musicParams["release"] = decay;
     }
     
     public override void Trigger(float value, int inputIndex)
