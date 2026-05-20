@@ -331,6 +331,18 @@ public class InventoryManager : MonoBehaviour
         
         if (moduleMov.isInInventory) return;
 
+        for (var i = 0; i < module.parentWires.Count; i++)
+        {
+            var wire = module.parentWires[i];
+            wire.GetComponent<Wire>().DeleteSelf();
+        }
+
+        for (var i = 0; i < module.childWires.Count; i++)
+        {
+            var wire = module.childWires[i];
+            wire.GetComponent<Wire>().DeleteSelf();
+        }
+        
         if (module is TriggerModule)
         {
             triggerModules.Add(moduleObj);
