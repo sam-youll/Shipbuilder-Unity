@@ -1739,8 +1739,8 @@ void getParameterInfo(ParameterIndex index, ParameterInfo * info) const {
             {
             info->type = ParameterTypeNumber;
             info->initialValue = 0;
-            info->min = 0;
-            info->max = 20000;
+            info->min = 32.703;
+            info->max = 2093;
             info->exponent = 1;
             info->steps = 0;
             info->debug = false;
@@ -2550,8 +2550,8 @@ ParameterValue convertToNormalizedParameterValue(ParameterIndex index, Parameter
     case 2:
         {
         {
-            value = (value < 0 ? 0 : (value > 20000 ? 20000 : value));
-            ParameterValue normalizedValue = (value - 0) / (20000 - 0);
+            value = (value < 32.703 ? 32.703 : (value > 2093 ? 2093 : value));
+            ParameterValue normalizedValue = (value - 32.703) / (2093 - 32.703);
             return normalizedValue;
         }
         }
@@ -2621,7 +2621,7 @@ ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, Paramet
             value = (value < 0 ? 0 : (value > 1 ? 1 : value));
 
             {
-                return 0 + value * (20000 - 0);
+                return 32.703 + value * (2093 - 32.703);
             }
         }
         }
@@ -4169,7 +4169,7 @@ void send_02_input_number_set(number v) {
 }
 
 static number param_03_value_constrain(number v) {
-    v = (v > 20000 ? 20000 : (v < 0 ? 0 : v));
+    v = (v > 2093 ? 2093 : (v < 32.703 ? 32.703 : v));
     return v;
 }
 
