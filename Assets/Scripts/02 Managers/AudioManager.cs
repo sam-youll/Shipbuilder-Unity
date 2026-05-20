@@ -178,6 +178,7 @@ public class AudioManager: MonoBehaviour
         decay = noteLength * decayRatio;
         release = noteLength * releaseRatio;
         // UnityEngine.Debug.Log("note length: " + noteLength + "attack: " + attack + "decay: " + decay + "release" + release);
+
     }
     
     #region SetParams
