@@ -788,17 +788,10 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
 
     private void OnDestroyed()
     {
-        for (var i = 0; i < parentWires.Count; i++)
-        {
-            var wire = parentWires[i];
-            wire.GetComponent<Wire>().DeleteSelf();
-        }
-
-        for (var i = 0; i < childWires.Count; i++)
-        {
-            var wire = childWires[i];
-            wire.GetComponent<Wire>().DeleteSelf();
-        }
+        Debug.Log("boutta die, lemme clear my wires");
+        ClearWires();
+        
+        Destroy(gameObject);
     }
 
     protected virtual void OnJackClick(GameObject jack)

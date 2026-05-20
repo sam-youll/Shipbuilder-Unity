@@ -7,15 +7,19 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo
     public float decay;
     public float release;
     
-    public string Info()
+    public override string Info()
     {
-        return $"Attack: {attack}\n" +
+        var info = base.Info();
+        
+        return info + $"Attack: {attack}\n" +
                $"Decay: {decay}\n" +
                $"Release: {release}";
     }
 
     protected override void Start()
     {
+        base.Start();
+        
         musicParams["attack"] = attack;
         musicParams["decay"] = decay;
         musicParams["release"] = release;

@@ -81,17 +81,17 @@ public class RackPacker : MonoBehaviour
             rack.SetActive(true);
         }
         
-        Debug.Log("Packing Racks");
+        // Debug.Log("Packing Racks");
         for (var i = 0; i < racks.Count; i++)
         {
-            Debug.Log($"Packing {racks[i].name}.");
+            // Debug.Log($"Packing {racks[i].name}.");
             var rack = racks[i].GetComponent<ModuleRack>();
             var pos = (Vector2)transform.position + 
                       new Vector2(-bounds.x*.5f, bounds.y*.5f) + 
                       new Vector2((rack.dimensions.x) * .5f + margin, -(rack.dimensions.y) * .5f - margin);
             var validPos = false;
             var counter = 0;
-            Debug.Log($"Checking if {pos} is valid.");
+            // Debug.Log($"Checking if {pos} is valid.");
             while (!validPos)
             {
                 validPos = true;
@@ -110,7 +110,7 @@ public class RackPacker : MonoBehaviour
 
                         if (myRect.Overlaps(prevRect))
                         {
-                            Debug.Log($"{pos} overlaps with {racks[j].name}. Checking new pos.");
+                            // Debug.Log($"{pos} overlaps with {racks[j].name}. Checking new pos.");
                             // Debug.Log($"PrevMin: {prevRect.min.y}, MyMax: {myRect.max.y}");
                             validPos = false;
                             pos.y -= .5f;
@@ -125,7 +125,7 @@ public class RackPacker : MonoBehaviour
                     !boundsRect.Contains(myRect.max))
                 {
                     // Debug.Log($"({myRect.min},{myRect.max}) is out of bounds ({boundsRect.min},{boundsRect.max}). Checking new pos.");
-                    Debug.Log($"{pos} is out of bounds.");
+                    // Debug.Log($"{pos} is out of bounds.");
                     validPos = false;
                     pos.x += .5f;
                     pos.y = transform.position.y + bounds.y * .5f - (rack.dimensions.y) * .5f - margin;
@@ -134,13 +134,13 @@ public class RackPacker : MonoBehaviour
                 counter++;
                 if (counter > 800)
                 {
-                    Debug.Log("No valid positions.");
+                    // Debug.Log("No valid positions.");
                     racks[i].SetActive(false);
                     break;
                 }
             }
             racks[i].transform.position = pos;
-            Debug.Log($"{racks[i].name} packed successfully.");
+            // Debug.Log($"{racks[i].name} packed successfully.");
         }
     }
 

@@ -104,10 +104,10 @@ public class Reactor : MonoBehaviour, ITooltipInfo
 
     private void OnCombatStarted()
     {
-        Debug.Log($"{name} has {storedEnergy[Common.SoundType.None]} stored energy.");
+        // Debug.Log($"{name} has {storedEnergy[Common.SoundType.None]} stored energy.");
         var allEnergy = new Dictionary<Common.SoundType, float>(storedEnergy);
         TrySpendEnergy(allEnergy);
-        Debug.Log($"After TrySpendEnergy(), {name} has {storedEnergy[Common.SoundType.None]} stored energy.");
+        // Debug.Log($"After TrySpendEnergy(), {name} has {storedEnergy[Common.SoundType.None]} stored energy.");
     }
 
     private bool EnergyFull()
@@ -155,8 +155,16 @@ public class Reactor : MonoBehaviour, ITooltipInfo
         if (PreviousModule() != null)
         {
             var prev = PreviousModule().GetComponent<Module>();
+            var loopCount = 0;
             while (prev.PreviousModule() != null)
             {
+                if (loopCount > 299)
+                {
+                    parentWire.GetComponent<Wire>().DeleteSelf();
+                    Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
+                    break;
+                }
+                loopCount++;
                 // Debug.Log(prev.name);
                 myPatch.Add(prev);
                 prev = prev.PreviousModule().GetComponent<Module>();

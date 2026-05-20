@@ -326,22 +326,11 @@ public class InventoryManager : MonoBehaviour
     
     public void SendToInventory(GameObject moduleObj)
     {
+        Debug.Log("Sending to inventory.");
         var module = moduleObj.GetComponent<Module>();
         var moduleMov = moduleObj.GetComponent<RackMovement>();
         
         if (moduleMov.isInInventory) return;
-
-        for (var i = 0; i < module.parentWires.Count; i++)
-        {
-            var wire = module.parentWires[i];
-            wire.GetComponent<Wire>().DeleteSelf();
-        }
-
-        for (var i = 0; i < module.childWires.Count; i++)
-        {
-            var wire = module.childWires[i];
-            wire.GetComponent<Wire>().DeleteSelf();
-        }
         
         if (module is TriggerModule)
         {

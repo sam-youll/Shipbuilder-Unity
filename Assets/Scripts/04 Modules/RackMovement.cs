@@ -109,10 +109,10 @@ public class RackMovement : MonoBehaviour
     {
         if (Global.Instance.TopRaycastResult() == gameObject)
         {
+            Debug.Log($"You right clicked on {name}");
             if (InventoryManager.Instance.creativeMode)
             {
                 destroyed.Invoke();
-                Destroy(gameObject);
             }
             else
             {

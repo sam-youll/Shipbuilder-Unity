@@ -389,8 +389,16 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         myPatch = new();
         var prev = PreviousModule().GetComponent<Module>();
         // Debug.Log($"{prev}'s previous module is {prev.PreviousModule()}");
+        var loopCount = 0;
         while (prev.PreviousModule() != null)
         {
+            if (loopCount > 299)
+            {
+                parentWire.GetComponent<Wire>().DeleteSelf();
+                Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
+                break;
+            }
+            loopCount++;
             // Debug.Log(prev.name);
             myPatch.Add(prev);
 
