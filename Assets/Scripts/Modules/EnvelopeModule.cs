@@ -16,8 +16,25 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo
 
     protected override void Start()
     {
-        base.Start();
-        
-        
+        musicParams["attack"] = attack;
+        musicParams["decay"] = decay;
+        musicParams["release"] = release;
+    }
+    
+    public override void Trigger(float value, int inputIndex)
+    {
+        switch (inputIndex)
+        {
+            case 0:
+                base.Trigger();
+                break;
+            case 1:
+                musicParams["attack"] = value * 100;
+                // base.Trigger();
+                break;
+            case 2:
+                musicParams["decay"] = value * 100;
+                break;
+        }
     }
 }
