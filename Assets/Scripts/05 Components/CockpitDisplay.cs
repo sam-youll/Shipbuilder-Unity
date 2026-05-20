@@ -16,6 +16,7 @@ public class CockpitDisplay : MonoBehaviour
     [Header("Display Icons")] 
     public GameObject playerShip;
     public GameObject playerShield;
+    private float shieldScale;
     public List<GameObject> playerWeapons;
     public StatBar playerHealthBar;
     public GameObject enemyShip;
@@ -45,6 +46,8 @@ public class CockpitDisplay : MonoBehaviour
         
         DeactivateEnemyIcons();
         OnEnemyInitialized();
+        
+        shieldScale = playerShield.transform.localScale.x;
     }
 
     void Update()
@@ -215,6 +218,38 @@ public class CockpitDisplay : MonoBehaviour
         {
             yield return new WaitForSeconds(.05f);
             sr.color = Color.Lerp(sr.color, mainCol, .1f);
+        }
+    }
+
+    private IEnumerator ShieldDownAnimation()
+    {
+        while (playerShield.transform.localScale.x > 0)
+        {
+            var newScale = playerShield.transform.localScale.magnitude;
+            newScale -= .1f;
+            playerShield.transform.localScale = Vector3.one * newScale;
+            yield return new WaitForSeconds(.1f);
+        }
+
+        if (playerShield.transform.localScale.x < 0)
+        {
+            playerShield.transform.localScale = Vector3.zero;
+        }
+    }
+
+    private IEnumerator ShieldUpAnimation()
+    {
+        while (playerShield.transform.localScale.x < shieldScale)
+        {
+            var newScale = playerShield.transform.localScale.magnitude;
+            newScale += .1f;
+            playerShield.transform.localScale = Vector3.one * newScale;
+            yield return new WaitForSeconds(.1f);
+        }
+
+        if (playerShield.transform.localScale.x > shieldScale)
+        {
+            playerShield.transform.localScale = Vector3.one * shieldScale;
         }
     }
 }

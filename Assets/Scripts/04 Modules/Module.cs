@@ -652,7 +652,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     [Header("Values")] 
     [Tooltip("The amount charged for this module in the shop.")]
     public float price;
-    public float energyCost;
     public float izki;
     public float aubo;
     public float dwth;
@@ -674,12 +673,19 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public virtual string Info()
     {
         var info = "";
-        
+
+        info += "Energy Draw (per trigger):\n";
+        foreach (var kvp in energyCosts)
+        {
+            info += kvp.Key + ": " + kvp.Value + "\n";
+        }
+        info += "Combat Stats:\n";
         foreach (var pookie in combatStats)
         {
-            info += pookie.Key + " ";
+            info += pookie.Key + ": ";
             info += pookie.Value;
         }
+        
         
         if (izki > 0)
         {

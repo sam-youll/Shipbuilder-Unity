@@ -349,6 +349,7 @@ public class AudioManager: MonoBehaviour
             // if weapon doesn't match any existing weapons, make new weapon
             if (weaponIndex == -1)
             {
+                Debug.Log("Added new weapon instance in audio manager");
                 weapons.Add(weapon);
                 weaponsEventInstances.Add(RuntimeManager.CreateInstance(moduleRef));
                 weaponIndex = weapons.Count - 1;
@@ -385,8 +386,10 @@ public class AudioManager: MonoBehaviour
 
     void SetInstanceParametersByDict(EventInstance inst, Dictionary<string, float> parameters)
     {
+        // Debug.Log("=== NEW NOTE ===");
         foreach (var parameter in parameters)
         {
+            // Debug.Log($"{parameter.Key} = {parameter.Value}");
             inst.setParameterByName(parameter.Key, parameter.Value);
         }
         
