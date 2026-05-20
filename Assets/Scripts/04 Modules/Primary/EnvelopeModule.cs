@@ -9,9 +9,7 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo
     
     public override string Info()
     {
-        var info = base.Info();
-        
-        return info + $"Attack: {attack}\n" +
+        return $"Attack: {attack}\n" +
                $"Decay: {decay}\n" +
                $"Release: {release}";
     }
