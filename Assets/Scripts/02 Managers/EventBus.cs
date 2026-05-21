@@ -77,6 +77,7 @@ public class EventBus : MonoBehaviour
     
     // shop events
     public UnityEvent<GameObject> shopSlotPurchased;
+    public UnityEvent shopRefreshed;
     public UnityEvent leftShop;
     
     // rack layout editing

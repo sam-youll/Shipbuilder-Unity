@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TriggerModule : Module
+public abstract class TriggerModule : Module
 {
     
 }

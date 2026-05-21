@@ -138,13 +138,9 @@ public class Wire : MonoBehaviour
                 {
                     grabbedIndex = points - 1;
                     grabbed = false;
-                    if (nextModule.CompareTag("Weapon"))
+                    if (nextModule.TryGetComponent(out ModuleRack moduleRack))
                     {
-                        nextModule.GetComponent<Weapon>().parentWire = null;
-                    }
-                    else if (nextModule.CompareTag("Reactor"))
-                    {
-                        nextModule.GetComponent<Reactor>().parentWire = null;
+                        moduleRack.parentWire = null;
                     }
                     else
                     {
@@ -199,13 +195,9 @@ public class Wire : MonoBehaviour
             {
                 grabbedIndex = points - 1;
                 grabbed = false;
-                if (nextModule.CompareTag("Weapon"))
+                if (nextModule.TryGetComponent(out ModuleRack moduleRack))
                 {
-                    nextModule.GetComponent<Weapon>().parentWire = null;
-                }
-                else if (nextModule.CompareTag("Reactor"))
-                {
-                    nextModule.GetComponent<Reactor>().parentWire = null;
+                    moduleRack.parentWire = null;
                 }
                 else
                 {
@@ -268,17 +260,11 @@ public class Wire : MonoBehaviour
                             module.childWires.Add(gameObject);
                         }
                     }
-                    else if (parentGameObject.TryGetComponent(out Weapon weapon))
+                    else if (parentGameObject.TryGetComponent(out ModuleRack moduleRack))
                     {
                         nextModuleJack = hit.collider.gameObject;
                         nextModule = parentGameObject;
-                        weapon.parentWire = gameObject;
-                    }
-                    else if (parentGameObject.TryGetComponent(out Reactor reactor))
-                    {
-                        nextModuleJack = hit.collider.gameObject;
-                        nextModule = parentGameObject;
-                        reactor.parentWire = gameObject;
+                        moduleRack.parentWire = gameObject;
                     }
                     
                     isConnected = true;
@@ -294,7 +280,7 @@ public class Wire : MonoBehaviour
                 if (!dying && isConnected && previousModule.TryGetComponent(out SecondaryModule secondaryModule))
                 {
                     // might not work if you plug into primary input jack, not sure though
-                    if (!nextModule.TryGetComponent(out Weapon weapon))
+                    if (!nextModule.TryGetComponent(out ModuleRack moduleRack))
                     {
                         var inputIndex = nextModule.GetComponent<Module>().inputJacks.FindIndex(x => x == nextModuleJack);
                         secondaryModule.myInputIndex = inputIndex;
@@ -302,12 +288,10 @@ public class Wire : MonoBehaviour
                 }
                 
                 connected.Invoke();
-                PatchManager.Instance.UpdateAllPatches();
                 EventBus.Instance.updateJackValidity.Invoke(this);
             }
             else
             {
-                PatchManager.Instance.UpdateAllPatches();
                 EventBus.Instance.updateJackValidity.Invoke(this);
                 DeleteSelf();
             }
@@ -474,18 +458,13 @@ public class Wire : MonoBehaviour
     {
         if (nextModule != null)
         {
-            if (nextModule.CompareTag("Weapon"))
+            if (nextModule.TryGetComponent(out ModuleRack moduleRack))
             {
-                nextModule.GetComponent<Weapon>().parentWire = null;
-            }
-            else if (nextModule.CompareTag("Reactor"))
-            {
-                nextModule.GetComponent<Reactor>().parentWire = null;
+               moduleRack.parentWire = null;
             }
             else
             {
                 nextModule.GetComponent<Module>().parentWires.Remove(gameObject);
-                // nextModule.GetComponent<Module>().previousModule = null;
             }
         }
         if (previousModule != null)
@@ -497,7 +476,6 @@ public class Wire : MonoBehaviour
             }
         }
         EventBus.Instance.updateJackValidity.Invoke(this);
-        PatchManager.Instance.UpdateAllPatches();
         Vector3[] positions = new Vector3[points];
         Vector2 deletePos = Global.Instance.mousePos;
         while ((Vector2)positions[0] != deletePos || (Vector2)positions[^1] != deletePos)

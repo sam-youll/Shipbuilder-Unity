@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class HarmonicModule : PrimaryModule
+public class HarmonicModule : PrimaryModule, IWeaponModule
 {
     public float warmupRate = 1.2f;
     public float damage = 1.2f;
@@ -25,14 +25,21 @@ public class HarmonicModule : PrimaryModule
         Profile.naturalCurve
     };
 
-    protected override void Start()
+    public override string Description()
     {
-        base.Start();
-        musicParams["harmonics"] = (float)profile;
-        combatStats["warmupRate"] = warmupRate;
-        combatStats["damage"] = damage;
-        combatStats["bulletSpeed"] = bulletSpeed;
+        throw new System.NotImplementedException();
     }
+
+    public Dictionary<string, float> WeaponStats()
+    {
+        return new Dictionary<string, float>()
+        {
+            { "warmupRate", warmupRate },
+            { "damage", damage },
+            { "bulletSpeed", bulletSpeed },
+        };
+    }
+
     public override void Trigger(float value, int inputIndex)
     {
         switch (inputIndex)
@@ -42,9 +49,17 @@ public class HarmonicModule : PrimaryModule
                 break;
             case 1:
                 value %= profiles.Count;
-                musicParams["harmonics"] = value;
+                profile = profiles[(int)value];
                 // base.Trigger();
                 break;
         }
+    }
+
+    public override Dictionary<string, float> MusicParams()
+    {
+        return new Dictionary<string, float>()
+        {
+            { "harmonics", (float)profile }
+        };
     }
 }

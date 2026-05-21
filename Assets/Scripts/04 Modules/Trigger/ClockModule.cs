@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ClockModule : TriggerModule
@@ -16,13 +17,18 @@ public class ClockModule : TriggerModule
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public override string Description()
+    {
+        return "Triggers output at a consistent interval, set to a division of the current tempo.";
+    }
+
     protected override void Start()
     {
         base.Start();
         
         UpdateFrequency(frequency);
     }
-    
+
     void UpdateFrequency(int value)
     {
         Conductor.Instance.onSixteenth.RemoveListener(Trigger);

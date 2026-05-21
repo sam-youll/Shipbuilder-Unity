@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PrimaryModule : Module
+public abstract class PrimaryModule : Module, IMusicParams
 {
     public enum SystemType
     {
@@ -20,4 +21,6 @@ public abstract class PrimaryModule : Module
     {
         
     }
+
+    public abstract Dictionary<string, float> MusicParams();
 }

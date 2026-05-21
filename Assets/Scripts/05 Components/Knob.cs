@@ -47,6 +47,11 @@ public class Knob : MonoBehaviour, ITooltipInfo
     }
     #endif
 
+    public string Description()
+    {
+        return "Knob knob bonk bonk";
+    }
+
     public string Info()
     {
         return value.ToString();

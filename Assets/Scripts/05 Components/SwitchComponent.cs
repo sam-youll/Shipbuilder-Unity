@@ -8,6 +8,11 @@ public class SwitchComponent : MonoBehaviour, ITooltipInfo
     public bool on;
     private SpriteRenderer sr;
 
+    public string Description()
+    {
+        return "Turn me on";
+    }
+
     public string Info()
     {
         return on ? "On" : "Off";

@@ -51,10 +51,6 @@ public class WeaponManager : MonoBehaviour
         var pos = newShipWeapon.transform.localPosition;
         pos.y = weaponActive - 1;
         newShipWeapon.transform.localPosition = pos;
-        // weapons[weaponActive].GetComponent<Weapon>().statBar = newShipWeapon.transform.GetComponentInChildren<StatBar>();
-        // weapons[weaponActive].GetComponent<Weapon>().myShip = playerShip;
-        // weapons[weaponActive].GetComponent<Weapon>().myShipWeapon = newShipWeapon;
-        PatchManager.Instance.weapons.Add(weapons[weaponActive].GetComponent<Weapon>());
     }
 
     public void OnMainSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -65,14 +61,10 @@ public class WeaponManager : MonoBehaviour
         var pos = newShipWeapon.transform.localPosition;
         pos.y = weaponActive - 1;
         newShipWeapon.transform.localPosition = pos;
-        // weapons[weaponActive].GetComponent<Weapon>().statBar = newShipWeapon.transform.GetComponentInChildren<StatBar>();
-        // weapons[weaponActive].GetComponent<Weapon>().myShip = playerShip;
-        // weapons[weaponActive].GetComponent<Weapon>().myShipWeapon = newShipWeapon;
-        PatchManager.Instance.weapons.Add(weapons[weaponActive].GetComponent<Weapon>());
 
         foreach (var weapon in weapons)
         {
-            weapon.GetComponent<Weapon>().Start();
+            // weapon.GetComponent<Weapon>().Start();
         }
     }
 }

@@ -243,6 +243,9 @@ MonoBehaviour:
   shopSlotPurchased:
     m_PersistentCalls:
       m_Calls: []
+  shopRefreshed:
+    m_PersistentCalls:
+      m_Calls: []
   leftShop:
     m_PersistentCalls:
       m_Calls: []
@@ -495,6 +498,7 @@ MonoBehaviour:
     maxHull: 0
     shield: 0
     weapons: []
+    reactor: {fileID: 0}
     evasion: 0
   enemy:
     baseShip: {fileID: 0}
@@ -503,6 +507,7 @@ MonoBehaviour:
     maxHull: 0
     shield: 0
     weapons: []
+    reactor: {fileID: 0}
     evasion: 0
   baseEnemyShips: []
   baseEliteShips: []
@@ -556,87 +561,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
---- !u!1 &5834256910477112809
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4224728719132501389}
-  - component: {fileID: 2006715040312443485}
-  m_Layer: 0
-  m_Name: Map Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4224728719132501389
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5834256910477112809}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6474073650286890672}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2006715040312443485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5834256910477112809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af4355f752c71a0418201d0751fe6056, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sector: 2
-  currentNodeType: 0
-  nodeMaps:
-  - {fileID: 5866469915049723728, guid: 08ab0c01c66222e4f9b987d8058550f4, type: 3}
-  - {fileID: 2503341151537815394, guid: 46ffd4f150d10a340b752a7aaaa41afc, type: 3}
-  - {fileID: 6824273305946851993, guid: f83622b961d41284f95dea442087768d, type: 3}
-  - {fileID: 2879208612733159193, guid: d79f028ffecb7114a8e54cf51d5c8971, type: 3}
-  - {fileID: 8786241638964394908, guid: 5ce857db1ae986d4887117b5a32d7d4d, type: 3}
-  - {fileID: 5259479598837060685, guid: 747bbd9a9c82b284585256805c9af15f, type: 3}
-  - {fileID: 4200859549681073100, guid: ef4df68ffb798914c855ba48c8a84365, type: 3}
-  - {fileID: 9081961389573128424, guid: 87ef7a2848682bd419039b6d78a9431d, type: 3}
-  - {fileID: 4175918363755040189, guid: f1757fc16c440f845ac231409bb8ac03, type: 3}
-  - {fileID: 361626115025013793, guid: ec8c4b05118f39641a5efdf81f48bcf6, type: 3}
-  - {fileID: 3891583782665386735, guid: c865f4f432995634294f361e81d8359a, type: 3}
-  - {fileID: 1313273715281998144, guid: 13a712a2397b3444aa3e78faf3301105, type: 3}
-  sectorMaps:
-  - {fileID: 8824142064997669599, guid: 79cdbe1b620f5c64d8e618ae290d5684, type: 3}
-  - {fileID: 1343105578534803126, guid: 93dea47e54957c4408f2536600290ff6, type: 3}
-  - {fileID: 7979939849141287977, guid: 9d104c849e816c84bbdb261e77f24ef9, type: 3}
-  - {fileID: 546335335660904902, guid: 35e56a5977da69843bfca0c62cce6966, type: 3}
-  - {fileID: 6839063558552473851, guid: f285ad3ad29367942aa73bdd3243a6cf, type: 3}
-  - {fileID: 4045953223741367702, guid: f1ecac628e665694fada12d1d0e000ea, type: 3}
-  - {fileID: 4154799666902629252, guid: a61fe4ce83b1b3346aba765f9b388c04, type: 3}
-  - {fileID: 1661104947292148824, guid: 67b4a0584fb5984489f9c8258b04f16e, type: 3}
-  - {fileID: 1406263476946397114, guid: 6fca2de35b1c8e148ac2fa6c1107d168, type: 3}
-  - {fileID: 5867056322900854552, guid: e65e179aa2b9b3440a50ce16e6690332, type: 3}
-  - {fileID: 3614334912888222585, guid: ac0293ea71a6b2e4f9f47a3fd534d1aa, type: 3}
-  - {fileID: 7104499410558155092, guid: 6cc223882b7c82246a1e85ef54115d24, type: 3}
-  planet: {fileID: 1701225667645622866, guid: c06108d1fd4db4241be5493d5a1b300b, type: 3}
-  activeNodeMap: {fileID: 0}
-  pathIndex: 0
-  currentPath: 
-  planetSprites:
-  - {fileID: -183412217674829444, guid: ef8974fa459959b4496bf9389d1f16a8, type: 3}
-  - {fileID: 8041774921739049974, guid: 2ec3fec3d9ac30349ace980d3e879a8c, type: 3}
-  - {fileID: -5092523712460967588, guid: 26d2146c89e16024b876b24f4c595e71, type: 3}
-  - {fileID: -5866991988133798788, guid: f61cea9362dae4a47bfda4a95033b3eb, type: 3}
 --- !u!1 &6304497298974990313
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,7 +719,6 @@ Transform:
   - {fileID: 2655682620697899990}
   - {fileID: 7314958863519940431}
   - {fileID: 7773546800740409521}
-  - {fileID: 4224728719132501389}
   - {fileID: 2580497817753987097}
   - {fileID: 3172781343051935145}
   m_Father: {fileID: 0}
@@ -868,6 +791,7 @@ MonoBehaviour:
   primaryModules: []
   secondaryModules: []
   pauseMenu: {fileID: 0}
+  shopMenu: {fileID: 0}
 --- !u!1001 &2890274147819624919
 PrefabInstance:
   m_ObjectHideFlags: 0

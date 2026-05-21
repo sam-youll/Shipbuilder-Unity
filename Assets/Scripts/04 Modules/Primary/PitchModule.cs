@@ -1,9 +1,15 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PitchModule : PrimaryModule
+public class PitchModule : PrimaryModule, IWeaponModule
 {
     public float pitch;
-    
+
+    public override string Description()
+    {
+        return "Sets pitch based on the received value, quantized to the current scale.";
+    }
+
     public override void Trigger(float value, int inputIndex)
     {
         switch (inputIndex)
@@ -14,16 +20,21 @@ public class PitchModule : PrimaryModule
             case 1:
                 value %= 7;
                 pitch = Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (int)value);
-                musicParams["pitch"] = pitch;
-                Debug.Log($"PitchModule received a value {value} and set pitch to {pitch}.");
-                // base.Trigger();
+                // Debug.Log($"PitchModule received a value {value} and set pitch to {pitch}.");
                 break;
         }
     }
 
-    protected override void Start()
+    public override Dictionary<string, float> MusicParams()
     {
-        base.Start();
-        musicParams["pitch"] = pitch;
+        return new Dictionary<string, float>
+        {
+            { "pitch", pitch }
+        };
+    }
+
+    public Dictionary<string, float> WeaponStats()
+    {
+        return new();
     }
 }

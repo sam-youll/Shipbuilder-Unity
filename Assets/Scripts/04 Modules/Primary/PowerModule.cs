@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerModule : PrimaryModule
+public class PowerModule : PrimaryModule, IReactorModule
 {
     /// <summary>
     /// Bars of energy generated per second.
@@ -12,12 +13,24 @@ public class PowerModule : PrimaryModule
     /// </summary>
     public Common.SoundType soundType = Common.SoundType.None;
     
-    protected override void Start()
+    public Dictionary<string, float> ReactorStats()
     {
-        base.Start();
+        return new Dictionary<string, float>()
+        {
+            { "power", power },
+            { "soundType", (float)soundType }
+        };
+    }
 
-        combatStats["power"] = power;
-        combatStats["rate"] = 0;
-        combatStats["shields"] = 0;
+    public override string Description()
+    {
+        return $"Generates {soundType} power for the reactor.";
+    }
+ 
+    public override Dictionary<string, float> MusicParams()
+    {
+        //TODO: add whatever bullshit the power modules will do to the sound
+        // i gotta be honest, idk what "more aggressive means" in this context
+        return new Dictionary<string, float>();
     }
 }

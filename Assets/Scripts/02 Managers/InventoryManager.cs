@@ -39,12 +39,14 @@ public class InventoryManager : MonoBehaviour
     public List<GameObject> secondaryModules = new();
 
     public GameObject pauseMenu;
+    public GameObject shopMenu;
     
     void Start()
     {
         
         CreateHotbar();
         CreatePauseMenu();
+        CreateShopMenu();
         
         SceneManager.sceneLoaded += OnSceneLoaded;
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
@@ -81,12 +83,32 @@ public class InventoryManager : MonoBehaviour
             pos.y = Mathf.Max(0, pos.y);
             moduleContainer.transform.localPosition = pos;
         }
+
+        if (Input.GetKeyDown(KeyCode.S) && CombatManager.Instance.state == CombatManager.State.outOfCombat)
+        {
+            shopMenu.SetActive(!shopMenu.activeSelf);
+        }
+
+        if (CombatManager.Instance.state != CombatManager.State.outOfCombat)
+        {
+            shopMenu.SetActive(false);
+        }
     }
 
+    //TODO: why did I put this in InventoryManager???
     private void CreatePauseMenu()
     {
         pauseMenu = Instantiate(Resources.Load<GameObject>("Prefabs/Pause Menu"), transform);
         pauseMenu.SetActive(false);
+    }
+
+    private void CreateShopMenu()
+    {
+        shopMenu = Instantiate(Resources.Load<GameObject>("Prefabs/Shop Menu"), transform);
+        shopMenu.SetActive(false);
+        var rerollButton = shopMenu.transform.GetChild(0).transform.Find("Reroll Button").GetComponent<Button2D>();
+        rerollButton.eventBus = EventBus.Instance;
+        rerollButton.eventString = "shopRefreshed";
     }
 
     private void LoadCreativeModeModules()
@@ -97,6 +119,7 @@ public class InventoryManager : MonoBehaviour
             triggerModules[i] = Instantiate(triggerModules[i]);
             triggerModules[i].SetActive(gameObject.activeSelf);
             triggerModules[i].transform.SetParent(triggerModulesLabel.transform);
+            triggerModules[i].name = triggerModules[i].name.Replace("(Clone)", "");
         }
         primaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Primary Modules").ToList();
         for (var i = 0; i < primaryModules.Count; i++)
@@ -104,6 +127,7 @@ public class InventoryManager : MonoBehaviour
             primaryModules[i] = Instantiate(primaryModules[i]);
             primaryModules[i].SetActive(gameObject.activeSelf);
             primaryModules[i].transform.SetParent(primaryModulesLabel.transform);
+            primaryModules[i].name = primaryModules[i].name.Replace("(Clone)", "");
         }
         secondaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Secondary Modules").ToList();
         for (var i = 0; i < secondaryModules.Count; i++)
@@ -111,6 +135,7 @@ public class InventoryManager : MonoBehaviour
             secondaryModules[i] = Instantiate(secondaryModules[i]);
             secondaryModules[i].SetActive(gameObject.activeSelf);
             secondaryModules[i].transform.SetParent(secondaryModulesLabel.transform);
+            secondaryModules[i].name = secondaryModules[i].name.Replace("(Clone)", "");
         }
         
         foreach (var module in triggerModules)
@@ -193,6 +218,7 @@ public class InventoryManager : MonoBehaviour
         }
         var newMod = Instantiate(module, pos, Quaternion.identity);
         newMod.transform.SetParent(gameObject.transform);
+        newMod.name = newMod.name.Replace("(Clone)", "");
     }
 
     public void ArrangeModules()
@@ -361,6 +387,7 @@ public class InventoryManager : MonoBehaviour
         if (creativeMode)
         {
             var replacement = Instantiate(module, module.transform.parent);
+            replacement.name = replacement.name.Replace("(Clone)", "");
             if (module.GetComponent<Module>() is TriggerModule)
             {
                 triggerModules[triggerModules.FindIndex(x => x == module)] = replacement;

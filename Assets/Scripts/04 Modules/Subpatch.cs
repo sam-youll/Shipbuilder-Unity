@@ -154,6 +154,30 @@ public class Subpatch : Module
         // subpatchDict[0].module.GetComponent<Module>().Trigger(value);
     }
 
+    public override string Description()
+    {
+        var desc = "This subpatch contains:\n";
+        
+        foreach (var mod in subpatchDict)
+        {
+            desc += "- " + mod.module.name + ", which connects to ";
+            for (var i = 0; i < mod.outputIndices.Count; i++)
+            {
+                var output = mod.outputIndices[i];
+                if (i == mod.outputIndices.Count - 1)
+                {
+                    desc += subpatchDict[output].module.name + "\n";
+                }
+                else
+                {
+                    desc += subpatchDict[output].module.name + ", ";
+                }
+            }
+        }
+
+        return desc;
+    }
+
     public override void Trigger()
     {
         // Debug.Log($"{gameObject.name} triggered {subpatchDict[0].module.name} with no arguments.");
@@ -173,5 +197,10 @@ public class Subpatch : Module
             wire.GetComponent<Wire>().connected.AddListener(CompileSubpatch);
             Debug.Log("Added wire connection listener.");
         }
+    }
+
+    public override Dictionary<Common.SoundType, float> EnergyCost()
+    {
+        throw new System.NotImplementedException();
     }
 }

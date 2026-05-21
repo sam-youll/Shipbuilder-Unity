@@ -1,8 +1,15 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomModule : SecondaryModule
 {
     public int randomNumber;
+
+    public override string Description()
+    {
+        return "When triggered, outputs a random value between 0 and 7";
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void Trigger(float value)
     {
@@ -11,7 +18,7 @@ public class RandomModule : SecondaryModule
         Debug.Log($"RandomModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");
         base.Trigger(value, myInputIndex);
     }
-
+    
     public override void Trigger()
     {
         randomNumber = Random.Range(0, 7);

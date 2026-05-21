@@ -254,8 +254,35 @@ public class ModuleInspector : Editor
 }
 #endif
 
+#region Interfaces
+public interface INeedEnergy
+{
+    public Dictionary<Common.SoundType, float> EnergyCost();
+}
+
+public interface IMusicParams
+{
+    public Dictionary<string, float> MusicParams();
+}
+
+public interface IWeaponModule
+{
+    public Dictionary<string, float> WeaponStats();
+}
+
+public interface IReactorModule
+{
+    public Dictionary<string, float> ReactorStats();
+}
+
+public interface IAuxModule
+{
+    // TODO: idk yet
+}
+#endregion
+
 [SelectionBase]
-public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, ITooltipInfo
+public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, ITooltipInfo, INeedEnergy
 {
     #region Module Builder
     public enum ModuleComponent
@@ -652,15 +679,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     [Header("Values")] 
     [Tooltip("The amount charged for this module in the shop.")]
     public float price;
-    public float izki;
-    public float aubo;
-    public float dwth;
-    public float hysh;
-    
-    [Header("Dictionaries")]
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> musicParams = new();
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> combatStats = new();
-    [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> energyCosts = new();
+
+    public float energyNoneCost;
+    public float energyIzkiCost;
+    public float energyAuboCost;
+    public float energyDwthCost;
+    public float energyHyshCost;
     
     [Header("Connections")] 
     [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
@@ -670,45 +694,49 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public List<GameObject> childWires = new();
     public GameObject wirePrefab;
 
+    #region Tooltip Info
+    public abstract string Description();
+    
     public virtual string Info()
     {
-        var info = "";
-
-        info += "Energy Draw (per trigger):\n";
-        foreach (var kvp in energyCosts)
+        var info = "Energy Draw (per trigger):\n";
+        foreach (var kvp in EnergyCost())
         {
-            info += kvp.Key + ": " + kvp.Value + "\n";
+            info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
         }
-        info += "Combat Stats:\n";
-        foreach (var pookie in combatStats)
+
+        if (this is PrimaryModule thisAsPrimaryMod)
         {
-            info += pookie.Key + ": ";
-            info += pookie.Value;
+            info += "~~~\n";
+            info += "Music Parameters:\n";
+            foreach (var kvp in thisAsPrimaryMod.MusicParams())
+            {
+                info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+            }
         }
         
-        
-        if (izki > 0)
+        if (this is IWeaponModule thisAsWeaponMod)
         {
-            info += "Izki: " + izki + "\n";
+            info += "~~~\n";
+            info += "Weapon Stats:\n";
+            foreach (var kvp in thisAsWeaponMod.WeaponStats())
+            {
+                info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+            }
         }
-
-        if (aubo > 0)
+        else if (this is IReactorModule thisAsReactorMod)
         {
-            info += "Aubo: " + aubo + "\n";
-        }
-
-        if (dwth > 0)
-        {
-            info += "Dwth: " + dwth + "\n";
-        }
-
-        if (hysh > 0)
-        {
-            info += "Hysh: " + hysh + "\n";
+            info += "~~~\n";
+            info += "Weapon Stats:\n";
+            foreach (var kvp in thisAsReactorMod.ReactorStats())
+            {
+                info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+            }
         }
         
         return info;
     }
+    #endregion
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
@@ -890,5 +918,17 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         var shape = new bool[bounds.x, bounds.y];
         
         Debug.Log("Generated new shape");
+    }
+
+    public virtual Dictionary<Common.SoundType, float> EnergyCost()
+    {
+        return new Dictionary<Common.SoundType, float>
+        {
+            { Common.SoundType.None, energyNoneCost },
+            { Common.SoundType.Izki, energyIzkiCost },
+            { Common.SoundType.Aubo, energyAuboCost },
+            { Common.SoundType.Dwth, energyDwthCost },
+            { Common.SoundType.Hysh, energyHyshCost }
+        };
     }
 }

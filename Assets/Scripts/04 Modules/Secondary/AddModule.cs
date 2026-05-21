@@ -5,6 +5,11 @@ public class AddModule : SecondaryModule
     // we can set this to different sizes positive or negative
     public float stepSize = 1;
 
+    public override string Description()
+    {
+        return "Adds a number.";
+    }
+    
     public override void Trigger(float value)
     {
         // Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");

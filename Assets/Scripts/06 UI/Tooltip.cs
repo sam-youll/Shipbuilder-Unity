@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public interface ITooltipInfo
 {
+    public string Description();
     public string Info();
 }
 
@@ -36,10 +37,11 @@ public class Tooltip : MonoBehaviour
     /// <param name="target">GameObject the tooltip will display info about.</param>
     public void UpdateTooltip(GameObject target)
     {
-        tmp.text = target.name;
+        tmp.text = target.name + "\n";
         if (target.TryGetComponent(out ITooltipInfo tooltip))
         {
-            tmp.text += "\n---\n" + tooltip.Info();
+            tmp.text += tooltip.Description() + "\n";
+            tmp.text += "~~~\n" + tooltip.Info();
         }
 
         // csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;

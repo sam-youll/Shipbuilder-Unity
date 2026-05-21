@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SourceModule : PrimaryModule
+public class SourceModule : PrimaryModule, IWeaponModule
 {
     // TODO: reorder these to match FMOD source parameter
     public enum Waveform
@@ -33,36 +33,54 @@ public class SourceModule : PrimaryModule
     public bool waveformKnobEnabled;
 
     public float damage = 1;
-    
-    public override string Info()
+
+    public Dictionary<string, float> WeaponStats()
     {
-        var info = base.Info() + "---\n";
-        info += $"bulletType: {Enum.GetName(typeof(Common.BulletType), (int)bulletType)}\n";
-        return info;
+        return new Dictionary<string, float>()
+        {
+            { "bulletType", (float)bulletType },
+            { "damage", damage },
+        };
     }
-    
+
+    public override string Description()
+    {
+        return "Creates the base waveform, affecting the damage amount and type of the weapon's projectiles.";
+    }
+
     protected override void Start()
     {
         base.Start();
         
-        musicParams["source"] = (float)waveform;
         if (waveformKnobEnabled)
         {
             GetComponentInChildren<Knob>().valueChanged.AddListener(UpdateWaveform);
         }
-        combatStats["bulletType"] = (float)bulletType;
-        combatStats["damage"] = damage;
+    }
+
+    public override Dictionary<string, float> MusicParams()
+    {
+        return new Dictionary<string, float>()
+        {
+            { "waveform", (float)waveform }
+        };
+    }
+
+    public override Dictionary<Common.SoundType, float> EnergyCost()
+    {
+        return new Dictionary<Common.SoundType, float>()
+        {
+
+        };
     }
 
     void UpdateWaveform(float value)
     {
         waveform = waveforms[(int)value];
-        musicParams["source"] = (float)waveform;
     }
 
     void UpdateWaveform(int value)
     {
         waveform = waveforms[value];
-        musicParams["source"] = (float)waveform;
     }
 }

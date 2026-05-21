@@ -6,14 +6,12 @@ using SaintsField.Playa;
 using TMPro;
 using UnityEngine;
 
-public class Reactor : MonoBehaviour, ITooltipInfo
+public class Reactor : ModuleRack, ITooltipInfo
 {
-    public string Info()
+    public override string Description()
     {
-        var info =  "Total power: " + power.ToString() +
-               "\nTempo: " + (120 + rate * 100).ToString() +
-               "\nDamage mult: " + (1 + .5f * strength);
-        return info;
+        return "Controls energy generation, as well as affecting " +
+               "harmonic and rhythmic properties of the overall composition.";
     }
 
     public float power; // default power module adds 1, can be more or less (upper limit 30-40 maybe?)
@@ -30,14 +28,6 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     };
     public EnergyReservoirDisplay energyReservoirDisplay;
     
-    private float shields; // 1-4
-    // public float izki;
-    // public float aubo;
-    // public float dwth;
-    public List<Module> myPatch;
-
-    public GameObject parentWire;
-
     private EventInstance[] pads = new EventInstance[8];
 
     public bool tempoOverride;
@@ -46,12 +36,7 @@ public class Reactor : MonoBehaviour, ITooltipInfo
 
     public float maxStoredEnergy = 30;
 
-    void Awake()
-    {
-        Debug.Log("reactor awake");
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected override void Start()
     {
         Debug.Log("Reactor Start");
         if (energyReservoirDisplay == null)
@@ -68,18 +53,12 @@ public class Reactor : MonoBehaviour, ITooltipInfo
     // Update is called once per frame
     void Update()
     {
-        SetPatch();
         GenerateEnergy();
-        
-        // if (!invisible)
-        // {
-        //     Debug.Log($"There is currently {storedEnergy[Common.SoundType.None]} None energy in reactor.");
-        // }
     }
 
     private void GenerateEnergy()
     {
-        foreach (var mod in myPatch)
+        foreach (var mod in ActivePatch())
         {
             if (mod is PowerModule p)
             {
@@ -147,96 +126,11 @@ public class Reactor : MonoBehaviour, ITooltipInfo
 
         return true;
     }
-    
-    public void SetPatch()
+
+    public Dictionary<string, float> ReactorStats()
     {
-        myPatch = new();
-        
-        if (PreviousModule() != null)
-        {
-            var prev = PreviousModule().GetComponent<Module>();
-            var loopCount = 0;
-            while (prev.PreviousModule() != null)
-            {
-                if (loopCount > 299)
-                {
-                    parentWire.GetComponent<Wire>().DeleteSelf();
-                    Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
-                    break;
-                }
-                loopCount++;
-                // Debug.Log(prev.name);
-                myPatch.Add(prev);
-                prev = prev.PreviousModule().GetComponent<Module>();
-            }
-            // Debug.Log(prev.name);
-            myPatch.Add(prev);
-        }
+        var dict = new Dictionary<string, float>();
 
-        power = 0;
-        rate = 0;
-        shields = 0;
-        foreach (var module in myPatch)
-        {
-            power += module.combatStats["power"];
-            rate += module.combatStats["rate"];
-            shields += module.combatStats["shields"];
-        }
-
-        shields = Mathf.Clamp(shields, 0, 4);
-        // for (var i = 0; i < CombatManager.Instance.playerShipData.shields.Length; i++)
-        // {
-        //     var shield = CombatManager.Instance.playerShipData.shields[i];
-        //     shield.SetActive(false);
-        // }
-
-        // for (var i = 0; i < shields; i++)
-        // {
-        //     CombatManager.Instance.playerShipData.shields[i].SetActive(true);
-        // }
-
-
-
-        float shieldDiff = shields - ReactorSounds.Instance.playerPads.Count;
-        // Debug.Log("shield diff: " + shieldDiff + ", shields: " + shields + ", pads: " + ReactorSounds.Instance.playerPads.Count);
-
-        if (shieldDiff > 0) 
-        {
-            for (int i = 0; i < shieldDiff; i++)
-            {
-                ReactorSounds.Instance.AddPlayerPad();
-            }
-        }
-        if (shieldDiff < 0)
-        {
-            for (int i = 0; i < -shieldDiff; i++)
-            {
-                ReactorSounds.Instance.RemovePlayerPad();
-                Debug.Log("Removing");
-            }
-        }
-
-
-        strength = power / rate;
-        if (!tempoOverride)
-        {
-            Conductor.Instance.tempo = 120 + (rate * 100);
-        } 
-
-        // TODO: set values of ReactorSounds.Instance based on adsrValues[adsrIndex]
-
-        ReactorSounds.Instance.SetReactorParams();
-    }
-    
-    public GameObject PreviousModule()
-    {
-        if (parentWire == null)
-        {
-            return null;
-        }
-        else
-        {
-            return parentWire.GetComponent<Wire>().previousModule;
-        }
+        return dict;
     }
 }

@@ -5,6 +5,11 @@ public class CounterModule : SecondaryModule
 
     public float currentValue;
     public float limit = 14;
+    
+    public override string Description()
+    {
+        return "Counts.";
+    }
 
     public override void Trigger(float value, int inputIndex)
     {

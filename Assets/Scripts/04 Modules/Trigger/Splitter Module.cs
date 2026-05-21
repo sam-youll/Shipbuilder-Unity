@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 public class SplitterModule : TriggerModule
 {
     public float bulletSpeed = .75f;
-    protected override void Start()
+    public override string Description()
     {
-        base.Start();
-        combatStats["bulletSpeed"] = bulletSpeed;
+        return "When triggered, triggers all outputs simultaneously.";
     }
 }

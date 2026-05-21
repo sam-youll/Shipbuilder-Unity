@@ -263,7 +263,7 @@ public class ShipManager : MonoBehaviour
             newWeapon.name = "Enemy Weapon";
             var weapon = newWeapon.AddComponent<Weapon>();
             weapon.enemyWeapon = true;
-            weapon.weaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel));
+            weapon.baseWeaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel));
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             enemy.weapons.Add(weapon);
         }

@@ -516,9 +516,24 @@ PrefabInstance:
       insertIndex: 2
       addedObject: {fileID: 2589276315015714561}
   m_SourcePrefab: {fileID: 100100000, guid: 58646d3420b343a499a4720194421f55, type: 3}
+--- !u!61 &369463551805925723 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3289615266360905479, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 2920468373932107356}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &709791394460307033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2404421925348829189, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 2920468373932107356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2456054491954587644 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 761739523004088736, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 2920468373932107356}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &3342319435471550899 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 497044479947448303, guid: 58646d3420b343a499a4720194421f55, type: 3}
   m_PrefabInstance: {fileID: 2920468373932107356}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &3590559463342624347 stripped
@@ -538,25 +553,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856ccbfa061296443882cf52a7ce5485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundType: 0
-  effects: 
+  coll: {fileID: 369463551805925723}
+  sr: {fileID: 3342319435471550899}
+  patchEndPanel: {fileID: 7673148713888544569}
+  inputJack: {fileID: 709791394460307033}
+  parentWire: {fileID: 0}
+  label: {fileID: 4815056589088412177}
+  dimensionsMax: {x: 20, y: 10}
+  dimensions: {x: 4, y: 4}
+  enemySystem: 0
+  heat: 0
   warming: 0
   warmup: 0
-  charge: 0
   stunTimer: 0
-  quantized: 0
   firing: 0
   enemyWeapon: 0
-  previousModule: {fileID: 0}
-  parentWire: {fileID: 0}
+  heatOverlay: {fileID: 6450483652943534682}
   testFireSwitch: {fileID: 179426237700785943}
-  currentNoteMeter: 0
-  myPatch: []
-  cooldown: 1
-  cooldownOverlay: {fileID: 6450483652943534682}
+--- !u!1 &4815056589088412177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7662051195723756621, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 2920468373932107356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5341534977041854414 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7108764067981625746, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 2920468373932107356}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7673148713888544569 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4826476279256453477, guid: 58646d3420b343a499a4720194421f55, type: 3}
   m_PrefabInstance: {fileID: 2920468373932107356}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4040391187278741597

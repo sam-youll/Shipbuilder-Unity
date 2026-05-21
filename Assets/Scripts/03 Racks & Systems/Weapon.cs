@@ -9,92 +9,32 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
-// #if UNITY_EDITOR
-// using UnityEditor;
-// #endif
 
-// #if UNITY_EDITOR
-// [CustomEditor(typeof(Weapon))]
-// public class WeaponEditor : Editor
-// {
-//     public override void OnInspectorGUI()
-//     {
-//         var weapon = (Weapon)target;
-//         EditorGUILayout.BeginVertical();
-//         GUILayout.Label("Note Info",  EditorStyles.boldLabel);
-//         foreach (var kvp in weapon.noteInfo)
-//         {
-//             GUILayout.BeginHorizontal();
-//             GUILayout.Label(kvp.Key, GUILayout.Width(60));
-//             // GUILayout.FlexibleSpace();
-//             GUILayout.Label(kvp.Value.ToString());
-//             GUILayout.EndHorizontal();
-//         }
-//         EditorGUILayout.EndVertical();
-//         DrawDefaultInspector();
-//     }
-// }
-// #endif
-
-public class Weapon : MonoBehaviour, ITooltipInfo
+public class Weapon : ModuleRack, ITooltipInfo
 {
-    [Header("Weapon Stats")]
-    public Dictionary<Common.SoundType, int> soundTypePoints = new();
-    public List<Common.Effect> effects;
-    
-    [Header("Properties")]
+    [Header("Properties")] 
+    public float heat;
     public bool warming = false;
     public float warmup = 0;
-    public float charge = 0;
     public float stunTimer;
-    public bool quantized;
-    // public bool testing;
     public bool firing;
     public bool enemyWeapon; // set true if Weapon belongs to an enemy ship
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new();
+    [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new();
 
-    public GameObject parentWire;
+    [Header("Components")]
+    public Image heatOverlay;
     public SwitchComponent testFireSwitch;
 
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> noteInfo = new(Common.NoteInfo);
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> weaponStats = new(Common.CombatStats);
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new();
-    
-    public int currentNoteMeter = 0;
-    private int[] notes = new int[1];
-    private int currentNote;
-    
-    public List<Module> myPatch = new();
-
-    public float cooldown;
-    public Image cooldownOverlay;
-
-    public Common.SoundType soundType = Common.SoundType.None;
-    public float energyCost = 4;
-
-    public string Info()
+    public override string Description()
     {
-        var text = "Weapon stats: \n";
-        foreach (var kvp in FiringStats())
-        {
-            // if (kvp.Key == "bulletType")
-            // {
-            //     text += kvp.Key + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
-            // }
-            // else if (kvp.Key == "soundType")
-            // {
-            //     text += kvp.Key + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
-            // }
-            // else
-            // {
-            //     text += kvp.Key + ": " + kvp.Value + "\n";
-            // }
-        }
-    
-        return text;
+        return "Fires projectiles, playing a note with each one. " +
+               "Musical parameters and combat stats are determined by the modules in the connected patch.";
     }
 
-    public void Start()
+    protected override void Start()
     {
+        base.Start();
         // Enemy weapons do not have actual modules behind them (for now)
         // so we just want them to attempt to fire as often as possible
         if (enemyWeapon)
@@ -103,17 +43,8 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         }
         else
         {
-            cooldownOverlay.rectTransform.sizeDelta = GetComponent<ModuleRack>().dimensions + Vector2Int.one;
+            heatOverlay.rectTransform.sizeDelta = GetComponent<ModuleRack>().dimensions + Vector2Int.one;
         }
-        
-        for (int i = 0; i < notes.Length; i++)
-        {
-            notes[i] = Random.Range(0, 7);
-            // Debug.Log(notes[i]);
-        }
-        
-        // TODO: this is temporary, maybe change it so that this is more tied to the modules or something idk
-        noteInfo["pitch"] = Notes.RandomNoteInScale(Conductor.Instance.keyRoot, Conductor.Instance.mode);
     }
 
     // Update is called once per frame
@@ -128,112 +59,107 @@ public class Weapon : MonoBehaviour, ITooltipInfo
             firing = false;
         }
         
-        if (warming)
-        {
-            if (warmup < 1)
-            {
-                if (enemyWeapon)
-                {
-                    warmup += .2f * Time.deltaTime;
-                }
-                else
-                {
-                    warmup += weaponStats["warmupRate"] * .1f * Time.deltaTime;
-                }
-            }
-            else if (warmup > 1)
-            {
-                warmup = Mathf.Clamp(warmup, 0, 1);
-            }
-        }
+        // if (warming)
+        // {
+        //     if (warmup < 1)
+        //     {
+        //         if (enemyWeapon)
+        //         {
+        //             warmup += .2f * Time.deltaTime;
+        //         }
+        //         else
+        //         {
+        //             warmup += WeaponStats()["warmupRate"] * .1f * Time.deltaTime;
+        //         }
+        //     }
+        //     else if (warmup > 1)
+        //     {
+        //         warmup = Mathf.Clamp(warmup, 0, 1);
+        //     }
+        // }
         
         if (!enemyWeapon && firing && stunTimer <= 0)
         {
-            // charge += myReactor.rate * weaponStats["fireRate"] * warmup * Time.deltaTime;
-            cooldownOverlay.fillAmount -= 1 / cooldown * Time.deltaTime;
+            heat -= HeatDissipation();
+            heatOverlay.fillAmount = heat;
         }
         else if (enemyWeapon && firing && stunTimer <= 0)
         {
-            charge += weaponStats["fireRate"] * warmup * Time.deltaTime;
+            heat -= HeatDissipation();
         }
-
-        // TODO: This is temporary, we probably don't want to just turn the whole thing yellow
-        // in the final version. We should make it a little fancier at least...
-        
-        // if (stunTimer > 0)
-        // {
-        //     stunTimer -= Time.deltaTime;
-        //     if (gameObject.GetComponent<SpriteRenderer>().color == Color.white)
-        //     {
-        //         gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
-        //     }
-        // }
-        // else if (gameObject.GetComponent<SpriteRenderer>().color == Color.yellow)
-        // {
-        //     gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-        // }
     }
 
-    public Dictionary<string, float> FiringStats()
+    public float HeatDissipation()
     {
-        var dict = new Dictionary<string, float>(weaponStats);
+        return 1 * Time.deltaTime;
+    }
 
-        var izki = 0f;
-        var aubo = 0f;
-        var dwth = 0f;
-        var hysh = 0f;
+    public Dictionary<string, float> WeaponStats()
+    {
+        var dict = new Dictionary<string, float>(baseWeaponStats);
+
+        // var izki = 0f;
+        // var aubo = 0f;
+        // var dwth = 0f;
+        // var hysh = 0f;
         
-        foreach (var mod in myPatch)
+        foreach (var mod in ActivePatch())
         {
-            foreach (var stat in mod.combatStats)
-            {
-                dict[stat.Key] += stat.Value;
-            }
+           if (mod is IWeaponModule weaponMod)
+           {
+               foreach (var stat in weaponMod.WeaponStats())
+               {
+                   dict[stat.Key] += stat.Value;
+               }
 
-            izki += mod.izki;
-            aubo += mod.aubo;
-            dwth += mod.dwth;
-            hysh += mod.hysh;
-        }
-
-        var soundTypeValue = 0f;
-        dict["soundType"] = (float)Common.SoundType.None;
-        if (izki > soundTypeValue)
-        {
-            dict["soundType"] = (float)Common.SoundType.Izki;
-            soundTypeValue = izki;
-        }
-        if (aubo > soundTypeValue)
-        {
-            dict["soundType"] = (float)Common.SoundType.Aubo;
-            soundTypeValue = aubo;
-        }
-        if (dwth > soundTypeValue)
-        {
-            dict["soundType"] = (float)Common.SoundType.Dwth;
-            soundTypeValue = dwth;
-        }
-        if (hysh > soundTypeValue)
-        {
-            dict["soundType"] = (float)Common.SoundType.Hysh;
-            soundTypeValue = hysh;
+               // izki += mod.izki;
+               // aubo += mod.aubo;
+               // dwth += mod.dwth;
+               // hysh += mod.hysh;
+           }
         }
 
-        var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
-        dict["damage"] *= (1 + .5f * myReactor.strength);
+        // var soundTypeValue = 0f;
+        // dict["soundType"] = (float)Common.SoundType.None;
+        // if (izki > soundTypeValue)
+        // {
+        //     dict["soundType"] = (float)Common.SoundType.Izki;
+        //     soundTypeValue = izki;
+        // }
+        // if (aubo > soundTypeValue)
+        // {
+        //     dict["soundType"] = (float)Common.SoundType.Aubo;
+        //     soundTypeValue = aubo;
+        // }
+        // if (dwth > soundTypeValue)
+        // {
+        //     dict["soundType"] = (float)Common.SoundType.Dwth;
+        //     soundTypeValue = dwth;
+        // }
+        // if (hysh > soundTypeValue)
+        // {
+        //     dict["soundType"] = (float)Common.SoundType.Hysh;
+        //     soundTypeValue = hysh;
+        // }
+
+        // var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
+        // dict["damage"] *= (1 + .5f * myReactor.strength);
 
         return dict;
     }
 
     public Dictionary<string, float> NoteInfo()
     {
-        var dict = noteInfo;
+        var dict = new Dictionary<string, float>(Common.NoteInfo);
         
-        foreach (var mod in myPatch)
+        foreach (var mod in ActivePatch())
         {
-            foreach (var param in mod.musicParams)
+            if (mod is IMusicParams musicMod)
             {
-                noteInfo[param.Key] = param.Value;
+                foreach (var param in musicMod.MusicParams())
+                {
+                    dict[param.Key] = param.Value;
+                }
             }
         }
 
@@ -242,8 +168,19 @@ public class Weapon : MonoBehaviour, ITooltipInfo
 
     private Dictionary<Common.SoundType, float> EnergyCost()
     {
-        var dict = new Dictionary<Common.SoundType, float>();
-        dict[soundType] = energyCost;
+        var dict = new Dictionary<Common.SoundType, float>(baseEnergyCost);
+
+        foreach (var mod in ActivePatch())
+        {
+            if (mod is INeedEnergy energyMod)
+            {
+                foreach (var kvp in energyMod.EnergyCost())
+                {
+                    dict[kvp.Key] = kvp.Value;
+                }
+            }
+        }
+        
         return dict;
     }
 
@@ -251,7 +188,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
     {
         var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // Debug.Log(name);
-        if (!enemyWeapon && cooldownOverlay.fillAmount > 0)
+        if (!enemyWeapon && heatOverlay.fillAmount > 0)
         {
             // Debug.Log($"{name} needs to cool down.");
             return;
@@ -277,7 +214,7 @@ public class Weapon : MonoBehaviour, ITooltipInfo
 
         if (!enemyWeapon)
         {
-            cooldownOverlay.fillAmount = 1;
+            heatOverlay.fillAmount = 1;
         }
         
         DisplayManager.Instance.Log("Fired " + name);
@@ -287,159 +224,40 @@ public class Weapon : MonoBehaviour, ITooltipInfo
         {
             if (enemyWeapon)
             {
-                var hit = FiringStats()["accuracy"] * (1 - ShipManager.Instance.PlayerEvasion());
+                var hit = WeaponStats()["accuracy"] * (1 - ShipManager.Instance.PlayerEvasion());
                 if (hit <= 0)
                 {
                     // Debug.Log("miss");
-                    ShipManager.Instance.DamagePlayer(hit, FiringStats()["soundType"]); // TODO: add overloads so I don't have to call useless stuff
+                    ShipManager.Instance.DamagePlayer(hit, WeaponStats()["soundType"]); // TODO: add overloads so I don't have to call useless stuff
                     EventBus.Instance.playerHit.Invoke(hit);
                 }
                 else
                 {
                     // Debug.Log("hit");
                     ShipManager.Instance.DamagePlayer(
-                        weaponStats["damage"], FiringStats()["soundType"]); // TODO: make it so that multiple effects can be sent
-                    EventBus.Instance.playerHit.Invoke(weaponStats["damage"]);
+                        WeaponStats()["damage"], WeaponStats()["soundType"]); // TODO: make it so that multiple effects can be sent
+                    EventBus.Instance.playerHit.Invoke(WeaponStats()["damage"]);
                 }
             }
             else
             {
-                var hit = FiringStats()["accuracy"] * (1 - ShipManager.Instance.EnemyEvasion());
+                var hit = WeaponStats()["accuracy"] * (1 - ShipManager.Instance.EnemyEvasion());
                 if (hit <= 0)
                 {
                     // Debug.Log("miss");
-                    ShipManager.Instance.DamageEnemy(hit, FiringStats()["soundType"]); // TODO: add overloads so I don't have to call useless stuff
+                    ShipManager.Instance.DamageEnemy(hit, WeaponStats()["soundType"]); // TODO: add overloads so I don't have to call useless stuff
                     EventBus.Instance.enemyHit.Invoke(hit);
                 }
                 else
                 {
                     // Debug.Log("hit");
                     ShipManager.Instance.DamageEnemy(
-                        FiringStats()["damage"], FiringStats()["soundType"]); // TODO: make it so that multiple effects can be sent
-                    EventBus.Instance.enemyHit.Invoke(FiringStats()["damage"]);
+                        WeaponStats()["damage"], WeaponStats()["soundType"]); // TODO: make it so that multiple effects can be sent
+                    EventBus.Instance.enemyHit.Invoke(WeaponStats()["damage"]);
                 }
             }
         }
         
-        noteInfo = NoteInfo();
-        
         EventBus.Instance.weaponFired.Invoke(this);
-        
-        
-        // if hit, fire at enemy ship
-        // if miss, fire above/below
-        // need to calculate hit range/angle
-        
-        
-        /*
-        // create bullet
-        var newBullet = Instantiate(bulletPrefab, myShipWeapon.transform.position + Vector3.right * (dir * .5f), Quaternion.identity);
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cinematic Scene"))
-        {
-            newBullet.transform.localScale = (Vector3.one * 0.3f);
-        }
-        if (dir == 1)
-        {
-            newBullet.GetComponent<Bullet>().damage = damage * myReactor.strength;
-            newBullet.GetComponent<Bullet>().hullDamage = hullDamage * myReactor.strength;
-            newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage * myReactor.strength;
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Cinematic Scene"))
-            {
-                newBullet.GetComponent<Bullet>().damage = damage * (Random.Range(1, 4));
-            }
-        }
-        else if (dir == -1)
-        {
-            newBullet.GetComponent<Bullet>().damage = damage;
-            newBullet.GetComponent<Bullet>().hullDamage = hullDamage;
-            newBullet.GetComponent<Bullet>().shieldDamage = shieldDamage;
-        }
-        newBullet.GetComponent<Bullet>().myShip = myShip;
-        newBullet.GetComponent<Bullet>().myShields = myShip.GetComponent<Ship>().shields;
-        newBullet.GetComponent<Bullet>().effects = effects;
-        newBullet.GetComponent<Bullet>().soundType = soundType;
-        */
-
-
-        // int currentChord = ReactorSounds.Instance.changesIndex;
-        // var chord = ReactorSounds.Instance.changes[currentChord];
-        // string chordString = ReactorSounds.Instance.chords[chord];
-
-        // var sensorMod = 1f;
-    }
-
-    public void SetPatch()
-    {
-        if (enemyWeapon)
-            return;
-        
-        // Debug.Log($"Setting patch for {gameObject.name}.");
-        if (parentWire == null)
-        {
-            myPatch.Clear();
-            return;
-        }
-
-        if (PreviousModule() == null)
-        {
-            myPatch.Clear();
-            return;
-        }
-        
-        myPatch = new();
-        var prev = PreviousModule().GetComponent<Module>();
-        // Debug.Log($"{prev}'s previous module is {prev.PreviousModule()}");
-        var loopCount = 0;
-        while (prev.PreviousModule() != null)
-        {
-            if (loopCount > 299)
-            {
-                parentWire.GetComponent<Wire>().DeleteSelf();
-                Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
-                break;
-            }
-            loopCount++;
-            // Debug.Log(prev.name);
-            myPatch.Add(prev);
-
-            if (prev.PreviousModule().TryGetComponent(out Module mod))
-            {
-                prev = mod;
-            }
-            // The lines below can probably be deleted
-            else if (prev.PreviousModule().TryGetComponent(out Weapon weapon))
-            {
-                break;
-            }
-        }
-        // Debug.Log(prev.name);
-        myPatch.Add(prev);
-        // Debug.Log($"{gameObject.name}'s patch consists of the following modules:");
-        // foreach (var mod in myPatch)
-        // {
-        //     Debug.Log(mod.gameObject.name);
-        // }
-    }
-
-    private bool CompletePatch()
-    {
-        SetPatch();
-        if (myPatch.Count == 0)
-            return false;
-        
-        return true;
-        // return myPatch[^1].PreviousModule();
-    }
-    
-    public GameObject PreviousModule()
-    {
-        if (parentWire == null)
-        {
-            return null;
-        }
-        else
-        {
-            return parentWire.GetComponent<Wire>().previousModule;
-        }
     }
 }

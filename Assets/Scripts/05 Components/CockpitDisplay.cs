@@ -57,7 +57,7 @@ public class CockpitDisplay : MonoBehaviour
             for (var i = 0; i < ShipManager.Instance.PlayerWeapons().Length; i++)
             {
                 playerWeapons[i].GetComponentInChildren<StatBar>().value =
-                    ShipManager.Instance.PlayerWeapons()[i].charge;
+                    ShipManager.Instance.PlayerWeapons()[i].heat;
             }
         }
 
@@ -65,7 +65,7 @@ public class CockpitDisplay : MonoBehaviour
         {
             for (var i = 0; i < ShipManager.Instance.EnemyWeapons().Length; i++)
             {
-                enemyWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.EnemyWeapons()[i].charge;
+                enemyWeapons[i].GetComponentInChildren<StatBar>().value = ShipManager.Instance.EnemyWeapons()[i].heat;
             }
         }
         
@@ -110,7 +110,7 @@ public class CockpitDisplay : MonoBehaviour
         statText.text = "Prepare for combat! Enemy ship approaching!\nEnemy weapon types are:\n";
         foreach (var weapon in enemyWeapons)
         {
-            statText.text +=  Enum.GetName(typeof(Common.SoundType), (int)weapon.weaponStats["soundType"]) + " ";
+            statText.text +=  Enum.GetName(typeof(Common.SoundType), (int)weapon.WeaponStats()["soundType"]) + " ";
         }
         questionMarks.SetActive(true);
     }

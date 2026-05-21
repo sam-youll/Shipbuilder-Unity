@@ -71,11 +71,16 @@ using UnityEngine;
 // }
 // #endif
 
-public class SensorModule : TriggerModule, ITooltipInfo
+public class SensorModule : TriggerModule
 {
     public List<string> availableEventTriggers = new();
     public string currentEventTrigger;
-    
+
+    public override string Description()
+    {
+        return $"When {currentEventTrigger} happens, triggers output.";
+    }
+
     public override string Info()
     {
         var info = base.Info() + "---\nAvailable Event Triggers:\n";

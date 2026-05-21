@@ -8,6 +8,13 @@ public class SwitchModule : TriggerModule
     public int currentIndex;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public override string Description()
+    {
+        return "When triggered by a secondary module, switches output that this module will trigger. " +
+               "Sending a higher number will switch that many times. When triggered by a primary module," +
+               "triggers the currently selected output.";
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -19,6 +26,7 @@ public class SwitchModule : TriggerModule
         currentIndex += (int)value;
         outWires[currentIndex].Trigger();
     }
+
 
     public override void Trigger()
     {

@@ -5,6 +5,11 @@ public class NumberModule : SecondaryModule
     // we can set this to different sizes positive or negative
     public float number = 1;
 
+    public override string Description()
+    {
+        return "Holds a number.";
+    }
+
     public override void Trigger(float value)
     {
         // Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");
