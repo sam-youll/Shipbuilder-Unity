@@ -10,25 +10,15 @@ public interface ITooltipInfo
 
 public class Tooltip : MonoBehaviour
 {
-    private Vector2 panelSize;
-    private SpriteRenderer sr;
-    private TextMeshPro tmp;
-    private BetterCSF csf;
+    public TextMeshProUGUI nameLabel;
+    public TextMeshProUGUI descriptionLabel;
+    public TextMeshProUGUI infoLabel;
+    public LayoutElement layoutElement;
     public float maxWidth = 5;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        sr = GetComponent<SpriteRenderer>();
-        tmp = GetComponentInChildren<TextMeshPro>();
-        csf = GetComponentInChildren<BetterCSF>();
-        csf.maxWidth = maxWidth;
-    }
 
     public void SetText(string text)
     {
-        tmp.text = text;
-        sr.size = new Vector2(tmp.bounds.size.x + .5f, tmp.bounds.size.y + .5f);
+        return;
     }
 
     /// <summary>
@@ -37,33 +27,34 @@ public class Tooltip : MonoBehaviour
     /// <param name="target">GameObject the tooltip will display info about.</param>
     public void UpdateTooltip(GameObject target)
     {
-        tmp.text = target.name + "\n";
+        nameLabel.text = target.name;
+        descriptionLabel.text = "";
+        infoLabel.text = "";
         if (target.TryGetComponent(out ITooltipInfo tooltip))
         {
-            tmp.text += tooltip.Description() + "\n";
-            tmp.text += "~~~\n" + tooltip.Info();
+            descriptionLabel.text = tooltip.Description();
+            infoLabel.text = tooltip.Info();
         }
 
-        // csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        layoutElement.enabled = descriptionLabel.textBounds.size.x > maxWidth || infoLabel.textBounds.size.x > maxWidth;
         
-        sr.size = new Vector2(tmp.bounds.size.x + .5f, tmp.bounds.size.y + .5f);
 
         var coll = target.GetComponent<Collider2D>();
         
         // position tooltip just outside (top right) of target's collider
         var pos = coll.bounds.center;
         pos.x += .5f * coll.bounds.size.x;
-        pos.x += .5f * sr.bounds.size.x + .5f;
+        pos.x -= 1f * GetComponent<RectTransform>().rect.x - .5f;
         pos.y += .5f * coll.bounds.size.y + .39f;
-        pos.y -= .5f * sr.bounds.size.y;
+        pos.y += 1f * GetComponent<RectTransform>().rect.y - .5f;
         pos.z = target.transform.position.z;
         pos.z -= 1;
         // make sure collider is visible (within bounds of camera)
         var cam = Global.Instance.cam;
         var height = cam.orthographicSize;
         var width = cam.aspect * height;
-        pos.x = Mathf.Clamp(pos.x, -width + .5f * sr.bounds.size.x + .25f, width - .5f * sr.bounds.size.x - .25f);
-        pos.y = Mathf.Clamp(pos.y, -height + .5f * sr.bounds.size.y + .25f, height - .5f * sr.bounds.size.y - .25f);
+        pos.x = Mathf.Clamp(pos.x, -width + .5f * GetComponent<RectTransform>().rect.x + .25f, width - .5f * GetComponent<RectTransform>().rect.x - .25f);
+        pos.y = Mathf.Clamp(pos.y, -height + .5f * GetComponent<RectTransform>().rect.y + .25f, height - .5f * GetComponent<RectTransform>().rect.y - .25f);
         transform.position = pos;
         
         // Debug.Log($"Coll pos = {coll.transform.position}. Coll size = {coll.bounds.size}. SR size = {sr.size}. Final pos = {pos}.");

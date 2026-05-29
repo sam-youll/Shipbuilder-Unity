@@ -77,9 +77,9 @@ public class Global : MonoBehaviour
         selectionReticle.GetComponent<SpriteRenderer>().drawMode = SpriteDrawMode.Tiled;
         selectionReticle.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
         
-        tooltip = Instantiate(Resources.Load<GameObject>("Prefabs/Tooltip"), transform);
-        tooltip.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
-        tooltip.GetComponentInChildren<MeshRenderer>().sortingLayerName = "UI";
+        tooltip = Instantiate(Resources.Load<GameObject>("Prefabs/TooltipCanvas"), transform).transform.GetChild(0).gameObject;
+        // tooltip.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
+        // tooltip.GetComponentInChildren<MeshRenderer>().sortingLayerName = "UI";
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         
@@ -110,16 +110,42 @@ public class Global : MonoBehaviour
         // Cursor
         UpdateCursor();
         
+        // Debug.Log(TopRaycastResult().name);
+        
+        // I'm tired of not being able to see the cursor when I'm trying to click on stuff in the
+        // hierarchy or the inspector while the game is running, so this is a fix for that.
+        Cursor.visible = !cam.rect.Contains(cam.ScreenToViewportPoint(Input.mousePosition));
+    }
+
+    private void LateUpdate()
+    {
         // Selection Reticle & Tooltip
-        var tooltipsActive = hoverList.Count > 0 && Input.GetKey(KeyCode.LeftAlt);
-        selectionReticle.SetActive(tooltipsActive);
+        var tooltipsActive = false;
+        if (hoverList.Count > 0)
+        {
+            foreach (var item in hoverList)
+            {
+                if (item.TryGetComponent(out ITooltipInfo tooltipInfo))
+                {
+                    tooltipsActive = true;
+                }
+            }
+        }
+        selectionReticle.SetActive(false);
         tooltip.SetActive(tooltipsActive);
         if (hoverList.Count > 0)
         {
             var selectedItem = hoverList[0];
+            foreach (var itemm in hoverList)
+            {
+                if (itemm.TryGetComponent(out ITooltipInfo tooltipInfo))
+                {
+                    selectedItem = itemm;
+                }
+            }
             foreach (var item in hoverList)
             {
-                if (selectedItem.transform.position.z >= item.transform.position.z)
+                if (selectedItem.TryGetComponent(out ITooltipInfo tooltipInfo) && selectedItem.transform.position.z >= item.transform.position.z)
                 {
                     selectedItem = item;
                     selectionReticle.GetComponent<SpriteRenderer>().size = new Vector2(
@@ -134,12 +160,6 @@ public class Global : MonoBehaviour
             
             tooltip.GetComponent<Tooltip>().UpdateTooltip(selectedItem);
         }
-        
-        // Debug.Log(TopRaycastResult().name);
-        
-        // I'm tired of not being able to see the cursor when I'm trying to click on stuff in the
-        // hierarchy or the inspector while the game is running, so this is a fix for that.
-        Cursor.visible = !cam.rect.Contains(cam.ScreenToViewportPoint(Input.mousePosition));
     }
 
     private void UpdateCursor()
