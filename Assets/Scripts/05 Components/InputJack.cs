@@ -26,6 +26,53 @@ public class InputJack : Jack
         UpdateHighlights();
     }
 
+    public override string Description()
+    {
+        var parentIsModule = transform.parent.TryGetComponent(out Module parentModule);
+        if (parentIsModule)
+        {
+            var type = parentModule.inputJacks.FindIndex(x => x == gameObject);
+            switch (type)
+            {
+                case 0:
+                    return "This jack receives a trigger from the last upstream module";
+                    break;
+                case 1:
+                    return "This jack receives a value from the last upstream module";
+                    break;
+            }
+        }
+        return "This jack receives a trigger from the last upstream module";
+    }
+
+    public override string Info()
+    {
+        if (transform.parent.TryGetComponent(out Module module))
+        {
+            foreach (var wire in module.parentWires)
+            {
+                if (wire.GetComponent<Wire>().previousModule != null &&
+                    wire.GetComponent<Wire>().nextModuleJack == gameObject)
+                {
+                    return $"Connected to {wire.GetComponent<Wire>().previousModule.name} upstream.";
+                }
+            }
+        }
+        else if (transform.parent.TryGetComponent(out ModuleRack rack))
+        {
+            if (rack.parentWire != null)
+            {
+                if (rack.parentWire.GetComponent<Wire>().previousModule != null &&
+                    rack.parentWire.GetComponent<Wire>().nextModuleJack == gameObject)
+                {
+                    return $"Connected to {rack.parentWire.GetComponent<Wire>().previousModule.name} upstream.";
+                }
+            }
+        }
+
+        return "Not connected upstream.";
+    }
+
     protected override void Start()
     {
         base.Start();

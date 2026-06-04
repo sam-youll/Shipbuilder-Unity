@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI descriptionLabel;
     public TextMeshProUGUI infoLabel;
     public LayoutElement layoutElement;
+    public GridLayoutGroup energyCost;
     public float maxWidth = 5;
 
     public void SetText(string text)
@@ -36,7 +38,59 @@ public class Tooltip : MonoBehaviour
             infoLabel.text = tooltip.Info();
         }
 
-        layoutElement.enabled = descriptionLabel.textBounds.size.x > maxWidth || infoLabel.textBounds.size.x > maxWidth;
+        if (target.TryGetComponent(out INeedEnergy energy))
+        {
+            var energySum = 0f;
+            foreach (var kvp in energy.EnergyCost())
+            {
+                energySum += kvp.Value;
+            }
+            if (energySum > 0)
+            {
+                energyCost.transform.parent.gameObject.SetActive(true);
+                for (var i = 0; i < energyCost.transform.childCount; i++)
+                {
+                    Destroy(energyCost.transform.GetChild(i).gameObject);
+                }
+
+                foreach (var kvp in energy.EnergyCost())
+                {
+                    for (var i = 0; i < (int)kvp.Value; i++)
+                    {
+                        var newEnergy = new GameObject($"{kvp.Key} Energy", typeof(Image));
+                        newEnergy.transform.SetParent(energyCost.transform);
+                        var energyIconFilePath = "";
+                        switch (kvp.Key)
+                        {
+                            case Common.SoundType.None:
+                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12None";
+                                break;
+                            case Common.SoundType.Izki:
+                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12Izki";
+                                break;
+                            case Common.SoundType.Aubo:
+                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12Aubo";
+                                break;
+                            case Common.SoundType.Dwth:
+                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12Dwth";
+                                break;
+                        }
+
+                        newEnergy.GetComponent<Image>().sprite = Resources.Load<Sprite>(energyIconFilePath);
+                    }
+                }
+            }
+            else
+            {
+                energyCost.transform.parent.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            energyCost.transform.parent.gameObject.SetActive(false);
+        }
+
+        layoutElement.enabled = descriptionLabel.textBounds.size.x >= maxWidth || infoLabel.textBounds.size.x >= maxWidth;
         
 
         var coll = target.GetComponent<Collider2D>();
@@ -53,8 +107,8 @@ public class Tooltip : MonoBehaviour
         var cam = Global.Instance.cam;
         var height = cam.orthographicSize;
         var width = cam.aspect * height;
-        pos.x = Mathf.Clamp(pos.x, -width + .5f * GetComponent<RectTransform>().rect.x + .25f, width - .5f * GetComponent<RectTransform>().rect.x - .25f);
-        pos.y = Mathf.Clamp(pos.y, -height + .5f * GetComponent<RectTransform>().rect.y + .25f, height - .5f * GetComponent<RectTransform>().rect.y - .25f);
+        pos.x = Mathf.Clamp(pos.x, -width - 1f * GetComponent<RectTransform>().rect.x + .25f, width + 1f * GetComponent<RectTransform>().rect.x - .25f);
+        pos.y = Mathf.Clamp(pos.y, -height - 1f * GetComponent<RectTransform>().rect.y + .25f, height + 1f * GetComponent<RectTransform>().rect.y - .25f);
         transform.position = pos;
         
         // Debug.Log($"Coll pos = {coll.transform.position}. Coll size = {coll.bounds.size}. SR size = {sr.size}. Final pos = {pos}.");

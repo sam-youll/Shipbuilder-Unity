@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class Jack : MonoBehaviour
+public abstract class Jack : MonoBehaviour, ITooltipInfo
 {
     private bool _darkTheme;
     public bool darkTheme
@@ -199,4 +199,8 @@ public abstract class Jack : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().color = valid ? Color.white : new Color(.5f, .5f, .5f, 1);
     }
+
+    public abstract string Description();
+
+    public abstract string Info();
 }

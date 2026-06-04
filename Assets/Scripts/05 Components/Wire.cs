@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class Wire : MonoBehaviour
+public class Wire : MonoBehaviour, ITooltipInfo
 {
     public enum Type
     {
@@ -643,5 +643,34 @@ public class Wire : MonoBehaviour
             new GradientColorKey(new Color(.06667f, .06667f, .06667f, 1), 1)
         };
         return gradient;
+    }
+
+    public string Description()
+    {
+        return "Carries values and triggers between modules and systems.";
+    }
+
+    public string Info()
+    {
+        var info = "";
+        if (previousModule != null)
+        {
+            info += $"Upstream: {previousModule.name}\n";
+        }
+        else
+        {
+            info += "Not plugged in upstream.\n";
+        }
+
+        if (nextModule != null)
+        {
+            info += $"Downstream: {nextModule.name}\n";
+        }
+        else
+        {
+            info += "Not plugged in downstream.\n";
+        }
+
+        return info;
     }
 }

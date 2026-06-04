@@ -133,6 +133,34 @@ public class ModuleInspector : Editor
             paletteSelection = Module.ModuleComponent.Label;
         }
         
+        // CONTROL LABEL
+        if (paletteSelection == Module.ModuleComponent.ControlLabel)
+        {
+            GUI.color = Color.white;
+        }
+        else
+        {
+            GUI.color = Color.gray;
+        }
+        if (GUILayout.Button("Control", GUILayout.Width(40), GUILayout.Height(20)))
+        {
+            paletteSelection = Module.ModuleComponent.ControlLabel;
+        }
+        
+        // TRIGGER LABEL
+        if (paletteSelection == Module.ModuleComponent.TriggerLabel)
+        {
+            GUI.color = Color.white;
+        }
+        else
+        {
+            GUI.color = Color.gray;
+        }
+        if (GUILayout.Button("Trigger", GUILayout.Width(40), GUILayout.Height(20)))
+        {
+            paletteSelection = Module.ModuleComponent.TriggerLabel;
+        }
+        
         GUI.color = Color.red;
         if (GUILayout.Button("CLEAR", GUILayout.Width(50), GUILayout.Height(20)))
         {
@@ -203,6 +231,22 @@ public class ModuleInspector : Editor
                     case Module.ModuleComponent.Label:
                         GUI.color = Color.cyan;
                         if (GUILayout.Button("L", GUILayout.Width(40), GUILayout.Height(40)))
+                        {
+                            module.moduleShape[x, y] = paletteSelection;
+                        }
+
+                        break;
+                    case Module.ModuleComponent.ControlLabel:
+                        GUI.color = Color.cyan;
+                        if (GUILayout.Button("CL", GUILayout.Width(40), GUILayout.Height(40)))
+                        {
+                            module.moduleShape[x, y] = paletteSelection;
+                        }
+
+                        break;
+                    case Module.ModuleComponent.TriggerLabel:
+                        GUI.color = Color.cyan;
+                        if (GUILayout.Button("TL", GUILayout.Width(40), GUILayout.Height(40)))
                         {
                             module.moduleShape[x, y] = paletteSelection;
                         }
@@ -293,7 +337,9 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         Output,
         Switch,
         Knob,
-        Label
+        Label,
+        ControlLabel,
+        TriggerLabel
     }
     
     [Header("Changing dimensions will reset grid.\nDimensions can be between 1 and 8.")]
@@ -316,6 +362,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public Theme theme = Theme.CarbonFiber;
     public bool darkTheme;
     private string tilesheetPath;
+    public string labelText;
     
     #if UNITY_EDITOR
     private void OnValidate()
@@ -573,8 +620,20 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                         textComponent.rectTransform.sizeDelta = new Vector2(.75f, .75f);
                         textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/mythic-pixels");
                         textComponent.alignment = TextAlignmentOptions.BottomLeft;
-                        textComponent.text = gameObject.name.Split(" ")[0];
+                        textComponent.text = String.IsNullOrEmpty(labelText) ? gameObject.name.Split(" ")[0] : labelText;
                         textComponent.color = darkTheme ? new Color(.56f, .78f, .78f) : new Color(.2f, .2f, .2f);
+                        break;
+                    case ModuleComponent.ControlLabel:
+                        var controlLabel = new GameObject("Control Label", typeof(SpriteRenderer));
+                        controlLabel.transform.SetParent(transform);
+                        controlLabel.transform.localPosition = new Vector3(x, y, -.1f);
+                        controlLabel.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Jacks/control label");
+                        break;
+                    case ModuleComponent.TriggerLabel:
+                        var triggerLabel = new GameObject("Trigger Label", typeof(SpriteRenderer));
+                        triggerLabel.transform.SetParent(transform);
+                        triggerLabel.transform.localPosition = new Vector3(x, y, -.1f);
+                        triggerLabel.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Jacks/trigger label");
                         break;
                 }
             }

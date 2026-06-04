@@ -24,4 +24,31 @@ public class OutputJack : Jack
         
         UpdateHighlights();
     }
+
+    public override string Description()
+    {
+        var myMod = transform.gameObject.GetComponentInParent<Module>();
+        if (myMod is SecondaryModule)
+        {
+            return "This jack sends a value downstream.";
+        }
+        else
+        {
+            return "This jack sends a trigger downstream.";
+        }
+    }
+
+    public override string Info()
+    {
+        var myMod = transform.gameObject.GetComponentInParent<Module>();
+        foreach (var wire in myMod.childWires)
+        {
+            if (wire.GetComponent<Wire>().nextModule != null && wire.GetComponent<Wire>().previousModuleJack == gameObject)
+            {
+                return $"Connected to {wire.GetComponent<Wire>().nextModule.name} downstream.";
+            }
+        }
+
+        return "Not connected downstream.";
+    }
 }

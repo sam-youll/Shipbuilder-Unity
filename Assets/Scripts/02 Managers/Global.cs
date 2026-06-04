@@ -41,6 +41,9 @@ public class Global : MonoBehaviour
     }
     public CursorState cursorState = CursorState.Default;
     private bool cursorLocked;
+    private float tooltipPopupTimer;
+    private GameObject currentTooltipTarget;
+    private GameObject grabbedObject;
 
     [Header("Object Lists")] 
     public List<GameObject> hoverList = new();
@@ -120,41 +123,68 @@ public class Global : MonoBehaviour
     private void LateUpdate()
     {
         // Selection Reticle & Tooltip
-        var tooltipsActive = false;
+        var tooltipUnderMouse = false;
         if (hoverList.Count > 0)
         {
             foreach (var item in hoverList)
             {
                 if (item.TryGetComponent(out ITooltipInfo tooltipInfo))
                 {
-                    tooltipsActive = true;
+                    tooltipUnderMouse = true;
                 }
             }
         }
+
+        if (grabbedObject != null)
+        {
+            tooltipUnderMouse = true;
+        }
+
+        if (tooltipUnderMouse)
+        {
+            tooltipPopupTimer -= Time.deltaTime;
+        }
+        else
+        {
+            tooltipPopupTimer = 1f;
+        }
+
+        var tooltipsActive = tooltipPopupTimer <= 0;
+        
         selectionReticle.SetActive(false);
         tooltip.SetActive(tooltipsActive);
-        if (hoverList.Count > 0)
+        if (tooltipsActive)
         {
-            var selectedItem = hoverList[0];
-            foreach (var itemm in hoverList)
+            GameObject selectedItem;
+            if (grabbedObject != null)
             {
-                if (itemm.TryGetComponent(out ITooltipInfo tooltipInfo))
-                {
-                    selectedItem = itemm;
-                }
+                selectedItem = grabbedObject;
             }
-            foreach (var item in hoverList)
+            else
             {
-                if (selectedItem.TryGetComponent(out ITooltipInfo tooltipInfo) && selectedItem.transform.position.z >= item.transform.position.z)
+                selectedItem = hoverList[0];
+                foreach (var itemm in hoverList)
                 {
-                    selectedItem = item;
-                    selectionReticle.GetComponent<SpriteRenderer>().size = new Vector2(
-                        item.GetComponent<Collider2D>().bounds.size.x + 1,
-                        item.GetComponent<Collider2D>().bounds.size.y + 1);
-                    selectionReticle.transform.position = item.GetComponent<Collider2D>().bounds.center;
-                    var vector3 = selectionReticle.transform.position;
-                    vector3.z = item.transform.position.z - .1f;
-                    selectionReticle.transform.position = vector3;
+                    if (itemm.TryGetComponent(out ITooltipInfo tooltipInfo))
+                    {
+                        selectedItem = itemm;
+                    }
+                }
+
+                foreach (var item in hoverList)
+                {
+                    if (selectedItem.TryGetComponent(out ITooltipInfo tooltipInfo) &&
+                        selectedItem.transform.position.z >= item.transform.position.z)
+                    {
+                        selectedItem = item;
+                        selectionReticle.GetComponent<SpriteRenderer>().size = new Vector2(
+                            item.GetComponent<Collider2D>().bounds.size.x + 1,
+                            item.GetComponent<Collider2D>().bounds.size.y + 1);
+                        selectionReticle.transform.position = item.GetComponent<Collider2D>().bounds.center;
+                        var vector3 = selectionReticle.transform.position;
+                        vector3.z = item.transform.position.z - .1f;
+                        selectionReticle.transform.position = vector3;
+                    }
                 }
             }
             
@@ -167,12 +197,15 @@ public class Global : MonoBehaviour
         if (cursorLocked)
             return;
         
+        // move cursor to mouse position
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = -5;
+        cursor.transform.position = mousePos;
         
+        // test for colliders under mouse
         raycastHits = Physics2D.RaycastAll(mousePos, Vector2.zero);
         
-        cursor.transform.position = mousePos;
+        // test if colliders are grabbable
         var hitGrabbable = false;
         hoverList.Clear();
         foreach (var result in raycastHits)
@@ -194,6 +227,8 @@ public class Global : MonoBehaviour
                 hitGrabbable = true;
             }
         }
+        
+        // set cursor visual state
         var sr = cursor.GetComponent<SpriteRenderer>();
         switch (cursorState)
         {
@@ -214,13 +249,27 @@ public class Global : MonoBehaviour
                 {
                     sr.sprite = cursorGrabClose;
                     cursorState = CursorState.GrabClose;
+                    grabbedObject = TopRaycastResult().gameObject;
                 }
                 break;
             case CursorState.GrabClose:
+                if (grabbedObject == null)
+                {
+                    sr.sprite = cursorGrabOpen;
+                    cursorState = CursorState.GrabOpen;
+                }
+                else if (grabbedObject.TryGetComponent(out Jack jack))
+                {
+                    if (TopRaycastResult().TryGetComponent(out Wire wire))
+                    {
+                        grabbedObject = wire.gameObject;
+                    }
+                }
                 if (Input.GetMouseButtonUp(0))
                 {
                     sr.sprite = cursorGrabOpen;
                     cursorState = CursorState.GrabOpen;
+                    grabbedObject = null;
                 }
                 break;
         }
