@@ -743,7 +743,6 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public float energyIzkiCost;
     public float energyAuboCost;
     public float energyDwthCost;
-    public float energyHyshCost;
     
     [Header("Connections")] 
     [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
@@ -986,8 +985,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
             { Common.SoundType.None, energyNoneCost },
             { Common.SoundType.Izki, energyIzkiCost },
             { Common.SoundType.Aubo, energyAuboCost },
-            { Common.SoundType.Dwth, energyDwthCost },
-            { Common.SoundType.Hysh, energyHyshCost }
+            { Common.SoundType.Dwth, energyDwthCost }
         };
     }
 }

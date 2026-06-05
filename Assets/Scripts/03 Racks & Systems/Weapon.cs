@@ -19,7 +19,7 @@ public class Weapon : ModuleRack, ITooltipInfo
     public float stunTimer;
     public bool firing;
     public bool enemyWeapon; // set true if Weapon belongs to an enemy ship
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new();
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.CombatStats);
     [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new();
 
     [Header("Components")]
@@ -80,18 +80,18 @@ public class Weapon : ModuleRack, ITooltipInfo
         
         if (!enemyWeapon && firing && stunTimer <= 0)
         {
-            heat -= HeatDissipation();
+            heat = Mathf.Max(0, heat - HeatDissipation());
             heatOverlay.fillAmount = heat;
         }
         else if (enemyWeapon && firing && stunTimer <= 0)
         {
-            heat -= HeatDissipation();
+            heat = Mathf.Max(0, heat - HeatDissipation());
         }
     }
 
     public float HeatDissipation()
     {
-        return 1 * Time.deltaTime;
+        return 1f * Time.deltaTime;
     }
 
     public Dictionary<string, float> WeaponStats()
@@ -176,7 +176,14 @@ public class Weapon : ModuleRack, ITooltipInfo
             {
                 foreach (var kvp in energyMod.EnergyCost())
                 {
-                    dict[kvp.Key] = kvp.Value;
+                    if (!dict.ContainsKey(kvp.Key))
+                    {
+                        dict[kvp.Key] = kvp.Value;
+                    }
+                    else
+                    {
+                        dict[kvp.Key] += kvp.Value;
+                    }
                 }
             }
         }
@@ -186,9 +193,14 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public void Fire()
     {
+        if (!enemyWeapon)
+        {
+            Debug.Log("yello");
+        }
+        
         var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // Debug.Log(name);
-        if (!enemyWeapon && heatOverlay.fillAmount > 0)
+        if (!enemyWeapon && heatOverlay.fillAmount > 1)
         {
             // Debug.Log($"{name} needs to cool down.");
             return;
@@ -214,7 +226,7 @@ public class Weapon : ModuleRack, ITooltipInfo
 
         if (!enemyWeapon)
         {
-            heatOverlay.fillAmount = 1;
+            heat = 1;
         }
         
         DisplayManager.Instance.Log("Fired " + name);

@@ -66,14 +66,6 @@ public class SourceModule : PrimaryModule, IWeaponModule
         };
     }
 
-    public override Dictionary<Common.SoundType, float> EnergyCost()
-    {
-        return new Dictionary<Common.SoundType, float>()
-        {
-
-        };
-    }
-
     void UpdateWaveform(float value)
     {
         waveform = waveforms[(int)value];
