@@ -91,6 +91,10 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public float HeatDissipation()
     {
+        if (slowTimer > 0)
+        {
+            return .25f * Time.deltaTime;
+        }
         return 1f * Time.deltaTime;
     }
 
@@ -107,10 +111,15 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
            if (mod is IWeaponModule weaponMod)
            {
-               foreach (var stat in weaponMod.WeaponStats())
+               if (weaponMod.MyWeaponStats().Stats != null)
                {
-                   dict[stat.Key] += stat.Value;
+                   foreach (var stat in weaponMod.MyWeaponStats().Stats)
+                   {
+                       dict[stat.Key] += stat.Value;
+                   }
                }
+               
+               dict["heat"] += mod.heat;
 
                // izki += mod.izki;
                // aubo += mod.aubo;
@@ -146,6 +155,11 @@ public class Weapon : ModuleRack, ITooltipInfo
         // dict["damage"] *= (1 + .5f * myReactor.strength);
 
         return dict;
+    }
+
+    public Dictionary<Common.Effect, float> WeaponEffects()
+    {
+        return new Dictionary<Common.Effect, float>();
     }
 
     public Dictionary<string, float> NoteInfo()
@@ -193,10 +207,10 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public void Fire()
     {
-        if (!enemyWeapon)
-        {
-            Debug.Log("yello");
-        }
+        // if (!enemyWeapon)
+        // {
+        //     Debug.Log("yello");
+        // }
         
         var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // Debug.Log(name);
@@ -226,7 +240,7 @@ public class Weapon : ModuleRack, ITooltipInfo
 
         if (!enemyWeapon)
         {
-            heat = 1;
+            heat += WeaponStats()["heat"];
         }
         
         DisplayManager.Instance.Log("Fired " + name);
@@ -236,37 +250,11 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             if (enemyWeapon)
             {
-                var hit = WeaponStats()["accuracy"] * (1 - ShipManager.Instance.PlayerEvasion());
-                if (hit <= 0)
-                {
-                    // Debug.Log("miss");
-                    ShipManager.Instance.DamagePlayer(hit, WeaponStats()["soundType"]); // TODO: add overloads so I don't have to call useless stuff
-                    EventBus.Instance.playerHit.Invoke(hit);
-                }
-                else
-                {
-                    // Debug.Log("hit");
-                    ShipManager.Instance.DamagePlayer(
-                        WeaponStats()["damage"], WeaponStats()["soundType"]); // TODO: make it so that multiple effects can be sent
-                    EventBus.Instance.playerHit.Invoke(WeaponStats()["damage"]);
-                }
+                ShipManager.Instance.DamagePlayer(WeaponStats(), WeaponEffects());
             }
             else
             {
-                var hit = WeaponStats()["accuracy"] * (1 - ShipManager.Instance.EnemyEvasion());
-                if (hit <= 0)
-                {
-                    // Debug.Log("miss");
-                    ShipManager.Instance.DamageEnemy(hit, WeaponStats()["soundType"]); // TODO: add overloads so I don't have to call useless stuff
-                    EventBus.Instance.enemyHit.Invoke(hit);
-                }
-                else
-                {
-                    // Debug.Log("hit");
-                    ShipManager.Instance.DamageEnemy(
-                        WeaponStats()["damage"], WeaponStats()["soundType"]); // TODO: make it so that multiple effects can be sent
-                    EventBus.Instance.enemyHit.Invoke(WeaponStats()["damage"]);
-                }
+                ShipManager.Instance.DamageEnemy(WeaponStats(), WeaponEffects());
             }
         }
         

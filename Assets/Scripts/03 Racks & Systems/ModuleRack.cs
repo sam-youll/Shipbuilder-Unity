@@ -18,6 +18,8 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public Vector2Int dimensionsMax = new(20, 10);
     [OnValueChanged(nameof(SetDimensions))] public Vector2Int dimensions = new(4, 4);
     public bool enemySystem;
+    public float maxHealth;
+    public float health;
 
     protected virtual void Start()
     {
@@ -25,6 +27,12 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         EventBus.Instance.rackEditYUp.AddListener(OnYUp);
         EventBus.Instance.rackEditYDown.AddListener(OnYDown);
         EventBus.Instance.rackEditXDown.AddListener(OnXDown);
+    }
+
+    protected virtual void Update()
+    {
+        slowTimer -= Time.deltaTime;
+        slowTimer = Mathf.Max(0, slowTimer);
     }
 
     private void SetDimensions()
@@ -83,26 +91,26 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
 
         info += "~~~\n";
 
-        if (this is Reactor reactor)
-        {
-            info += "Weapon Stats:\n";
-            foreach (var kvp in reactor.ReactorStats())
-            {
-                if (kvp.Key == "bulletType")
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
-                }
-                else if (kvp.Key == "soundType")
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
-                }
-                else
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
-                }
-            }
-        }
-        else if (this is Weapon weapon)
+        // if (this is Reactor reactor)
+        // {
+        //     info += "Weapon Stats:\n";
+        //     foreach (var kvp in reactor.ReactorStats())
+        //     {
+        //         if (kvp.Key == "bulletType")
+        //         {
+        //             info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
+        //         }
+        //         else if (kvp.Key == "soundType")
+        //         {
+        //             info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
+        //         }
+        //         else
+        //         {
+        //             info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
+        //         }
+        //     }
+        // }
+        if (this is Weapon weapon)
         {
             info += "Weapon Stats:\n";
             foreach (var kvp in weapon.WeaponStats())
@@ -163,6 +171,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         }
 
         patch.Add(prev);
+        patch.Reverse();
         return patch;
     }
 
@@ -185,5 +194,17 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         {
             return parentWire.GetComponent<Wire>().previousModule;
         }
+    }
+    
+    
+    public virtual void Stun(float time)
+    {
+        
+    }
+
+    protected float slowTimer;
+    public virtual void Slow(float time)
+    {
+        slowTimer += time;
     }
 }

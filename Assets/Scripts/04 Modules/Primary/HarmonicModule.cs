@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class HarmonicModule : PrimaryModule, IWeaponModule
 {
-    public float warmupRate = 1.2f;
     public float damage = 1.2f;
-    public float bulletSpeed = 1.2f;
     
     public enum Profile
     {
@@ -30,16 +28,6 @@ public class HarmonicModule : PrimaryModule, IWeaponModule
         throw new System.NotImplementedException();
     }
 
-    public Dictionary<string, float> WeaponStats()
-    {
-        return new Dictionary<string, float>()
-        {
-            { "warmupRate", warmupRate },
-            { "damage", damage },
-            { "bulletSpeed", bulletSpeed },
-        };
-    }
-
     public override void Trigger(float value, int inputIndex)
     {
         switch (inputIndex)
@@ -59,7 +47,25 @@ public class HarmonicModule : PrimaryModule, IWeaponModule
     {
         return new Dictionary<string, float>()
         {
-            { "harmonics", (float)profile }
+            { "harmonics" , (float)profile }
+        };
+    }
+
+    public IWeaponModule.WeaponStats MyWeaponStats()
+    {
+        return new IWeaponModule.WeaponStats
+        {
+            Stats = new Dictionary<string, float>
+            {
+                { "damage", damage },
+            },
+            SoundType = new()
+            {
+                { Common.SoundType.Izki , izki },
+                { Common.SoundType.Aubo , aubo },
+                { Common.SoundType.Dwth , dwth },
+                { Common.SoundType.Hysh , hysh }
+            }
         };
     }
 }

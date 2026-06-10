@@ -34,15 +34,6 @@ public class SourceModule : PrimaryModule, IWeaponModule
 
     public float damage = 1;
 
-    public Dictionary<string, float> WeaponStats()
-    {
-        return new Dictionary<string, float>()
-        {
-            { "bulletType", (float)bulletType },
-            { "damage", damage },
-        };
-    }
-
     public override string Description()
     {
         return "Creates the base waveform, affecting the damage amount and type of the weapon's projectiles.";
@@ -74,5 +65,23 @@ public class SourceModule : PrimaryModule, IWeaponModule
     void UpdateWaveform(int value)
     {
         waveform = waveforms[value];
+    }
+
+    public IWeaponModule.WeaponStats MyWeaponStats()
+    {
+        return new IWeaponModule.WeaponStats()
+        {
+            Stats = new Dictionary<string, float>()
+            {
+                { "damage", damage }
+            },
+            SoundType = new()
+            {
+                { Common.SoundType.Izki, izki },
+                { Common.SoundType.Aubo, aubo },
+                { Common.SoundType.Dwth, dwth },
+                { Common.SoundType.Hysh, hysh }
+            }
+        };
     }
 }

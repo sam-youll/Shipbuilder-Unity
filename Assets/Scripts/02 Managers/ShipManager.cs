@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +6,8 @@ using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
-    
+using Random = UnityEngine.Random;
+
 /// <summary>
 /// Manages ships, handling setup, stat changes, and more for player and enemy ships.
 /// </summary>
@@ -26,16 +28,42 @@ public class ShipManager : MonoBehaviour
     }
     
     [System.Serializable]
-    private struct Ship
+    private struct Ship : IEquatable<Ship>
     {
         public ShipData baseShip;
         public string name;
         public float currentHull;
         public float maxHull;
         public float shield;
-        public List<Weapon> weapons;
         public Reactor reactor;
+        public List<Weapon> weapons;
+        public AuxiliarySystems auxSystems;
         public float evasion;
+
+        public bool Equals(Ship other)
+        {
+            return Equals(baseShip, other.baseShip) && name == other.name && currentHull.Equals(other.currentHull) && maxHull.Equals(other.maxHull) && shield.Equals(other.shield) && Equals(reactor, other.reactor) && Equals(weapons, other.weapons) && Equals(auxSystems, other.auxSystems) && evasion.Equals(other.evasion);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Ship other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(baseShip);
+            hashCode.Add(name);
+            hashCode.Add(currentHull);
+            hashCode.Add(maxHull);
+            hashCode.Add(shield);
+            hashCode.Add(reactor);
+            hashCode.Add(weapons);
+            hashCode.Add(auxSystems);
+            hashCode.Add(evasion);
+            return hashCode.ToHashCode();
+        }
     }
 
     public float hullRepairCost = 15;
@@ -311,75 +339,210 @@ public class ShipManager : MonoBehaviour
     }
     
     /// <summary>
-    /// Deals damage to player ship, and applies any associated status effects.
+    /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
-    /// <param name="damage">Amount of damage dealt.</param>
-    /// <param name="effect">Status effect applied to projectile.</param>
-    /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    public void DamagePlayer(float damage, float soundType, Common.Effect effect, float effectStrength)
+    /// <param name="combatStats">Dictionary of combat stats.</param>
+    /// <param name="effects">Any effects applied to the projectile.</param>
+    public void DamagePlayer(Dictionary<string, float> combatStats, Dictionary<Common.Effect, float> effects)
     {
-        Damage(ref player, damage, soundType, effect, effectStrength);
-
-        EventBus.Instance.playerHullValueChanged.Invoke();
-    }
-
-    public void DamagePlayer(float damage, float soundType)
-    {
-        Damage(ref player, damage, soundType, Common.Effect.None, 0);
-        
-        EventBus.Instance.playerHullValueChanged.Invoke();
+        DamageShip(ref player, combatStats, effects);
     }
 
     /// <summary>
     /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
-    /// <param name="damage">Amount of damage dealt.</param>
-    /// <param name="soundType">Sound type of damage.</param>
-    /// <param name="effect">Status effect applied to projectile.</param>
-    /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    public void DamageEnemy(float damage, float soundType, Common.Effect effect, float effectStrength)
+    /// <param name="combatStats">Dictionary of combat stats.</param>
+    /// <param name="effects">Any effects applied to the projectile.</param>
+    public void DamageEnemy(Dictionary<string, float> combatStats, Dictionary<Common.Effect, float> effects)
     {
-        Damage(ref enemy, damage, soundType, effect, effectStrength);
+        DamageShip(ref enemy, combatStats, effects);
     }
  
-    public void DamageEnemy(float damage, float soundType)
-    {
-        Damage(ref enemy, damage, soundType, Common.Effect.None, 0);
-    }
-
     /// <summary>
     /// Calculates actual damage received after shields, resistances, weaknesses, etc.
     /// done to target ship. Also applies the associated status effects.
     /// </summary>
     /// <param name="target">Player or enemy ship.</param>
-    /// <param name="damage">Amount of damage dealt.</param>
-    /// <param name="soundType">idfhbvsiufbsiubn sound type!!! asawaawa</param>
-    /// <param name="effect">Status effect applied to projectile.</param>
-    /// <param name="effectStrength">"Strength" of the effect. This might mean duration or some other parameter.</param>
-    private void Damage(ref Ship target, float damage, float soundType, Common.Effect effect, float effectStrength)
+    /// <param name="combatStats">Dictionary of combat stats.</param>
+    /// <param name="effects">Any effects applied to the projectile.</param>
+    private void DamageShip(ref Ship target, Dictionary<string, float> combatStats, Dictionary<Common.Effect, float> effects)
     {
-        if (CombatManager.Instance.state == CombatManager.State.outOfCombat)
+        if (CombatManager.Instance.state != CombatManager.State.inCombat)
         {
             return;
         }
         
-        //TODO: Add overloads without effects and stuff
-
-        switch (soundType)
+        // pick random system to target
+        // the attack will deal some damage to the targeted system, and some damage to the hull
+        var potentialSystemTargets = new List<ModuleRack>();
+        potentialSystemTargets.Add(target.reactor);
+        foreach (var weapon in target.weapons)
         {
-            case (float)Common.SoundType.None:
-                break;
-            case (float)Common.SoundType.Izki:
-                break;
-            case (float)Common.SoundType.Aubo:
-                break;
-            case (float)Common.SoundType.Dwth:
-                break;
-            case (float)Common.SoundType.Hysh:
-                break;
+            potentialSystemTargets.Add(weapon);
+        }
+        potentialSystemTargets.Add(target.auxSystems);
+
+        var systemTargets = new List<ModuleRack>
+        {
+            potentialSystemTargets[Random.Range(0, potentialSystemTargets.Count)]
+        };
+        
+
+        // switch (soundType)
+        // {
+        //     case (float)Common.SoundType.None:
+        //         break;
+        //     case (float)Common.SoundType.Izki:
+        //         break;
+        //     case (float)Common.SoundType.Aubo:
+        //         break;
+        //     case (float)Common.SoundType.Dwth:
+        //         break;
+        //     case (float)Common.SoundType.Hysh:
+        //         break;
+        // }
+        
+        // damage
+        // hullDamage
+        // systemDamage
+        // heat
+        // accuracy
+        // soundType
+
+        var hullDamage = .5f * combatStats["damage"];
+        var systemDamage = .5f * combatStats["damage"];
+
+        hullDamage *= 1 + combatStats["hullDamage"];
+        systemDamage *= 1 + combatStats["systemDamage"];
+
+        var stunAmount = 0f;
+        var slowAmount = 0f;
+        
+        foreach (var effect in effects)
+        {
+            switch (effect.Key)
+            {
+                case Common.Effect.None:
+                    break;
+                case Common.Effect.Stun:
+                    stunAmount += effect.Value;
+                    break;
+                case Common.Effect.Slow:
+                    slowAmount += effect.Value;
+                    break;
+                case Common.Effect.Skip:
+                    //TODO: Implement shields
+                    break;
+                case Common.Effect.Sustain:
+                    //TODO
+                    break;
+                case Common.Effect.Siphon:
+                    if (target.Equals(enemy))
+                    {
+                        var energySiphonSum = effect.Value;
+                        var energyToSteal = new Dictionary<Common.SoundType, float>();
+                        foreach (var energyType in enemy.reactor.storedEnergy)
+                        {
+                            if (energyType.Value > energySiphonSum)
+                            {
+                                energyToSteal[energyType.Key] = energySiphonSum;
+                                energySiphonSum = 0;
+                            }
+                            else
+                            {
+                                energyToSteal[energyType.Key] = energyType.Value;
+                                energySiphonSum -= energyType.Value;
+                            }
+                        }
+                        
+                        enemy.reactor.TrySpendEnergy(energyToSteal);
+                        player.reactor.AddEnergy(energyToSteal);
+                    }
+                    else if (target.Equals(player))
+                    {
+                        var energySiphonSum = effect.Value;
+                        var energyToSteal = new Dictionary<Common.SoundType, float>();
+                        foreach (var energyType in player.reactor.storedEnergy)
+                        {
+                            if (energyType.Value > energySiphonSum)
+                            {
+                                energyToSteal[energyType.Key] = energySiphonSum;
+                                energySiphonSum = 0;
+                            }
+                            else
+                            {
+                                energyToSteal[energyType.Key] = energyType.Value;
+                                energySiphonSum -= energyType.Value;
+                            }
+                        }
+                        
+                        player.reactor.TrySpendEnergy(energyToSteal);
+                        enemy.reactor.AddEnergy(energyToSteal);
+                    }
+                    break;
+                case Common.Effect.Scrap:
+                    InventoryManager.Instance.scrap += effect.Value;
+                    break;
+                case Common.Effect.Splash:
+                    // add additional targets
+                    for (var i = 0; i < Mathf.Floor(effect.Value); i++)
+                    {
+                        systemTargets.Add(potentialSystemTargets[Random.Range(0, potentialSystemTargets.Count)]);
+                    }
+                    // divide damage (& other applicable effects) between targets
+                    systemDamage /= Mathf.Floor(effect.Value);
+                    stunAmount /= Mathf.Floor(effect.Value);
+                    slowAmount /= Mathf.Floor(effect.Value);
+                    break;
+                case Common.Effect.SeekReactor:
+                    for (var i = 0; i < systemTargets.Count; i++)
+                    {
+                        if (Random.value <= effect.Value)
+                        {
+                            systemTargets[i] = target.reactor;
+                        }
+                    }
+                    break;
+                case Common.Effect.SeekWeapon:
+                    for (var i = 0; i < systemTargets.Count; i++)
+                    {
+                        if (Random.value <= effect.Value)
+                        {
+                            systemTargets[i] = target.reactor;
+                        }
+                    }
+                    if (Random.value <= effect.Value)
+                    {
+                        systemTargets[0] = target.weapons[Random.Range(0, target.weapons.Count)];
+                    }
+                    break;
+                case Common.Effect.SeekAux:
+                    for (var i = 0; i < systemTargets.Count; i++)
+                    {
+                        if (Random.value <= effect.Value)
+                        {
+                            systemTargets[i] = target.auxSystems;
+                        }
+                    }
+                    break;
+            }
         }
         
-        target.currentHull -= damage;
+        
+        target.currentHull -= hullDamage;
+        foreach (var systemTarget in systemTargets)
+        {
+            if (stunAmount > 0)
+            {
+                systemTarget.Stun(stunAmount);
+            }
+            if (slowAmount > 0)
+            {
+                systemTarget.Slow(slowAmount);
+            }
+            systemTarget.health -= systemDamage;
+        }
+        
         
         // Debug.Log($"{target.name} was hit for {damage} damage. Hull is now {target.hull}.");
         
@@ -387,28 +550,6 @@ public class ShipManager : MonoBehaviour
         {
             Die(target);
         }
-        
-        // switch (effect)
-        // {
-        //     case Common.Effect.None:
-        //         break;
-        //     case Common.Effect.Stun:
-        //         Stun(target, effectStrength);
-        //         break;
-        //     case Common.Effect.Slow:
-        //         Slow(target, effectStrength);
-        //         break;
-        //     case Common.Effect.Splash:
-        //         break;
-        //     case Common.Effect.Skip:
-        //         break;
-        //     case Common.Effect.Sustain:
-        //         break;
-        //     case Common.Effect.Siphon:
-        //         break;
-        //     case Common.Effect.Scrap:
-        //         break;
-        // }
     }
 
     private IEnumerator DamageOverTime()
@@ -426,16 +567,6 @@ public class ShipManager : MonoBehaviour
         {
             EventBus.Instance.enemyDefeated.Invoke();
         }
-    }
-    
-    private void Stun(Ship target, float duration)
-    {
-        
-    }
-
-    private void Slow(Ship target, float duration)
-    {
-        
     }
     
     #endregion

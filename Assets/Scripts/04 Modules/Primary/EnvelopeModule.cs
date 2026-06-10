@@ -20,11 +20,6 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
                $"Decay: {decay}\n" +
                $"Release: {release}";
     }
-
-    public Dictionary<string, float> WeaponStats()
-    {
-        return new Dictionary<string, float>();
-    }
     
     public override void Trigger(float value, int inputIndex)
     {
@@ -50,6 +45,20 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
             { "attack", attack },
             { "decay", decay },
             { "release", release }
+        };
+    }
+
+    public IWeaponModule.WeaponStats MyWeaponStats()
+    {
+        return new IWeaponModule.WeaponStats()
+        {
+            SoundType = new()
+            {
+                { Common.SoundType.Izki, izki },
+                { Common.SoundType.Aubo, aubo },
+                { Common.SoundType.Dwth, dwth },
+                { Common.SoundType.Hysh, hysh }
+            }
         };
     }
 }

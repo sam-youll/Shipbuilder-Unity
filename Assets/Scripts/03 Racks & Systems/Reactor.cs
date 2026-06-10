@@ -58,26 +58,70 @@ public class Reactor : ModuleRack, ITooltipInfo
 
     private void GenerateEnergy()
     {
+        var newEnergy = new Dictionary<Common.SoundType, float>
+        {
+            { Common.SoundType.None, 0 },
+            { Common.SoundType.Izki, 0 },
+            { Common.SoundType.Aubo, 0 },
+            { Common.SoundType.Dwth, 0 }
+        };
+        
         foreach (var mod in ActivePatch())
         {
-            if (mod is PowerModule p)
+            if (mod is IReactorModule iReactorMod)
             {
-                if (!EnergyFull())
+                if (mod is PowerModule)
                 {
-                    storedEnergy[p.soundType] += p.power * Time.deltaTime;
-                    if (!invisible)
+                    // Add the energy amount as untyped energy (right now, this assumes a power module)
+                    newEnergy[Common.SoundType.None] += iReactorMod.MyReactorStats().PowerGenerated;
+                }
+                if (mod is ConverterModule)
+                {
+                    // this is probably gonna throw errors, but I'm not sure exactly how
+                    var enCon = iReactorMod.MyReactorStats().EnergyConversion;
+                    var conAmt = Mathf.Min(enCon.EnergyLimit, newEnergy[Common.SoundType.None]);
+
+                    newEnergy[Common.SoundType.None] -= conAmt;
+
+                    foreach (var kvp in iReactorMod.MyReactorStats().EnergyConversion.ConversionRatios)
                     {
-                        energyReservoirDisplay.UpdateDisplay(storedEnergy);
+                        newEnergy[kvp.Key] += conAmt * kvp.Value;
                     }
                 }
             }
         }
 
+        if (!EnergyFull())
+        {
+            foreach (var kvp in newEnergy)
+            {
+                storedEnergy[kvp.Key] += kvp.Value * Time.deltaTime;
+            }
+            if (!invisible)
+            {
+                energyReservoirDisplay.UpdateDisplay(storedEnergy);
+            }
+        }
+
         // TODO: once a system for adding invisible modules to enemy ships is in place, delete this
         // the above code will work once that's all in place
+        // This is a stopgap for enemy ships
         if (invisible)
         {
             storedEnergy[Common.SoundType.None] += Time.deltaTime;
+        }
+    }
+
+    public void AddEnergy(Dictionary<Common.SoundType, float> energyToAdd)
+    {
+        foreach (var energyType in energyToAdd)
+        {
+            storedEnergy[energyType.Key] += energyType.Value;
+        }
+        
+        if (!invisible)
+        {
+            energyReservoirDisplay.UpdateDisplay(storedEnergy);
         }
     }
 
@@ -125,12 +169,5 @@ public class Reactor : ModuleRack, ITooltipInfo
         }
 
         return true;
-    }
-
-    public Dictionary<string, float> ReactorStats()
-    {
-        var dict = new Dictionary<string, float>();
-
-        return dict;
     }
 }

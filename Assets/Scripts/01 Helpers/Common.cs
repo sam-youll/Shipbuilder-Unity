@@ -41,8 +41,11 @@ public static class Common
         Splash, // hits multiple systems
         Skip, // ignores shields
         Sustain, // damage over time
-        Siphon, // steal energy/hull TODO: decide which one
-        Scrap // drop scrap on hit
+        Siphon, // steal energy
+        Scrap, // drop scrap on hit
+        SeekReactor,
+        SeekWeapon,
+        SeekAux
     }
     
     public static readonly Dictionary<string, float> NoteInfo = new()
@@ -56,17 +59,14 @@ public static class Common
 
     public static readonly Dictionary<string, float> CombatStats = new()
     {
-        { "warmupRate", 1 },
-        { "fireRate", 1 },
-        { "damage", .1f },
-        { "hullDamage", 1 },
-        { "shieldDamage", 1 },
-        { "bulletSpeed", 1 },
-        { "accuracy", .75f },
-        { "bulletType", 0 },
+        { "damage", 0 }, // Base damage dealt (Damage is equal to sum of all "damage").
+        { "hullDamage", 0 }, // Multiplier for damage to hull. (Damage mult is equal to 1 + sum, which is then used as a coefficient for damage).
+        { "systemDamage", 0 }, // Multiplier for damage to systems. Bonus system damage almost always means less hull damage, and vice versa.
+        { "heat", 0 }, // The amount of heat generated on trigger. This should roughly correlate to power draw.
+        { "accuracy", 0 }, // Multiplier for chance to hit (1 + sum). 
         { "soundType", 0 }
     };
-
+    
     public static Dictionary<string, float> RandomEnemyWeaponStats(int difficulty)
     {
         var dict = new Dictionary<string, float>(CombatStats);

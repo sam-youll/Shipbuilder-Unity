@@ -311,12 +311,37 @@ public interface IMusicParams
 
 public interface IWeaponModule
 {
-    public Dictionary<string, float> WeaponStats();
+    public struct WeaponStats
+    {
+        public Dictionary<string, float> Stats;
+
+        public Dictionary<Common.SoundType, float> SoundType;
+    }
+
+    public WeaponStats MyWeaponStats();
 }
 
 public interface IReactorModule
 {
-    public Dictionary<string, float> ReactorStats();
+    public struct EnergyConversion
+    {
+        public float EnergyLimit;
+        public List<KeyValuePair<Common.SoundType, float>> ConversionRatios;
+    }
+    
+    public struct ReactorStats
+    {
+        // power module
+        public float PowerGenerated;
+        
+        // converter modules
+        public EnergyConversion EnergyConversion;
+        
+        // system routing? energy discounts?
+        public Dictionary<ModuleRack, float> SystemRouting;
+    }
+    
+    public ReactorStats MyReactorStats();
 }
 
 public interface IAuxModule
@@ -735,22 +760,21 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     }
     #endregion
     
-    [Header("Values")] 
-    [Tooltip("The amount charged for this module in the shop.")]
-    public float price;
-
-    public float energyNoneCost;
-    public float energyIzkiCost;
-    public float energyAuboCost;
-    public float energyDwthCost;
-    
     [Header("Connections")] 
     [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
     public List<GameObject> inputJacks = new();
     public List<GameObject> outputJacks = new();
     public List<GameObject> parentWires = new();
     public List<GameObject> childWires = new();
-    public GameObject wirePrefab;
+    
+    [Header("Values")] 
+    [Tooltip("The amount charged for this module in the shop.")]
+    public float price;
+    public float heat;
+    public float energyNoneCost;
+    public float energyIzkiCost;
+    public float energyAuboCost;
+    public float energyDwthCost;
 
     #region Tooltip Info
     public abstract string Description();
@@ -777,20 +801,32 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         {
             info += "~~~\n";
             info += "Weapon Stats:\n";
-            foreach (var kvp in thisAsWeaponMod.WeaponStats())
+            if (thisAsWeaponMod.MyWeaponStats().Stats != null)
             {
-                info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+                foreach (var kvp in thisAsWeaponMod.MyWeaponStats().Stats)
+                {
+                    info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+                }
             }
-        }
-        else if (this is IReactorModule thisAsReactorMod)
-        {
-            info += "~~~\n";
-            info += "Weapon Stats:\n";
-            foreach (var kvp in thisAsReactorMod.ReactorStats())
+            if (thisAsWeaponMod.MyWeaponStats().SoundType != null)
             {
-                info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+                foreach (var kvp in thisAsWeaponMod.MyWeaponStats().SoundType)
+                {
+                    info += Funcs.ConvertCamelCase(Enum.GetName(typeof(Common.SoundType), kvp.Key)) + ": " + kvp.Value +
+                            "\n";
+                }
             }
+            
         }
+        // else if (this is IReactorModule thisAsReactorMod)
+        // {
+        //     info += "~~~\n";
+        //     info += "Weapon Stats:\n";
+        //     foreach (var kvp in thisAsReactorMod.ReactorStats().Conversion)
+        //     {
+        //         info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
+        //     }
+        // }
         
         return info;
     }

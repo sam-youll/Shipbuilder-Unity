@@ -35,11 +35,17 @@ public class DelayModule : PrimaryModule, IWeaponModule
         };
     }
 
-    public Dictionary<string, float> WeaponStats()
+    public IWeaponModule.WeaponStats MyWeaponStats()
     {
-        return new Dictionary<string, float>
+        return new IWeaponModule.WeaponStats()
         {
-
+            SoundType = new()
+            {
+                { Common.SoundType.Izki, izki },
+                { Common.SoundType.Aubo, aubo },
+                { Common.SoundType.Dwth, dwth },
+                { Common.SoundType.Hysh, hysh }
+            }
         };
     }
 }

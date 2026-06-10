@@ -33,4 +33,12 @@ public class PowerModule : PrimaryModule, IReactorModule
         // i gotta be honest, idk what "more aggressive means" in this context
         return new Dictionary<string, float>();
     }
+
+    public IReactorModule.ReactorStats MyReactorStats()
+    {
+        return new IReactorModule.ReactorStats()
+        {
+            PowerGenerated = power
+        };
+    }
 }

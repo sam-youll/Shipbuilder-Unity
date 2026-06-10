@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class ConverterModule : PrimaryModule, IReactorModule
 {
-    public float conversionRatio = 1;
-    public Common.SoundType conversionType;
+    public float energyLimit;
+    public float ratioNone;
+    public float ratioIzki;
+    public float ratioAubo;
+    public float ratioDwth;
     
     public override string Description()
     {
@@ -16,12 +19,35 @@ public class ConverterModule : PrimaryModule, IReactorModule
         return new Dictionary<string, float>();
     }
 
-    public Dictionary<string, float> ReactorStats()
+    
+
+    public IReactorModule.ReactorStats MyReactorStats()
     {
-        return new Dictionary<string, float>
+        var conversionList = new List<KeyValuePair<Common.SoundType, float>>();
+        if (ratioNone > 0)
         {
-            { "conversionType", (float)conversionType },
-            { "conversionRatio", conversionRatio }
-        } ;
+            conversionList.Add(new(Common.SoundType.None, ratioNone));
+        }
+        if (ratioIzki > 0)
+        {
+            conversionList.Add(new(Common.SoundType.Izki, ratioIzki));
+        }
+        if (ratioAubo > 0)
+        {
+            conversionList.Add(new(Common.SoundType.Aubo, ratioAubo));
+        }
+        if (ratioDwth > 0)
+        {
+            conversionList.Add(new(Common.SoundType.Dwth, ratioDwth));
+        }
+        
+        return new IReactorModule.ReactorStats
+        {
+            EnergyConversion = new()
+            {
+                EnergyLimit = energyLimit,
+                ConversionRatios = conversionList
+            }
+        };
     }
 }
