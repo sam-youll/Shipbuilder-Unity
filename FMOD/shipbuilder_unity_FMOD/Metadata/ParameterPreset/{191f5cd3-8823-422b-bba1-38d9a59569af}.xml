@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{191f5cd3-8823-422b-bba1-38d9a59569af}">
+		<property name="name">
+			<value>constellation</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ce6d2344-96c9-42ee-9081-b58ed7aadc13}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{d205b5c8-4268-4cd7-9ef6-71fe77c85fce}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{d205b5c8-4268-4cd7-9ef6-71fe77c85fce}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>13</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

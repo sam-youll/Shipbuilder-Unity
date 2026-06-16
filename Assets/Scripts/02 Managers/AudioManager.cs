@@ -32,8 +32,6 @@ public class AudioManager: MonoBehaviour
     private EventInstance amb_spaceInst;
     private EventInstance sfx_shipInst;
     private EventInstance enemySongInst;
-    private EventInstance tutorialEnemyShieldInst;
-    private EventInstance tutorialEnemyWeaponInst;
     private EventInstance sfx_stormInst;
     private EventInstance sfx_explosionInst;
 
@@ -154,8 +152,6 @@ public class AudioManager: MonoBehaviour
         amb_spaceInst = FMODUnity.RuntimeManager.CreateInstance(amb_spaceRef);
         sfx_shipInst = FMODUnity.RuntimeManager.CreateInstance(sfx_shipRef);
 
-        tutorialEnemyShieldInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
-        tutorialEnemyWeaponInst = FMODUnity.RuntimeManager.CreateInstance(moduleRef);
 
         for (int i = 0; i < 12; i++)
         {
