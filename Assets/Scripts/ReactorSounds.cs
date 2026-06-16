@@ -18,9 +18,14 @@ public class ReactorSounds : MonoBehaviour
     
     private EventInstance reactor;
     
-    
     public EventReference reactorRef;
 
+    //params 
+    private float pitch;
+    private float power;
+    private float conversion;
+    private float constellation;
+    
     //currentChord variable is the position in the changes list. 
     public int changesIndex;
 
@@ -30,7 +35,7 @@ public class ReactorSounds : MonoBehaviour
         0,
         3,
         1,
-        6
+        4
     };
 
     //list of chord strings to plop in play note from chord function 
@@ -51,9 +56,7 @@ public class ReactorSounds : MonoBehaviour
     {
 
         reactor = FMODUnity.RuntimeManager.CreateInstance(reactorRef);
-
-        //setting the placeholder parameters that will just work for now
-        SetTestParams();
+        
         //setting params based on reactor variables
         SetReactorParams();
         
@@ -72,7 +75,9 @@ public class ReactorSounds : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        pitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])));
+        power = Mathf.Clamp(power, -1, 1);
+
     }
 
     void SetTestChanges()
@@ -81,7 +86,7 @@ public class ReactorSounds : MonoBehaviour
         changes.Add(0);
         changes.Add(3);
         changes.Add(1);
-        changes.Add(6);
+        changes.Add(4);
     }
 
     void UpdateChord()
@@ -97,7 +102,7 @@ public class ReactorSounds : MonoBehaviour
         //THIS NEEDS TO BE FIXED OH MY GOD i'm just making the list longer every bar this is not ok lmfao 
         //SetTestChanges();
 
-        // UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
+        //UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
         //UnityEngine.Debug.Log("currentChord: " + changesIndex);
 
         
@@ -106,7 +111,11 @@ public class ReactorSounds : MonoBehaviour
 
     public void SetReactorParams()
     {
-        
+        reactor.setParameterByName("pitch", pitch);
+        //TODO: make the constellations change
+        reactor.setParameterByName("constellation", 1);
+        reactor.setParameterByName("power", 120);
+        reactor.setParameterByName("conversion", 100);
     }
 
 
