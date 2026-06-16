@@ -17,4 +17,9 @@ public static class Funcs
         // Capitalize the first letter of the result
         return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(spaced);
     }
+    
+    public static float Remap(float value, float inMin, float inMax, float outMin, float outMax) 
+    {
+        return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);
+    }
 }

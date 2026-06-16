@@ -13,10 +13,6 @@ public class Reactor : ModuleRack, ITooltipInfo
         return "Controls energy generation, as well as affecting " +
                "harmonic and rhythmic properties of the overall composition.";
     }
-
-    public float power; // default power module adds 1, can be more or less (upper limit 30-40 maybe?)
-    public float rate; // 1-4, but tempo is 200-600
-    public float strength; // 1-4
     
     // ENERGY
     [ShowInInspector] public Dictionary<Common.SoundType, float> storedEnergy = new()
@@ -42,9 +38,9 @@ public class Reactor : ModuleRack, ITooltipInfo
         if (energyReservoirDisplay == null)
         {
             invisible = true;
-            strength = 1;
-            power = 1;
-            rate = 1;
+            // strength = 1;
+            // power = 1;
+            // rate = 1;
         }
         
         EventBus.Instance.combatStarted.AddListener(OnCombatStarted);
@@ -110,6 +106,48 @@ public class Reactor : ModuleRack, ITooltipInfo
         {
             storedEnergy[Common.SoundType.None] += Time.deltaTime;
         }
+    }
+
+    public float Power()
+    {
+        var power = 0f;
+        
+        foreach (var mod in ActivePatch())
+        {
+            if (mod is IReactorModule iReactorMod)
+            {
+                if (mod is PowerModule)
+                {
+                    power += iReactorMod.MyReactorStats().PowerGenerated;
+                }
+            }
+        }
+
+        return power;
+    }
+
+    public float ConversionRate()
+    {
+        var powerGenerated = 0f;
+        var conversionLimit = 0f;
+
+        foreach (var mod in ActivePatch())
+        {
+            if (mod is IReactorModule iReactorMod)
+            {
+                if (mod is PowerModule)
+                {
+                    // Add the energy amount as untyped energy (right now, this assumes a power module)
+                    powerGenerated += iReactorMod.MyReactorStats().PowerGenerated;
+                }
+                if (mod is ConverterModule)
+                {
+                    conversionLimit += iReactorMod.MyReactorStats().EnergyConversion.EnergyLimit;
+                }
+            }
+        }
+
+        return Mathf.Clamp01(conversionLimit / powerGenerated) * 100;
     }
 
     public void AddEnergy(Dictionary<Common.SoundType, float> energyToAdd)

@@ -10,12 +10,18 @@ using Debug = UnityEngine.Debug;
 public class ReactorSounds : MonoBehaviour
 {
     public static ReactorSounds Instance;
-
-    void Awake()
+    private void Awake()
     {
-        Instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
     }
-    
     private EventInstance reactor;
     
     public EventReference reactorRef;
@@ -25,6 +31,10 @@ public class ReactorSounds : MonoBehaviour
     private float power;
     private float conversion;
     private float constellation;
+
+    private float powerMax = 120;
+
+    private Reactor myReactor;
     
     //currentChord variable is the position in the changes list. 
     public int changesIndex;
@@ -38,27 +48,18 @@ public class ReactorSounds : MonoBehaviour
         4
     };
 
-    //list of chord strings to plop in play note from chord function 
-    public List<string> chords = new List<string>()
-    {
-        "I",
-        "II",
-        "III",
-        "IV",
-        "V",
-        "VI",
-        "VII"
-    };
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        myReactor = GetComponent<Reactor>();
 
         reactor = FMODUnity.RuntimeManager.CreateInstance(reactorRef);
         
+        //line to set constellation will go here
+        
         //setting params based on reactor variables
-        SetReactorParams();
+        UpdateReactorParams();
         
         reactor.start();
         
@@ -76,18 +77,12 @@ public class ReactorSounds : MonoBehaviour
     void Update()
     {
         pitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])));
-        power = Mathf.Clamp(power, -1, 1);
-
+        power = Funcs.Remap(myReactor.Power(), 0, myReactor.maxStoredEnergy, 0, powerMax);
+        conversion = myReactor.ConversionRate();
+        
+        UpdateReactorParams();
     }
-
-    void SetTestChanges()
-    {
-        //adding stuff to the list here bc when it was in the variable it was contributing to the weird list errors
-        changes.Add(0);
-        changes.Add(3);
-        changes.Add(1);
-        changes.Add(4);
-    }
+    
 
     void UpdateChord()
     {
@@ -99,8 +94,6 @@ public class ReactorSounds : MonoBehaviour
             //SHOULD reset it to 0... this shit is broken tho it doesnt change the number of currentChord at all. the values work fine tho
             changesIndex = 0;
         }
-        //THIS NEEDS TO BE FIXED OH MY GOD i'm just making the list longer every bar this is not ok lmfao 
-        //SetTestChanges();
 
         //UnityEngine.Debug.Log("chord: " + changes[changesIndex]);
         //UnityEngine.Debug.Log("currentChord: " + changesIndex);
@@ -109,16 +102,16 @@ public class ReactorSounds : MonoBehaviour
     }
 
 
-    public void SetReactorParams()
+    public void UpdateReactorParams()
     {
         reactor.setParameterByName("pitch", pitch);
         //TODO: make the constellations change
         reactor.setParameterByName("constellation", 1);
-        reactor.setParameterByName("power", 120);
-        reactor.setParameterByName("conversion", 100);
+        reactor.setParameterByName("power", power);
+        reactor.setParameterByName("conversion", conversion);
     }
 
-
+    
     //p much copied over from the weapons firing in audiomanager
     IEnumerator PlayNoteCoroutine(EventInstance instrument, float noteLength)
     {
