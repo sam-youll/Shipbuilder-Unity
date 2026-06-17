@@ -152,6 +152,8 @@ public class Reactor : ModuleRack, ITooltipInfo
             }
         }
 
+        if (powerGenerated <= 0) return 0;
+
         return Mathf.Clamp01(conversionLimit / powerGenerated) * 100;
     }
 
