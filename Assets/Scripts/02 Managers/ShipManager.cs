@@ -303,9 +303,12 @@ public class ShipManager : MonoBehaviour
         newReactorObj.transform.SetParent(transform);
         newReactorObj.name = "Enemy Reactor";
         var newReactor = newReactorObj.AddComponent<Reactor>();
+        newReactor.health = newReactor.maxHealth;
         enemy.reactor = newReactor;
         
         EventBus.Instance.enemyInitialized.Invoke();
+        
+        UIManager.Instance.InitEnemySystemsDisplay();
     }
 
     public Weapon[] EnemyWeapons()
@@ -550,6 +553,7 @@ public class ShipManager : MonoBehaviour
                 systemTarget.Slow(slowAmount);
             }
             systemTarget.health -= systemDamage;
+            EventBus.Instance.systemHit.Invoke(systemTarget);
         }
         
         

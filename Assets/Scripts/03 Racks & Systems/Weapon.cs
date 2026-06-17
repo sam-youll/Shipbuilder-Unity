@@ -21,6 +21,7 @@ public class Weapon : ModuleRack, ITooltipInfo
     public bool enemyWeapon; // set true if Weapon belongs to an enemy ship
     [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.CombatStats);
     [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new();
+    public bool overheated;
 
     [Header("Components")]
     public Image heatOverlay;
@@ -39,7 +40,18 @@ public class Weapon : ModuleRack, ITooltipInfo
         // so we just want them to attempt to fire as often as possible
         if (enemyWeapon)
         {
-            Conductor.Instance.onSixteenth.AddListener(Fire);
+            switch (Random.Range(0, 2))
+            {
+                case 0:
+                    Conductor.Instance.onSixteenth.AddListener(Fire);
+                    break;
+                case 1:
+                    Conductor.Instance.onEighth.AddListener(Fire);
+                    break;
+                case 2:
+                    Conductor.Instance.onQuarter.AddListener(Fire);
+                    break;
+            }
         }
         else
         {
@@ -87,15 +99,28 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             heat = Mathf.Max(0, heat - HeatDissipation());
         }
+
+        if (heat >= 1)
+        {
+            overheated = true;
+        }
+
+        if (overheated)
+        {
+            if (heat <= 0)
+            {
+                overheated = false;
+            }
+        }
     }
 
     public float HeatDissipation()
     {
         if (slowTimer > 0)
         {
-            return .25f * Time.deltaTime;
+            return .025f * Time.deltaTime;
         }
-        return 1f * Time.deltaTime;
+        return .1f * Time.deltaTime;
     }
 
     public Dictionary<string, float> WeaponStats()
@@ -164,6 +189,18 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public Dictionary<string, float> NoteInfo()
     {
+        if (enemyWeapon)
+        {
+            var enemydict = new Dictionary<string, float>(Common.NoteInfo);
+            var myPitch = Notes.GetPitch(
+                Notes.C,
+                Notes.MODE.IONIAN,
+                Random.Range(0, 8));
+            // Debug.Log($"pitch is {myPitch}");
+            enemydict["pitch"] = myPitch;
+            return enemydict;
+        }
+        
         var dict = new Dictionary<string, float>(Common.NoteInfo);
         
         foreach (var mod in ActivePatch())
@@ -182,6 +219,11 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     private Dictionary<Common.SoundType, float> EnergyCost()
     {
+        if (enemyWeapon)
+        {
+            return Common.RandomEnergyCost();
+        }
+        
         var dict = new Dictionary<Common.SoundType, float>(baseEnergyCost);
 
         foreach (var mod in ActivePatch())
@@ -214,7 +256,12 @@ public class Weapon : ModuleRack, ITooltipInfo
         
         var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // Debug.Log(name);
-        if (!enemyWeapon && heatOverlay.fillAmount > 1)
+        if (health <= 0)
+        {
+            return;
+        }
+        
+        if (overheated)
         {
             // Debug.Log($"{name} needs to cool down.");
             return;
@@ -238,10 +285,8 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
-        if (!enemyWeapon)
-        {
-            heat += WeaponStats()["heat"];
-        }
+        heat += WeaponStats()["heat"];
+        
         
         DisplayManager.Instance.Log("Fired " + name);
         

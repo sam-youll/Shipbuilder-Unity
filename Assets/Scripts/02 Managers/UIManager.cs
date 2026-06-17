@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using SaintsField;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +29,7 @@ public class UIManager : MonoBehaviour
     public Vector3 screenUpPos;
     public Vector3 screenDownPos;
     [Range(10, 100)] public float screenMoveSpeed = 50f;
-    private bool screenUpDown;
+    private bool screenUpDown = true;
 
     [Header("Combat Display Elements")] 
     public GameObject systemPanelPrefab;
@@ -105,6 +106,25 @@ public class UIManager : MonoBehaviour
         foreach (var system in ShipManager.Instance.PlayerWeapons())
         {
             var newWeapon = Instantiate(systemPanelPrefab, playerSystems.transform);
+            newWeapon.GetComponent<UISystemPanel>().Setup(system);
+        }
+    }
+
+    public void InitEnemySystemsDisplay()
+    {
+        for (var i = 0; i < enemySystems.transform.childCount; i++)
+        {
+            Destroy(enemySystems.transform.GetChild(i).gameObject);
+        }
+        
+        // create reactor
+        var newReactor = Instantiate(systemPanelPrefab, enemySystems.transform);
+        newReactor.GetComponent<UISystemPanel>().Setup(ShipManager.Instance.EnemyReactor());
+        
+        // create weapons
+        foreach (var system in ShipManager.Instance.EnemyWeapons())
+        {
+            var newWeapon = Instantiate(systemPanelPrefab, enemySystems.transform);
             newWeapon.GetComponent<UISystemPanel>().Setup(system);
         }
     }

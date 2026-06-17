@@ -95,6 +95,7 @@ public class EventBus : MonoBehaviour
     public UnityEvent<Weapon> weaponFired;
     public UnityEvent<float> playerHit; // technically this and the event below also get called on a miss, damage is just set to -1
     public UnityEvent<float> enemyHit;
+    public UnityEvent<ModuleRack> systemHit;
     public UnityEvent<Wire> updateJackValidity;
     public UnityEvent displayLogUpdated;
     

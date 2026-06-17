@@ -18,7 +18,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public Vector2Int dimensionsMax = new(20, 10);
     [OnValueChanged(nameof(SetDimensions))] public Vector2Int dimensions = new(4, 4);
     public bool enemySystem;
-    public float maxHealth;
+    public float maxHealth = 30;
     public float health;
 
     protected virtual void Start()
@@ -27,6 +27,8 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         EventBus.Instance.rackEditYUp.AddListener(OnYUp);
         EventBus.Instance.rackEditYDown.AddListener(OnYDown);
         EventBus.Instance.rackEditXDown.AddListener(OnXDown);
+
+        health = maxHealth;
     }
 
     protected virtual void Update()

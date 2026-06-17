@@ -71,11 +71,24 @@ public static class Common
     {
         var dict = new Dictionary<string, float>(CombatStats);
 
-        dict["warmupRate"] = Random.value * .2f + .1f * difficulty + .5f;
-        dict["fireRate"] = Random.value * .2f + .1f * difficulty + .5f;
-        dict["damage"] = 2 + Random.value * .2f + .1f * difficulty + .5f;
+        dict["damage"] = 4 + Random.value * .5f + .5f * difficulty;
+        dict["hullDamage"] = Random.value * .2f;
+        dict["systemDamage"] = .2f - dict["hullDamage"];
+        dict["heat"] = Random.value * .1f + .1f;
+        dict["accuracy"] = Random.value * .3f + .6f;
         dict["soundType"] = Random.Range(0, 4);
 
         return dict;
+    }
+
+    public static Dictionary<SoundType, float> RandomEnergyCost()
+    {
+        return new Dictionary<SoundType, float>()
+        {
+            { SoundType.None, Random.Range(0, 3) },
+            // { SoundType.Izki, Random.Range(0, 1) },
+            // { SoundType.Aubo, Random.Range(0, 1) },
+            // { SoundType.Dwth, Random.Range(0, 1) }
+        };
     }
 }

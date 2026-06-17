@@ -279,7 +279,7 @@ public class Global : MonoBehaviour
                 }
                 else if (grabbedObject.TryGetComponent(out Jack jack))
                 {
-                    if (TopRaycastResult().TryGetComponent(out Wire wire))
+                    if (hoverList.Count > 0 && TopRaycastResult().TryGetComponent(out Wire wire))
                     {
                         grabbedObject = wire.gameObject;
                     }
@@ -327,7 +327,17 @@ public class Global : MonoBehaviour
             // TODO: fix left click + right click bug
             // vvv this didn't really work vvv
             // if (result == null) continue;
-            
+            if (result == null)
+            {
+                if (topObj == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    continue;
+                }
+            }
             if (result.transform.position.z <= topObj.transform.position.z)
             {
                 topObj = result;

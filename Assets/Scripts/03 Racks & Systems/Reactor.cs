@@ -54,6 +54,11 @@ public class Reactor : ModuleRack, ITooltipInfo
 
     private void GenerateEnergy()
     {
+        if (health <= 0)
+        {
+            return;
+        }
+        
         var newEnergy = new Dictionary<Common.SoundType, float>
         {
             { Common.SoundType.None, 0 },
@@ -183,6 +188,11 @@ public class Reactor : ModuleRack, ITooltipInfo
     
     public bool TrySpendEnergy(Dictionary<Common.SoundType, float> cost)
     {
+        // if (health <= 0)
+        // {
+        //     return false;
+        // }
+        
         // before we start actually removing any energy, make sure we have enough of each type
         foreach (var key in cost.Keys)
         {

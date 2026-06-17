@@ -57,7 +57,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
         {
             if (transform.parent.CompareTag("OutputJack"))
             {
-                Debug.Log($"parent is output jack: {transform.parent.transform.parent.gameObject}");
+                // Debug.Log($"parent is output jack: {transform.parent.transform.parent.gameObject}");
                 previousModuleJack = transform.parent.gameObject;
                 previousModule = previousModuleJack.transform.parent.gameObject;
 
@@ -68,7 +68,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
             }
             else if (transform.parent.CompareTag("InputJack"))
             {
-                Debug.Log($"parent is input jack: {transform.parent.transform.parent.gameObject}");
+                // Debug.Log($"parent is input jack: {transform.parent.transform.parent.gameObject}");
                 nextModuleJack = transform.parent.gameObject;
                 nextModule = nextModuleJack.transform.parent.gameObject;
             }

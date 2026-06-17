@@ -69,7 +69,7 @@ public class AudioManager: MonoBehaviour
     public List<EventReference> enemySongs = new();
     public List<EventReference> enemySongsPlayed = new();
 
-    private List<Weapon> weapons = new();
+    public List<Weapon> weapons = new();
     private List<EventInstance> weaponsEventInstances = new();
     private List<Coroutine> weaponsCoroutines = new();
     
@@ -176,7 +176,12 @@ public class AudioManager: MonoBehaviour
         // UnityEngine.Debug.Log("note length: " + noteLength + "attack: " + attack + "decay: " + decay + "release" + release);
 
     }
-    
+
+    private void Update()
+    {
+        // Debug.Log($"weaponsEventInstances.Count: {weaponsEventInstances.Count}\npatchInstances.Length: {patchInstances.Length}");
+    }
+
     #region SetParams
     // TODO: SetParametersByDict and SetEnemyParam... should be combined into one method.
     // A target should be passed in as an argument and values set regardless of target type.
