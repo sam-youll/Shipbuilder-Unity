@@ -77,8 +77,9 @@ public class ReactorSounds : MonoBehaviour
     void Update()
     {
         pitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])));
-        power = Funcs.Remap(myReactor.Power(), 0, myReactor.maxStoredEnergy, 0, powerMax);
-        conversion = myReactor.ConversionRate();
+        power = Funcs.Remap(myReactor.Power(), 0, myReactor.maxStoredEnergy, 1, powerMax) * 10;
+        conversion = myReactor.ConversionRate() + 1;
+        Debug.Log("power: " + power + " conversion: " + conversion);
         
         UpdateReactorParams();
     }
