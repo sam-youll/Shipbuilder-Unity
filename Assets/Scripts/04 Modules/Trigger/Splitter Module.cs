@@ -9,4 +9,30 @@ public class SplitterModule : TriggerModule
     {
         return "When triggered, triggers all outputs simultaneously.";
     }
+
+    public override string Info()
+    {
+        var info = "";
+        if (parentWires.Count > 0)
+        {
+            var prevMod = parentWires[0].GetComponent<Wire>().previousModule;
+            if (prevMod != null)
+            {
+                info += $"Triggered by:\n - {prevMod}.\n";
+            }
+        }
+        else
+        {
+            info += "Not triggered by anything.\n";
+        }
+        info += "Triggers:\n";
+        foreach (var wire in childWires)
+        {
+            var nextMod = wire.GetComponent<Wire>().nextModule;
+            if (nextMod == null) continue;
+            info += $" - {nextMod}";
+        }
+
+        return info;
+    }
 }

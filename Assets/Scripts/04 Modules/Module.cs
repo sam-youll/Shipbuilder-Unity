@@ -778,58 +778,9 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
 
     #region Tooltip Info
     public abstract string Description();
-    
-    public virtual string Info()
-    {
-        var info = "Energy Draw (per trigger):\n";
-        foreach (var kvp in EnergyCost())
-        {
-            info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
-        }
 
-        if (this is PrimaryModule thisAsPrimaryMod)
-        {
-            info += "~~~\n";
-            info += "Music Parameters:\n";
-            foreach (var kvp in thisAsPrimaryMod.MusicParams())
-            {
-                info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
-            }
-        }
-        
-        if (this is IWeaponModule thisAsWeaponMod)
-        {
-            info += "~~~\n";
-            info += "Weapon Stats:\n";
-            if (thisAsWeaponMod.MyWeaponStats().Stats != null)
-            {
-                foreach (var kvp in thisAsWeaponMod.MyWeaponStats().Stats)
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
-                }
-            }
-            if (thisAsWeaponMod.MyWeaponStats().SoundType != null)
-            {
-                foreach (var kvp in thisAsWeaponMod.MyWeaponStats().SoundType)
-                {
-                    info += Funcs.ConvertCamelCase(Enum.GetName(typeof(Common.SoundType), kvp.Key)) + ": " + kvp.Value +
-                            "\n";
-                }
-            }
-            
-        }
-        // else if (this is IReactorModule thisAsReactorMod)
-        // {
-        //     info += "~~~\n";
-        //     info += "Weapon Stats:\n";
-        //     foreach (var kvp in thisAsReactorMod.ReactorStats().Conversion)
-        //     {
-        //         info += Funcs.ConvertCamelCase(kvp.Key) + ": " + kvp.Value + "\n";
-        //     }
-        // }
-        
-        return info;
-    }
+    public abstract string Info();
+    
     #endregion
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created

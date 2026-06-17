@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Global : MonoBehaviour
 {
@@ -204,6 +206,14 @@ public class Global : MonoBehaviour
         
         // test for colliders under mouse
         raycastHits = Physics2D.RaycastAll(mousePos, Vector2.zero);
+        //Set up the new Pointer Event
+        var m_EventSystem = EventSystem.current;
+        var m_PointerEventData = new PointerEventData(m_EventSystem);
+        //Set the Pointer Event Position to that of the mouse position
+        m_PointerEventData.position = Input.mousePosition;
+        var graphicRaycastHits = new List<RaycastResult>();
+        var gRaycaster = UIManager.Instance.shipCanvas.GetComponent<GraphicRaycaster>();
+        gRaycaster.Raycast(m_PointerEventData, graphicRaycastHits);
         
         // test if colliders are grabbable
         var hitGrabbable = false;
@@ -224,6 +234,15 @@ public class Global : MonoBehaviour
                 TopRaycastResult().layer == LayerMask.NameToLayer("Jacks") ||
                 TopRaycastResult().layer == LayerMask.NameToLayer("Module Components"))
             {
+                hitGrabbable = true;
+            }
+        }
+        foreach (var result in graphicRaycastHits)
+        {
+            var obj = result.gameObject;
+            if (obj.TryGetComponent(out Button button))
+            {
+                hoverList.Add(obj.gameObject);
                 hitGrabbable = true;
             }
         }

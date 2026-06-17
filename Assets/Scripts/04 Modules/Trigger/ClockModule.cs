@@ -22,6 +22,34 @@ public class ClockModule : TriggerModule
         return "Triggers output at a consistent interval, set to a division of the current tempo.";
     }
 
+    public override string Info()
+    {
+        var info = "Triggers every ";
+        switch (frequency)
+        {
+            case 0:
+                info += "sixteenth note.";
+                break;
+            case 1:
+                info += "eighth note.";
+                break;
+            case 2:
+                info += "quarter note.";
+                break;
+            case 3:
+                info += "half note.";
+                break;
+            case 4:
+                info += "whole note.";
+                break;
+            case 5:
+                info += "bar.";
+                break;
+        }
+
+        return info;
+    }
+
     protected override void Start()
     {
         base.Start();

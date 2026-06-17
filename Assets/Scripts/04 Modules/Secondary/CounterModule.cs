@@ -11,6 +11,11 @@ public class CounterModule : SecondaryModule
         return "Counts.";
     }
 
+    public override string Info()
+    {
+        return $"Current value is {currentValue}";
+    }
+
     public override void Trigger(float value, int inputIndex)
     {
         currentValue += value;

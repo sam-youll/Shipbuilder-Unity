@@ -15,6 +15,11 @@ public class SwitchModule : TriggerModule
                "triggers the currently selected output.";
     }
 
+    public override string Info()
+    {
+        return "Come back later I'm not ready yet.";
+    }
+
     protected override void Start()
     {
         base.Start();

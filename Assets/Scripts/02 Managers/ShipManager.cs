@@ -150,6 +150,8 @@ public class ShipManager : MonoBehaviour
         player.maxHull = baseShip.maxHull;
         player.currentHull = baseShip.maxHull;
         player.evasion = 1;
+        
+        UIManager.Instance.InitPlayerSystemsDisplay();
     }
 
     private void InitPlayerShip()
@@ -173,6 +175,8 @@ public class ShipManager : MonoBehaviour
         {
             player.reactor = GameObject.FindWithTag("Reactor").GetComponent<Reactor>();
         }
+        
+        UIManager.Instance.InitPlayerSystemsDisplay();
     }
     // Because the module racks in Creative Mode are instantiated at start, they don't exist when OnLoadScene runs
     // so we just let the Rack Packer in the scene set it later and cross our fingers that things don't break
@@ -380,7 +384,7 @@ public class ShipManager : MonoBehaviour
         {
             potentialSystemTargets.Add(weapon);
         }
-        potentialSystemTargets.Add(target.auxSystems);
+        // potentialSystemTargets.Add(target.auxSystems);
 
         var systemTargets = new List<ModuleRack>
         {
@@ -409,6 +413,11 @@ public class ShipManager : MonoBehaviour
         // accuracy
         // soundType
 
+        if (Random.value < combatStats["accuracy"])
+        {
+            return;
+        }
+        
         var hullDamage = .5f * combatStats["damage"];
         var systemDamage = .5f * combatStats["damage"];
 

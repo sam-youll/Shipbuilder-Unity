@@ -10,6 +10,11 @@ public class PitchModule : PrimaryModule, IWeaponModule
         return "Sets pitch based on the received value, quantized to the current scale.";
     }
 
+    public override string Info()
+    {
+        return $"Current pitch is {pitch}.";
+    }
+
     public override void Trigger(float value, int inputIndex)
     {
         switch (inputIndex)

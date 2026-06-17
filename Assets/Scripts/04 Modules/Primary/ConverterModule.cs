@@ -11,7 +11,29 @@ public class ConverterModule : PrimaryModule, IReactorModule
     
     public override string Description()
     {
-        return "Converts energy or something.";
+        return "Converts untyped energy to typed energy, though not with perfect efficiency.";
+    }
+
+    public override string Info()
+    {
+        var info = $"Converts up to {energyLimit} untyped energy per second, at a ratio of:\n";
+        if (ratioNone > 0)
+        {
+            info += $"{ratioNone * 100}% untyped energy.\n";
+        }
+        if (ratioIzki > 0)
+        {
+            info += $"{ratioIzki * 100}% izki energy.\n";
+        }
+        if (ratioAubo > 0)
+        {
+            info += $"{ratioAubo * 100}% aubo energy.\n";
+        }
+        if (ratioDwth > 0)
+        {
+            info += $"{ratioDwth * 100}% dwth energy.\n";
+        }
+        return info;
     }
 
     public override Dictionary<string, float> MusicParams()

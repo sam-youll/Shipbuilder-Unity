@@ -9,7 +9,12 @@ public class AddModule : SecondaryModule
     {
         return "Adds a number.";
     }
-    
+
+    public override string Info()
+    {
+        return "Current aosigjaosigjaoigjaoergjareoigajerogiajergio";
+    }
+
     public override void Trigger(float value)
     {
         // Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");

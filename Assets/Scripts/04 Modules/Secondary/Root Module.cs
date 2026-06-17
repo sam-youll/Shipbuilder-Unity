@@ -10,7 +10,12 @@ public class RootModule : SecondaryModule
     {
         return "When triggered, outputs a value equal to the interval of the root of the current scale.";
     }
-    
+
+    public override string Info()
+    {
+        return $"Current value is {currentRoot}.";
+    }
+
     public override void Trigger(float value, int inputIndex)
     {
         currentRoot = ReactorSounds.Instance.changes[ReactorSounds.Instance.changesIndex]; 

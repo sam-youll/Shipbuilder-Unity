@@ -39,6 +39,11 @@ public class SourceModule : PrimaryModule, IWeaponModule
         return "Creates the base waveform, affecting the damage amount and type of the weapon's projectiles.";
     }
 
+    public override string Info()
+    {
+        return $"Current waveform is {waveform}.";
+    }
+
     protected override void Start()
     {
         base.Start();

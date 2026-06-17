@@ -83,7 +83,7 @@ public class SensorModule : TriggerModule
 
     public override string Info()
     {
-        var info = base.Info() + "---\nAvailable Event Triggers:\n";
+        var info = "Available Event Triggers:\n";
         foreach (var trigger in availableEventTriggers)
         {
             if (trigger == currentEventTrigger)

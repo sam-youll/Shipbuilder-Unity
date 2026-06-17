@@ -4,9 +4,17 @@ using UnityEngine;
 
 public static class Funcs
 {
-    public static float DLerp(float a, float b, float t, float dt)
+    /// <summary>
+    /// Framerate independent alternative to lerp.
+    /// </summary>
+    /// <param name="a">Starting value.</param>
+    /// <param name="b">Target value.</param>
+    /// <param name="lambda">Decay rate???.</param>
+    /// <param name="dt">Frame time.</param>
+    /// <returns></returns>
+    public static float Damp(float a, float b, float lambda, float dt)
     {
-        return Mathf.Lerp(a, b, 1 - Mathf.Pow(t, dt));
+        return Mathf.Lerp(a, b, 1 - Mathf.Exp(-lambda * dt));
     }
     
     public static string ConvertCamelCase(string input)

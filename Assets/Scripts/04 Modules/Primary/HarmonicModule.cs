@@ -25,7 +25,12 @@ public class HarmonicModule : PrimaryModule, IWeaponModule
 
     public override string Description()
     {
-        throw new System.NotImplementedException();
+        return "Adds harmonics.";
+    }
+
+    public override string Info()
+    {
+        return $"Current harmonic profile is {profile}.";
     }
 
     public override void Trigger(float value, int inputIndex)

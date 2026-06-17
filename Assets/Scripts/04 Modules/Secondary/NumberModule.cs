@@ -10,6 +10,11 @@ public class NumberModule : SecondaryModule
         return "Holds a number.";
     }
 
+    public override string Info()
+    {
+        return $"Current value is {number}";
+    }
+
     public override void Trigger(float value)
     {
         // Debug.Log($"AddModule on {gameObject.name} triggered base.Trigger() with a value of {value}.");

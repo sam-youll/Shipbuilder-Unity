@@ -10,6 +10,11 @@ public class RandomModule : SecondaryModule
         return "When triggered, outputs a random value between 0 and 7";
     }
 
+    public override string Info()
+    {
+        return $"Current value is {randomNumber}.";
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void Trigger(float value)
     {

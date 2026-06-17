@@ -178,6 +178,11 @@ public class Subpatch : Module
         return desc;
     }
 
+    public override string Info()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void Trigger()
     {
         // Debug.Log($"{gameObject.name} triggered {subpatchDict[0].module.name} with no arguments.");

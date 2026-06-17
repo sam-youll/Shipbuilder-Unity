@@ -11,9 +11,14 @@ public class DelayModule : PrimaryModule, IWeaponModule
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override string Description()
     {
-        return "Adds delay. Crazy, right?";
+        return "Adds delay.";
     }
-    
+
+    public override string Info()
+    {
+        return $"Currently delaying by {delayTime} milliseconds.";
+    }
+
     public override void Trigger(float value, int inputIndex)
     {
         switch (inputIndex)
