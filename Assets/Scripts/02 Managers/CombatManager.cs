@@ -206,11 +206,8 @@ public class CombatManager : MonoBehaviour
 
     private void OnCombatStarted()
     {
-        ReactorSounds.Instance.StartEnemyReactor();
         state = State.inCombat;
 
-        //AudioManager.Instance.ResetPlayedList();
-        //AudioManager.Instance.StopEnemySong();
     }
 
     private void OnEnemyDefeated()

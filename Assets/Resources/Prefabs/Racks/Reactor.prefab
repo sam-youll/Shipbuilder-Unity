@@ -579,14 +579,11 @@ MonoBehaviour:
   inputJack: {fileID: 401471969985220524}
   parentWire: {fileID: 0}
   label: {fileID: 5663693619103896548}
-  energyDisplay: {fileID: 9110623333714676100}
-  cooldownDisplay: {fileID: 0}
   dimensionsMax: {x: 20, y: 10}
   dimensions: {x: 4, y: 4}
   enemySystem: 0
-  power: 0
-  rate: 0
-  strength: 0
+  maxHealth: 0
+  health: 0
   energyReservoirDisplay: {fileID: 5059082675907484156}
   tempoOverride: 0
   invisible: 0
@@ -603,83 +600,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 341143e1a09efe147942f3abb746d318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyBassRef:
+  reactorRef:
     Guid:
-      Data1: -882703425
-      Data2: 1076792622
-      Data3: 1111426239
-      Data4: -286263609
-    Path: event:/ENEMY GEN/enemy_bass
-  playerBassRef:
-    Guid:
-      Data1: 1577863340
-      Data2: 1293431072
-      Data3: 599389357
-      Data4: -1994605737
-    Path: event:/PLAYER GEN/player_bass
-  enemyPadRef:
-    Guid:
-      Data1: -22682584
-      Data2: 1168354225
-      Data3: -1592922724
-      Data4: -921203472
-    Path: event:/ENEMY GEN/enemy_pad
-  playerPadRef:
-    Guid:
-      Data1: 384406097
-      Data2: 1170066996
-      Data3: -916520015
-      Data4: 974316332
-    Path: event:/PLAYER GEN/player_pad
-  enemyPercRef:
-    Guid:
-      Data1: -1193807301
-      Data2: 1119971342
-      Data3: 1804405159
-      Data4: -1418873121
-    Path: event:/ENEMY GEN/enemy_perc
-  playerPercRef:
-    Guid:
-      Data1: 1530440174
-      Data2: 1297913103
-      Data3: 1218545851
-      Data4: -40908790
-    Path: event:/PLAYER GEN/player_perc
+      Data1: 549546827
+      Data2: 1246446719
+      Data3: 1915675546
+      Data4: 1481278323
+    Path: event:/Reactor
   changesIndex: 0
   changes: 00000000030000000100000006000000
-  chords:
-  - I
-  - II
-  - III
-  - IV
-  - V
-  - VI
-  - VII
-  bassSyncProb: 60
-  bassDelayTime: 500
-  padDelayTime: 1500
-  percSyncProb: 20
-  percFreq: 5600
-  strength: 0
-  enemyStrength: 0
-  baseNoteLength: 0
-  enemyBaseNoteLength: 0
-  playerBassAttackRatio: 0.3
-  playerBassDecayRatio: 0.4
-  playerBassReleaseRatio: 0.3
-  enemyBassAttackRatio: 0.3
-  enemyBassDecayRatio: 0.4
-  enemyBassReleaseRatio: 0.3
-  playerPercAttackRatio: 0.2
-  playerPercDecayRatio: 0.8
-  playerGrit: 0
-  playerSoft: 0
-  enemyGrit: 0
-  enemySoft: 0
-  playerFB: 0
-  playerFF: 0
-  enemyFF: 0
-  enemyFB: 0
 --- !u!1 &5663693619103896548 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7662051195723756621, guid: 58646d3420b343a499a4720194421f55, type: 3}
