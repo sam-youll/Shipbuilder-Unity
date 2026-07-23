@@ -4,6 +4,8 @@ using UnityEngine;
 public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
 {
     // TODO: add weapon stats
+    public float systemDamageMult;
+    public float hullDamageMult;
     
     public float attack;
     public float decay;
@@ -11,7 +13,7 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
 
     public override string Description()
     {
-        return "Puts da sound in a envelope.";
+        return "Shapes the attack, decay, and release of the note. Envelope also affects damage multipliers vs systems/hulls.";
     }
 
     public override string Info()
@@ -52,6 +54,11 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
     {
         return new IWeaponModule.WeaponStats()
         {
+            Stats = new()
+            {
+                { "hullDamage",  hullDamageMult },
+                { "systemDamage", systemDamageMult }
+            },
             SoundType = new()
             {
                 { Common.SoundType.Izki, izki },

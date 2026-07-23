@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
-public abstract class Jack : MonoBehaviour, ITooltipInfo
+public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
 {
     private bool _darkTheme;
     public bool darkTheme
@@ -46,7 +47,7 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Global.Instance.TopRaycastResult() == gameObject)
+            if (UIManager.Instance.TopRaycastResult() == gameObject)
             {
                 OnMouseDown();
             }
@@ -56,7 +57,7 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo
     protected void OnMouseDown()
     {
         // Debug.Log("module jack clicked");
-        if (transform.parent.parent == InventoryManager.Instance.transform)
+        if (Parent().transform == InventoryManager.Instance.transform)
             return;
 
         // input jacks are not allowed to spawn new wires
@@ -65,15 +66,15 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo
         //     return;
         //
         // update: they're allowed
-        if (transform.parent.TryGetComponent(out Module module))
+        if (Parent().TryGetComponent(out Module module))
         {
             SpawnWire(module);
         }
-        else if (transform.parent.TryGetComponent(out Weapon weapon))
+        else if (Parent().TryGetComponent(out Weapon weapon))
         {
             SpawnWire(weapon);
         }
-        else if (transform.parent.TryGetComponent(out Reactor reactor))
+        else if (Parent().TryGetComponent(out Reactor reactor))
         {
             SpawnWire(reactor);
         }
@@ -200,7 +201,35 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo
         GetComponent<SpriteRenderer>().color = valid ? Color.white : new Color(.5f, .5f, .5f, 1);
     }
 
+    public GameObject Parent()
+    {
+        var parent = transform.parent.gameObject;
+        var loopCount = 0;
+        while (!parent.TryGetComponent(out Module m1) && !parent.TryGetComponent(out ModuleRack m2))
+        {
+            parent = parent.transform.parent.gameObject;
+            loopCount++;
+
+            if (loopCount > 100 || parent == null)
+            {
+                return null;
+            }
+        }
+
+        if (parent.TryGetComponent(out Module module) || parent.TryGetComponent(out ModuleRack moduleRack))
+        {
+            return parent;
+        }
+
+        return null;
+    }
+
     public abstract string Description();
 
     public abstract string Info();
+    
+    public void Select()
+    {
+        
+    }
 }

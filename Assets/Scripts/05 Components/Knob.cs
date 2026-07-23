@@ -78,7 +78,7 @@ public class Knob : MonoBehaviour, ITooltipInfo
         //     }
         // }
 
-        var isItMe = Global.Instance.RaycastResultsContains(gameObject);
+        var isItMe = UIManager.Instance.RaycastResultsContains(gameObject);
 
         if (sr != null)
         {
@@ -97,7 +97,7 @@ public class Knob : MonoBehaviour, ITooltipInfo
             if (isItMe)
             {
                 grabbed = true;
-                Global.Instance.LockCursor(true);
+                // Global.Instance.LockCursor(true);
             }
         }
 
@@ -129,7 +129,7 @@ public class Knob : MonoBehaviour, ITooltipInfo
 
                 grabbed = false;
                 valueChanged.Invoke(value);
-                Global.Instance.LockCursor(false);
+                // Global.Instance.LockCursor(false);
             }
         }
         

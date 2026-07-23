@@ -1,13 +1,14 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputJack : Jack
 {
     #if UNITY_EDITOR
     protected override void SetSprite(bool dt)
     {
-        var filepath = dt ? "Sprites/Jacks/jack dark in" : "Sprites/Jacks/jack light in";
-        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(filepath);
+        // var filepath = dt ? "Sprites/Jacks/jack dark in" : "Sprites/Jacks/jack light in";
+        // GetComponent<Image>().sprite = Resources.Load<Sprite>(filepath);
     }
     #endif
 

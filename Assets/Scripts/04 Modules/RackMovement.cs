@@ -87,7 +87,7 @@ public class RackMovement : MonoBehaviour
 
     void LeftClicky()
     {
-        if (Global.Instance.TopRaycastResult() == gameObject)
+        if (UIManager.Instance.TopRaycastResult() == gameObject)
         {
             if (isInInventory)
             {
@@ -95,11 +95,12 @@ public class RackMovement : MonoBehaviour
                 InventoryManager.Instance.RemoveModule(gameObject);
             }
             AudioManager.Instance.PickUpModuleSFX();
-            dragOffset = transform.position - Global.Instance.mousePos;
+            dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            dragOffset.z = 0;
             snapSquare.SetActive(true);
             isMouseDragging = true;
             lastParent = transform.parent;
-            transform.SetParent(cam.transform);
+            transform.SetParent(UIManager.Instance.shipCanvas.transform);
             bodyClick.Invoke();
             dragStartPos = transform.position;
         }
@@ -107,7 +108,7 @@ public class RackMovement : MonoBehaviour
 
     void RightClicky()
     {
-        if (Global.Instance.TopRaycastResult() == gameObject)
+        if (UIManager.Instance.TopRaycastResult() == gameObject)
         {
             Debug.Log($"You right clicked on {name}");
             if (InventoryManager.Instance.creativeMode)
@@ -123,7 +124,8 @@ public class RackMovement : MonoBehaviour
 
     void DragMove()
     {
-        var mousePos = Global.Instance.mousePos;
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
         // add offset from center of module to mouse position
         mousePos += dragOffset;
         
@@ -234,7 +236,7 @@ public class RackMovement : MonoBehaviour
                 // theoretically, this is the module rack I'm hovering over
                 transform.SetParent(result.collider.gameObject.transform);
                 var pos = transform.position;
-                pos.z = transform.parent.position.z - .1f;
+                pos.z = transform.parent.position.z - 1f;
                 transform.position = pos;
                 myModuleRack = result.collider.gameObject;
                 rackCheck = true;

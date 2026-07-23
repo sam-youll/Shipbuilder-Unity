@@ -60,6 +60,11 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 6479947651529125898}
   m_SourcePrefab: {fileID: 100100000, guid: 58646d3420b343a499a4720194421f55, type: 3}
+--- !u!61 &694877427234286401 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3289615266360905479, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 2595125555508044870}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4418049637765631041 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1824991723555137543, guid: 58646d3420b343a499a4720194421f55, type: 3}
@@ -77,3 +82,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed2db0d97bcb57b479496f11b59320aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coll: {fileID: 694877427234286401}
+  sr: {fileID: 0}
+  patchEndPanel: {fileID: 0}
+  inputJack: {fileID: 0}
+  parentWire: {fileID: 0}
+  label: {fileID: 0}
+  dimensionsMax: {x: 20, y: 10}
+  dimensions: {x: 4, y: 4}
+  enemySystem: 0
+  maxHealth: 30
+  health: 0

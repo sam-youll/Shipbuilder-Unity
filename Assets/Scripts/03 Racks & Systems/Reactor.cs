@@ -34,7 +34,7 @@ public class Reactor : ModuleRack, ITooltipInfo
 
     protected override void Start()
     {
-        Debug.Log("Reactor Start");
+        // Debug.Log("Reactor Start");
         if (energyReservoirDisplay == null)
         {
             invisible = true;
@@ -42,13 +42,16 @@ public class Reactor : ModuleRack, ITooltipInfo
             // power = 1;
             // rate = 1;
         }
-        
+
+        health = maxHealth;
         EventBus.Instance.combatStarted.AddListener(OnCombatStarted);
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+        
         GenerateEnergy();
     }
 
@@ -102,6 +105,28 @@ public class Reactor : ModuleRack, ITooltipInfo
             {
                 energyReservoirDisplay.UpdateDisplay(storedEnergy);
             }
+        }
+        else
+        {
+            foreach (var kvp in newEnergy)
+            {
+                var totalEnergy = storedEnergy.Values.Sum();
+                for (var i = 0; i < storedEnergy.Count; i++)
+                {
+                    var key = storedEnergy.ElementAt(i).Key;
+                    storedEnergy[key] -= kvp.Value * (storedEnergy.ElementAt(i).Value / totalEnergy) * Time.deltaTime;
+                }
+                storedEnergy[kvp.Key] += kvp.Value * Time.deltaTime;
+            }
+            if (!invisible)
+            {
+                energyReservoirDisplay.UpdateDisplay(storedEnergy);
+            }
+        }
+
+        if (energyReservoirDisplay != null)
+        {
+            energyReservoirDisplay.UpdateDisplay(storedEnergy);
         }
 
         // TODO: once a system for adding invisible modules to enemy ships is in place, delete this
@@ -219,5 +244,28 @@ public class Reactor : ModuleRack, ITooltipInfo
         }
 
         return true;
+    }
+
+    public override bool CompletePatch()
+    {
+        return base.CompletePatch() && 
+               ActivePatch().Exists(x => x is PowerModule) && 
+               ActivePatch().TrueForAll(x => x is IReactorModule);
+    }
+    
+    public Dictionary<Common.SoundType, float> SoundType()
+    {
+        var dict = new Dictionary<Common.SoundType, float>(Common.EmptySoundType);
+        foreach (var mod in ActivePatch())
+        {
+            if (mod is IReactorModule reactorModule)
+            {
+                foreach (var kvp in reactorModule.MyReactorStats().SoundType)
+                {
+                    dict[kvp.Key] += kvp.Value;
+                }
+            }
+        }
+        return dict;
     }
 }

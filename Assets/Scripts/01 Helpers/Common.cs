@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface ISelectable
+{
+    public void Select();
+}
+
 public static class Common
 {
     /// <summary>
@@ -66,6 +71,15 @@ public static class Common
         { "accuracy", 0 }, // Multiplier for chance to hit (1 + sum). 
         { "soundType", 0 }
     };
+
+    public static readonly Dictionary<SoundType, float> EmptySoundType = new()
+    {
+        { SoundType.None, 0 },
+        { SoundType.Izki, 0 },
+        { SoundType.Aubo, 0 },
+        { SoundType.Dwth, 0 },
+        { SoundType.Hysh, 0 },
+    };
     
     public static Dictionary<string, float> RandomEnemyWeaponStats(int difficulty)
     {
@@ -90,5 +104,40 @@ public static class Common
             // { SoundType.Aubo, Random.Range(0, 1) },
             // { SoundType.Dwth, Random.Range(0, 1) }
         };
+    }
+
+    public static float SoundTypeEffectMult(SoundType attacker, SoundType defender, float strength)
+    {
+        var mult = 1f;
+        switch (attacker)
+        {
+            case SoundType.None:
+                break;
+            case SoundType.Izki:
+                if (defender == SoundType.Aubo)
+                {
+                    mult *= 1.5f;
+                }
+                break;
+            case SoundType.Aubo:
+                if (defender == SoundType.Dwth)
+                {
+                    mult *= 1.5f;
+                }
+                break;
+            case SoundType.Dwth:
+                if (defender == SoundType.Izki)
+                {
+                    mult *= 1.5f;
+                }
+                break;
+            case SoundType.Hysh:
+                if (defender == SoundType.None)
+                {
+                    mult *= 1.15f;
+                }
+                break;
+        }
+        return mult * strength;
     }
 }

@@ -803,24 +803,27 @@ MonoBehaviour:
   theme: 0
   darkTheme: 0
   labelText: 
-  price: 5
-  energyNoneCost: 0
-  energyIzkiCost: 0
-  energyAuboCost: 0
-  energyDwthCost: 0
-  energyHyshCost: 0
   inputJacks:
   - {fileID: 8811281154545539490}
   outputJacks:
   - {fileID: 6203296584164139309}
   parentWires: []
   childWires: []
-  wirePrefab: {fileID: 0}
-  systemType: 0
+  price: 5
+  heat: 0.1
+  energyNoneCost: 1
+  energyIzkiCost: 0
+  energyAuboCost: 1
+  energyDwthCost: 0
+  icon: {fileID: 21300000, guid: 7b01c277f6f21964bb4191886e509304, type: 3}
+  izki: 0
+  aubo: 0
+  dwth: 0
+  hysh: 0
   waveform: 7
   bulletType: 1
   waveformKnobEnabled: 0
-  damage: 1
+  damage: 2
 --- !u!50 &2659650471163950864
 Rigidbody2D:
   serializedVersion: 5

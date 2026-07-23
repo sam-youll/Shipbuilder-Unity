@@ -73,9 +73,10 @@ public class ShipManager : MonoBehaviour
         // InitPlayerShip();
         // InitEnemyShip();
 
-        Debug.Log("hey im boutta add onsceneloaded");
+        // Debug.Log("hey im boutta add onsceneloaded");
         SceneManager.sceneLoaded += OnSceneLoaded;
         EventBus.Instance.newCombatEncounterStarted.AddListener(InitEnemyShip);
+        EventBus.Instance.combatStarted.AddListener(InitEnemyShip);
         EventBus.Instance.playerHullRepairAttempted.AddListener(OnPlayerHullRepairAttempted);
         
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
@@ -90,7 +91,7 @@ public class ShipManager : MonoBehaviour
     private bool playerShipInitialized = false;
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("OnSceneLoaded hi i'm shipmanager");
+        // Debug.Log("OnSceneLoaded hi i'm shipmanager");
         if (scene.name == "Cockpit" || scene.name == "Creative Mode")// && !playerShipInitialized)
         {
             InitPlayerShip();
@@ -152,11 +153,12 @@ public class ShipManager : MonoBehaviour
         player.evasion = 1;
         
         UIManager.Instance.InitPlayerSystemsDisplay();
+        InventoryManager.Instance.scrap += 20;
     }
 
     private void InitPlayerShip()
     {
-        Debug.Log("InitPlayerShip");
+        // Debug.Log("InitPlayerShip");
         player = new Ship
         {
             name = "Player ship",
@@ -208,6 +210,12 @@ public class ShipManager : MonoBehaviour
     public float PlayerMaxHull()
     {
         return 100;
+    }
+
+    public bool PlayerReadyForCombat()
+    {
+        return PlayerWeapons().ToList().Exists(x => x.CompletePatch()) &&
+               PlayerReactor().CompletePatch();
     }
 
     public void SetPlayerName(string shipName)
@@ -281,8 +289,8 @@ public class ShipManager : MonoBehaviour
         enemy = new Ship
         {
             name = "Enemy ship",
-            maxHull = 50 + 5 * CombatManager.Instance.fightLevel,
-            currentHull = 50 + 5 * CombatManager.Instance.fightLevel,
+            maxHull = 10 + 5 * CombatManager.Instance.fightLevel,
+            currentHull = 10 + 5 * CombatManager.Instance.fightLevel,
             shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
@@ -294,7 +302,7 @@ public class ShipManager : MonoBehaviour
             newWeapon.transform.SetParent(transform);
             newWeapon.name = "Enemy Weapon";
             var weapon = newWeapon.AddComponent<Weapon>();
-            weapon.enemyWeapon = true;
+            weapon.enemySystem = true;
             weapon.baseWeaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel));
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             enemy.weapons.Add(weapon);
@@ -304,6 +312,7 @@ public class ShipManager : MonoBehaviour
         newReactorObj.name = "Enemy Reactor";
         var newReactor = newReactorObj.AddComponent<Reactor>();
         newReactor.health = newReactor.maxHealth;
+        newReactor.enemySystem = true;
         enemy.reactor = newReactor;
         
         EventBus.Instance.enemyInitialized.Invoke();
@@ -328,7 +337,7 @@ public class ShipManager : MonoBehaviour
 
     public float EnemyMaxHull()
     {
-        return 50 + 10 * CombatManager.Instance.fightLevel;
+        return enemy.maxHull;
     }
     
     #endregion
@@ -344,35 +353,38 @@ public class ShipManager : MonoBehaviour
     {
         return enemy.evasion;
     }
-    
+
     /// <summary>
     /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
     /// <param name="combatStats">Dictionary of combat stats.</param>
+    /// <param name="soundType">Sound type.</param>
     /// <param name="effects">Any effects applied to the projectile.</param>
-    public void DamagePlayer(Dictionary<string, float> combatStats, Dictionary<Common.Effect, float> effects)
+    public void DamagePlayer(Dictionary<string, float> combatStats, Dictionary<Common.SoundType, float> soundType, Dictionary<Common.Effect, float> effects)
     {
-        DamageShip(ref player, combatStats, effects);
+        DamageShip(ref player, combatStats, soundType, effects);
     }
 
     /// <summary>
     /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
     /// <param name="combatStats">Dictionary of combat stats.</param>
+    /// <param name="soundType">Sound type.</param>
     /// <param name="effects">Any effects applied to the projectile.</param>
-    public void DamageEnemy(Dictionary<string, float> combatStats, Dictionary<Common.Effect, float> effects)
+    public void DamageEnemy(Dictionary<string, float> combatStats, Dictionary<Common.SoundType, float> soundType, Dictionary<Common.Effect, float> effects)
     {
-        DamageShip(ref enemy, combatStats, effects);
+        DamageShip(ref enemy, combatStats, soundType, effects);
     }
- 
+
     /// <summary>
     /// Calculates actual damage received after shields, resistances, weaknesses, etc.
     /// done to target ship. Also applies the associated status effects.
     /// </summary>
     /// <param name="target">Player or enemy ship.</param>
     /// <param name="combatStats">Dictionary of combat stats.</param>
+    /// <param name="soundType">Sound type.</param>
     /// <param name="effects">Any effects applied to the projectile.</param>
-    private void DamageShip(ref Ship target, Dictionary<string, float> combatStats, Dictionary<Common.Effect, float> effects)
+    private void DamageShip(ref Ship target, Dictionary<string, float> combatStats, Dictionary<Common.SoundType, float> soundType, Dictionary<Common.Effect, float> effects)
     {
         if (CombatManager.Instance.state != CombatManager.State.inCombat)
         {
@@ -393,21 +405,6 @@ public class ShipManager : MonoBehaviour
         {
             potentialSystemTargets[Random.Range(0, potentialSystemTargets.Count)]
         };
-        
-
-        // switch (soundType)
-        // {
-        //     case (float)Common.SoundType.None:
-        //         break;
-        //     case (float)Common.SoundType.Izki:
-        //         break;
-        //     case (float)Common.SoundType.Aubo:
-        //         break;
-        //     case (float)Common.SoundType.Dwth:
-        //         break;
-        //     case (float)Common.SoundType.Hysh:
-        //         break;
-        // }
         
         // damage
         // hullDamage
@@ -552,6 +549,22 @@ public class ShipManager : MonoBehaviour
             {
                 systemTarget.Slow(slowAmount);
             }
+            
+            if (soundType.Values.Sum() > 0)
+            {
+                var targetType = Common.SoundType.None;
+                if (systemTarget is Weapon targetWeapon)
+                {
+                    
+                    targetType = targetWeapon.SoundType().OrderByDescending(kvp => kvp.Value).First().Key;
+                }
+                else if (systemTarget is Reactor targetReactor)
+                {
+                    targetType = targetReactor.SoundType().OrderByDescending(kvp => kvp.Value).First().Key;
+                }
+                systemDamage *= Common.SoundTypeEffectMult(soundType.OrderByDescending(kvp => kvp.Value).First().Key, targetType, soundType.OrderByDescending(kvp => kvp.Value).First().Value);
+            }
+            
             systemTarget.health -= systemDamage;
             EventBus.Instance.systemHit.Invoke(systemTarget);
         }

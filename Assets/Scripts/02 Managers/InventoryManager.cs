@@ -44,7 +44,7 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         
-        CreateHotbar();
+        CreateInventoryMenu();
         CreatePauseMenu();
         CreateShopMenu();
         
@@ -52,6 +52,8 @@ public class InventoryManager : MonoBehaviour
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         EventBus.Instance.shopSlotPurchased.AddListener(OnShopSlotPurchased);
+
+        scrap = 20;
     }
     
     void Update()
@@ -76,7 +78,7 @@ public class InventoryManager : MonoBehaviour
             pauseMenu.SetActive(!pauseMenu.activeSelf);
         }
 
-        if (Input.mouseScrollDelta.y != 0)
+        if (inventoryOverlay.activeSelf && Input.mouseScrollDelta.y != 0)
         {
             var pos = moduleContainer.transform.localPosition;
             pos.y -= Input.mouseScrollDelta.y * .075f;
@@ -179,7 +181,7 @@ public class InventoryManager : MonoBehaviour
         pauseMenu.SetActive(false);
     }
 
-    private void CreateHotbar()
+    private void CreateInventoryMenu()
     {
         inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryOverlay"), transform);
         inventoryOverlay.transform.position = new Vector3(-9, 0, -2.5f);
@@ -187,12 +189,37 @@ public class InventoryManager : MonoBehaviour
         triggerModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Trigger Modules").gameObject;
         primaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Primary Modules").gameObject;
         secondaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Secondary Modules").gameObject;
+
+        AddStartingModules();
+        
         inventoryOverlay.SetActive(false);
     }
 
+    private void AddStartingModules()
+    {
+        var newClock = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Trigger Modules/Clock Module"), triggerModulesLabel.transform, true);
+        newClock.SetActive(gameObject.activeSelf);
+        newClock.name = newClock.name.Replace("(Clone)", "");
+        SendToInventory(newClock);
+        var newSource = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Source Module (Saw)"), primaryModulesLabel.transform, true);
+        newSource.SetActive(gameObject.activeSelf);
+        newSource.name = newSource.name.Replace("(Clone)", "");
+        SendToInventory(newSource);
+        var newPower = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Power Module"), primaryModulesLabel.transform, true);
+        newPower.SetActive(gameObject.activeSelf);
+        newPower.name = newPower.name.Replace("(Clone)", "");
+        SendToInventory(newPower);
+        var newConverter = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Converter Module None-Izki"), primaryModulesLabel.transform, true);
+        newConverter.SetActive(gameObject.activeSelf);
+        newConverter.name = newConverter.name.Replace("(Clone)", "");
+        SendToInventory(newConverter);
+        
+        ArrangeModules();
+    }
+    
     public void AddModule(GameObject module)
     {
-        Debug.Log("Added " + module.name);
+        // Debug.Log("Added " + module.name);
         var pos = Vector3.zero;
         for (int i = 0; i < 36; i++)
         {
@@ -271,7 +298,7 @@ public class InventoryManager : MonoBehaviour
             var startPos = new Vector3(-5, -1 - module.GetComponent<Module>().dimensions.y + 1, -.5f);
             module.transform.localPosition = startPos;
             
-            Debug.Log($"===== CHECKING {module.name} ======");
+            // Debug.Log($"===== CHECKING {module.name} ======");
             
             // loop through items that have already been placed
             for (var j = 0; j < i; j++)
@@ -286,7 +313,7 @@ public class InventoryManager : MonoBehaviour
                 var loops = 0;
                 while (myBounds.Intersects(otherBounds))
                 {
-                    Debug.Log($"{module.name} is overlapping {otherModule.name}");
+                    // Debug.Log($"{module.name} is overlapping {otherModule.name}");
                     var newPos = module.transform.localPosition;
                     newPos.x += 1f;
                     if (newPos.x > width * .5f - myBounds.size.x + 1)
@@ -352,7 +379,7 @@ public class InventoryManager : MonoBehaviour
     
     public void SendToInventory(GameObject moduleObj)
     {
-        Debug.Log("Sending to inventory.");
+        // Debug.Log("Sending to inventory.");
         var module = moduleObj.GetComponent<Module>();
         var moduleMov = moduleObj.GetComponent<RackMovement>();
         
@@ -426,17 +453,25 @@ public class InventoryManager : MonoBehaviour
 
     private void OnShopSlotPurchased(GameObject shopSlotObj)
     {
-        if (shopSlotObj.TryGetComponent(out ShopSlot shopSlot))
+        
+    }
+
+    public bool ShopSlotPurchase(GameObject shopSlotObj)
+    {
+        if (shopSlotObj.TryGetComponent(out ShopSlotPanel shopSlot))
         {
-            if (scrap < shopSlot.scrapPrice || shopSlot.saleItem == null) 
-                return;
+            if (shopSlot.itemForSale == null || scrap < shopSlot.itemForSale.GetComponent<Module>().price) 
+                return false;
             
-            scrap -= shopSlot.scrapPrice;
+            scrap -= shopSlot.itemForSale.GetComponent<Module>().price;
             EventBus.Instance.playerScrapValueChanged.Invoke();
-            var newMod = Instantiate(shopSlot.saleItem);
+            var newMod = Instantiate(shopSlot.itemForSale);
             newMod.transform.localScale = Vector3.one;
             SendToInventory(newMod);
-            DisplayManager.Instance.Log($"Purchased {shopSlot.saleItem.name}!");
+            DisplayManager.Instance.Log($"Purchased {shopSlot.itemForSale.name}!");
+            return true;
         }
+
+        return false;
     }
 }

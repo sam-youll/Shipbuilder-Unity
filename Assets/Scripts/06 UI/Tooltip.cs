@@ -91,7 +91,7 @@ public class Tooltip : MonoBehaviour
         }
 
         layoutElement.enabled = descriptionLabel.textBounds.size.x >= maxWidth || infoLabel.textBounds.size.x >= maxWidth;
-        
+        GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.y + 25f);
 
         var coll = target.GetComponent<Collider2D>();
         

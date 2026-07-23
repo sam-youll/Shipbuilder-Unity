@@ -7,11 +7,12 @@ using SaintsField.Playa;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine.U2D;
 #endif
 
 
@@ -64,7 +65,7 @@ public class ModuleInspector : Editor
         }
         
         // INPUT
-        if (paletteSelection == Module.ModuleComponent.Input)
+        if (paletteSelection == Module.ModuleComponent.InputTrig)
         {
             GUI.color = Color.white;
         }
@@ -72,11 +73,23 @@ public class ModuleInspector : Editor
         {
             GUI.color = Color.gray;
         }
-        if (GUILayout.Button("Input", GUILayout.Width(40), GUILayout.Height(20)))
+        if (GUILayout.Button("InputTrig", GUILayout.Width(40), GUILayout.Height(20)))
         {
-            paletteSelection = Module.ModuleComponent.Input;
+            paletteSelection = Module.ModuleComponent.InputTrig;
         }
-        
+        if (paletteSelection == Module.ModuleComponent.InputCtrl)
+        {
+            GUI.color = Color.white;
+        }
+        else
+        {
+            GUI.color = Color.gray;
+        }
+        if (GUILayout.Button("InputCtrl", GUILayout.Width(40), GUILayout.Height(20)))
+        {
+            paletteSelection = Module.ModuleComponent.InputCtrl;
+        }
+
         // OUTPUT
         if (paletteSelection == Module.ModuleComponent.Output)
         {
@@ -133,8 +146,8 @@ public class ModuleInspector : Editor
             paletteSelection = Module.ModuleComponent.Label;
         }
         
-        // CONTROL LABEL
-        if (paletteSelection == Module.ModuleComponent.ControlLabel)
+        // SCREEN
+        if (paletteSelection == Module.ModuleComponent.Screen)
         {
             GUI.color = Color.white;
         }
@@ -142,24 +155,13 @@ public class ModuleInspector : Editor
         {
             GUI.color = Color.gray;
         }
-        if (GUILayout.Button("Control", GUILayout.Width(40), GUILayout.Height(20)))
+
+        if (GUILayout.Button("Screen", GUILayout.Width(40), GUILayout.Height(20)))
         {
-            paletteSelection = Module.ModuleComponent.ControlLabel;
+            paletteSelection = Module.ModuleComponent.Screen;
         }
         
-        // TRIGGER LABEL
-        if (paletteSelection == Module.ModuleComponent.TriggerLabel)
-        {
-            GUI.color = Color.white;
-        }
-        else
-        {
-            GUI.color = Color.gray;
-        }
-        if (GUILayout.Button("Trigger", GUILayout.Width(40), GUILayout.Height(20)))
-        {
-            paletteSelection = Module.ModuleComponent.TriggerLabel;
-        }
+        
         
         GUI.color = Color.red;
         if (GUILayout.Button("CLEAR", GUILayout.Width(50), GUILayout.Height(20)))
@@ -196,9 +198,17 @@ public class ModuleInspector : Editor
                         }
 
                         break;
-                    case Module.ModuleComponent.Input:
+                    case Module.ModuleComponent.InputTrig:
                         GUI.color = Color.cyan;
-                        if (GUILayout.Button("In", GUILayout.Width(40), GUILayout.Height(40)))
+                        if (GUILayout.Button("InT", GUILayout.Width(40), GUILayout.Height(40)))
+                        {
+                            module.moduleShape[x, y] = paletteSelection;
+                        }
+
+                        break;
+                    case Module.ModuleComponent.InputCtrl:
+                        GUI.color = Color.cyan;
+                        if (GUILayout.Button("InC", GUILayout.Width(40), GUILayout.Height(40)))
                         {
                             module.moduleShape[x, y] = paletteSelection;
                         }
@@ -214,7 +224,7 @@ public class ModuleInspector : Editor
                         break;
                     case Module.ModuleComponent.Switch:
                         GUI.color = Color.cyan;
-                        if (GUILayout.Button("S", GUILayout.Width(40), GUILayout.Height(40)))
+                        if (GUILayout.Button("Sw", GUILayout.Width(40), GUILayout.Height(40)))
                         {
                             module.moduleShape[x, y] = paletteSelection;
                         }
@@ -236,17 +246,9 @@ public class ModuleInspector : Editor
                         }
 
                         break;
-                    case Module.ModuleComponent.ControlLabel:
+                    case Module.ModuleComponent.Screen:
                         GUI.color = Color.cyan;
-                        if (GUILayout.Button("CL", GUILayout.Width(40), GUILayout.Height(40)))
-                        {
-                            module.moduleShape[x, y] = paletteSelection;
-                        }
-
-                        break;
-                    case Module.ModuleComponent.TriggerLabel:
-                        GUI.color = Color.cyan;
-                        if (GUILayout.Button("TL", GUILayout.Width(40), GUILayout.Height(40)))
+                        if (GUILayout.Button("Sc", GUILayout.Width(40), GUILayout.Height(40)))
                         {
                             module.moduleShape[x, y] = paletteSelection;
                         }
@@ -316,6 +318,8 @@ public interface IWeaponModule
         public Dictionary<string, float> Stats;
 
         public Dictionary<Common.SoundType, float> SoundType;
+
+        public Dictionary<Common.Effect, float> Effect;
     }
 
     public WeaponStats MyWeaponStats();
@@ -339,6 +343,8 @@ public interface IReactorModule
         
         // system routing? energy discounts?
         public Dictionary<ModuleRack, float> SystemRouting;
+
+        public Dictionary<Common.SoundType, float> SoundType;
     }
     
     public ReactorStats MyReactorStats();
@@ -351,43 +357,65 @@ public interface IAuxModule
 #endregion
 
 [SelectionBase]
-public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, ITooltipInfo, INeedEnergy
+public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, ITooltipInfo, INeedEnergy, ISelectable
 {
     #region Module Builder
     public enum ModuleComponent
     {
         Empty,
         Body,
-        Input,
+        InputTrig,
+        InputCtrl,
         Output,
         Switch,
         Knob,
         Label,
-        ControlLabel,
-        TriggerLabel
+        Screen
     }
     
     [Header("Changing dimensions will reset grid.\nDimensions can be between 1 and 8.")]
     public Vector2Int dimensions = new(3, 3);
     public ModuleComponent[,] moduleShape = new ModuleComponent[3, 3];
     [SerializeField] private List<Package<ModuleComponent>> moduleShapeSerialized = new();
-    
-    public enum Theme
+
+    public enum EdgeStyle
+    {
+        Spikes,
+        Round,
+        Flat
+    }
+    public EdgeStyle edgeStyle = EdgeStyle.Flat;
+
+    public enum EdgeColor
     {
         White,
-        CarbonFiber,
-        BlueMetal
+        Yellow,
+        Cyan,
+        Magenta
     }
-    private readonly string[] tilesheetPaths = 
-    {
-        "Spritesheets/tilesheet white",
-        "Spritesheets/tilesheet carbon fiber",
-        "Spritesheets/tilesheet blue metal"
-    };
-    public Theme theme = Theme.CarbonFiber;
+    public EdgeColor edgeColor = EdgeColor.White;
+    
+    // public enum Theme
+    // {
+    //     White,
+    //     CarbonFiber,
+    //     BlueMetal
+    // }
+    // private readonly string[] tilesheetPaths = 
+    // {
+    //     "Spritesheets/tilesheet white",
+    //     "Spritesheets/tilesheet carbon fiber",
+    //     "Spritesheets/tilesheet blue metal"
+    // };
+    // public Theme theme = Theme.CarbonFiber;
+    
     public bool darkTheme;
-    private string tilesheetPath;
+    public bool leyLines;
+    
+    [ShowInInspector] private string tilesheetPath;
     public string labelText;
+
+    public Sprite overlayImage;
     
     #if UNITY_EDITOR
     private void OnValidate()
@@ -398,8 +426,35 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         {
             moduleShape = new ModuleComponent[dimensions.x, dimensions.y];
         }
-        
-        tilesheetPath = tilesheetPaths[(int)theme];
+
+        tilesheetPath = "Spritesheets/tilesheet ";
+        switch (edgeStyle)
+        {
+            case EdgeStyle.Spikes:
+                tilesheetPath += "spikes ";
+                break;
+            case EdgeStyle.Round:
+                tilesheetPath += "round ";
+                break;
+            case EdgeStyle.Flat:
+                tilesheetPath += "flat ";
+                break;
+        }
+        switch (edgeColor)
+        {
+            case EdgeColor.White:
+                tilesheetPath += "white";
+                break;
+            case EdgeColor.Yellow:
+                tilesheetPath += "yellow";
+                break;
+            case EdgeColor.Cyan:
+                tilesheetPath += "cyan";
+                break;
+            case EdgeColor.Magenta:
+                tilesheetPath += "magenta";
+                break;
+        }
     }
     
     public void BuildModule()
@@ -409,6 +464,40 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         ClearModule();
         Debug.Log("module cleared :)");
         gameObject.layer = LayerMask.NameToLayer("Rack Objects");
+        
+        
+        #region Rack movement and snap square
+        var rackMovement = gameObject.AddComponent<RackMovement>();
+        rackMovement.oddSizeX = dimensions.x % 2 == 1;
+        rackMovement.oddSizeY = dimensions.y % 2 == 1;
+        
+        var snapSquare = new GameObject("Snap Square");
+        snapSquare.transform.parent = gameObject.transform;
+        snapSquare.transform.localPosition = new Vector3(0, 0, .05f);
+        snapSquare.AddComponent<CompositeCollider2D>();
+        snapSquare.GetComponent<CompositeCollider2D>().geometryType = CompositeCollider2D.GeometryType.Polygons;
+        snapSquare.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+        rackMovement.snapSquare = snapSquare;
+        for (int x = 0; x < dimensions.x; x++)
+        {
+            for (int y = 0; y < dimensions.y; y++)
+            {
+                if (moduleShape[x, y] == ModuleComponent.Empty)
+                    continue;
+                
+                var snapSquareComponent = new GameObject($"Snap Square Component ({x},{y})");
+                snapSquareComponent.transform.parent = snapSquare.transform;
+                snapSquareComponent.transform.localPosition = new Vector3(x - .5f * dimensions.x + .5f, y - .5f * dimensions.y + .5f, -.01f);
+                snapSquareComponent.AddComponent<SpriteRenderer>();
+                snapSquareComponent.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Square");
+                snapSquareComponent.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0.7f);
+                // snapSquareComponent.GetComponent<RectTransform>().sizeDelta = Vector2.one;
+                var coll = snapSquareComponent.AddComponent<BoxCollider2D>();
+                coll.compositeOperation = Collider2D.CompositeOperation.Merge;
+                coll.size = new Vector2(.9f, .9f);
+            }
+        }
+        #endregion
         
         #region Module body sprites & collision
         Debug.Log("loading tilesheet");
@@ -422,8 +511,9 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
             {
                 var newComponent = new GameObject($"Body ({x}, {y})");
                 newComponent.transform.SetParent(transform);
-                newComponent.transform.localPosition = new Vector3(x - .5f, y - .5f, 0);
-                var sr = newComponent.AddComponent<SpriteRenderer>();
+                newComponent.transform.localPosition = new Vector3(x- .5f * dimensions.x, y - .5f * dimensions.y, 0);
+                var img = newComponent.AddComponent<SpriteRenderer>();
+                // newComponent.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.one;
 
                 // with the dual-grid system, we only check the corners of a tile
                 // for the purposes of checking against moduleShape, top right is (0,0)
@@ -461,12 +551,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomRight)
                             {
                                 // all 4 corners are filled with module
-                                sr.sprite = tilesheet[6];
+                                img.sprite = tilesheet[6];
                             }
                             else
                             {
                                 // bottom right is missing, all others are filled
-                                sr.sprite = tilesheet[7];
+                                img.sprite = tilesheet[7];
                             }
                         }
                         else
@@ -474,12 +564,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomRight)
                             {
                                 // bottom left is missing, all others are filled
-                                sr.sprite = tilesheet[10];
+                                img.sprite = tilesheet[10];
                             }
                             else
                             {
                                 // bottom missing, top filled
-                                sr.sprite = tilesheet[9];
+                                img.sprite = tilesheet[9];
                             }
                         }
                     }
@@ -491,12 +581,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomLeft)
                             {
                                 // top left is missing, all others are filled
-                                sr.sprite = tilesheet[5];
+                                img.sprite = tilesheet[5];
                             }
                             else
                             {
                                 // left side missing, right side filled
-                                sr.sprite = tilesheet[1];
+                                img.sprite = tilesheet[1];
                             }
                         }
                         else
@@ -504,12 +594,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomLeft)
                             {
                                 // top right and bottom left filled, others missing
-                                sr.sprite = tilesheet[13];
+                                img.sprite = tilesheet[13];
                             }
                             else
                             {
                                 // top right only
-                                sr.sprite = tilesheet[8];
+                                img.sprite = tilesheet[8];
                             }
                         }
                     }
@@ -524,12 +614,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomLeft)
                             {
                                 // top right missing, all others filled
-                                sr.sprite = tilesheet[2];
+                                img.sprite = tilesheet[2];
                             }
                             else
                             {
                                 // top left and bottom right only
-                                sr.sprite = tilesheet[4];
+                                img.sprite = tilesheet[4];
                             }
                         }
                         else
@@ -538,12 +628,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomLeft)
                             {
                                 // left side only
-                                sr.sprite = tilesheet[11];
+                                img.sprite = tilesheet[11];
                             }
                             else
                             {
                                 // top left only
-                                sr.sprite = tilesheet[14];
+                                img.sprite = tilesheet[14];
                             }
                         }
                     }
@@ -555,12 +645,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomLeft)
                             {
                                 // bottom only
-                                sr.sprite = tilesheet[3];
+                                img.sprite = tilesheet[3];
                             }
                             else
                             {
                                 // bottom right only
-                                sr.sprite = tilesheet[12];
+                                img.sprite = tilesheet[12];
                             }
                         }
                         else
@@ -568,15 +658,31 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                             if (bottomLeft)
                             {
                                 // bottom left only
-                                sr.sprite = tilesheet[0];
+                                img.sprite = tilesheet[0];
                             }
                             else
                             {
                                 // all empty
                                 DestroyImmediate(newComponent);
+                                continue;
                             }
                         }
                     }
+                }
+
+                if (overlayImage != null)
+                {
+                    var mask = newComponent.AddComponent<SpriteMask>();
+                    mask.sprite = img.sprite;
+                    var overlay = new GameObject("Overlay Image", typeof(SpriteRenderer));
+                    overlay.transform.SetParent(newComponent.transform, false);
+                    overlay.transform.position = transform.position;
+                    overlay.GetComponent<SpriteRenderer>().sprite = overlayImage;
+                    overlay.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                    // overlay.GetComponent<SpriteRenderer>().preserveAspect = true;
+                    // overlay.GetComponent<SpriteRenderer>().material =
+                    //     Resources.Load<Material>("Sprites/Materials/SpriteMultMaterial");
+                    // overlay.GetComponent<RectTransform>().sizeDelta = overlayImage.rect.size / 32f;
                 }
             }
         }
@@ -584,6 +690,14 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         // for collision, we're adding a composite collider, so we can place
         // a box collider on each tile of the module, then combine them
         Debug.Log("Adding Components");
+        // if (!TryGetComponent(out RectTransform rt))
+        // {
+        //     rt = gameObject.AddComponent<RectTransform>();
+        // }
+        // rt.sizeDelta = new Vector2(dimensions.x, dimensions.y);
+        // gameObject.AddComponent<Canvas>();
+        // gameObject.AddComponent<CanvasScaler>();
+        // gameObject.AddComponent<GraphicRaycaster>();
         gameObject.AddComponent<CompositeCollider2D>();
         gameObject.GetComponent<CompositeCollider2D>().geometryType = CompositeCollider2D.GeometryType.Polygons;
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
@@ -596,11 +710,280 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                 
                 var newCollObj = new GameObject($"Coll ({x}, {y})");
                 newCollObj.transform.SetParent(transform);
-                newCollObj.transform.localPosition = new Vector3(x, y, 0);
+                newCollObj.transform.localPosition = new Vector3(x - .5f * dimensions.x + .5f, y - .5f * dimensions.y + .5f, 0);
                 var newColl = newCollObj.AddComponent<BoxCollider2D>();
                 newColl.compositeOperation = Collider2D.CompositeOperation.Merge; 
             }
         }
+        
+        // just like don't bother. idk it's staying for posterity
+        /*
+        Debug.Log("I'm about to do the sprite shape thing");
+        var ssc = gameObject.AddComponent<SpriteShapeController>();
+        var mask = gameObject.AddComponent<SpriteMask>();
+        var spline = ssc.spline;
+        ssc.splineDetail = 2; // Low I hope
+        ssc.spriteShape = ScriptableObject.CreateInstance<SpriteShape>();
+        var compositeCollider = gameObject.GetComponent<CompositeCollider2D>();
+        var points = new List<Vector2>();
+        Debug.Log("HELLLOOOOOo");
+        for (int i = 0; i < compositeCollider.pathCount; i++)
+        {
+            Vector2[] pathPoints = new Vector2[compositeCollider.GetPathPointCount(i)];
+            compositeCollider.GetPath(i, pathPoints);
+            points.AddRange(pathPoints);
+            foreach (var point in pathPoints) Debug.Log(point);
+        }
+        Debug.Log("=============");
+        spriteShapePoints = new Vector2[points.Count];
+        for (int i = 0; i < points.Count; i++)
+        {
+            spriteShapePoints[i] = points[i];
+            spline.InsertPointAt(i, points[i]);
+            spline.SetTangentMode(i, ShapeTangentMode.Linear);
+            Debug.Log("added " + points[i]);
+        }
+
+        spriteShapePoints = new Vector2[spline.GetPointCount()];
+        for (int i = 0; i < spline.GetPointCount(); i++)
+        {
+            spriteShapePoints[i] = spline.GetPosition(i);
+        }
+
+        while (spline.GetPointCount() > points.Count)
+        {
+            spline.RemovePointAt(spline.GetPointCount() - 1);
+        }
+        // for (int i = 1; i < 3; i++)
+        // {
+        //     spline.RemovePointAt(spline.GetPointCount()-i);
+        //     spline.RemovePointAt(i-1);
+        // }
+        
+        ssc.RefreshSpriteShape();
+        
+        var sprite = Sprite.Create(ssc.spriteShape.fillTexture, new Rect(0, 0, dimensions.x, dimensions.y), new Vector2(.5f, .5f), 32);
+        mask.sprite = sprite;
+        */
+        
+        
+        if (leyLines)
+        {
+            var end = new Vector2Int();
+            for (var i0 = 0; i0 < moduleShape.GetLength(0); i0++)
+            for (var i1 = 0; i1 < moduleShape.GetLength(1); i1++)
+            {
+                var component = moduleShape[i0, i1];
+                if (component is ModuleComponent.Output)
+                {
+                    end = new Vector2Int(i0, i1);
+                }
+            }
+            for (var j0 = 0; j0 < moduleShape.GetLength(0); j0++)
+            for (var j1 = 0; j1 < moduleShape.GetLength(1); j1++)
+            {
+                var component = moduleShape[j0, j1];
+                if (component is ModuleComponent.InputTrig)
+                {
+                    var start = new Vector2Int(j0, j1);
+
+                    var lineTiles = Resources.LoadAll<Sprite>("Spritesheets/leylines");
+
+                    Debug.Log($"Pathing from {start} to {end}. Dimensions: {dimensions}.");
+                    
+                    var path = Funcs.AStar4Dir(start, end, dimensions.y, dimensions.x, v2I => moduleShape[v2I.x, v2I.y] != ModuleComponent.Empty);
+                    
+                    if (path.Count < 2) continue;
+
+                    for (var i = 0; i < path.Count; i++)
+                    {
+                        var cell = path[i];
+                        var newLineSegment = new GameObject("Line Segment " + cell, typeof(SpriteRenderer));
+                        newLineSegment.transform.parent = transform;
+                        // newLineSegment.GetComponent<RectTransform>().sizeDelta = Vector2.one;
+                        newLineSegment.transform.localPosition = new Vector3(path[i].x - .5f * dimensions.x + .5f, path[i].y - .5f * dimensions.y + .5f, -.1f);
+                        var lineSprite = lineTiles[0];
+                        if (i == 0)
+                        {
+                            var dir = path[i + 1] - path[i];
+                            if (dir == Vector2Int.up)
+                            {
+                                lineSprite = lineTiles[0];
+                            }
+                            else if (dir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[1];
+                            }
+                            else if (dir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[2];
+                            }
+                            else if (dir == Vector2Int.left)
+                            {
+                                lineSprite = lineTiles[3];
+                            }
+                        }
+                        else if (i == path.Count - 1)
+                        {
+                            var dir = path[i - 1] - path[i];
+                            if (dir == Vector2Int.up)
+                            {
+                                lineSprite = lineTiles[0];
+                            }
+                            else if (dir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[1];
+                            }
+                            else if (dir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[2];
+                            }
+                            else if (dir == Vector2Int.left)
+                            {
+                                lineSprite = lineTiles[3];
+                            }
+                        }
+                        else
+                        {
+                            var prevDir = path[i - 1] - path[i];
+                            var nextDir =  path[i + 1] - path[i];
+
+                            if (prevDir == Vector2Int.up && nextDir == Vector2Int.right ||
+                                nextDir == Vector2Int.up && prevDir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[4];
+                            }
+                            else if (prevDir == Vector2Int.down && nextDir == Vector2Int.right ||
+                                     nextDir == Vector2Int.down && prevDir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[5];
+                            }
+                            else if (prevDir == Vector2Int.left && nextDir == Vector2Int.down ||
+                                     nextDir == Vector2Int.left && prevDir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[6];
+                            }
+                            else if (prevDir == Vector2Int.left && nextDir == Vector2Int.up ||
+                                     nextDir == Vector2Int.left && prevDir == Vector2Int.up)
+                            {
+                                lineSprite = lineTiles[7];
+                            }
+                            else if (prevDir == Vector2Int.left && nextDir == Vector2Int.right ||
+                                     nextDir == Vector2Int.left && prevDir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[8];
+                            }
+                            else if (prevDir == Vector2Int.up && nextDir == Vector2Int.down ||
+                                     nextDir == Vector2Int.up && prevDir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[9];
+                            }
+                        }
+
+                        newLineSegment.GetComponent<SpriteRenderer>().sprite = lineSprite;
+                    }
+                }
+                else if (component is ModuleComponent.InputCtrl)
+                {
+                    var start = new Vector2Int(j0, j1);
+                    
+                    var lineTiles = Resources.LoadAll<Sprite>("Spritesheets/leylines");
+
+                    var path = Funcs.AStar4Dir(start, end, dimensions.x, dimensions.y, v2I => moduleShape[v2I.x, v2I.y] != ModuleComponent.Empty);
+                    
+                    if (path.Count < 2) continue;
+
+                    for (var i = 0; i < path.Count; i++)
+                    {
+                        var cell = path[i];
+                        var newLineSegment = new GameObject("Line Segment " + cell, typeof(SpriteRenderer));
+                        newLineSegment.transform.parent = transform;
+                        // newLineSegment.GetComponent<RectTransform>().sizeDelta = Vector2.one;
+                        newLineSegment.transform.localPosition = new Vector3(path[i].x - .5f * dimensions.x + .5f, path[i].y - .5f * dimensions.y + .5f, -.1f);
+                        var lineSprite = lineTiles[0];
+                        if (i == 0)
+                        {
+                            var dir = path[i + 1] - path[i];
+                            if (dir == Vector2Int.up)
+                            {
+                                lineSprite = lineTiles[10];
+                            }
+                            else if (dir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[11];
+                            }
+                            else if (dir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[12];
+                            }
+                            else if (dir == Vector2Int.left)
+                            {
+                                lineSprite = lineTiles[13];
+                            }
+                        }
+                        else if (i == path.Count - 1)
+                        {
+                            var dir = path[i - 1] - path[i];
+                            if (dir == Vector2Int.up)
+                            {
+                                lineSprite = lineTiles[10];
+                            }
+                            else if (dir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[11];
+                            }
+                            else if (dir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[12];
+                            }
+                            else if (dir == Vector2Int.left)
+                            {
+                                lineSprite = lineTiles[13];
+                            }
+                        }
+                        else
+                        {
+                            var prevDir = path[i - 1] - path[i];
+                            var nextDir =  path[i + 1] - path[i];
+
+                            if (prevDir == Vector2Int.up && nextDir == Vector2Int.right ||
+                                nextDir == Vector2Int.up && prevDir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[14];
+                            }
+                            else if (prevDir == Vector2Int.down && nextDir == Vector2Int.right ||
+                                     nextDir == Vector2Int.down && prevDir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[15];
+                            }
+                            else if (prevDir == Vector2Int.left && nextDir == Vector2Int.down ||
+                                     nextDir == Vector2Int.left && prevDir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[16];
+                            }
+                            else if (prevDir == Vector2Int.left && nextDir == Vector2Int.up ||
+                                     nextDir == Vector2Int.left && prevDir == Vector2Int.up)
+                            {
+                                lineSprite = lineTiles[17];
+                            }
+                            else if (prevDir == Vector2Int.left && nextDir == Vector2Int.right ||
+                                     nextDir == Vector2Int.left && prevDir == Vector2Int.right)
+                            {
+                                lineSprite = lineTiles[18];
+                            }
+                            else if (prevDir == Vector2Int.up && nextDir == Vector2Int.down ||
+                                     nextDir == Vector2Int.up && prevDir == Vector2Int.down)
+                            {
+                                lineSprite = lineTiles[19];
+                            }
+                        }
+
+                        newLineSegment.GetComponent<SpriteRenderer>().sprite = lineSprite;
+                    }
+                }
+            }
+        }
+        
         #endregion
 
         #region Module components
@@ -608,98 +991,73 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         {
             for (int y = 0; y < dimensions.y; y++)
             {
+                var pos = new Vector3(x - .5f * dimensions.x + .5f, y - .5f * dimensions.y + .5f, -.2f);
+                
                 switch (moduleShape[x, y])
                 {
-                    case ModuleComponent.Input:
+                    case ModuleComponent.InputTrig:
                         // var newInputJack = new GameObject($"Input Jack ({x}, {y})");
-                        var newInputJack = Instantiate(Resources.Load<GameObject>("Module Components/Input Jack"), transform);
+                        var newInputJack = Instantiate(Resources.Load<GameObject>("Module Components/Input Jack (Trigger)"), transform);
                         newInputJack.transform.SetParent(transform);
-                        newInputJack.transform.localPosition = new Vector3(x, y, -.1f);
+                        newInputJack.transform.localPosition = pos;
                         newInputJack.GetComponent<Jack>().darkTheme = darkTheme;
                         inputJacks.Add(newInputJack);
+                        break;
+                    case ModuleComponent.InputCtrl:
+                        // var newInputJack = new GameObject($"Input Jack ({x}, {y})");
+                        var newInputJackCtrl = Instantiate(Resources.Load<GameObject>("Module Components/Input Jack (Control)"), transform);
+                        newInputJackCtrl.transform.SetParent(transform);
+                        newInputJackCtrl.transform.localPosition = pos;
+                        newInputJackCtrl.GetComponent<Jack>().darkTheme = darkTheme;
+                        inputJacks.Add(newInputJackCtrl);
                         break;
                     case ModuleComponent.Output:
                         var newOutputJack = Instantiate(Resources.Load<GameObject>("Module Components/Output Jack"), transform);
                         newOutputJack.transform.SetParent(transform);
-                        newOutputJack.transform.localPosition = new Vector3(x, y, -.1f);
+                        newOutputJack.transform.localPosition = pos;
                         newOutputJack.GetComponent<Jack>().darkTheme = darkTheme;
                         outputJacks.Add(newOutputJack);
                         break;
                     case ModuleComponent.Switch:
                         var newSwitch = Instantiate(Resources.Load<GameObject>("Module Components/Switch"), transform);
                         newSwitch.transform.SetParent(transform);
-                        newSwitch.transform.localPosition = new Vector3(x, y, -.1f);
+                        newSwitch.transform.localPosition = pos;
                         break;
                     case ModuleComponent.Knob:
                         var newKnob = Instantiate(Resources.Load<GameObject>("Module Components/Knob"), transform);
                         newKnob.transform.SetParent(transform);
-                        newKnob.transform.localPosition = new Vector3(x, y, -.1f);
+                        newKnob.transform.localPosition = pos;
                         break;
                     case ModuleComponent.Label:
                         var newTypeIcon = new GameObject($"Label ({x}, {y})");
                         newTypeIcon.transform.SetParent(transform);
-                        newTypeIcon.transform.localPosition = new Vector3(x, y, -.1f);
+                        newTypeIcon.transform.localPosition = pos;
                         newTypeIcon.AddComponent<MeshRenderer>();
                         var textComponent = newTypeIcon.AddComponent<TextMeshPro>();
-                        textComponent.fontSize = 5;
-                        textComponent.rectTransform.sizeDelta = new Vector2(.75f, .75f);
-                        textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/mythic-pixels");
-                        textComponent.alignment = TextAlignmentOptions.BottomLeft;
+                        textComponent.fontSize = 5f;
+                        textComponent.rectTransform.sizeDelta = new Vector2(1f, .75f);
+                        textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/CutePixel Bitmap");
+                        textComponent.alignment = TextAlignmentOptions.Midline;
+                        textComponent.textWrappingMode = TextWrappingModes.NoWrap;
                         textComponent.text = String.IsNullOrEmpty(labelText) ? gameObject.name.Split(" ")[0] : labelText;
                         textComponent.color = darkTheme ? new Color(.56f, .78f, .78f) : new Color(.2f, .2f, .2f);
                         break;
-                    case ModuleComponent.ControlLabel:
-                        var controlLabel = new GameObject("Control Label", typeof(SpriteRenderer));
-                        controlLabel.transform.SetParent(transform);
-                        controlLabel.transform.localPosition = new Vector3(x, y, -.1f);
-                        controlLabel.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Jacks/control label");
-                        break;
-                    case ModuleComponent.TriggerLabel:
-                        var triggerLabel = new GameObject("Trigger Label", typeof(SpriteRenderer));
-                        triggerLabel.transform.SetParent(transform);
-                        triggerLabel.transform.localPosition = new Vector3(x, y, -.1f);
-                        triggerLabel.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Jacks/trigger label");
+                    case ModuleComponent.Screen:
+                        var newScreen = Instantiate(Resources.Load<GameObject>("Module Components/Screen"), transform);
+                        newScreen.transform.SetParent(transform);
+                        newScreen.transform.localPosition = pos;
                         break;
                 }
             }
         }
         #endregion
         
-        #region Rack movement and snap square
-        var rackMovement = gameObject.AddComponent<RackMovement>();
-        rackMovement.oddSizeX = dimensions.x % 2 == 1;
-        rackMovement.oddSizeY = dimensions.y % 2 == 1;
-        
-        var snapSquare = new GameObject("Snap Square");
-        snapSquare.transform.parent = gameObject.transform;
-        snapSquare.transform.localPosition = new Vector3(0, 0, .05f);
-        snapSquare.AddComponent<CompositeCollider2D>();
-        snapSquare.GetComponent<CompositeCollider2D>().geometryType = CompositeCollider2D.GeometryType.Polygons;
-        snapSquare.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-        rackMovement.snapSquare = snapSquare;
-        for (int x = 0; x < dimensions.x; x++)
-        {
-            for (int y = 0; y < dimensions.y; y++)
-            {
-                if (moduleShape[x, y] == ModuleComponent.Empty)
-                    continue;
-                
-                var snapSquareComponent = new GameObject($"Snap Square Component ({x},{y})");
-                snapSquareComponent.transform.parent = snapSquare.transform;
-                snapSquareComponent.transform.localPosition = new Vector3(x, y, -.01f);
-                snapSquareComponent.AddComponent<SpriteRenderer>();
-                snapSquareComponent.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Square");
-                snapSquareComponent.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0.7f);
-                var coll = snapSquareComponent.AddComponent<BoxCollider2D>();
-                coll.compositeOperation = Collider2D.CompositeOperation.Merge;
-                coll.size = new Vector2(.9f, .9f);
-            }
-        }
-        #endregion
     }
 
     public void ClearModule()
     {
+        if (TryGetComponent(out SpriteShapeController ssc)) DestroyImmediate(ssc);
+        
         while (transform.childCount > 0)
         {
             DestroyImmediate(transform.GetChild(0).gameObject);
@@ -759,6 +1117,9 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         }
     }
     #endregion
+
+    [Header("Components")] 
+    public ModuleScreen screen;
     
     [Header("Connections")] 
     [Tooltip("Make sure the primary input jack is index 0 in the list. The rest should be left to right.")]
@@ -775,6 +1136,8 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public float energyIzkiCost;
     public float energyAuboCost;
     public float energyDwthCost;
+
+    public Sprite icon;
 
     #region Tooltip Info
     public abstract string Description();
@@ -936,6 +1299,11 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         
     }
 
+    protected virtual void UpdateScreen(string content)
+    {
+        
+    }
+
     public void ClearWires()
     {
         if (parentWires.Count > 0)
@@ -974,5 +1342,10 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
             { Common.SoundType.Aubo, energyAuboCost },
             { Common.SoundType.Dwth, energyDwthCost }
         };
+    }
+
+    public void Select()
+    {
+        
     }
 }

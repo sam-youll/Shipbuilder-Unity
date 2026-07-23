@@ -5,6 +5,8 @@ using UnityEngine;
 public class HarmonicModule : PrimaryModule, IWeaponModule
 {
     public float damage = 1.2f;
+    public float stun;
+    public float siphon;
     
     public enum Profile
     {
@@ -70,6 +72,11 @@ public class HarmonicModule : PrimaryModule, IWeaponModule
                 { Common.SoundType.Aubo , aubo },
                 { Common.SoundType.Dwth , dwth },
                 { Common.SoundType.Hysh , hysh }
+            },
+            Effect = new()
+            {
+                { Common.Effect.Stun , stun },
+                { Common.Effect.Siphon , siphon }
             }
         };
     }

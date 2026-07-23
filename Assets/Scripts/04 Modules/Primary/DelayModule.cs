@@ -4,14 +4,13 @@ using UnityEngine;
 public class DelayModule : PrimaryModule, IWeaponModule
 {
     public float taps;
-    public float fireRate = 2;
     public float damage = 2;
     public float delayTime = 0;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override string Description()
     {
-        return "Adds delay.";
+        return "Adds delay, causing the weapon to fire twice (deals more damage).";
     }
 
     public override string Info()
@@ -44,6 +43,10 @@ public class DelayModule : PrimaryModule, IWeaponModule
     {
         return new IWeaponModule.WeaponStats()
         {
+            Stats = new()
+            {
+                { "damage", damage },
+            },
             SoundType = new()
             {
                 { Common.SoundType.Izki, izki },

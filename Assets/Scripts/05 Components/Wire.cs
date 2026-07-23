@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class Wire : MonoBehaviour, ITooltipInfo
+public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
 {
     public enum Type
     {
@@ -59,7 +59,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
             {
                 // Debug.Log($"parent is output jack: {transform.parent.transform.parent.gameObject}");
                 previousModuleJack = transform.parent.gameObject;
-                previousModule = previousModuleJack.transform.parent.gameObject;
+                previousModule = previousModuleJack.GetComponent<Jack>().Parent();
 
                 if (previousModule.TryGetComponent(out Subpatch subpatch))
                 {
@@ -70,7 +70,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
             {
                 // Debug.Log($"parent is input jack: {transform.parent.transform.parent.gameObject}");
                 nextModuleJack = transform.parent.gameObject;
-                nextModule = nextModuleJack.transform.parent.gameObject;
+                nextModule = nextModuleJack.GetComponent<Jack>().Parent();
             }
             
             
@@ -92,16 +92,15 @@ public class Wire : MonoBehaviour, ITooltipInfo
     // Update is called once per frame
     void Update()
     {
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
         #region Grabbing
         bool overWire = false;
         if (isConnected)
         {
-            foreach (var result in Global.Instance.raycastHits)
+            if (UIManager.Instance.RaycastResultsContains(gameObject))
             {
-                if (result.collider.gameObject == gameObject)
-                {
-                    overWire = true;
-                }
+                overWire = true;
             }
         }
         
@@ -111,20 +110,20 @@ public class Wire : MonoBehaviour, ITooltipInfo
             if (Input.GetMouseButtonDown(0))
             {
                 grabbed = true;
-                grabStartPos = Global.Instance.mousePos;
+                grabStartPos = mousePos;
                 grabbedIndex = 1;
                 Vector3[] positions = new Vector3[points];
                 lineRenderer.GetPositions(positions);
                 for (var i = 0; i < positions.Length; i++)
                 {
-                    if (((Vector2)positions[i] - (Vector2)Global.Instance.mousePos).magnitude <
-                        ((Vector2)positions[grabbedIndex] - (Vector2)Global.Instance.mousePos).magnitude)
+                    if (((Vector2)positions[i] - (Vector2)mousePos).magnitude <
+                        ((Vector2)positions[grabbedIndex] - (Vector2)mousePos).magnitude)
                     {
                         grabbedIndex = i;
                     }
                 }
 
-                if (Global.Instance.RaycastResultsContains(previousModuleJack))
+                if (UIManager.Instance.RaycastResultsContains(previousModuleJack))
                 {
                     grabbedIndex = 0;
                     grabbed = false;
@@ -134,7 +133,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
                     isConnected = false;
                     EventBus.Instance.updateJackValidity.Invoke(this);
                 }
-                else if (Global.Instance.RaycastResultsContains(nextModuleJack))
+                else if (UIManager.Instance.RaycastResultsContains(nextModuleJack))
                 {
                     grabbedIndex = points - 1;
                     grabbed = false;
@@ -180,7 +179,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
         else if (isConnected && Input.GetMouseButtonDown(0))
         {
             // picking up start of wire
-            if (Global.Instance.RaycastResultsContains(previousModuleJack))
+            if (UIManager.Instance.RaycastResultsContains(previousModuleJack))
             {
                 grabbedIndex = 0;
                 grabbed = false;
@@ -191,7 +190,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
                 EventBus.Instance.updateJackValidity.Invoke(this);
             }
             // picking up end of wire
-            else if (Global.Instance.RaycastResultsContains(nextModuleJack))
+            else if (UIManager.Instance.RaycastResultsContains(nextModuleJack))
             {
                 grabbedIndex = points - 1;
                 grabbed = false;
@@ -213,7 +212,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
         if (grabbed)
         {
             Vector3[] positions = new Vector3[points];
-            var lerpPos = Vector2.Lerp(positions[grabbedIndex], Global.Instance.mousePos, 1f);
+            var lerpPos = Vector2.Lerp(positions[grabbedIndex], mousePos, 1f);
             var newPos = new Vector3(lerpPos.x, lerpPos.y, positions[grabbedIndex].z);
             lineRenderer.SetPosition(grabbedIndex, newPos);
 
@@ -223,7 +222,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
                 EventBus.Instance.updateJackValidity.Invoke(this);
             }
 
-            if ((grabStartPos - Global.Instance.mousePos).magnitude > grabBreakDistance)
+            if ((grabStartPos - mousePos).magnitude > grabBreakDistance)
             {
                 DeleteSelf();
             }
@@ -235,7 +234,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
         if (Input.GetMouseButtonUp(0) && !isConnected)
         {
             // Look for jacks under the mouse
-            RaycastHit2D hit = Physics2D.Raycast(Global.Instance.mousePos,Vector2.zero,Mathf.Infinity, LayerMask.GetMask("Jacks"));
+            RaycastHit2D hit = Physics2D.Raycast(mousePos,Vector2.zero,Mathf.Infinity, LayerMask.GetMask("Jacks"));
             if (hit && !dying)
             {
                 if (!hit.collider.gameObject.GetComponent<Jack>().valid)
@@ -244,7 +243,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
                 }
                 else
                 {
-                    var parentGameObject = hit.collider.transform.parent.gameObject;
+                    var parentGameObject = hit.collider.gameObject.GetComponent<Jack>().Parent();
                     if (parentGameObject.TryGetComponent(out Module module))
                     {
                         if (hit.collider.TryGetComponent(out InputJack inputJack))
@@ -317,28 +316,31 @@ public class Wire : MonoBehaviour, ITooltipInfo
             lrMov.x += 1;
         }
         lineRenderer.material.mainTextureOffset = lrMov;
-        lineRenderer.colorGradient = ColorGradient(color, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0, grabbed || overWire);
+        lineRenderer.colorGradient = ColorGradient(color, grabbed ? (grabStartPos -  mousePos).magnitude / grabBreakDistance : 0, grabbed || overWire);
         #endregion
     }
 
     private void FixedUpdate()
     {
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+        
         if (!invisible)
         {
             if (!dying)
             {
                 if (isConnected || isConnected)
                 {
-                    UpdatePoints(Vector2.down * .1f, previousModuleJack.transform.position, nextModuleJack.transform.position, false, false, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0);
+                    UpdatePoints(Vector2.down * .1f, previousModuleJack.GetComponent<Collider2D>().bounds.center, nextModuleJack.GetComponent<Collider2D>().bounds.center, false, false, grabbed ? (grabStartPos -  mousePos).magnitude / grabBreakDistance : 0);
                 }
                 else if (nextModule == null)
                 {
                     
-                    UpdatePoints(Vector2.down * .1f, previousModuleJack.transform.position, Global.Instance.mousePos, false, true, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0);
+                    UpdatePoints(Vector2.down * .1f, previousModuleJack.GetComponent<Collider2D>().bounds.center, mousePos, false, true, grabbed ? (grabStartPos -  mousePos).magnitude / grabBreakDistance : 0);
                 }
                 else if (previousModule == null)
                 {
-                    UpdatePoints(Vector2.down * .1f, Global.Instance.mousePos, nextModuleJack.transform.position, true, false, grabbed ? (grabStartPos -  Global.Instance.mousePos).magnitude / grabBreakDistance : 0);
+                    UpdatePoints(Vector2.down * .1f, mousePos, nextModuleJack.GetComponent<Collider2D>().bounds.center, true, false, grabbed ? (grabStartPos -  mousePos).magnitude / grabBreakDistance : 0);
                 }
                 else
                 {
@@ -351,6 +353,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
 
     private void UpdatePoints(Vector3 force, Vector3 startPos, Vector3 endPos, bool draggingStart, bool draggingEnd, float stress)
     {
+        var zOffset = 1f;
         force *= 1 - stress;
         // calculate points
         Vector3[] targetPositions = new Vector3[points];
@@ -358,27 +361,18 @@ public class Wire : MonoBehaviour, ITooltipInfo
         {
             if (i == 0)
             {
-                startPos.z -= .2f;
+                startPos.z -= zOffset;
                 targetPositions[0] = startPos;
                 
                 // Aim assist
                 if (draggingStart)
                 {
-                    var overJack = false;
-                    GameObject jack = null;
-                    foreach (var result in Global.Instance.raycastHits)
-                    {
-                        if (result.collider.gameObject.CompareTag("OutputJack"))
-                        {
-                            overJack = true;
-                            jack = result.collider.gameObject;
-                        }
-                    }
+                    bool overJack = UIManager.Instance.RaycastResultsContains(x => x.CompareTag("OutputJack"), out var jack);
 
                     if (overJack)
                     {
                         var jackPos = jack.transform.position;
-                        jackPos.z -= .2f;
+                        jackPos.z -= zOffset;
                         targetPositions[i] = jackPos;
                     }
                 }
@@ -386,26 +380,23 @@ public class Wire : MonoBehaviour, ITooltipInfo
             else if (i == points - 1)
             {
                 targetPositions[i] = endPos;
-                targetPositions[i].z -= 1f;
+                targetPositions[i].z -= zOffset;
                 
                 // Aim assist
                 if (draggingEnd)
                 {
                     var overJack = false;
                     GameObject jack = null;
-                    foreach (var result in Global.Instance.raycastHits)
+                    if (UIManager.Instance.RaycastResultsContains(x => x.CompareTag("InputJack"), out var match))
                     {
-                        if (result.collider.gameObject.CompareTag("InputJack"))
-                        {
-                            overJack = true;
-                            jack = result.collider.gameObject;
-                        }
+                        overJack = true;
+                        jack = match;
                     }
 
                     if (overJack)
                     {
                         var jackPos = jack.transform.position;
-                        jackPos.z -= .2f;
+                        jackPos.z -= zOffset;
                         targetPositions[i] = jackPos;
                     }
                 }
@@ -477,7 +468,7 @@ public class Wire : MonoBehaviour, ITooltipInfo
         }
         EventBus.Instance.updateJackValidity.Invoke(this);
         Vector3[] positions = new Vector3[points];
-        Vector2 deletePos = Global.Instance.mousePos;
+        Vector2 deletePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         while ((Vector2)positions[0] != deletePos || (Vector2)positions[^1] != deletePos)
         {
             lineRenderer.GetPositions(positions);
@@ -672,5 +663,10 @@ public class Wire : MonoBehaviour, ITooltipInfo
         }
 
         return info;
+    }
+
+    public void Select()
+    {
+        
     }
 }

@@ -1,12 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class SwitchComponent : MonoBehaviour, ITooltipInfo
+public class SwitchComponent : MonoBehaviour, ITooltipInfo, ISelectable
 {
     public Sprite upSprite;
     public Sprite downSprite;
 
     public bool on;
-    private SpriteRenderer sr;
+    private SpriteRenderer image;
 
     public string Description()
     {
@@ -21,33 +22,38 @@ public class SwitchComponent : MonoBehaviour, ITooltipInfo
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        sr = GetComponent<SpriteRenderer>();
+        image = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Global.Instance.TopRaycastResult() == gameObject)
+        if (UIManager.Instance.TopRaycastResult() == gameObject)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 on = !on;
                 if (on)
                 {
-                    sr.sprite = upSprite;
+                    image.sprite = upSprite;
                 }
                 else
                 {
-                    sr.sprite = downSprite;
+                    image.sprite = downSprite;
                 }
             }
 
-            sr.color = new Color(.8f,.8f,.8f);
+            image.color = new Color(.8f,.8f,.8f);
         }
         else
         {
-            sr.color = Color.white;
+            image.color = Color.white;
         }
+        
+    }
+
+    public void Select()
+    {
         
     }
 }

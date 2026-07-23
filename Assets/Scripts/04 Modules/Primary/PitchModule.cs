@@ -4,6 +4,9 @@ using UnityEngine;
 public class PitchModule : PrimaryModule, IWeaponModule
 {
     public float pitch;
+    public float seekReactor;
+    public float seekWeapon;
+    public float seekAux;
 
     public override string Description()
     {
@@ -48,6 +51,12 @@ public class PitchModule : PrimaryModule, IWeaponModule
                 { Common.SoundType.Aubo, aubo },
                 { Common.SoundType.Dwth, dwth },
                 { Common.SoundType.Hysh, hysh }
+            },
+            Effect = new()
+            {
+                { Common.Effect.SeekReactor, seekReactor },
+                { Common.Effect.SeekWeapon , seekWeapon },
+                { Common.Effect.SeekAux, seekAux }
             }
         };
     }

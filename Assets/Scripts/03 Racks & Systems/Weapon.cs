@@ -18,7 +18,6 @@ public class Weapon : ModuleRack, ITooltipInfo
     public float warmup = 0;
     public float stunTimer;
     public bool firing;
-    public bool enemyWeapon; // set true if Weapon belongs to an enemy ship
     [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.CombatStats);
     [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new();
     public bool overheated;
@@ -38,7 +37,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         base.Start();
         // Enemy weapons do not have actual modules behind them (for now)
         // so we just want them to attempt to fire as often as possible
-        if (enemyWeapon)
+        if (enemySystem)
         {
             switch (Random.Range(0, 2))
             {
@@ -53,19 +52,16 @@ public class Weapon : ModuleRack, ITooltipInfo
                     break;
             }
         }
-        else
-        {
-            heatOverlay.rectTransform.sizeDelta = GetComponent<ModuleRack>().dimensions + Vector2Int.one;
-        }
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         // are we either testing or in combat? If yes to either, we're firing
-        firing = (!enemyWeapon && testFireSwitch.on) || CombatManager.Instance.state == CombatManager.State.inCombat;
+        firing = (!enemySystem && testFireSwitch.on) || CombatManager.Instance.state == CombatManager.State.inCombat;
         // if we're facing right (only true if player ship) and the patch is not complete, turn it off
-        if (!enemyWeapon && !CompletePatch())
+        if (!enemySystem && !CompletePatch())
         {
             // Debug.Log("Is patch complete? " + CompletePatch());
             firing = false;
@@ -75,7 +71,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         // {
         //     if (warmup < 1)
         //     {
-        //         if (enemyWeapon)
+        //         if (enemySystem)
         //         {
         //             warmup += .2f * Time.deltaTime;
         //         }
@@ -90,12 +86,12 @@ public class Weapon : ModuleRack, ITooltipInfo
         //     }
         // }
         
-        if (!enemyWeapon && firing && stunTimer <= 0)
+        if (!enemySystem && firing && stunTimer <= 0)
         {
             heat = Mathf.Max(0, heat - HeatDissipation());
             heatOverlay.fillAmount = heat;
         }
-        else if (enemyWeapon && firing && stunTimer <= 0)
+        else if (enemySystem && firing && stunTimer <= 0)
         {
             heat = Mathf.Max(0, heat - HeatDissipation());
         }
@@ -176,7 +172,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         //     soundTypeValue = hysh;
         // }
 
-        // var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
+        // var myReactor = enemySystem ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // dict["damage"] *= (1 + .5f * myReactor.strength);
 
         return dict;
@@ -184,12 +180,26 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public Dictionary<Common.Effect, float> WeaponEffects()
     {
-        return new Dictionary<Common.Effect, float>();
+        var dict = new Dictionary<Common.Effect, float>();
+        foreach (var module in ActivePatch())
+        {
+            if (module.TryGetComponent(out IWeaponModule weaponModule))
+            {
+                if (weaponModule.MyWeaponStats().Effect == null) continue;
+                
+                foreach (var kvp in weaponModule.MyWeaponStats().Effect)
+                {
+                    dict.Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+
+        return dict;
     }
 
     public Dictionary<string, float> NoteInfo()
     {
-        if (enemyWeapon)
+        if (enemySystem)
         {
             var enemydict = new Dictionary<string, float>(Common.NoteInfo);
             var myPitch = Notes.GetPitch(
@@ -219,7 +229,7 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     private Dictionary<Common.SoundType, float> EnergyCost()
     {
-        if (enemyWeapon)
+        if (enemySystem)
         {
             return Common.RandomEnergyCost();
         }
@@ -249,12 +259,12 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public void Fire()
     {
-        // if (!enemyWeapon)
+        // if (!enemySystem)
         // {
         //     Debug.Log("yello");
         // }
         
-        var myReactor = enemyWeapon ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
+        var myReactor = enemySystem ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
         // Debug.Log(name);
         if (health <= 0)
         {
@@ -267,7 +277,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
-        if (!enemyWeapon && !CompletePatch())
+        if (!enemySystem && !CompletePatch())
         {
             // Debug.Log($"{name} has an incomplete patch.");
             return;
@@ -293,16 +303,40 @@ public class Weapon : ModuleRack, ITooltipInfo
         // calculate hit/miss + damage
         if (CombatManager.Instance.state == CombatManager.State.inCombat)
         {
-            if (enemyWeapon)
+            if (enemySystem)
             {
-                ShipManager.Instance.DamagePlayer(WeaponStats(), WeaponEffects());
+                ShipManager.Instance.DamagePlayer(WeaponStats(), SoundType(), WeaponEffects());
             }
             else
             {
-                ShipManager.Instance.DamageEnemy(WeaponStats(), WeaponEffects());
+                ShipManager.Instance.DamageEnemy(WeaponStats(), SoundType(), WeaponEffects());
             }
         }
         
         EventBus.Instance.weaponFired.Invoke(this);
+    }
+
+    public override bool CompletePatch()
+    {
+        return base.CompletePatch() &&
+               ActivePatch().TrueForAll(x => x is IWeaponModule or SecondaryModule or TriggerModule) &&
+               ActivePatch().Exists(x => x is ClockModule) &&
+               ActivePatch().Exists(x => x is SourceModule);
+    }
+    
+    public Dictionary<Common.SoundType, float> SoundType()
+    {
+        var dict = new Dictionary<Common.SoundType, float>(Common.EmptySoundType);
+        foreach (var mod in ActivePatch())
+        {
+            if (mod is IWeaponModule weaponModule)
+            {
+                foreach (var kvp in weaponModule.MyWeaponStats().SoundType)
+                {
+                    dict[kvp.Key] += kvp.Value;
+                }
+            }
+        }
+        return dict;
     }
 }
