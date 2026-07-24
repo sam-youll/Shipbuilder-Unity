@@ -254,7 +254,7 @@ public class InventoryManager : MonoBehaviour
         ArrangeModulesOfType(triggerModules, triggerPos);
         if (triggerModules.Count > 0)
         {
-            primaryModulesLabel.transform.position = new Vector3(-9,
+            primaryModulesLabel.transform.position = new Vector3(triggerModulesLabel.transform.position.x,
                 triggerModules[^1].transform.position.y - 1 -
                 triggerModules[^1].GetComponent<Module>().dimensions.y * .5f, -3);
         }
@@ -263,7 +263,7 @@ public class InventoryManager : MonoBehaviour
         ArrangeModulesOfType(primaryModules, primaryPos);
         if (primaryModules.Count > 0)
         {
-            secondaryModulesLabel.transform.position = new Vector3(-9,
+            secondaryModulesLabel.transform.position = new Vector3(primaryModulesLabel.transform.position.x,
                 primaryModules[^1].transform.position.y - 1 -
                 primaryModules[^1].GetComponent<Module>().dimensions.y * .5f, -3);
         }
@@ -287,14 +287,14 @@ public class InventoryManager : MonoBehaviour
         Physics2D.SyncTransforms();
         
         // width of allowed space in inventory before moving down a row
-        var width = 10;
+        var width = 16;
 
         for (var i = 0; i < modulesInInventory.Count; i++)
         {
             // initial setup & placement of module
             var module = modulesInInventory[i];
             module.SetActive(true);
-            var startPos = new Vector3(-5, -1 - module.GetComponent<Module>().dimensions.y + 1, -.5f);
+            var startPos = new Vector3(module.GetComponent<Module>().dimensions.x + 1f, -1 - module.GetComponent<Module>().dimensions.y, -1.1f);
             module.transform.localPosition = startPos;
             
             // Debug.Log($"===== CHECKING {module.name} ======");
@@ -308,16 +308,18 @@ public class InventoryManager : MonoBehaviour
                 var otherModule = modulesInInventory[j];
                 var myBounds = module.GetComponent<CompositeCollider2D>().bounds;
                 var otherBounds = otherModule.GetComponent<CompositeCollider2D>().bounds;
-                otherBounds.size += Vector3.one * .5f;
+                // otherBounds.size += Vector3.one * .5f;
                 var loops = 0;
                 while (myBounds.Intersects(otherBounds))
                 {
                     // Debug.Log($"{module.name} is overlapping {otherModule.name}");
                     var newPos = module.transform.localPosition;
                     newPos.x += 1f;
-                    if (newPos.x > width * .5f - myBounds.size.x + 1)
+                    Debug.Log(newPos);
+                    if (newPos.x > width)
                     {
-                        newPos.x = -width * .5f;
+                        Debug.Log($"x pos {newPos.x} is greater than width {width}. moving down");
+                        newPos.x = module.GetComponent<Module>().dimensions.x + 1f;
                         newPos.y -= 1;
                     }
                     module.transform.localPosition = newPos;
@@ -406,6 +408,7 @@ public class InventoryManager : MonoBehaviour
         moduleMov.inventoryEnter.Invoke();
         moduleMov.lastParent = transform.parent;
         SetToRenderInsideMask(moduleObj, true);
+        module.transform.localScale = Vector3.one * 1.949281f;
         ArrangeModules();
     }
 

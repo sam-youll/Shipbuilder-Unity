@@ -1041,9 +1041,65 @@ CompositeCollider2D:
   m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths: []
+  m_ColliderPaths:
+  - m_Collider: {fileID: 2343761056031795124}
+    m_ColliderPaths:
+    - - X: 4500000
+        Y: -500000
+      - X: -4500000
+        Y: -500000
+      - X: -4500000
+        Y: -9500000
+      - X: 4500000
+        Y: -9500000
+  - m_Collider: {fileID: 4354674475029455300}
+    m_ColliderPaths:
+    - - X: 14500000
+        Y: -500000
+      - X: 5500000
+        Y: -500000
+      - X: 5500000
+        Y: -9500000
+      - X: 14500000
+        Y: -9500000
+  - m_Collider: {fileID: 6716662628339065962}
+    m_ColliderPaths:
+    - - X: 4500000
+        Y: 9500000
+      - X: -4500000
+        Y: 9500000
+      - X: -4500000
+        Y: 500000
+      - X: 4500000
+        Y: 500000
+  - m_Collider: {fileID: 7526654712625727738}
+    m_ColliderPaths:
+    - - X: -5500000
+        Y: -500000
+      - X: -14500000
+        Y: -500000
+      - X: -14500000
+        Y: -9500000
+      - X: -5500000
+        Y: -9500000
   m_CompositePaths:
-    m_Paths: []
+    m_Paths:
+    - - {x: 0.4499707, y: 0.05}
+      - {x: 0.4499707, y: 0.95}
+      - {x: -0.45000002, y: 0.9499707}
+      - {x: -0.4499707, y: 0.05}
+    - - {x: 1.4499707, y: -0.95}
+      - {x: 1.4499707, y: -0.05}
+      - {x: 0.55, y: -0.0500293}
+      - {x: 0.5500293, y: -0.95}
+    - - {x: 0.4499707, y: -0.95}
+      - {x: 0.4499707, y: -0.05}
+      - {x: -0.45000002, y: -0.0500293}
+      - {x: -0.4499707, y: -0.95}
+    - - {x: -0.5500293, y: -0.95}
+      - {x: -0.5500293, y: -0.05}
+      - {x: -1.45, y: -0.0500293}
+      - {x: -1.4499707, y: -0.95}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -2152,13 +2208,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &3316485362567849640
-RectTransform:
+--- !u!4 &3316485362567849640
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8079908051738374488}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -2187,11 +2244,6 @@ RectTransform:
   - {fileID: 4484972499282484934}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 3, y: 2}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8993422503245942003
 MonoBehaviour:
   m_ObjectHideFlags: 0

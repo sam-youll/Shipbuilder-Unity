@@ -102,6 +102,7 @@ public class RackMovement : MonoBehaviour
             isMouseDragging = true;
             lastParent = transform.parent;
             transform.SetParent(UIManager.Instance.shipCanvas.transform);
+            transform.localScale = Vector3.one;
             bodyClick.Invoke();
             dragStartPos = transform.position;
         }
@@ -146,8 +147,8 @@ public class RackMovement : MonoBehaviour
         
         var snappedPos = new Vector2
         {
-            x = Mathf.Floor(mousePos.x) + .5f,
-            y = Mathf.Floor(mousePos.y) + .5f
+            x = Mathf.Round(mousePos.x),
+            y = Mathf.Round(mousePos.y)
         };
         if (oddSizeX)
         {
