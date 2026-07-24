@@ -249,20 +249,30 @@ public class UIManager : MonoBehaviour
 
     private void HandleTooltip()
     {
-        if (HoverList().Exists(x => x.gameObject.TryGetComponent(out Tooltip _)))
+        GameObject target = null;
+        if (cursor.heldObject != null && cursor.heldObject.TryGetComponent(out ITooltipInfo _))
         {
-            Debug.Log("Hovering over something tooltippable");
+            target = cursor.heldObject;
+        }
+        else
+        {
+            target = HoverList().Find(x => x.gameObject.TryGetComponent(out ITooltipInfo _));
+        }
+        
+        if (target != null)
+        {
             tooltipTimer -= Time.deltaTime;
+            Debug.Log("tooltipTimer: " + tooltipTimer);
         }
         else
         {
             tooltipTimer = .5f;
         }
-
+        
         if (tooltipTimer <= 0)
         {
             tooltip.gameObject.SetActive(true);
-            tooltip.UpdateTooltip(TopRaycastResult().gameObject);
+            tooltip.UpdateTooltip(target);
         }
         else
         {
@@ -302,7 +312,7 @@ public class UIManager : MonoBehaviour
         }
 
         if (Input.mouseScrollDelta.y != 0 &&
-            InventoryManager.Instance.inventoryOverlay.activeSelf == false) // TODO: make this a raycast check so it only works when you're hovering over the inventory overlay
+            AmIOnlyHittingShipCanvas()) 
         {
             cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1.4375f, 16.4375f);
         }
@@ -506,6 +516,34 @@ public class UIManager : MonoBehaviour
     private bool DidIHitAnythingClickable()
     {
         return CanvasRaycast(out _) || HoverList().Count > 0;
+    }
+
+    private bool AmIOnlyHittingShipCanvas()
+    {
+        var results = new List<RaycastResult>();
+        
+        var pointerEvent = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        
+        var canvasList = new List<Canvas>
+        {
+            screenCanvas,
+            overlayCanvas
+        };
+        
+        foreach (var canvas in canvasList)
+        {
+            var canvasResults = new List<RaycastResult>();
+            canvas.GetComponent<GraphicRaycaster>().Raycast(pointerEvent, canvasResults);
+            foreach (var result in canvasResults)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
     
     #endregion

@@ -77,6 +77,7 @@ public class Tooltip : MonoBehaviour
                         }
 
                         newEnergy.GetComponent<Image>().sprite = Resources.Load<Sprite>(energyIconFilePath);
+                        newEnergy.transform.localScale = Vector3.one;
                     }
                 }
             }
@@ -90,31 +91,33 @@ public class Tooltip : MonoBehaviour
             energyCost.transform.parent.gameObject.SetActive(false);
         }
 
-        layoutElement.enabled = descriptionLabel.textBounds.size.x >= maxWidth || infoLabel.textBounds.size.x >= maxWidth;
-        GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.y + 25f);
+        // layoutElement.enabled = descriptionLabel.textBounds.size.x >= maxWidth || infoLabel.textBounds.size.x >= maxWidth;
+        GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta.y + .25f);
 
-        var coll = target.GetComponent<Collider2D>();
         
-        // position tooltip just outside (top right) of target's collider
-        var pos = coll.bounds.center;
-        pos.x += .5f * coll.bounds.size.x;
-        pos.x -= 1f * GetComponent<RectTransform>().rect.x - .5f;
-        pos.y += .5f * coll.bounds.size.y + .39f;
-        pos.y += 1f * GetComponent<RectTransform>().rect.y - .5f;
-        pos.z = target.transform.position.z;
-        pos.z -= 1;
+        // var coll = target.GetComponent<Collider2D>();
+        //
+        // // position tooltip just outside (top right) of target's collider
+        // var pos = coll.bounds.center;
+        // pos.x += .5f * coll.bounds.size.x;
+        // pos.x -= 1f * GetComponent<RectTransform>().rect.x - .5f;
+        // pos.y += .5f * coll.bounds.size.y + .39f;
+        // pos.y += 1f * GetComponent<RectTransform>().rect.y - .5f;
+        // pos.z = target.transform.position.z;
+        // pos.z -= 1;
         // make sure collider is visible (within bounds of camera)
-        var cam = Global.Instance.cam;
-        var height = cam.orthographicSize;
-        var width = cam.aspect * height;
-        pos.x = Mathf.Clamp(pos.x, -width - 1f * GetComponent<RectTransform>().rect.x + .25f, width + 1f * GetComponent<RectTransform>().rect.x - .25f);
-        pos.y = Mathf.Clamp(pos.y, -height - 1f * GetComponent<RectTransform>().rect.y + .25f, height + 1f * GetComponent<RectTransform>().rect.y - .25f);
-        transform.position = pos;
-        
+        // var cam = Global.Instance.cam;
+        // var height = cam.orthographicSize;
+        // var width = cam.aspect * height;
+        // pos.x = Mathf.Clamp(pos.x, -width - 1f * GetComponent<RectTransform>().rect.x + .25f, width + 1f * GetComponent<RectTransform>().rect.x - .25f);
+        // pos.y = Mathf.Clamp(pos.y, -height - 1f * GetComponent<RectTransform>().rect.y + .25f, height + 1f * GetComponent<RectTransform>().rect.y - .25f);
+        // pos = Camera.main.WorldToScreenPoint(pos);
+        transform.position = UIManager.Instance.cursor.transform.position + 10 * Vector3.right;
+
         // Debug.Log($"Coll pos = {coll.transform.position}. Coll size = {coll.bounds.size}. SR size = {sr.size}. Final pos = {pos}.");
-        
+
         // TODO: check to make sure tooltip doesn't go off screen
-        
+
     }
     
     // void DrawBounds(Bounds b, Color color)

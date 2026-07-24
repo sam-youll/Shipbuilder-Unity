@@ -1348,4 +1348,18 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     {
         
     }
+
+    public void SetRenderers(SpriteMaskInteraction smi, int order)
+    {
+        foreach (var sr in gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            sr.sortingOrder = order;
+            sr.maskInteraction = smi;
+        }
+
+        foreach (var tmp in gameObject.GetComponentsInChildren<TextMeshPro>())
+        {
+            tmp.sortingOrder = order;
+        }
+    }
 }

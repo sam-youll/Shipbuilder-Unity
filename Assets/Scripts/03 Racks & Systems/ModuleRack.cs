@@ -374,7 +374,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     {
         var pos = transform.position + .5f * Vector3.right;
         var size = GetComponent<RectTransform>().sizeDelta;
-        size += new Vector2(4f, 3f);
+        size += new Vector2(2f, 2f);
         var hits = Physics2D.OverlapBoxAll(pos,  size, 0);
         contacts = new();
         foreach (var hit in hits)

@@ -23,7 +23,6 @@ public class InventoryManager : MonoBehaviour
     }
 
     public float scrap;
-    [FormerlySerializedAs("creditsLabel")] public TextMeshPro scrapLabel;
 
     public GameObject inventoryOverlay;
 
@@ -183,12 +182,12 @@ public class InventoryManager : MonoBehaviour
 
     private void CreateInventoryMenu()
     {
-        inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryOverlay"), transform);
-        inventoryOverlay.transform.position = new Vector3(-9, 0, -2.5f);
-        moduleContainer = inventoryOverlay.transform.Find("Sprite Mask/Module Container").gameObject;
-        triggerModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Trigger Modules").gameObject;
-        primaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Primary Modules").gameObject;
-        secondaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Secondary Modules").gameObject;
+        // inventoryOverlay = Instantiate(Resources.Load<GameObject>("Prefabs/InventoryOverlay"), transform);
+        // inventoryOverlay.transform.position = new Vector3(-9, 0, -2.5f);
+        // moduleContainer = inventoryOverlay.transform.Find("Sprite Mask/Module Container").gameObject;
+        // triggerModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Trigger Modules").gameObject;
+        // primaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Primary Modules").gameObject;
+        // secondaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Secondary Modules").gameObject;
 
         AddStartingModules();
         
@@ -382,6 +381,7 @@ public class InventoryManager : MonoBehaviour
         // Debug.Log("Sending to inventory.");
         var module = moduleObj.GetComponent<Module>();
         var moduleMov = moduleObj.GetComponent<RackMovement>();
+        module.SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         
         if (moduleMov.isInInventory) return;
         

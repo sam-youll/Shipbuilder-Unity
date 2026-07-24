@@ -93,6 +93,7 @@ public class RackMovement : MonoBehaviour
             {
                 inventoryExit.Invoke();
                 InventoryManager.Instance.RemoveModule(gameObject);
+                GetComponent<Module>().SetRenderers(SpriteMaskInteraction.None, 0);
             }
             AudioManager.Instance.PickUpModuleSFX();
             dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
