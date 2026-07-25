@@ -267,7 +267,7 @@ public class InventoryManager : MonoBehaviour
         {
             primaryModulesLabel.transform.position = new Vector3(triggerModulesLabel.transform.position.x,
                 triggerModules[^1].transform.position.y - 1 -
-                triggerModules[^1].GetComponent<Module>().dimensions.y * .5f, -3);
+                triggerModules[^1].GetComponent<Module>().dimensions.y * .5f, 0);
         }
         var primaryPos = primaryModulesLabel.transform.position;
         primaryPos.x -= primaryModulesLabel.GetComponent<RectTransform>().rect.width;
@@ -276,11 +276,20 @@ public class InventoryManager : MonoBehaviour
         {
             secondaryModulesLabel.transform.position = new Vector3(primaryModulesLabel.transform.position.x,
                 primaryModules[^1].transform.position.y - 1 -
-                primaryModules[^1].GetComponent<Module>().dimensions.y * .5f, -3);
+                primaryModules[^1].GetComponent<Module>().dimensions.y * .5f, 0);
         }
         var secondaryPos = secondaryModulesLabel.transform.position;
         secondaryPos.x -= secondaryModulesLabel.GetComponent<RectTransform>().rect.width;
         ArrangeModulesOfType(secondaryModules, secondaryPos);
+        
+        
+        var pPos = primaryModulesLabel.transform.localPosition;
+        pPos.z = 0;
+        primaryModulesLabel.transform.localPosition = pPos;
+        
+        var sPos = secondaryModulesLabel.transform.localPosition;
+        sPos.z = 0;
+        secondaryModulesLabel.transform.localPosition = sPos;
     }
 
     public void ArrangeModulesOfType(List<GameObject> modulesInInventory, Vector3 headerPos)
