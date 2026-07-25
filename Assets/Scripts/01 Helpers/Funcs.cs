@@ -187,7 +187,8 @@ public static class Funcs
                 }
             }
             
-            Debug.Log("Adding currentCell to closedList");
+            Debug.Log($"Adding currentCell {currentCell.pos} to closedList");
+            Debug.Log($"closedList dimensions are {closedList.GetLength(0)} x {closedList.GetLength(1)}");
             closedList[currentCell.pos.x, currentCell.pos.y] = currentCell;
         }
 

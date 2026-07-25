@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534046391509670274}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -0.2}
+  m_LocalPosition: {x: 0, y: 0, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.9319172, y: 0}
+  m_AnchoredPosition: {x: -0.9319172, y: 0.21875}
   m_SizeDelta: {x: 1, y: 0.75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &91203804611089283
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_text: 'env
 
 
-    pluck'
+    staccato'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e4367bc2149d96c45a7f4a0fd91e9116, type: 2}
   m_sharedMaterial: {fileID: 4944029092044681742, guid: e4367bc2149d96c45a7f4a0fd91e9116, type: 2}
@@ -799,7 +799,7 @@ Transform:
   m_GameObject: {fileID: 3706146893704962861}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.8805829, y: 2.0526452, z: -0.0071821758}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1444,9 +1444,51 @@ CompositeCollider2D:
   m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths: []
+  m_ColliderPaths:
+  - m_Collider: {fileID: 103596722649670208}
+    m_ColliderPaths:
+    - - X: -5499999
+        Y: 4500000
+      - X: -14499998
+        Y: 4500000
+      - X: -14499998
+        Y: -4500000
+      - X: -5499999
+        Y: -4500000
+  - m_Collider: {fileID: 3744983099926898208}
+    m_ColliderPaths:
+    - - X: -5499999
+        Y: 14500000
+      - X: -14499998
+        Y: 14500000
+      - X: -14499998
+        Y: 5500000
+      - X: -5499999
+        Y: 5500000
+  - m_Collider: {fileID: 8003116767600439301}
+    m_ColliderPaths:
+    - - X: -5499999
+        Y: -5500000
+      - X: -14499998
+        Y: -5500000
+      - X: -14499998
+        Y: -14500000
+      - X: -5499999
+        Y: -14500000
   m_CompositePaths:
-    m_Paths: []
+    m_Paths:
+    - - {x: -0.5500292, y: 0.55}
+      - {x: -0.5500292, y: 1.45}
+      - {x: -1.4499998, y: 1.4499707}
+      - {x: -1.4499705, y: 0.55}
+    - - {x: -0.5500292, y: -0.45000002}
+      - {x: -0.5500292, y: 0.45000002}
+      - {x: -1.4499998, y: 0.4499707}
+      - {x: -1.4499705, y: -0.45000002}
+    - - {x: -0.5500292, y: -1.45}
+      - {x: -0.5500292, y: -0.55}
+      - {x: -1.4499998, y: -0.5500293}
+      - {x: -1.4499705, y: -1.45}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0

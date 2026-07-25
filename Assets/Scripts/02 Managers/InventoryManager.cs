@@ -59,17 +59,18 @@ public class InventoryManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Colosseum"))
         {
-            inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
-
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (transform.GetChild(i).TryGetComponent(out Module module))
-                {
-                    transform.GetChild(i).gameObject.SetActive(inventoryOverlay.activeSelf);
-                }
-            }
+            // inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
+            ToggleActive();
             
-            ArrangeModules();
+            // for (int i = 0; i < transform.childCount; i++)
+            // {
+            //     if (transform.GetChild(i).TryGetComponent(out Module module))
+            //     {
+            //         transform.GetChild(i).gameObject.SetActive(inventoryOverlay.activeSelf);
+            //     }
+            // }
+            
+            // ArrangeModules();
         }
         
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -121,6 +122,7 @@ public class InventoryManager : MonoBehaviour
             triggerModules[i].SetActive(gameObject.activeSelf);
             triggerModules[i].transform.SetParent(triggerModulesLabel.transform);
             triggerModules[i].name = triggerModules[i].name.Replace("(Clone)", "");
+            triggerModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
         primaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Primary Modules").ToList();
         for (var i = 0; i < primaryModules.Count; i++)
@@ -129,6 +131,7 @@ public class InventoryManager : MonoBehaviour
             primaryModules[i].SetActive(gameObject.activeSelf);
             primaryModules[i].transform.SetParent(primaryModulesLabel.transform);
             primaryModules[i].name = primaryModules[i].name.Replace("(Clone)", "");
+            primaryModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
         secondaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Secondary Modules").ToList();
         for (var i = 0; i < secondaryModules.Count; i++)
@@ -137,8 +140,9 @@ public class InventoryManager : MonoBehaviour
             secondaryModules[i].SetActive(gameObject.activeSelf);
             secondaryModules[i].transform.SetParent(secondaryModulesLabel.transform);
             secondaryModules[i].name = secondaryModules[i].name.Replace("(Clone)", "");
+            secondaryModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
-        
+
         foreach (var module in triggerModules)
         {
             SetToRenderInsideMask(module, true);
@@ -151,6 +155,8 @@ public class InventoryManager : MonoBehaviour
         {
             SetToRenderInsideMask(module, true);
         }
+        
+        ArrangeModules();
     }
 
     private void SetToRenderInsideMask(GameObject moduleObj, bool insideMask)
@@ -169,12 +175,16 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            creativeMode = false;
+            // creativeMode = false;
         }
         
         if (creativeMode)
         {
             LoadCreativeModeModules();
+        }
+        else
+        {
+            AddStartingModules();
         }
         
         pauseMenu.SetActive(false);
@@ -189,9 +199,10 @@ public class InventoryManager : MonoBehaviour
         // primaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Primary Modules").gameObject;
         // secondaryModulesLabel = inventoryOverlay.transform.Find("Sprite Mask/Module Container/Secondary Modules").gameObject;
 
-        AddStartingModules();
+        // AddStartingModules();
         
-        inventoryOverlay.SetActive(false);
+        // inventoryOverlay.SetActive(false);
+        ToggleActive();
     }
 
     private void AddStartingModules()
@@ -287,7 +298,7 @@ public class InventoryManager : MonoBehaviour
         Physics2D.SyncTransforms();
         
         // width of allowed space in inventory before moving down a row
-        var width = 16;
+        var width = 14;
 
         for (var i = 0; i < modulesInInventory.Count; i++)
         {
@@ -315,10 +326,10 @@ public class InventoryManager : MonoBehaviour
                     // Debug.Log($"{module.name} is overlapping {otherModule.name}");
                     var newPos = module.transform.localPosition;
                     newPos.x += 1f;
-                    Debug.Log(newPos);
+                    // Debug.Log(newPos);
                     if (newPos.x > width)
                     {
-                        Debug.Log($"x pos {newPos.x} is greater than width {width}. moving down");
+                        // Debug.Log($"x pos {newPos.x} is greater than width {width}. moving down");
                         newPos.x = module.GetComponent<Module>().dimensions.x + 1f;
                         newPos.y -= 1;
                     }
@@ -330,7 +341,7 @@ public class InventoryManager : MonoBehaviour
                     j = -1;
 
                     loops++;
-                    if (loops > 100) break;
+                    if (loops > 999) break;
                 }
             }
         }
@@ -449,9 +460,9 @@ public class InventoryManager : MonoBehaviour
         
         SetToRenderInsideMask(module, false);
         
-        ArrangeModules();
+        // ArrangeModules();
         
-        inventoryOverlay.SetActive(false);
+        ToggleActive();
     }
 
     private void OnShopSlotPurchased(GameObject shopSlotObj)
@@ -476,5 +487,20 @@ public class InventoryManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void ToggleActive()
+    {
+        var rt = inventoryOverlay.GetComponent<RectTransform>();
+        var active = rt.anchoredPosition.x >= 0;
+
+        if (active)
+        {
+            rt.anchoredPosition -= new Vector2(rt.rect.width, 0);
+        }
+        else
+        {
+            rt.anchoredPosition += new Vector2(rt.rect.width, 0);
+        }
     }
 }

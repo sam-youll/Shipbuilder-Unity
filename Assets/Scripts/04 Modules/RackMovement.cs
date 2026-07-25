@@ -82,7 +82,7 @@ public class RackMovement : MonoBehaviour
             RightClicky();
         }
         
-        DrawBounds(GetComponent<Collider2D>().bounds, Color.green);
+        // DrawBounds(GetComponent<Collider2D>().bounds, Color.green);
     }
 
     void LeftClicky()
@@ -91,13 +91,15 @@ public class RackMovement : MonoBehaviour
         {
             if (isInInventory)
             {
+                var pos = transform.position;
                 inventoryExit.Invoke();
                 InventoryManager.Instance.RemoveModule(gameObject);
                 GetComponent<Module>().SetRenderers(SpriteMaskInteraction.None, 0);
+                transform.position = pos;
             }
             AudioManager.Instance.PickUpModuleSFX();
             dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            dragOffset.z = 0;
+            dragOffset.z = -3;
             snapSquare.SetActive(true);
             isMouseDragging = true;
             lastParent = transform.parent;

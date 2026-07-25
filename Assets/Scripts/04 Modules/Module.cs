@@ -889,7 +889,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
                     
                     var lineTiles = Resources.LoadAll<Sprite>("Spritesheets/leylines");
 
-                    var path = Funcs.AStar4Dir(start, end, dimensions.x, dimensions.y, v2I => moduleShape[v2I.x, v2I.y] != ModuleComponent.Empty);
+                    var path = Funcs.AStar4Dir(start, end, dimensions.y, dimensions.x, v2I => moduleShape[v2I.x, v2I.y] != ModuleComponent.Empty);
                     
                     if (path.Count < 2) continue;
 

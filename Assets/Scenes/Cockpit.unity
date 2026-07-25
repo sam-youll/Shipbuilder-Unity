@@ -1352,7 +1352,7 @@ GameObject:
   - component: {fileID: 311127537}
   m_Layer: 0
   m_Name: Trigger Modules Label
-  m_TagString: Untagged
+  m_TagString: Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1700,7 +1700,7 @@ GameObject:
   - component: {fileID: 604617081}
   m_Layer: 0
   m_Name: Secondary Modules Label
-  m_TagString: Untagged
+  m_TagString: Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12551,7 +12551,7 @@ GameObject:
   - component: {fileID: 1423190207}
   m_Layer: 0
   m_Name: Inventory Menu
-  m_TagString: Untagged
+  m_TagString: Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13235,7 +13235,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 819847061}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.775353
+  m_Size: 0.3172701
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13318,7 +13318,7 @@ GameObject:
   - component: {fileID: 1871536820}
   m_Layer: 0
   m_Name: Primary Modules Label
-  m_TagString: Untagged
+  m_TagString: Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14001,7 +14001,7 @@ GameObject:
   - component: {fileID: 1945123579}
   m_Layer: 0
   m_Name: Content (Module Grid)
-  m_TagString: Untagged
+  m_TagString: Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14026,7 +14026,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 40}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!61 &1990131398 stripped
 BoxCollider2D:
@@ -14410,6 +14410,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 295943754136448914, guid: 43c0d480db2c7004a8e5573e71a367e3, type: 3}
+      propertyPath: creativeMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 295943754136448914, guid: 43c0d480db2c7004a8e5573e71a367e3, type: 3}
       propertyPath: moduleContainer
       value: 

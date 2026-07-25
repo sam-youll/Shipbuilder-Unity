@@ -141,8 +141,10 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
     protected virtual void UpdateValidity(Wire activeWire)
     {
         // Debug.Log("UpdateValidity");
-        if (transform.parent.TryGetComponent(out Module module))
+        if (Parent().TryGetComponent(out Module module))
         {
+            if (Parent().GetComponent<RackMovement>().isInInventory) return;
+            
             // Check if this jack already has a wire
             if (module.childWires.Count > 0)
             {

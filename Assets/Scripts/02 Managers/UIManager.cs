@@ -94,7 +94,8 @@ public class UIManager : MonoBehaviour
         HandleMouseInput();
         CursorStateMachine();
         HandleTooltip();
-        
+        UpdateCanvasRaycast();
+        UpdateHoverList();
         scrapCounterLabel.text = "Scrap: " + InventoryManager.Instance.scrap.ToString();
     }
     
@@ -256,13 +257,13 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            target = HoverList().Find(x => x.gameObject.TryGetComponent(out ITooltipInfo _));
+            target = HoverList().Find(x => x.gameObject != null && x.gameObject.TryGetComponent(out ITooltipInfo _));
         }
         
         if (target != null)
         {
             tooltipTimer -= Time.deltaTime;
-            Debug.Log("tooltipTimer: " + tooltipTimer);
+            // Debug.Log("tooltipTimer: " + tooltipTimer);
         }
         else
         {
@@ -379,7 +380,7 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
-
+    
     public GameObject TopRaycastResult()
     {
         if (HoverList().Count > 0)
@@ -444,6 +445,11 @@ public class UIManager : MonoBehaviour
 
     private List<GameObject> HoverList()
     {
+        return hoverList;
+    }
+    private List<GameObject> hoverList = new();
+    private void UpdateHoverList()
+    {
         var results = new List<GameObject>();
         CanvasRaycast(out var canvasResults);
         foreach (var hit in canvasResults)
@@ -466,15 +472,21 @@ public class UIManager : MonoBehaviour
             }
         }
         results.Sort((a, b) => a.transform.position.z > b.transform.position.z ? 1 : -1);
-        results.Sort((a, b) => a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);
+        results.Sort((a, b) => a.GetComponentInParent<Canvas>() != null && a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);
         raycastResults = new();
         results.ForEach(x => raycastResults.Add(x.gameObject));
-        return results;
+        hoverList = results;
     }
-    
+
     private bool CanvasRaycast(out List<RaycastResult> results)
     {
-        results = new List<RaycastResult>();
+        results = canvasRaycast;
+        return canvasRaycast.Count > 0;
+    }
+    private List<RaycastResult> canvasRaycast = new();
+    private void UpdateCanvasRaycast()
+    {
+        var results = new List<RaycastResult>();
         
         var pointerEvent = new PointerEventData(EventSystem.current)
         {
@@ -509,8 +521,8 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        
-        return results.Count > 0;
+
+        canvasRaycast = results;
     }
 
     private bool DidIHitAnythingClickable()

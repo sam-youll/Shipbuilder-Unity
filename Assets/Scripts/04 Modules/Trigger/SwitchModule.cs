@@ -26,16 +26,14 @@ public class SwitchModule : TriggerModule
     }
 
     //what happens if we get a value (increment)
-    public override void Trigger(float value)
+    public override void Trigger(float value, int inputIndex)
     {
         currentIndex += (int)value;
-        outWires[currentIndex].Trigger();
+        childWires[currentIndex].GetComponent<Wire>().Trigger();
     }
-
 
     public override void Trigger()
     {
-        currentIndex += 1;
-        outWires[currentIndex].Trigger();
+        childWires[currentIndex].GetComponent<Wire>().Trigger();
     }
 }
