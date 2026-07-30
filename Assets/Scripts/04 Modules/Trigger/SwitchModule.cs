@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class SwitchModule : TriggerModule
 {
-    public List<Wire> outWires = new();
-
     public int currentIndex;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,23 +15,27 @@ public class SwitchModule : TriggerModule
 
     public override string Info()
     {
-        return "Come back later I'm not ready yet.";
-    }
-
-    protected override void Start()
-    {
-        base.Start();
+        return childWires.Count > 0 ? $"Will trigger {childWires[currentIndex]}." : "No modules downstream.";
+        
     }
 
     //what happens if we get a value (increment)
     public override void Trigger(float value, int inputIndex)
     {
-        currentIndex += (int)value;
-        childWires[currentIndex].GetComponent<Wire>().Trigger();
+        switch (inputIndex)
+        {
+            case 0:
+                childWires[currentIndex].GetComponent<Wire>().Trigger();
+                break;
+            case 1:
+                currentIndex += (int)value;
+                if (currentIndex > childWires.Count - 1) currentIndex = 0;
+                break;
+        }
     }
 
-    public override void Trigger()
-    {
-        childWires[currentIndex].GetComponent<Wire>().Trigger();
-    }
+    // public override void Trigger()
+    // {
+    //     childWires[currentIndex].GetComponent<Wire>().Trigger();
+    // }
 }

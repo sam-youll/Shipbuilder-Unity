@@ -295,7 +295,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
-        heat += WeaponStats()["heat"];
+        heat += .125f * WeaponStats()["heat"];
         
         
         DisplayManager.Instance.Log("Fired " + name);
