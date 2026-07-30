@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SourceModule : PrimaryModule, IWeaponModule
 {
-    // TODO: reorder these to match FMOD source parameter
     public enum Waveform
     {
         Sine = 2,
