@@ -44,7 +44,7 @@ public class InventoryManager : MonoBehaviour
     {
         
         CreateInventoryMenu();
-        CreatePauseMenu();
+        // CreatePauseMenu();
         CreateShopMenu();
         
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -73,10 +73,10 @@ public class InventoryManager : MonoBehaviour
             // ArrangeModules();
         }
         
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            pauseMenu.SetActive(!pauseMenu.activeSelf);
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     pauseMenu.SetActive(!pauseMenu.activeSelf);
+        // }
 
         if (inventoryOverlay.activeSelf && Input.mouseScrollDelta.y != 0)
         {
@@ -113,8 +113,13 @@ public class InventoryManager : MonoBehaviour
         rerollButton.eventString = "shopRefreshed";
     }
 
-    private void LoadCreativeModeModules()
+    public void LoadCreativeModeModules()
     {
+        for (int i = 0; i < triggerModules.Count; i++)
+        {
+            DestroyImmediate(triggerModules[i]);
+        }
+        triggerModules = new();
         triggerModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Trigger Modules").ToList();
         for (var i = 0; i < triggerModules.Count; i++)
         {
@@ -124,6 +129,12 @@ public class InventoryManager : MonoBehaviour
             triggerModules[i].name = triggerModules[i].name.Replace("(Clone)", "");
             triggerModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
+
+        for (int i = 0; i < primaryModules.Count; i++)
+        {
+            DestroyImmediate(primaryModules[i]);
+        }
+        primaryModules = new();
         primaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Primary Modules").ToList();
         for (var i = 0; i < primaryModules.Count; i++)
         {
@@ -133,6 +144,12 @@ public class InventoryManager : MonoBehaviour
             primaryModules[i].name = primaryModules[i].name.Replace("(Clone)", "");
             primaryModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
+
+        for (int i = 0; i < secondaryModules.Count; i++)
+        {
+            DestroyImmediate(secondaryModules[i]);
+        }
+        secondaryModules = new();
         secondaryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Secondary Modules").ToList();
         for (var i = 0; i < secondaryModules.Count; i++)
         {
@@ -187,7 +204,7 @@ public class InventoryManager : MonoBehaviour
             AddStartingModules();
         }
         
-        pauseMenu.SetActive(false);
+        // pauseMenu.SetActive(false);
     }
 
     private void CreateInventoryMenu()

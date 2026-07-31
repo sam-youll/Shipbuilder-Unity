@@ -9,6 +9,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -65,6 +66,9 @@ public class UIManager : MonoBehaviour
     
     private readonly float rerollPrice = 1;
     
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenu;
+    
     [Header("Overlay Elements")] 
     [SerializeField] private TextMeshProUGUI scrapCounterLabel;
     [SerializeField] private GameObject cursorPrefab;
@@ -97,6 +101,11 @@ public class UIManager : MonoBehaviour
         UpdateCanvasRaycast();
         UpdateHoverList();
         scrapCounterLabel.text = "Scrap: " + InventoryManager.Instance.scrap.ToString();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
     }
     
     public void ShowHideScreen()
@@ -556,6 +565,22 @@ public class UIManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void ResetScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void CreativeMode()
+    {
+        InventoryManager.Instance.creativeMode = true;
+        InventoryManager.Instance.LoadCreativeModeModules();
     }
     
     #endregion
