@@ -57,8 +57,9 @@ public class SourceModule : PrimaryModule, IWeaponModule
     {
         return new Dictionary<string, float>()
         {
-            { "waveform", (float)waveform }
+            { "source", (float)waveform }
         };
+        
     }
 
     void UpdateWaveform(float value)
