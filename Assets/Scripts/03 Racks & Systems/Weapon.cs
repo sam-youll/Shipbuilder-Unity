@@ -25,6 +25,8 @@ public class Weapon : ModuleRack, ITooltipInfo
     [Header("Components")]
     public Image heatOverlay;
     public SwitchComponent testFireSwitch;
+    public GameObject energyInJack;
+    public GameObject parentEnergyWire;
 
     public override string Description()
     {
@@ -107,6 +109,11 @@ public class Weapon : ModuleRack, ITooltipInfo
             {
                 overheated = false;
             }
+        }
+
+        if (EnergyPatch().Count > 0)
+        {
+            GenerateEnergy(energyReservoir);
         }
     }
 
@@ -256,6 +263,61 @@ public class Weapon : ModuleRack, ITooltipInfo
         
         return dict;
     }
+    
+    private void GenerateEnergy(EnergyReservoir targetReservoir)
+    {
+        if (health <= 0)
+        {
+            return;
+        }
+
+        var newEnergy = new Dictionary<Common.SoundType, float>
+        {
+            { Common.SoundType.None, 0 },
+            { Common.SoundType.Izki, 0 },
+            { Common.SoundType.Aubo, 0 },
+            { Common.SoundType.Dwth, 0 }
+        };
+
+        foreach (var mod in EnergyPatch())
+        {
+            if (mod is IReactorModule iReactorMod)
+            {
+                if (mod is PowerModule)
+                {
+                    // Add the energy amount as untyped energy (right now, this assumes a power module)
+                    newEnergy[Common.SoundType.None] += iReactorMod.MyReactorStats().PowerGenerated;
+                    // Debug.Log($"Added {iReactorMod.MyReactorStats().PowerGenerated} power");
+                }
+
+                if (mod is ConverterModule)
+                {
+                    // this is probably gonna throw errors, but I'm not sure exactly how
+                    var enCon = iReactorMod.MyReactorStats().EnergyConversion;
+                    var conAmt = Mathf.Min(enCon.EnergyLimit, newEnergy[Common.SoundType.None]);
+
+                    newEnergy[Common.SoundType.None] -= conAmt;
+
+                    foreach (var kvp in iReactorMod.MyReactorStats().EnergyConversion.ConversionRatios)
+                    {
+                        newEnergy[kvp.Key] += conAmt * kvp.Value;
+                        // Debug.Log($"Converted {conAmt * kvp.Value} energy to {kvp.Key}");
+                    }
+                }
+            }
+        }
+
+        targetReservoir.AddEnergy(newEnergy);
+
+
+        // TODO: once a system for adding invisible modules to enemy ships is in place, delete this
+        // the above code will work once that's all in place
+        // This is a stopgap for enemy ships
+        if (enemySystem)
+        {
+            targetReservoir.storedEnergy[Common.SoundType.None] += Time.deltaTime;
+        }
+    }
 
     public void Fire()
     {
@@ -289,7 +351,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
-        if (!myReactor.TrySpendEnergy(EnergyCost()))
+        if (!energyReservoir.TrySpendEnergy(EnergyCost()))
         {
             // Debug.Log($"{name} didn't have enough energy to fire.");
             return;
@@ -338,5 +400,47 @@ public class Weapon : ModuleRack, ITooltipInfo
             }
         }
         return dict;
+    }
+
+    private List<Module> EnergyPatch()
+    {
+        if (enemySystem)
+            return new List<Module>();
+
+        if (parentEnergyWire == null)
+            return new List<Module>();
+
+        if (parentEnergyWire.GetComponent<Wire>().previousModule == null)
+            return new List<Module>();
+
+        var patch = new List<Module>();
+        var prev = parentEnergyWire.GetComponent<Wire>().previousModule.GetComponent<Module>();
+        var loopCount = 0;
+        while (prev.PreviousModule() != null)
+        {
+            if (loopCount > 299)
+            {
+                parentWire.GetComponent<Wire>().DeleteSelf();
+                Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
+                break;
+            }
+
+            loopCount++;
+            // Debug.Log(prev.name);
+            patch.Add(prev);
+
+            if (prev.PreviousModule().TryGetComponent(out Module mod))
+            {
+                prev = mod;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        patch.Add(prev);
+        patch.Reverse();
+        return patch;
     }
 }

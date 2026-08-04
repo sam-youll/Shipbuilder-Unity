@@ -114,14 +114,20 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
     protected void SpawnWire(Weapon weapon)
     {
         // is there already a wire there?
-        if (weapon.parentWire != null)
-        {
+        if (weapon.parentWire != null ||
+            weapon.parentEnergyWire != null)
             return;
+        
+        if (gameObject == weapon.patchEndJack)
+        {
+            GameObject newWire = Instantiate(Resources.Load<GameObject>("Module Components/Wire"), gameObject.transform);
+            weapon.parentWire = newWire;
         }
-
-        // make a new wire
-        GameObject newWire = Instantiate(Resources.Load<GameObject>("Module Components/Wire"), gameObject.transform);
-        weapon.parentWire = newWire;
+        else if (gameObject == weapon.energyInJack)
+        {
+            GameObject newWire = Instantiate(Resources.Load<GameObject>("Module Components/Wire"), gameObject.transform);
+            weapon.parentEnergyWire = newWire;
+        }
     }
 
     protected void SpawnWire(Reactor reactor)

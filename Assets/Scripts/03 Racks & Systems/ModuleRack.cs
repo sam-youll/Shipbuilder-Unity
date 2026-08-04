@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SaintsField;
+using SaintsField.Playa;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
 {
     [Header("Components")]
     [GetComponent] public BoxCollider2D coll;
+    public GameObject patchEndJack;
     public GameObject parentWire;
 
     [Header("Properties")]
@@ -19,6 +21,9 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public SwitchComponent transformControlSwitch;
     public GameObject transformControls;
     private Vector2 handleDragOffset;
+    
+    // ENERGY
+    public EnergyReservoir energyReservoir;
 
     protected virtual void Start()
     {
@@ -372,9 +377,10 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
 
     public bool IsOverlapping(out List<GameObject> contacts)
     {
-        var pos = transform.position + .5f * Vector3.right;
+        Physics2D.SyncTransforms();
+        var pos = transform.position;
         var size = GetComponent<RectTransform>().sizeDelta;
-        size += new Vector2(2f, 2f);
+        size += new Vector2(3f, .5f);
         var hits = Physics2D.OverlapBoxAll(pos,  size, 0);
         contacts = new();
         foreach (var hit in hits)
@@ -393,5 +399,10 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         pos.x = dimensions.x % 2 == 0 ? Mathf.Floor(pos.x) : Mathf.Floor(pos.x) + .5f;
         pos.y = dimensions.y % 2 == 0 ? Mathf.Floor(pos.y) : Mathf.Floor(pos.y) + .5f;
         transform.position = pos;
+    }
+
+    public virtual void Trigger()
+    {
+        
     }
 }

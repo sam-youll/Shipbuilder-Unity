@@ -450,7 +450,7 @@ public class ShipManager : MonoBehaviour
                     {
                         var energySiphonSum = effect.Value;
                         var energyToSteal = new Dictionary<Common.SoundType, float>();
-                        foreach (var energyType in enemy.reactor.storedEnergy)
+                        foreach (var energyType in enemy.reactor.energyReservoir.storedEnergy)
                         {
                             if (energyType.Value > energySiphonSum)
                             {
@@ -464,14 +464,14 @@ public class ShipManager : MonoBehaviour
                             }
                         }
                         
-                        enemy.reactor.TrySpendEnergy(energyToSteal);
-                        player.reactor.AddEnergy(energyToSteal);
+                        enemy.reactor.energyReservoir.TrySpendEnergy(energyToSteal);
+                        player.reactor.energyReservoir.AddEnergy(energyToSteal);
                     }
                     else if (target.Equals(player))
                     {
                         var energySiphonSum = effect.Value;
                         var energyToSteal = new Dictionary<Common.SoundType, float>();
-                        foreach (var energyType in player.reactor.storedEnergy)
+                        foreach (var energyType in player.reactor.energyReservoir.storedEnergy)
                         {
                             if (energyType.Value > energySiphonSum)
                             {
@@ -485,8 +485,8 @@ public class ShipManager : MonoBehaviour
                             }
                         }
                         
-                        player.reactor.TrySpendEnergy(energyToSteal);
-                        enemy.reactor.AddEnergy(energyToSteal);
+                        player.reactor.energyReservoir.TrySpendEnergy(energyToSteal);
+                        enemy.reactor.energyReservoir.AddEnergy(energyToSteal);
                     }
                     break;
                 case Common.Effect.Scrap:

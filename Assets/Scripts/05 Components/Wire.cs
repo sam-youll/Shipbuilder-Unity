@@ -139,7 +139,21 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
                     grabbed = false;
                     if (nextModule.TryGetComponent(out ModuleRack moduleRack))
                     {
-                        moduleRack.parentWire = null;
+                        if (moduleRack is Weapon weapon)
+                        {
+                            if (nextModuleJack == weapon.patchEndJack)
+                            {
+                                weapon.parentWire = null;
+                            }
+                            else if (nextModuleJack == weapon.energyInJack)
+                            {
+                                weapon.parentEnergyWire = null;
+                            }
+                        }
+                        else
+                        {
+                            moduleRack.parentWire = null;
+                        }
                     }
                     else
                     {
@@ -196,7 +210,21 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
                 grabbed = false;
                 if (nextModule.TryGetComponent(out ModuleRack moduleRack))
                 {
-                    moduleRack.parentWire = null;
+                    if (moduleRack is Weapon weapon)
+                    {
+                        if (nextModuleJack == weapon.patchEndJack)
+                        {
+                            weapon.parentWire = null;
+                        }
+                        else if (nextModuleJack == weapon.energyInJack)
+                        {
+                            weapon.parentEnergyWire = null;
+                        }
+                    }
+                    else
+                    {
+                        moduleRack.parentWire = null;
+                    }
                 }
                 else
                 {
@@ -263,7 +291,22 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
                     {
                         nextModuleJack = hit.collider.gameObject;
                         nextModule = parentGameObject;
-                        moduleRack.parentWire = gameObject;
+                        
+                        if (moduleRack is Weapon weapon)
+                        {
+                            if (hit.collider.gameObject == weapon.patchEndJack)
+                            {
+                                weapon.parentWire = gameObject;
+                            }
+                            else if (hit.collider.gameObject == weapon.energyInJack)
+                            {
+                                weapon.parentEnergyWire = gameObject;
+                            }
+                        }
+                        else
+                        {
+                            moduleRack.parentWire = gameObject;
+                        }
                     }
                     
                     isConnected = true;
@@ -580,7 +623,15 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         // Debug.Log($"{previousModule.name} triggered {nextModule.name} via {gameObject.name} with no arguments.");
         if (nextModule.TryGetComponent(out Weapon weapon))
         {
-            weapon.Fire();
+            if (nextModuleJack == weapon.energyInJack)
+            {
+                // TODO: try to add energy
+                // weapon.energyReservoir.AddEnergy();
+            }
+            else if (nextModuleJack == weapon.patchEndJack)
+            {
+                weapon.Fire();
+            }
         }
         else if (nextModule.TryGetComponent(out Module module))
         {

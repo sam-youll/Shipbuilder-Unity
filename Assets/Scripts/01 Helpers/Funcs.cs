@@ -194,4 +194,22 @@ public static class Funcs
 
         return null;
     }
+    
+    public static Vector2 GetClosestDirection(Vector2 vector)
+    {
+        // Handle a zero/null vector default case
+        if (vector == Vector2.zero) return Vector2.up; 
+
+        // Determine if the vector is mostly horizontal or vertical
+        if (Math.Abs(vector.x) > Math.Abs(vector.y))
+        {
+            // Mostly horizontal: Check if pointing right or left
+            return vector.x > 0 ? Vector2.right : Vector2.left;
+        }
+        else
+        {
+            // Mostly vertical: Check if pointing up or down
+            return vector.y > 0 ? Vector2.up : Vector2.down;
+        }
+    }
 }
