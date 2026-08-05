@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SaintsField;
 using SaintsField.Playa;
 using Unity.VisualScripting;
@@ -32,6 +33,94 @@ public class Weapon : ModuleRack, ITooltipInfo
     {
         return "Fires projectiles, playing a note with each one. " +
                "Musical parameters and combat stats are determined by the modules in the connected patch.";
+    }
+
+    public override bool Warning(out string message)
+    {
+        message = "";
+        var hasClock = false;
+        var hasSource = false;
+        var energyNeeds = new Dictionary<Common.SoundType, float>(Common.EmptyEnergyCost());
+        foreach (var module in ActivePatch())
+        {
+            if (module is ClockModule) hasClock = true;
+            if (module is SourceModule) hasSource = true;
+            if (module is INeedEnergy eMod)
+            {
+                foreach (var kvp in eMod.EnergyCost())
+                {
+                    energyNeeds[kvp.Key] += kvp.Value;
+                }
+            }
+        }
+
+        
+        if (!hasClock)
+        {
+            message += "No clock module present to trigger this weapon.\n";
+        }
+
+        if (!hasSource)
+        {
+            message += "No source module present to generate sound.\n";
+        }
+
+        if (!WeaponHasEnergyForYou(energyNeeds, out var missingEnergy))
+        {
+            message += "This weapon is missing the following energy types it needs to fire:\n";
+            foreach (var energy in missingEnergy)
+            {
+                message += "- " + energy + "\n";
+            }
+        }
+        
+        return !hasClock || !hasSource || missingEnergy.Count > 0;
+    }
+
+    public bool WeaponHasEnergyForYou(Dictionary<Common.SoundType, float> energyNeeds, out List<Common.SoundType> missingEnergy)
+    {
+        missingEnergy = new List<Common.SoundType>();
+        var theoreticalEnergyProduction = new Dictionary<Common.SoundType, float>(Common.EmptyEnergyCost());
+        foreach (var mod in EnergyPatch())
+        {
+            if (mod is IReactorModule iReactorMod)
+            {
+                if (mod is PowerModule)
+                {
+                    // Add the energy amount as untyped energy (right now, this assumes a power module)
+                    theoreticalEnergyProduction[Common.SoundType.Pure] += iReactorMod.MyReactorStats().PowerGenerated;
+                    // Debug.Log($"Added {iReactorMod.MyReactorStats().PowerGenerated} power");
+                }
+
+                if (mod is ConverterModule)
+                {
+                    // this is probably gonna throw errors, but I'm not sure exactly how
+                    var enCon = iReactorMod.MyReactorStats().EnergyConversion;
+                    var conAmt = Mathf.Min(enCon.EnergyLimit, theoreticalEnergyProduction[Common.SoundType.Pure]);
+
+                    theoreticalEnergyProduction[Common.SoundType.Pure] -= conAmt;
+
+                    foreach (var kvp in iReactorMod.MyReactorStats().EnergyConversion.ConversionRatios)
+                    {
+                        theoreticalEnergyProduction[kvp.Key] += conAmt * kvp.Value;
+                        // Debug.Log($"Converted {conAmt * kvp.Value} energy to {kvp.Key}");
+                    }
+                }
+            }
+        }
+
+        foreach (var kvp in energyNeeds)
+        {
+            if (kvp.Value > 0)
+            {
+                if (theoreticalEnergyProduction[kvp.Key] <= 0)
+                {
+                    missingEnergy.Add(kvp.Key);
+                }
+            }
+        }
+
+        return missingEnergy.Count == 0;
     }
 
     protected override void Start()
@@ -271,13 +360,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
-        var newEnergy = new Dictionary<Common.SoundType, float>
-        {
-            { Common.SoundType.None, 0 },
-            { Common.SoundType.Izki, 0 },
-            { Common.SoundType.Aubo, 0 },
-            { Common.SoundType.Dwth, 0 }
-        };
+        var newEnergy = new Dictionary<Common.SoundType, float>(Common.EmptyEnergyCost());
 
         foreach (var mod in EnergyPatch())
         {
@@ -286,7 +369,7 @@ public class Weapon : ModuleRack, ITooltipInfo
                 if (mod is PowerModule)
                 {
                     // Add the energy amount as untyped energy (right now, this assumes a power module)
-                    newEnergy[Common.SoundType.None] += iReactorMod.MyReactorStats().PowerGenerated;
+                    newEnergy[Common.SoundType.Pure] += iReactorMod.MyReactorStats().PowerGenerated;
                     // Debug.Log($"Added {iReactorMod.MyReactorStats().PowerGenerated} power");
                 }
 
@@ -294,14 +377,23 @@ public class Weapon : ModuleRack, ITooltipInfo
                 {
                     // this is probably gonna throw errors, but I'm not sure exactly how
                     var enCon = iReactorMod.MyReactorStats().EnergyConversion;
-                    var conAmt = Mathf.Min(enCon.EnergyLimit, newEnergy[Common.SoundType.None]);
+                    var conAmt = Mathf.Min(enCon.EnergyLimit, newEnergy[Common.SoundType.Pure]);
 
-                    newEnergy[Common.SoundType.None] -= conAmt;
+                    newEnergy[Common.SoundType.Pure] -= conAmt;
 
                     foreach (var kvp in iReactorMod.MyReactorStats().EnergyConversion.ConversionRatios)
                     {
                         newEnergy[kvp.Key] += conAmt * kvp.Value;
                         // Debug.Log($"Converted {conAmt * kvp.Value} energy to {kvp.Key}");
+                    }
+                }
+
+                if (mod is SplitterModule)
+                {
+                    // splitter module splits the energy two ways, so each receiver just multiplies by .5f
+                    foreach (var key in newEnergy.Keys.ToList())
+                    {
+                        newEnergy[key] *= .5f;
                     }
                 }
             }
@@ -315,7 +407,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         // This is a stopgap for enemy ships
         if (enemySystem)
         {
-            targetReservoir.storedEnergy[Common.SoundType.None] += Time.deltaTime;
+            targetReservoir.storedEnergy[Common.SoundType.Pure] += Time.deltaTime;
         }
     }
 

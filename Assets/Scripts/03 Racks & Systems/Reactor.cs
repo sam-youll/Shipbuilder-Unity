@@ -13,7 +13,30 @@ public class Reactor : ModuleRack, ITooltipInfo
         return "Controls energy generation, as well as affecting " +
                "harmonic and rhythmic properties of the overall composition.";
     }
-    
+
+    public override bool Warning(out string message)
+    {
+        message = "";
+        // if (CompletePatch())
+        // {
+        //     return false;
+        // }
+        // else
+        // {
+        //     if (!ActivePatch().Exists(x => x is PowerModule))
+        //     {
+        //         message += "This reactor has no Power Modules generating power.\n";
+        //     }
+        //
+        //     if (!ActivePatch().TrueForAll(x => x is IReactorModule))
+        //     {
+        //         message += ""
+        //     }
+        // }
+
+        return false;
+    }
+
     private EventInstance[] pads = new EventInstance[8];
 
     public bool tempoOverride;

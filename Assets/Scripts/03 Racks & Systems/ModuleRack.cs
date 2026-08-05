@@ -299,6 +299,8 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         return info;
     }
 
+    public abstract bool Warning(out string message);
+
     public List<Module> ActivePatch()
     {
         if (enemySystem)

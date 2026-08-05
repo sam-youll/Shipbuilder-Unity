@@ -269,6 +269,8 @@ public class RackMovement : MonoBehaviour
                 transform.parent = lastParent;
             }
         }
+        
+        // EventBus.Instance.updateJackValidity.Invoke();
     }
     
     /// <summary>

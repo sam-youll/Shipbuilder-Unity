@@ -10,14 +10,14 @@ public class EnergyReservoir : MonoBehaviour
 {
     private Dictionary<Common.SoundType, List<GameObject>> energyCells = new()
     {
-        { Common.SoundType.None , new List<GameObject>() },
+        { Common.SoundType.Pure , new List<GameObject>() },
         { Common.SoundType.Izki , new List<GameObject>() },
         { Common.SoundType.Aubo , new List<GameObject>() },
         { Common.SoundType.Dwth , new List<GameObject>() }
     };
     [ShowInInspector] public Dictionary<Common.SoundType, float> storedEnergy = new()
     {
-        { Common.SoundType.None, 0 },
+        { Common.SoundType.Pure, 0 },
         { Common.SoundType.Izki, 0 },
         { Common.SoundType.Aubo, 0 },
         { Common.SoundType.Dwth, 0 }
@@ -173,7 +173,7 @@ public class EnergyReservoir : MonoBehaviour
 
         switch (type)
         {
-            case Common.SoundType.None:
+            case Common.SoundType.Pure:
                 newEnergyBar.transform.Find("Fill").GetComponent<Image>().color = Color.white;
                 break;
             case Common.SoundType.Izki:
@@ -197,13 +197,13 @@ public class EnergyReservoir : MonoBehaviour
         {
             switch (type)
             {
-                case Common.SoundType.None:
+                case Common.SoundType.Pure:
                     newEnergyBar.transform.SetSiblingIndex(1);
                     break;
                 case Common.SoundType.Izki:
-                    if (energyCells[Common.SoundType.None].Count > 0)
+                    if (energyCells[Common.SoundType.Pure].Count > 0)
                     {
-                        newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.None][^1].transform.GetSiblingIndex() + 1);
+                        newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.Pure][^1].transform.GetSiblingIndex() + 1);
                     }
                     else
                     {
@@ -215,9 +215,9 @@ public class EnergyReservoir : MonoBehaviour
                     {
                         newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.Izki][^1].transform.GetSiblingIndex() + 1);
                     }
-                    else if (energyCells[Common.SoundType.None].Count > 0)
+                    else if (energyCells[Common.SoundType.Pure].Count > 0)
                     {
-                        newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.None][^1].transform.GetSiblingIndex() + 1);
+                        newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.Pure][^1].transform.GetSiblingIndex() + 1);
                     }
                     else
                     {
@@ -233,9 +233,9 @@ public class EnergyReservoir : MonoBehaviour
                     {
                         newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.Izki][^1].transform.GetSiblingIndex() + 1);
                     }
-                    else if (energyCells[Common.SoundType.None].Count > 0)
+                    else if (energyCells[Common.SoundType.Pure].Count > 0)
                     {
-                        newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.None][^1].transform.GetSiblingIndex() + 1);
+                        newEnergyBar.transform.SetSiblingIndex(energyCells[Common.SoundType.Pure][^1].transform.GetSiblingIndex() + 1);
                     }
                     else
                     {

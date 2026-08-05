@@ -60,6 +60,11 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
         if (Parent().transform == InventoryManager.Instance.transform)
             return;
 
+        if (Parent().TryGetComponent(out RackMovement rm))
+        {
+            if (rm.isInInventory) return;
+        }
+
         // input jacks are not allowed to spawn new wires
         // this may change in the future depending on wire behavior
         // if (inputJacks.Contains(jack) || jack.CompareTag("InputJack"))
@@ -235,6 +240,12 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
     public abstract string Description();
 
     public abstract string Info();
+    
+    public bool Warning(out string message)
+    {
+        message = "";
+        return false;
+    }
     
     public void Select()
     {

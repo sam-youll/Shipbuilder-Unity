@@ -1143,7 +1143,26 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public abstract string Description();
 
     public abstract string Info();
-    
+
+    public virtual bool Warning(out string message)
+    {
+        message = "";
+        var missingEnergy = new List<Common.SoundType>();
+        if (GetComponentInParent<Weapon>() != null)
+        {
+            if (!GetComponentInParent<Weapon>().WeaponHasEnergyForYou(EnergyCost(), out missingEnergy))
+            {
+                message += "This module is missing the following energy types it needs to trigger:\n";
+                foreach (var energy in missingEnergy)
+                {
+                    message += "- " + energy + "\n";
+                }
+            }
+        }
+
+        return missingEnergy.Count > 0;
+    }
+
     #endregion
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -1337,7 +1356,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     {
         return new Dictionary<Common.SoundType, float>
         {
-            { Common.SoundType.None, energyNoneCost },
+            { Common.SoundType.Pure, energyNoneCost },
             { Common.SoundType.Izki, energyIzkiCost },
             { Common.SoundType.Aubo, energyAuboCost },
             { Common.SoundType.Dwth, energyDwthCost }

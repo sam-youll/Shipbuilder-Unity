@@ -224,4 +224,10 @@ public class Knob : MonoBehaviour, ITooltipInfo
             // notchLRs[i].GetComponent<LineRenderer>().sortingOrder = 1;
         }
     }
+    
+    public bool Warning(out string message)
+    {
+        message = "";
+        return false;
+    }
 }

@@ -552,7 +552,7 @@ public class ShipManager : MonoBehaviour
             
             if (soundType.Values.Sum() > 0)
             {
-                var targetType = Common.SoundType.None;
+                var targetType = Common.SoundType.Pure;
                 if (systemTarget is Weapon targetWeapon)
                 {
                     

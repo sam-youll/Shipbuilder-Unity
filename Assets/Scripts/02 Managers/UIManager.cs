@@ -479,6 +479,10 @@ public class UIManager : MonoBehaviour
             {
                 results.Add(hit.collider.gameObject);
             }
+            else if (hit.collider.gameObject.TryGetComponent(out ModuleRack _))
+            {
+                results.Add(hit.collider.gameObject);
+            }
         }
         results.Sort((a, b) => a.transform.position.z > b.transform.position.z ? 1 : -1);
         results.Sort((a, b) => a.GetComponentInParent<Canvas>() != null && a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);

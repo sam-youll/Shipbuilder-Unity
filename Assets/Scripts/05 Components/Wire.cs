@@ -716,6 +716,12 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         return info;
     }
 
+    public bool Warning(out string message)
+    {
+        message = "";
+        return false;
+    }
+
     public void Select()
     {
         

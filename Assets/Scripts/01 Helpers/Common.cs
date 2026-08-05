@@ -15,7 +15,7 @@ public static class Common
     /// </summary>
     public enum SoundType
     {
-        None,
+        Pure,
         Izki,
         Aubo,
         Dwth,
@@ -74,7 +74,7 @@ public static class Common
 
     public static readonly Dictionary<SoundType, float> EmptySoundType = new()
     {
-        { SoundType.None, 0 },
+        { SoundType.Pure, 0 },
         { SoundType.Izki, 0 },
         { SoundType.Aubo, 0 },
         { SoundType.Dwth, 0 },
@@ -99,10 +99,21 @@ public static class Common
     {
         return new Dictionary<SoundType, float>()
         {
-            { SoundType.None, Random.Range(0, 3) },
+            { SoundType.Pure, Random.Range(0, 3) },
             // { SoundType.Izki, Random.Range(0, 1) },
             // { SoundType.Aubo, Random.Range(0, 1) },
             // { SoundType.Dwth, Random.Range(0, 1) }
+        };
+    }
+
+    public static Dictionary<SoundType, float> EmptyEnergyCost()
+    {
+        return new Dictionary<SoundType, float>
+        {
+            { SoundType.Pure, 0 },
+            { SoundType.Izki, 0 },
+            { SoundType.Aubo, 0 },
+            { SoundType.Dwth, 0 }
         };
     }
 
@@ -111,7 +122,7 @@ public static class Common
         var mult = 1f;
         switch (attacker)
         {
-            case SoundType.None:
+            case SoundType.Pure:
                 break;
             case SoundType.Izki:
                 if (defender == SoundType.Aubo)
@@ -132,7 +143,7 @@ public static class Common
                 }
                 break;
             case SoundType.Hysh:
-                if (defender == SoundType.None)
+                if (defender == SoundType.Pure)
                 {
                     mult *= 1.15f;
                 }

@@ -51,6 +51,12 @@ public class SwitchComponent : MonoBehaviour, ITooltipInfo, ISelectable
         }
         
     }
+    
+    public bool Warning(out string message)
+    {
+        message = "";
+        return false;
+    }
 
     public void Select()
     {

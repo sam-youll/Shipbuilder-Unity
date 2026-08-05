@@ -1,26 +1,38 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public interface ITooltipInfo
 {
     public string Description();
     public string Info();
+    public bool Warning(out string message);
 }
 
 public class Tooltip : MonoBehaviour
 {
     public TextMeshProUGUI nameLabel;
     public TextMeshProUGUI descriptionLabel;
-    public TextMeshProUGUI infoLabel;
+    [FormerlySerializedAs("infoLabel")] public TextMeshProUGUI warningLabel;
     public LayoutElement layoutElement;
-    public GridLayoutGroup energyCost;
+    public GameObject pureEnergyCost;
+    public GameObject izkiEnergyCost;
+    public GameObject auboEnergyCost;
+    public GameObject dwthEnergyCost;
     public float maxWidth = 5;
 
     public void SetText(string text)
     {
         return;
+    }
+
+    private void Update()
+    {
+        var gb = .325f + .125f * Mathf.Sin(5 * Time.time);
+        warningLabel.color = new Color(1, gb, gb);
     }
 
     /// <summary>
@@ -31,11 +43,20 @@ public class Tooltip : MonoBehaviour
     {
         nameLabel.text = target.name;
         descriptionLabel.text = "";
-        infoLabel.text = "";
+        warningLabel.text = "";
         if (target.TryGetComponent(out ITooltipInfo tooltip))
         {
-            descriptionLabel.text = tooltip.Description();
-            infoLabel.text = tooltip.Info();
+            descriptionLabel.text = tooltip.Description() + "\n~~~\n" + tooltip.Info();
+            
+            if (tooltip.Warning(out string message))
+            {
+                warningLabel.gameObject.SetActive(true);
+                warningLabel.text = message;
+            }
+            else
+            {
+                warningLabel.gameObject.SetActive(false);
+            }
         }
 
         if (target.TryGetComponent(out INeedEnergy energy))
@@ -47,48 +68,128 @@ public class Tooltip : MonoBehaviour
             }
             if (energySum > 0)
             {
-                energyCost.transform.parent.gameObject.SetActive(true);
-                for (var i = 0; i < energyCost.transform.childCount; i++)
-                {
-                    Destroy(energyCost.transform.GetChild(i).gameObject);
-                }
+                pureEnergyCost.transform.parent.gameObject.SetActive(true);
 
                 foreach (var kvp in energy.EnergyCost())
                 {
-                    for (var i = 0; i < (int)kvp.Value; i++)
+                    if (energy.EnergyCost()[Common.SoundType.Pure] > 0)
                     {
-                        var newEnergy = new GameObject($"{kvp.Key} Energy", typeof(Image));
-                        newEnergy.transform.SetParent(energyCost.transform);
-                        var energyIconFilePath = "";
-                        switch (kvp.Key)
-                        {
-                            case Common.SoundType.None:
-                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12None";
-                                break;
-                            case Common.SoundType.Izki:
-                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12Izki";
-                                break;
-                            case Common.SoundType.Aubo:
-                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12Aubo";
-                                break;
-                            case Common.SoundType.Dwth:
-                                energyIconFilePath = "Sprites/Energy/SoundTypeEnergy12x12Dwth";
-                                break;
-                        }
-
-                        newEnergy.GetComponent<Image>().sprite = Resources.Load<Sprite>(energyIconFilePath);
-                        newEnergy.transform.localScale = Vector3.one;
+                        pureEnergyCost.SetActive(true);
+                        pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energy.EnergyCost()[Common.SoundType.Pure].ToString();
+                    }
+                    else
+                    {
+                        pureEnergyCost.SetActive(false);
+                    }
+                    if (energy.EnergyCost()[Common.SoundType.Izki] > 0)
+                    {
+                        izkiEnergyCost.SetActive(true);
+                        izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energy.EnergyCost()[Common.SoundType.Izki].ToString();
+                    }
+                    else
+                    {
+                        izkiEnergyCost.SetActive(false);
+                    }
+                    if (energy.EnergyCost()[Common.SoundType.Aubo] > 0)
+                    {
+                        auboEnergyCost.SetActive(true);
+                        auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energy.EnergyCost()[Common.SoundType.Aubo].ToString();
+                    }
+                    else
+                    {
+                        auboEnergyCost.SetActive(false);
+                    }
+                    if (energy.EnergyCost()[Common.SoundType.Dwth] > 0)
+                    {
+                        dwthEnergyCost.SetActive(true);
+                        dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energy.EnergyCost()[Common.SoundType.Izki].ToString();
+                    }
+                    else
+                    {
+                        dwthEnergyCost.SetActive(false);
                     }
                 }
             }
             else
             {
-                energyCost.transform.parent.gameObject.SetActive(false);
+                pureEnergyCost.transform.parent.gameObject.SetActive(false);
+            }
+        }
+        else if (target.TryGetComponent(out Weapon weapon))
+        {
+            var energySum = 0f;
+            var energyCost = new Dictionary<Common.SoundType, float>(Common.EmptyEnergyCost());
+            foreach (var mod in weapon.ActivePatch())
+            {
+                if (mod.TryGetComponent(out INeedEnergy eMod))
+                {
+                    foreach (var kvp in eMod.EnergyCost())
+                    {
+                        energySum += kvp.Value;
+                        energyCost[kvp.Key] += kvp.Value;
+                    }
+                }
+            }
+            if (energySum > 0)
+            {
+                pureEnergyCost.transform.parent.gameObject.SetActive(true);
+
+                foreach (var kvp in energyCost)
+                {
+                    if (energyCost[Common.SoundType.Pure] > 0)
+                    {
+                        pureEnergyCost.SetActive(true);
+                        pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Pure].ToString();
+                    }
+                    else
+                    {
+                        pureEnergyCost.SetActive(false);
+                    }
+                    if (energyCost[Common.SoundType.Izki] > 0)
+                    {
+                        izkiEnergyCost.SetActive(true);
+                        izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Izki].ToString();
+                    }
+                    else
+                    {
+                        izkiEnergyCost.SetActive(false);
+                    }
+                    if (energyCost[Common.SoundType.Aubo] > 0)
+                    {
+                        auboEnergyCost.SetActive(true);
+                        auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Aubo].ToString();
+                    }
+                    else
+                    {
+                        auboEnergyCost.SetActive(false);
+                    }
+                    if (energyCost[Common.SoundType.Dwth] > 0)
+                    {
+                        dwthEnergyCost.SetActive(true);
+                        dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Izki].ToString();
+                    }
+                    else
+                    {
+                        dwthEnergyCost.SetActive(false);
+                    }
+                }
+            }
+            else
+            {
+                pureEnergyCost.transform.parent.gameObject.SetActive(false);
             }
         }
         else
         {
-            energyCost.transform.parent.gameObject.SetActive(false);
+            pureEnergyCost.transform.parent.gameObject.SetActive(false);
         }
 
         // layoutElement.enabled = descriptionLabel.textBounds.size.x >= maxWidth || infoLabel.textBounds.size.x >= maxWidth;

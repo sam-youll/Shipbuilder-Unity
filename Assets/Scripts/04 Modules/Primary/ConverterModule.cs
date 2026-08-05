@@ -48,7 +48,7 @@ public class ConverterModule : PrimaryModule, IReactorModule
         var conversionList = new List<KeyValuePair<Common.SoundType, float>>();
         if (ratioNone > 0)
         {
-            conversionList.Add(new(Common.SoundType.None, ratioNone));
+            conversionList.Add(new(Common.SoundType.Pure, ratioNone));
         }
         if (ratioIzki > 0)
         {

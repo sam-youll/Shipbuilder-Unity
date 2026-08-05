@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class SplitterModule : TriggerModule
+public class SplitterModule : TriggerModule, IReactorModule
 {
     public float bulletSpeed = .75f;
     public override string Description()
@@ -34,5 +34,11 @@ public class SplitterModule : TriggerModule
         }
 
         return info;
+    }
+
+    public IReactorModule.ReactorStats MyReactorStats()
+    {
+        // this really doesn't need to do anything, the functionality is implemented in the GenerateEnergy() method over in Weapon.cs
+        return new IReactorModule.ReactorStats();
     }
 }
