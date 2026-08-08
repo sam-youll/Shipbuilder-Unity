@@ -36,16 +36,10 @@ public class ConverterModule : PrimaryModule, IReactorModule
         return info;
     }
 
-    public override Dictionary<string, float> MusicParams()
-    {
-        return new Dictionary<string, float>();
-    }
-
-    
-
-    public IReactorModule.ReactorStats MyReactorStats()
+    public List<KeyValuePair<Common.SoundType, float>> ConversionRatios()
     {
         var conversionList = new List<KeyValuePair<Common.SoundType, float>>();
+        
         if (ratioNone > 0)
         {
             conversionList.Add(new(Common.SoundType.Pure, ratioNone));
@@ -62,14 +56,26 @@ public class ConverterModule : PrimaryModule, IReactorModule
         {
             conversionList.Add(new(Common.SoundType.Dwth, ratioDwth));
         }
-        
-        return new IReactorModule.ReactorStats
+
+        return conversionList;
+    }
+
+    public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
+    {
+        var conversionAmount = Mathf.Min(energyLimit, energy[Common.SoundType.Pure]);
+
+        energy[Common.SoundType.Pure] -= conversionAmount;
+
+        foreach (var kvp in ConversionRatios())
         {
-            EnergyConversion = new()
-            {
-                EnergyLimit = energyLimit,
-                ConversionRatios = conversionList
-            }
-        };
+            energy[kvp.Key] += conversionAmount * kvp.Value;
+        }
+
+        return energy;
+    }
+
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -50,34 +50,24 @@ public class HarmonicModule : PrimaryModule, IWeaponModule
         }
     }
 
-    public override Dictionary<string, float> MusicParams()
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
     {
-        return new Dictionary<string, float>()
-        {
-            { "harmonics" , (float)profile }
-        };
+        musicParams["harmonics"] = (float)profile;
+        return musicParams;
     }
 
-    public IWeaponModule.WeaponStats MyWeaponStats()
+    public IWeaponModule.WeaponStats ChangeWeaponStats(IWeaponModule.WeaponStats input)
     {
-        return new IWeaponModule.WeaponStats
-        {
-            Stats = new Dictionary<string, float>
-            {
-                { "damage", damage },
-            },
-            SoundType = new()
-            {
-                { Common.SoundType.Izki , izki },
-                { Common.SoundType.Aubo , aubo },
-                { Common.SoundType.Dwth , dwth },
-                { Common.SoundType.Hysh , hysh }
-            },
-            Effect = new()
-            {
-                { Common.Effect.Stun , stun },
-                { Common.Effect.Siphon , siphon }
-            }
-        };
+        input.Stats["damage"] += damage;
+        input.Effects[Common.Effect.Stun] += stun;
+        input.Effects[Common.Effect.Siphon] += siphon;
+        
+        input.Stats["heat"] += heat;
+        input.SoundType[Common.SoundType.Izki] += izki;
+        input.SoundType[Common.SoundType.Aubo] += aubo;
+        input.SoundType[Common.SoundType.Dwth] += dwth;
+        input.SoundType[Common.SoundType.Hysh] += hysh;
+        
+        return input;
     }
 }

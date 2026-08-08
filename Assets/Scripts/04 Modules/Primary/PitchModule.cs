@@ -33,31 +33,25 @@ public class PitchModule : PrimaryModule, IWeaponModule
         }
     }
 
-    public override Dictionary<string, float> MusicParams()
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
     {
-        return new Dictionary<string, float>
-        {
-            { "pitch", pitch }
-        };
+        musicParams["pitch"] = pitch;
+        return musicParams;
     }
 
-    public IWeaponModule.WeaponStats MyWeaponStats()
+
+    public IWeaponModule.WeaponStats ChangeWeaponStats(IWeaponModule.WeaponStats input)
     {
-        return new IWeaponModule.WeaponStats()
-        {
-            SoundType = new()
-            {
-                { Common.SoundType.Izki, izki },
-                { Common.SoundType.Aubo, aubo },
-                { Common.SoundType.Dwth, dwth },
-                { Common.SoundType.Hysh, hysh }
-            },
-            Effect = new()
-            {
-                { Common.Effect.SeekReactor, seekReactor },
-                { Common.Effect.SeekWeapon , seekWeapon },
-                { Common.Effect.SeekAux, seekAux }
-            }
-        };
+        input.Effects[Common.Effect.SeekReactor] += seekReactor;
+        input.Effects[Common.Effect.SeekWeapon] += seekWeapon;
+        input.Effects[Common.Effect.SeekAux] += seekAux;
+        
+        input.Stats["heat"] += heat;
+        input.SoundType[Common.SoundType.Izki] += izki;
+        input.SoundType[Common.SoundType.Aubo] += aubo;
+        input.SoundType[Common.SoundType.Dwth] += dwth;
+        input.SoundType[Common.SoundType.Hysh] += hysh;
+        
+        return input;
     }
 }

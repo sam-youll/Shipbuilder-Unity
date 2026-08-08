@@ -40,14 +40,12 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
         }
     }
 
-    public override Dictionary<string, float> MusicParams()
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
     {
-        return new Dictionary<string, float>
-        {
-            { "attack", attack },
-            { "decay", decay },
-            { "release", release }
-        };
+        musicParams["attack"] += attack;
+        musicParams["decay"] += decay;
+        musicParams["release"] += release;
+        return musicParams;
     }
 
     public IWeaponModule.WeaponStats MyWeaponStats()
@@ -67,5 +65,19 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
                 { Common.SoundType.Hysh, hysh }
             }
         };
+    }
+
+    public IWeaponModule.WeaponStats ChangeWeaponStats(IWeaponModule.WeaponStats input)
+    {
+        input.Stats["hullDamage"] += hullDamageMult;
+        input.Stats["systemDamage"] += systemDamageMult;
+        
+        input.Stats["heat"] += heat;
+        input.SoundType[Common.SoundType.Izki] += izki;
+        input.SoundType[Common.SoundType.Aubo] += aubo;
+        input.SoundType[Common.SoundType.Dwth] += dwth;
+        input.SoundType[Common.SoundType.Hysh] += hysh;
+        
+        return input;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 
@@ -36,9 +37,13 @@ public class SplitterModule : TriggerModule, IReactorModule
         return info;
     }
 
-    public IReactorModule.ReactorStats MyReactorStats()
+    public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
     {
-        // this really doesn't need to do anything, the functionality is implemented in the GenerateEnergy() method over in Weapon.cs
-        return new IReactorModule.ReactorStats();
+        foreach (var key in energy.Keys.ToList())
+        {
+            energy[key] *= .5f;
+        }
+
+        return energy;
     }
 }

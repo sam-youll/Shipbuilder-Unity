@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 public interface ISelectable
@@ -62,16 +63,6 @@ public static class Common
         { "release", 100 },
     };
 
-    public static readonly Dictionary<string, float> CombatStats = new()
-    {
-        { "damage", 0 }, // Base damage dealt (Damage is equal to sum of all "damage").
-        { "hullDamage", 0 }, // Multiplier for damage to hull. (Damage mult is equal to 1 + sum, which is then used as a coefficient for damage).
-        { "systemDamage", 0 }, // Multiplier for damage to systems. Bonus system damage almost always means less hull damage, and vice versa.
-        { "heat", 0 }, // The amount of heat generated on trigger. This should roughly correlate to power draw.
-        { "accuracy", 0 }, // Multiplier for chance to hit (1 + sum). 
-        { "soundType", 0 }
-    };
-
     public static readonly Dictionary<SoundType, float> EmptySoundType = new()
     {
         { SoundType.Pure, 0 },
@@ -83,7 +74,7 @@ public static class Common
     
     public static Dictionary<string, float> RandomEnemyWeaponStats(int difficulty)
     {
-        var dict = new Dictionary<string, float>(CombatStats);
+        var dict = new Dictionary<string, float>(BaseWeaponStats().Stats);
 
         dict["damage"] = 4 + Random.value * .5f + .5f * difficulty;
         dict["hullDamage"] = Random.value * .2f;
@@ -115,6 +106,40 @@ public static class Common
             { SoundType.Aubo, 0 },
             { SoundType.Dwth, 0 }
         };
+    }
+
+    public static IWeaponModule.WeaponStats BaseWeaponStats()
+    {
+        var bws = new IWeaponModule.WeaponStats();
+
+        bws.Stats = new Dictionary<string, float>
+        {
+            { "damage", 0 }, // Base damage dealt (Damage is equal to sum of all "damage").
+            { "hullDamage", 0 }, // Multiplier for damage to hull. (Damage mult is equal to 1 + sum, which is then used as a coefficient for damage).
+            { "systemDamage", 0 }, // Multiplier for damage to systems. Bonus system damage almost always means less hull damage, and vice versa.
+            { "heat", 0 }, // The amount of heat generated on trigger. This should roughly correlate to power draw.
+            { "accuracy", 0 }, // Multiplier for chance to hit (1 + sum). 
+            { "soundType", 0 }
+        };
+
+        bws.Effects = new Dictionary<Effect, float>
+        {
+            { Effect.None, 0 },
+            { Effect.Stun, 0 },
+            { Effect.Slow, 0 },
+            { Effect.Splash, 0 },
+            { Effect.Skip, 0 },
+            { Effect.Sustain, 0 },
+            { Effect.Siphon, 0 },
+            { Effect.Scrap, 0 },
+            { Effect.SeekReactor, 0 },
+            { Effect.SeekWeapon, 0 },
+            { Effect.SeekAux, 0 }
+        };
+
+        bws.SoundType = new Dictionary<SoundType, float>(EmptySoundType);
+        
+        return bws;
     }
 
     public static float SoundTypeEffectMult(SoundType attacker, SoundType defender, float strength)

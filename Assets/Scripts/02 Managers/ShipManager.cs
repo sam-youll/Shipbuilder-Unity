@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FMODUnity;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -214,8 +215,7 @@ public class ShipManager : MonoBehaviour
 
     public bool PlayerReadyForCombat()
     {
-        return PlayerWeapons().ToList().Exists(x => x.CompletePatch()) &&
-               PlayerReactor().CompletePatch();
+        return PlayerWeapons().ToList().Exists(x => !x.Warning(out _));
     }
 
     public void SetPlayerName(string shipName)
@@ -305,6 +305,10 @@ public class ShipManager : MonoBehaviour
             weapon.enemySystem = true;
             weapon.baseWeaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel));
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
+            var er = weapon.AddComponent<EnergyReservoir>();
+            weapon.energyReservoir = er;
+            er.maxStoredEnergy = 50;
+            er.invisible = true;
             enemy.weapons.Add(weapon);
         }
         var newReactorObj = new GameObject();
@@ -357,34 +361,28 @@ public class ShipManager : MonoBehaviour
     /// <summary>
     /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
-    /// <param name="combatStats">Dictionary of combat stats.</param>
-    /// <param name="soundType">Sound type.</param>
-    /// <param name="effects">Any effects applied to the projectile.</param>
-    public void DamagePlayer(Dictionary<string, float> combatStats, Dictionary<Common.SoundType, float> soundType, Dictionary<Common.Effect, float> effects)
+    /// <param name="weaponStats">put the lime in the coconut</param>
+    public void DamagePlayer(IWeaponModule.WeaponStats weaponStats)
     {
-        DamageShip(ref player, combatStats, soundType, effects);
+        DamageShip(ref player, weaponStats);
     }
 
     /// <summary>
     /// Deals damage to enemy ship, and applies any associated status effects.
     /// </summary>
-    /// <param name="combatStats">Dictionary of combat stats.</param>
-    /// <param name="soundType">Sound type.</param>
-    /// <param name="effects">Any effects applied to the projectile.</param>
-    public void DamageEnemy(Dictionary<string, float> combatStats, Dictionary<Common.SoundType, float> soundType, Dictionary<Common.Effect, float> effects)
+    /// <param name="weaponStats">weapon stats</param>
+    public void DamageEnemy(IWeaponModule.WeaponStats weaponStats)
     {
-        DamageShip(ref enemy, combatStats, soundType, effects);
+        DamageShip(ref enemy, weaponStats);
     }
 
     /// <summary>
     /// Calculates actual damage received after shields, resistances, weaknesses, etc.
     /// done to target ship. Also applies the associated status effects.
     /// </summary>
-    /// <param name="target">Player or enemy ship.</param>
-    /// <param name="combatStats">Dictionary of combat stats.</param>
-    /// <param name="soundType">Sound type.</param>
-    /// <param name="effects">Any effects applied to the projectile.</param>
-    private void DamageShip(ref Ship target, Dictionary<string, float> combatStats, Dictionary<Common.SoundType, float> soundType, Dictionary<Common.Effect, float> effects)
+    /// <param name="target">The ship to damage</param>
+    /// <param name="weaponStats">weafweg statse</param>
+    private void DamageShip(ref Ship target, IWeaponModule.WeaponStats weaponStats)
     {
         if (CombatManager.Instance.state != CombatManager.State.inCombat)
         {
@@ -413,22 +411,24 @@ public class ShipManager : MonoBehaviour
         // accuracy
         // soundType
 
-        if (Random.value < combatStats["accuracy"])
+        if (Random.value < weaponStats.Stats["accuracy"])
         {
             return;
         }
         
-        var hullDamage = .5f * combatStats["damage"];
-        var systemDamage = .5f * combatStats["damage"];
+        var hullDamage = .5f * weaponStats.Stats["damage"];
+        var systemDamage = .5f * weaponStats.Stats["damage"];
 
-        hullDamage *= 1 + combatStats["hullDamage"];
-        systemDamage *= 1 + combatStats["systemDamage"];
+        hullDamage *= 1 + weaponStats.Stats["hullDamage"];
+        systemDamage *= 1 + weaponStats.Stats["systemDamage"];
 
         var stunAmount = 0f;
         var slowAmount = 0f;
         
-        foreach (var effect in effects)
+        foreach (var effect in weaponStats.Effects)
         {
+            if (effect.Value == 0) continue;
+            
             switch (effect.Key)
             {
                 case Common.Effect.None:
@@ -550,19 +550,19 @@ public class ShipManager : MonoBehaviour
                 systemTarget.Slow(slowAmount);
             }
             
-            if (soundType.Values.Sum() > 0)
+            if (weaponStats.SoundType.Values.Sum() > 0)
             {
                 var targetType = Common.SoundType.Pure;
                 if (systemTarget is Weapon targetWeapon)
                 {
                     
-                    targetType = targetWeapon.SoundType().OrderByDescending(kvp => kvp.Value).First().Key;
+                    targetType = targetWeapon.WeaponStats().SoundType.OrderByDescending(kvp => kvp.Value).First().Key;
                 }
                 else if (systemTarget is Reactor targetReactor)
                 {
-                    targetType = targetReactor.SoundType().OrderByDescending(kvp => kvp.Value).First().Key;
+                    // targetType = targetReactor.SoundType().OrderByDescending(kvp => kvp.Value).First().Key;
                 }
-                systemDamage *= Common.SoundTypeEffectMult(soundType.OrderByDescending(kvp => kvp.Value).First().Key, targetType, soundType.OrderByDescending(kvp => kvp.Value).First().Value);
+                systemDamage *= Common.SoundTypeEffectMult(weaponStats.SoundType.OrderByDescending(kvp => kvp.Value).First().Key, targetType, weaponStats.SoundType.OrderByDescending(kvp => kvp.Value).First().Value);
             }
             
             systemTarget.health -= systemDamage;

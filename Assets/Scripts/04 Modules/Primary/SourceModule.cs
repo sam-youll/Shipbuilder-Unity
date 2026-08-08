@@ -53,15 +53,6 @@ public class SourceModule : PrimaryModule, IWeaponModule
         }
     }
 
-    public override Dictionary<string, float> MusicParams()
-    {
-        return new Dictionary<string, float>()
-        {
-            { "source", (float)waveform }
-        };
-        
-    }
-
     void UpdateWaveform(float value)
     {
         waveform = waveforms[(int)value];
@@ -72,21 +63,24 @@ public class SourceModule : PrimaryModule, IWeaponModule
         waveform = waveforms[value];
     }
 
-    public IWeaponModule.WeaponStats MyWeaponStats()
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
     {
-        return new IWeaponModule.WeaponStats()
-        {
-            Stats = new Dictionary<string, float>()
-            {
-                { "damage", damage }
-            },
-            SoundType = new()
-            {
-                { Common.SoundType.Izki, izki },
-                { Common.SoundType.Aubo, aubo },
-                { Common.SoundType.Dwth, dwth },
-                { Common.SoundType.Hysh, hysh }
-            }
-        };
+        musicParams["source"] = (float)waveform;
+        
+        
+        return musicParams;
+    }
+
+    public IWeaponModule.WeaponStats ChangeWeaponStats(IWeaponModule.WeaponStats input)
+    {
+        input.Stats["damage"] += damage;
+
+        input.Stats["heat"] += heat;
+        input.SoundType[Common.SoundType.Izki] += izki;
+        input.SoundType[Common.SoundType.Aubo] += aubo;
+        input.SoundType[Common.SoundType.Dwth] += dwth;
+        input.SoundType[Common.SoundType.Hysh] += hysh;
+        
+        return input;
     }
 }

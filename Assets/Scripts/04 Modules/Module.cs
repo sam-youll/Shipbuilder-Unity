@@ -303,51 +303,45 @@ public class ModuleInspector : Editor
 #region Interfaces
 public interface INeedEnergy
 {
-    public Dictionary<Common.SoundType, float> EnergyCost();
+    public Dictionary<Common.SoundType, float> ChangeEnergyCost(Dictionary<Common.SoundType, float> input);
 }
 
 public interface IMusicParams
 {
-    public Dictionary<string, float> MusicParams();
+    public Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams);
 }
 
 public interface IWeaponModule
 {
+    public WeaponStats ChangeWeaponStats(WeaponStats input);
+    
     public struct WeaponStats
     {
         public Dictionary<string, float> Stats;
 
         public Dictionary<Common.SoundType, float> SoundType;
 
-        public Dictionary<Common.Effect, float> Effect;
-    }
+        public Dictionary<Common.Effect, float> Effects;
 
-    public WeaponStats MyWeaponStats();
+        public WeaponStats(WeaponStats weaponStats)
+        {
+            Stats = weaponStats.Stats;
+            SoundType = weaponStats.SoundType;
+            Effects = weaponStats.Effects;
+        }
+    }
 }
 
 public interface IReactorModule
 {
-    public struct EnergyConversion
-    {
-        public float EnergyLimit;
-        public List<KeyValuePair<Common.SoundType, float>> ConversionRatios;
-    }
+    /// <summary>
+    /// This method allows energy to be passed from module to module, allowing each module to act upon
+    /// that energy, adding to it, converting it, splitting it, etc.
+    /// </summary>
+    /// <param name="energy">The total energy coming from the previous module in the chain.</param>
+    /// <returns>Total energy after this module acts upon it.</returns>
+    public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy);
     
-    public struct ReactorStats
-    {
-        // power module
-        public float PowerGenerated;
-        
-        // converter modules
-        public EnergyConversion EnergyConversion;
-        
-        // system routing? energy discounts?
-        public Dictionary<ModuleRack, float> SystemRouting;
-
-        public Dictionary<Common.SoundType, float> SoundType;
-    }
-    
-    public ReactorStats MyReactorStats();
 }
 
 public interface IAuxModule
@@ -1380,5 +1374,16 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         {
             tmp.sortingOrder = order;
         }
+    }
+
+    public virtual Dictionary<Common.SoundType, float> ChangeEnergyCost(Dictionary<Common.SoundType, float> input)
+    {
+        return new Dictionary<Common.SoundType, float>
+        {
+            { Common.SoundType.Pure, energyNoneCost },
+            { Common.SoundType.Izki, energyIzkiCost },
+            { Common.SoundType.Aubo, energyAuboCost },
+            { Common.SoundType.Dwth, energyDwthCost }
+        };
     }
 }

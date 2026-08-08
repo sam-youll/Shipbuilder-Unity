@@ -31,12 +31,10 @@ public class DelayModule : PrimaryModule, IWeaponModule
         }
     }
 
-    public override Dictionary<string, float> MusicParams()
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
     {
-        return new Dictionary<string, float>
-        {
-            { "delayTime", delayTime }
-        };
+        musicParams["delayTime"] += delayTime;
+        return musicParams;
     }
 
     public IWeaponModule.WeaponStats MyWeaponStats()
@@ -55,5 +53,18 @@ public class DelayModule : PrimaryModule, IWeaponModule
                 { Common.SoundType.Hysh, hysh }
             }
         };
+    }
+
+    public IWeaponModule.WeaponStats ChangeWeaponStats(IWeaponModule.WeaponStats input)
+    {
+        input.Stats["damage"] += damage;
+        
+        input.Stats["heat"] += heat;
+        input.SoundType[Common.SoundType.Izki] += izki;
+        input.SoundType[Common.SoundType.Aubo] += aubo;
+        input.SoundType[Common.SoundType.Dwth] += dwth;
+        input.SoundType[Common.SoundType.Hysh] += hysh;
+        
+        return input;
     }
 }

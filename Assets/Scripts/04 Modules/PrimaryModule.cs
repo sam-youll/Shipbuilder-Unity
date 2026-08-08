@@ -20,5 +20,5 @@ public abstract class PrimaryModule : Module, IMusicParams
         
     }
 
-    public abstract Dictionary<string, float> MusicParams();
+    public abstract Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams);
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SaintsField;
 using SaintsField.Playa;
 using UnityEngine;
@@ -279,7 +280,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         if (this is Weapon weapon)
         {
             info += "Weapon Stats:\n";
-            foreach (var kvp in weapon.WeaponStats())
+            foreach (var kvp in weapon.WeaponStats().Stats)
             {
                 if (kvp.Key == "bulletType")
                 {
@@ -401,6 +402,14 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         pos.x = dimensions.x % 2 == 0 ? Mathf.Floor(pos.x) : Mathf.Floor(pos.x) + .5f;
         pos.y = dimensions.y % 2 == 0 ? Mathf.Floor(pos.y) : Mathf.Floor(pos.y) + .5f;
         transform.position = pos;
+    }
+
+    public virtual List<Module> ModulesOnRack()
+    {
+        // get all modules on the rack
+        return GetComponentsInChildren<Module>().ToList();
+        // if we want to filter these modules more specifically,
+        // we override this method in an inherited class like Reactor
     }
 
     public virtual void Trigger()

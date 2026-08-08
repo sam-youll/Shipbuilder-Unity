@@ -119,50 +119,6 @@ public class Reactor : ModuleRack, ITooltipInfo
     //     }
     // }
 
-    public float Power()
-    {
-        var power = 0f;
-        
-        foreach (var mod in ActivePatch())
-        {
-            if (mod is IReactorModule iReactorMod)
-            {
-                if (mod is PowerModule)
-                {
-                    power += iReactorMod.MyReactorStats().PowerGenerated;
-                }
-            }
-        }
-
-        return power;
-    }
-
-    public float ConversionRate()
-    {
-        var powerGenerated = 0f;
-        var conversionLimit = 0f;
-
-        foreach (var mod in ActivePatch())
-        {
-            if (mod is IReactorModule iReactorMod)
-            {
-                if (mod is PowerModule)
-                {
-                    // Add the energy amount as untyped energy (right now, this assumes a power module)
-                    powerGenerated += iReactorMod.MyReactorStats().PowerGenerated;
-                }
-                if (mod is ConverterModule)
-                {
-                    conversionLimit += iReactorMod.MyReactorStats().EnergyConversion.EnergyLimit;
-                }
-            }
-        }
-
-        if (powerGenerated <= 0) return 0;
-
-        return Mathf.Clamp01(conversionLimit / powerGenerated) * 100;
-    }
-
     public override bool CompletePatch()
     {
         return base.CompletePatch() && 
@@ -170,19 +126,57 @@ public class Reactor : ModuleRack, ITooltipInfo
                ActivePatch().TrueForAll(x => x is IReactorModule);
     }
     
-    public Dictionary<Common.SoundType, float> SoundType()
+    // public Dictionary<Common.SoundType, float> SoundType()
+    // {
+    //     var dict = new Dictionary<Common.SoundType, float>(Common.EmptySoundType);
+    //     foreach (var mod in ActivePatch())
+    //     {
+    //         if (mod is IReactorModule reactorModule)
+    //         {
+    //             foreach (var kvp in reactorModule.MyReactorStats().SoundType)
+    //             {
+    //                 dict[kvp.Key] += kvp.Value;
+    //             }
+    //         }
+    //     }
+    //     return dict;
+    // }
+
+    public float TotalPowerGenerated()
     {
-        var dict = new Dictionary<Common.SoundType, float>(Common.EmptySoundType);
-        foreach (var mod in ActivePatch())
+        var power = 0f;
+        
+        foreach (var mod in ModulesOnRack())
         {
-            if (mod is IReactorModule reactorModule)
+            if (mod is IReactorModule)
             {
-                foreach (var kvp in reactorModule.MyReactorStats().SoundType)
+                if (mod is PowerModule pMod)
                 {
-                    dict[kvp.Key] += kvp.Value;
+                    power += pMod.power;
                 }
             }
         }
-        return dict;
+
+        return power;
+    }
+    
+    // right now, this is just the total power getting converted to anything
+    // feel free to change how this is calculating stuff
+    public float TotalPowerConverted()
+    {
+        var power = 0f;
+
+        foreach (var mod in ModulesOnRack())
+        {
+            if (mod is IReactorModule)
+            {
+                if (mod is ConverterModule cMod)
+                {
+                    power += cMod.energyLimit;
+                }
+            }
+        }
+
+        return power;
     }
 }

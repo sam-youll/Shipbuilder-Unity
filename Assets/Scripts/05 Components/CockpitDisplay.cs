@@ -107,11 +107,11 @@ public class CockpitDisplay : MonoBehaviour
     private void OnEnemyInitialized()
     {
         var enemyWeapons = ShipManager.Instance.EnemyWeapons();
-        statText.text = "Prepare for combat! Enemy ship approaching!\nEnemy weapon types are:\n";
-        foreach (var weapon in enemyWeapons)
-        {
-            statText.text +=  Enum.GetName(typeof(Common.SoundType), (int)weapon.WeaponStats()["soundType"]) + " ";
-        }
+        // statText.text = "Prepare for combat! Enemy ship approaching!\nEnemy weapon types are:\n";
+        // foreach (var weapon in enemyWeapons)
+        // {
+        //     statText.text +=  Enum.GetName(typeof(Common.SoundType), (int)weapon.WeaponStats()["soundType"]) + " ";
+        // }
         questionMarks.SetActive(true);
     }
 

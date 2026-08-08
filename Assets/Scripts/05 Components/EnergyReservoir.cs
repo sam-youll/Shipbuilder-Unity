@@ -25,6 +25,7 @@ public class EnergyReservoir : MonoBehaviour
     [GetComponent] public GridLayoutGroup grid;
     public GameObject energyBarPrefab;
     public float maxStoredEnergy;
+    public bool invisible;
 
     // private void Update()
     // {
@@ -57,6 +58,8 @@ public class EnergyReservoir : MonoBehaviour
 
     public void UpdateDisplay(Dictionary<Common.SoundType, float> energyInReactor)
     {
+        if (invisible) return;
+        
         // Debug.Log("Updating display cells");
         foreach (var kvp in energyInReactor)
         {
@@ -97,6 +100,8 @@ public class EnergyReservoir : MonoBehaviour
 
     private void ChangeEnergy(Common.SoundType type, float amount)
     {
+        if (invisible) return;
+        
         // no change -> return
         if (amount == 0)
         {
@@ -163,6 +168,8 @@ public class EnergyReservoir : MonoBehaviour
 
     private void AddEnergyBar(Common.SoundType type, float remainder)
     {
+        if (invisible) return;
+        
         // if the remainder is still more than 1 (unlikely), we need to call this function again
         var trueRemainder = remainder;
         if (remainder > 1)
@@ -259,6 +266,8 @@ public class EnergyReservoir : MonoBehaviour
 
     private void RemoveEnergyBar(Common.SoundType type, float amount)
     {
+        if (invisible) return;
+        
         // if (Mathf.Abs(remainder) < 1) remainder--;
         // Debug.Log($"There was {energy[type].Count-1 + energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount} {type} energy. " +
         //           $"Removing {amount}.");

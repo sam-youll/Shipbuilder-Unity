@@ -15,7 +15,7 @@ public class PowerModule : PrimaryModule, IReactorModule
 
     public override string Description()
     {
-        return "Generates energy for the reactor.";
+        return "Generates energy for the reactor. Chaining power modules will increase overall output.";
     }
 
     public override string Info()
@@ -23,18 +23,21 @@ public class PowerModule : PrimaryModule, IReactorModule
         return $"Currently generating {power} untyped energy per second.";
     }
 
-    public override Dictionary<string, float> MusicParams()
+    public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
     {
-        //TODO: add whatever bullshit the power modules will do to the sound
-        // i gotta be honest, idk what "more aggressive means" in this context
-        return new Dictionary<string, float>();
+        energy[Common.SoundType.Pure] += power;
+        return energy;
     }
 
-    public IReactorModule.ReactorStats MyReactorStats()
+    // public IReactorModule.ReactorStats MyReactorStats()
+    // {
+    //     return new IReactorModule.ReactorStats()
+    //     {
+    //         PowerGenerated = power
+    //     };
+    // }
+    public override Dictionary<string, float> ChangeMusicParams(Dictionary<string, float> musicParams)
     {
-        return new IReactorModule.ReactorStats()
-        {
-            PowerGenerated = power
-        };
+        throw new System.NotImplementedException();
     }
 }

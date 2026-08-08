@@ -214,7 +214,7 @@ public class AudioManager: MonoBehaviour
     private void OnWeaponFired(Weapon weapon)
     {
         // Debug.Log("playing note");
-        StartCoroutine(PlayNoteCoroutine(weapon, weapon.NoteInfo()));
+        StartCoroutine(PlayNoteCoroutine(weapon, weapon.MusicParams()));
     }
 
     private IEnumerator PlayNoteCoroutine(Weapon weapon, Dictionary<string, float> noteInfo)

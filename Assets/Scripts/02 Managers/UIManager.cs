@@ -39,14 +39,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Vector3 mfdScreenUpPos;
     [SerializeField] private Vector3 mfdScreenDownPos;
     
-    private bool mfdScreenUpDown = false;
+    [ShowInInspector] private bool mfdScreenUpDown = false;
     
     [Header("Shop Screen")]
     [SerializeField] private GameObject shopScreen;
     [SerializeField] private Vector3 shopScreenUpPos;
     [SerializeField] private Vector3 shopScreenDownPos;
     
-    private bool shopScreenUpDown = false;
+    [ShowInInspector] private bool shopScreenUpDown = false;
     
     private readonly float screenMoveSpeed = 10f;
     
@@ -56,9 +56,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image enemyHullBar;
     [SerializeField] private GameObject playerSystems;
     [SerializeField] private GameObject enemySystems;
-    [SerializeField] private TextMeshProUGUI weaponsReadyCheckText;
-    [SerializeField] private TextMeshProUGUI reactorReadyCheckText;
     [SerializeField] private TextMeshProUGUI combatReadyCheckText;
+    [SerializeField] private TextMeshProUGUI warningMessage;
     
     [Header("Shop Display Elements")] 
     [SerializeField] private GameObject shopSlotPrefab;
@@ -122,7 +121,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator ShowHideScreenCoroutine()
     {
-        var targetPos = mfdScreenUpDown ? mfdScreenUpPos : mfdScreenDownPos;
+        var targetPos = !mfdScreenUpDown ? mfdScreenUpPos : mfdScreenDownPos;
         mfdScreenUpDown = !mfdScreenUpDown;
 
         while (mfdScreen.transform.localPosition != targetPos)
@@ -135,7 +134,7 @@ public class UIManager : MonoBehaviour
     
     private IEnumerator ShowHideShopScreenCoroutine()
     {
-        var targetPos = shopScreenUpDown ? shopScreenUpPos : shopScreenDownPos;
+        var targetPos = !shopScreenUpDown ? shopScreenUpPos : shopScreenDownPos;
         shopScreenUpDown = !shopScreenUpDown;
 
         while (shopScreen.transform.localPosition != targetPos)
@@ -169,16 +168,11 @@ public class UIManager : MonoBehaviour
         
         playerHullBar.fillAmount = ShipManager.Instance.PlayerCurrentHull() / ShipManager.Instance.PlayerMaxHull();
         enemyHullBar.fillAmount = ShipManager.Instance.EnemyHull() / ShipManager.Instance.EnemyMaxHull();
-
-        weaponsReadyCheckText.text = ShipManager.Instance.PlayerWeapons().ToList().Exists(x => x.CompletePatch())
-            ? "Weapons: Active"
-            : "Weapons: Inactive";
-        reactorReadyCheckText.text = ShipManager.Instance.PlayerReactor().CompletePatch()
-            ? "Reactor: Powered"
-            : "Reactor: Unpowered";
+        
         combatReadyCheckText.text = ShipManager.Instance.PlayerReadyForCombat()
             ? "READY FOR COMBAT"
             : "Not ready for combat";
+        warningMessage.gameObject.SetActive(!ShipManager.Instance.PlayerReadyForCombat());
     }
 
     public void InitPlayerSystemsDisplay()
@@ -474,6 +468,10 @@ public class UIManager : MonoBehaviour
         var physCastResults = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         foreach (var hit in physCastResults)
         {
+            if (canvasResults.Exists(x => x.gameObject.GetComponentInParent<Canvas>() == screenCanvas))
+            {
+                break;
+            }
             // results.Add(hit.collider.gameObject);
             if (hit.collider.gameObject.TryGetComponent(out ISelectable _))
             {

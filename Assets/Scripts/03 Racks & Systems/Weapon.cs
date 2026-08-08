@@ -19,8 +19,8 @@ public class Weapon : ModuleRack, ITooltipInfo
     public float warmup = 0;
     public float stunTimer;
     public bool firing;
-    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.CombatStats);
-    [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new();
+    [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.BaseWeaponStats().Stats.ToDictionary(x => x.Key, x => x.Value));
+    [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new(Common.EmptyEnergyCost());
     public bool overheated;
 
     [Header("Components")]
@@ -47,10 +47,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             if (module is SourceModule) hasSource = true;
             if (module is INeedEnergy eMod)
             {
-                foreach (var kvp in eMod.EnergyCost())
-                {
-                    energyNeeds[kvp.Key] += kvp.Value;
-                }
+                energyNeeds = eMod.ChangeEnergyCost(energyNeeds);
             }
         }
 
@@ -85,27 +82,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             if (mod is IReactorModule iReactorMod)
             {
-                if (mod is PowerModule)
-                {
-                    // Add the energy amount as untyped energy (right now, this assumes a power module)
-                    theoreticalEnergyProduction[Common.SoundType.Pure] += iReactorMod.MyReactorStats().PowerGenerated;
-                    // Debug.Log($"Added {iReactorMod.MyReactorStats().PowerGenerated} power");
-                }
-
-                if (mod is ConverterModule)
-                {
-                    // this is probably gonna throw errors, but I'm not sure exactly how
-                    var enCon = iReactorMod.MyReactorStats().EnergyConversion;
-                    var conAmt = Mathf.Min(enCon.EnergyLimit, theoreticalEnergyProduction[Common.SoundType.Pure]);
-
-                    theoreticalEnergyProduction[Common.SoundType.Pure] -= conAmt;
-
-                    foreach (var kvp in iReactorMod.MyReactorStats().EnergyConversion.ConversionRatios)
-                    {
-                        theoreticalEnergyProduction[kvp.Key] += conAmt * kvp.Value;
-                        // Debug.Log($"Converted {conAmt * kvp.Value} energy to {kvp.Key}");
-                    }
-                }
+                theoreticalEnergyProduction = iReactorMod.ChangeEnergy(theoreticalEnergyProduction);
             }
         }
 
@@ -200,7 +177,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             }
         }
 
-        if (EnergyPatch().Count > 0)
+        if (EnergyPatch().Count > 0 || enemySystem)
         {
             GenerateEnergy(energyReservoir);
         }
@@ -215,85 +192,25 @@ public class Weapon : ModuleRack, ITooltipInfo
         return .1f * Time.deltaTime;
     }
 
-    public Dictionary<string, float> WeaponStats()
+    public IWeaponModule.WeaponStats WeaponStats()
     {
-        var dict = new Dictionary<string, float>(baseWeaponStats);
+        var ws = new IWeaponModule.WeaponStats(Common.BaseWeaponStats())
+        {
+            Stats = baseWeaponStats.ToDictionary(x => x.Key, x => x.Value)
+        };
 
-        // var izki = 0f;
-        // var aubo = 0f;
-        // var dwth = 0f;
-        // var hysh = 0f;
-        
         foreach (var mod in ActivePatch())
         {
            if (mod is IWeaponModule weaponMod)
            {
-               if (weaponMod.MyWeaponStats().Stats != null)
-               {
-                   foreach (var stat in weaponMod.MyWeaponStats().Stats)
-                   {
-                       dict[stat.Key] += stat.Value;
-                   }
-               }
-               
-               dict["heat"] += mod.heat;
-
-               // izki += mod.izki;
-               // aubo += mod.aubo;
-               // dwth += mod.dwth;
-               // hysh += mod.hysh;
+               ws = weaponMod.ChangeWeaponStats(ws);
            }
         }
-
-        // var soundTypeValue = 0f;
-        // dict["soundType"] = (float)Common.SoundType.None;
-        // if (izki > soundTypeValue)
-        // {
-        //     dict["soundType"] = (float)Common.SoundType.Izki;
-        //     soundTypeValue = izki;
-        // }
-        // if (aubo > soundTypeValue)
-        // {
-        //     dict["soundType"] = (float)Common.SoundType.Aubo;
-        //     soundTypeValue = aubo;
-        // }
-        // if (dwth > soundTypeValue)
-        // {
-        //     dict["soundType"] = (float)Common.SoundType.Dwth;
-        //     soundTypeValue = dwth;
-        // }
-        // if (hysh > soundTypeValue)
-        // {
-        //     dict["soundType"] = (float)Common.SoundType.Hysh;
-        //     soundTypeValue = hysh;
-        // }
-
-        // var myReactor = enemySystem ? ShipManager.Instance.EnemyReactor() : ShipManager.Instance.PlayerReactor();
-        // dict["damage"] *= (1 + .5f * myReactor.strength);
-
-        return dict;
+        
+        return ws;
     }
 
-    public Dictionary<Common.Effect, float> WeaponEffects()
-    {
-        var dict = new Dictionary<Common.Effect, float>();
-        foreach (var module in ActivePatch())
-        {
-            if (module.TryGetComponent(out IWeaponModule weaponModule))
-            {
-                if (weaponModule.MyWeaponStats().Effect == null) continue;
-                
-                foreach (var kvp in weaponModule.MyWeaponStats().Effect)
-                {
-                    dict.Add(kvp.Key, kvp.Value);
-                }
-            }
-        }
-
-        return dict;
-    }
-
-    public Dictionary<string, float> NoteInfo()
+    public Dictionary<string, float> MusicParams()
     {
         if (enemySystem)
         {
@@ -313,10 +230,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             if (mod is IMusicParams musicMod)
             {
-                foreach (var param in musicMod.MusicParams())
-                {
-                    dict[param.Key] = param.Value;
-                }
+                dict = musicMod.ChangeMusicParams(dict);
             }
         }
 
@@ -336,27 +250,26 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             if (mod is INeedEnergy energyMod)
             {
-                foreach (var kvp in energyMod.EnergyCost())
-                {
-                    if (!dict.ContainsKey(kvp.Key))
-                    {
-                        dict[kvp.Key] = kvp.Value;
-                    }
-                    else
-                    {
-                        dict[kvp.Key] += kvp.Value;
-                    }
-                }
+                dict = energyMod.ChangeEnergyCost(dict);
             }
         }
         
         return dict;
     }
-    
+
     private void GenerateEnergy(EnergyReservoir targetReservoir)
     {
         if (health <= 0)
         {
+            return;
+        }
+        
+        // TODO: once a system for adding invisible modules to enemy ships is in place, delete this
+        // the above code will work once that's all in place
+        // This is a stopgap for enemy ships
+        if (enemySystem)
+        {
+            targetReservoir.storedEnergy[Common.SoundType.Pure] += Time.deltaTime;
             return;
         }
 
@@ -366,49 +279,11 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             if (mod is IReactorModule iReactorMod)
             {
-                if (mod is PowerModule)
-                {
-                    // Add the energy amount as untyped energy (right now, this assumes a power module)
-                    newEnergy[Common.SoundType.Pure] += iReactorMod.MyReactorStats().PowerGenerated;
-                    // Debug.Log($"Added {iReactorMod.MyReactorStats().PowerGenerated} power");
-                }
-
-                if (mod is ConverterModule)
-                {
-                    // this is probably gonna throw errors, but I'm not sure exactly how
-                    var enCon = iReactorMod.MyReactorStats().EnergyConversion;
-                    var conAmt = Mathf.Min(enCon.EnergyLimit, newEnergy[Common.SoundType.Pure]);
-
-                    newEnergy[Common.SoundType.Pure] -= conAmt;
-
-                    foreach (var kvp in iReactorMod.MyReactorStats().EnergyConversion.ConversionRatios)
-                    {
-                        newEnergy[kvp.Key] += conAmt * kvp.Value;
-                        // Debug.Log($"Converted {conAmt * kvp.Value} energy to {kvp.Key}");
-                    }
-                }
-
-                if (mod is SplitterModule)
-                {
-                    // splitter module splits the energy two ways, so each receiver just multiplies by .5f
-                    foreach (var key in newEnergy.Keys.ToList())
-                    {
-                        newEnergy[key] *= .5f;
-                    }
-                }
+                newEnergy = iReactorMod.ChangeEnergy(newEnergy);
             }
         }
 
         targetReservoir.AddEnergy(newEnergy);
-
-
-        // TODO: once a system for adding invisible modules to enemy ships is in place, delete this
-        // the above code will work once that's all in place
-        // This is a stopgap for enemy ships
-        if (enemySystem)
-        {
-            targetReservoir.storedEnergy[Common.SoundType.Pure] += Time.deltaTime;
-        }
     }
 
     public void Fire()
@@ -449,8 +324,8 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
-        heat += .125f * WeaponStats()["heat"];
-        
+        heat += WeaponStats().Stats["heat"];
+        Debug.Log(heat);
         
         DisplayManager.Instance.Log("Fired " + name);
         
@@ -459,11 +334,11 @@ public class Weapon : ModuleRack, ITooltipInfo
         {
             if (enemySystem)
             {
-                ShipManager.Instance.DamagePlayer(WeaponStats(), SoundType(), WeaponEffects());
+                ShipManager.Instance.DamagePlayer(WeaponStats());
             }
             else
             {
-                ShipManager.Instance.DamageEnemy(WeaponStats(), SoundType(), WeaponEffects());
+                ShipManager.Instance.DamageEnemy(WeaponStats());
             }
         }
         
@@ -476,22 +351,6 @@ public class Weapon : ModuleRack, ITooltipInfo
                ActivePatch().TrueForAll(x => x is IWeaponModule or SecondaryModule or TriggerModule) &&
                ActivePatch().Exists(x => x is ClockModule) &&
                ActivePatch().Exists(x => x is SourceModule);
-    }
-    
-    public Dictionary<Common.SoundType, float> SoundType()
-    {
-        var dict = new Dictionary<Common.SoundType, float>(Common.EmptySoundType);
-        foreach (var mod in ActivePatch())
-        {
-            if (mod is IWeaponModule weaponModule)
-            {
-                foreach (var kvp in weaponModule.MyWeaponStats().SoundType)
-                {
-                    dict[kvp.Key] += kvp.Value;
-                }
-            }
-        }
-        return dict;
     }
 
     private List<Module> EnergyPatch()
