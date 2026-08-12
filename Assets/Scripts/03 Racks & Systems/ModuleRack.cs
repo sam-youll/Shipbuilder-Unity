@@ -252,7 +252,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
 
     public abstract string Description();
 
-    public string Info()
+    public virtual string Info()
     {
         var info = CompletePatch() ? "Complete patch\n" : "Patch is incomplete\n";
 
@@ -277,25 +277,6 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         //         }
         //     }
         // }
-        if (this is Weapon weapon)
-        {
-            info += "Weapon Stats:\n";
-            foreach (var kvp in weapon.WeaponStats().Stats)
-            {
-                if (kvp.Key == "bulletType")
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
-                }
-                else if (kvp.Key == "soundType")
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
-                }
-                else
-                {
-                    info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
-                }
-            }
-        }
     
         return info;
     }

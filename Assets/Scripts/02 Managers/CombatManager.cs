@@ -77,6 +77,7 @@ public class CombatManager : MonoBehaviour
         
         EventBus.Instance.combatStarted.AddListener(OnCombatStarted);
         EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
+        EventBus.Instance.playerEscaped.AddListener(OnPlayerEscaped);
     }
 
     /// <summary>
@@ -219,7 +220,16 @@ public class CombatManager : MonoBehaviour
         InventoryManager.Instance.scrap += scrapWon;
         EventBus.Instance.playerScrapValueChanged.Invoke();
         DisplayManager.Instance.Log($"Found {scrapWon} scrap.");
+        ShipManager.Instance.HealPlayerToFull();
         fightLevel++;
+    }
+
+    private void OnPlayerEscaped()
+    {
+        state = State.outOfCombat;
+        DisplayManager.Instance.Log("Player escaped!");
+        ShipManager.Instance.HealPlayerToFull();
+        
     }
 
     // public IEnumerator Pulsar()

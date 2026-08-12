@@ -21,6 +21,7 @@ public class Weapon : ModuleRack, ITooltipInfo
     public bool firing;
     [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.BaseWeaponStats().Stats.ToDictionary(x => x.Key, x => x.Value));
     [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new(Common.EmptyEnergyCost());
+    public float baseCoolingRate = .1f;
     public bool overheated;
 
     [Header("Components")]
@@ -33,6 +34,30 @@ public class Weapon : ModuleRack, ITooltipInfo
     {
         return "Fires projectiles, playing a note with each one. " +
                "Musical parameters and combat stats are determined by the modules in the connected patch.";
+    }
+
+    public override string Info()
+    {
+        var info = base.Info();
+        
+        info += "Weapon Stats:\n";
+        foreach (var kvp in WeaponStats().Stats)
+        {
+            if (kvp.Key == "bulletType")
+            {
+                info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
+            }
+            else if (kvp.Key == "soundType")
+            {
+                info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
+            }
+            else
+            {
+                info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
+            }
+        }
+        info += "Cooling at a rate of " + CoolingRate() + " per second\n";
+        return info;
     }
 
     public override bool Warning(out string message)
@@ -98,6 +123,20 @@ public class Weapon : ModuleRack, ITooltipInfo
         }
 
         return missingEnergy.Count == 0;
+    }
+
+    public float CoolingRate()
+    {
+        var rate = baseCoolingRate;
+        foreach (var module in ModulesOnRack())
+        {
+            if (module is VentModule vMod)
+            {
+                rate += vMod.coolingRateBonus;
+            }
+        }
+
+        return rate;
     }
 
     protected override void Start()
@@ -187,9 +226,9 @@ public class Weapon : ModuleRack, ITooltipInfo
     {
         if (slowTimer > 0)
         {
-            return .025f * Time.deltaTime;
+            return .25f * CoolingRate() * Time.deltaTime;
         }
-        return .1f * Time.deltaTime;
+        return CoolingRate() * Time.deltaTime;
     }
 
     public IWeaponModule.WeaponStats WeaponStats()
@@ -224,7 +263,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             return enemydict;
         }
         
-        var dict = new Dictionary<string, float>(Common.NoteInfo);
+        var dict = new Dictionary<string, float>(Common.NoteInfo.ToDictionary(x => x.Key, x => x.Value));
         
         foreach (var mod in ActivePatch())
         {

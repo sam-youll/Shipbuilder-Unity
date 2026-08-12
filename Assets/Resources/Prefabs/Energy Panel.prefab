@@ -253,6 +253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 2299256570010499461}
   energyBarPrefab: {fileID: 2723746213113385867, guid: cdca4ad529b76094e931799eb6ed22f7, type: 3}
+  maxStoredEnergy: 0
+  invisible: 0
 --- !u!114 &599760561688008983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,7 +466,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -0.1875, y: -0.1875}
+  m_SizeDelta: {x: -0.125, y: -0.125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2299256570010499461
 MonoBehaviour:
@@ -486,7 +488,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 0.3125, y: 0.3125}
-  m_Spacing: {x: 0.0625, y: 0.0625}
+  m_CellSize: {x: 0.375, y: 0.375}
+  m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2

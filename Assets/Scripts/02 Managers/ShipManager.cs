@@ -411,7 +411,7 @@ public class ShipManager : MonoBehaviour
         // accuracy
         // soundType
 
-        if (Random.value < weaponStats.Stats["accuracy"])
+        if (Random.value < 1 - weaponStats.Stats["accuracy"])
         {
             return;
         }
@@ -587,6 +587,14 @@ public class ShipManager : MonoBehaviour
     {
         if (target.Equals(player))
         {
+            // check for Escape Modules
+            if (player.reactor.ModulesOnRack().Exists(x => x is EscapeModule))
+            {
+                var escMod = player.reactor.ModulesOnRack().Find(x => x is EscapeModule);
+                Destroy(escMod.gameObject);
+                EventBus.Instance.playerEscaped.Invoke();
+                return;
+            }
             EventBus.Instance.playerDefeated.Invoke();
         }
         else if (target.Equals(enemy))
@@ -603,6 +611,11 @@ public class ShipManager : MonoBehaviour
             return;
         
         InventoryManager.Instance.scrap -= hullRepairCost;
+        player.currentHull = PlayerMaxHull();
+    }
+
+    public void HealPlayerToFull()
+    {
         player.currentHull = PlayerMaxHull();
     }
 }

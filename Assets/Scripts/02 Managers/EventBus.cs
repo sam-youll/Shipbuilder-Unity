@@ -61,6 +61,7 @@ public class EventBus : MonoBehaviour
     public UnityEvent combatStarted;
     public UnityEvent enemyDefeated;
     public UnityEvent playerDefeated;
+    public UnityEvent playerEscaped;
     public UnityEvent newCombatEncounterStarted;
     public UnityEvent startedDialogue;
     public UnityEvent enteredShop;

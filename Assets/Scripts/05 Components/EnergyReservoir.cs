@@ -26,6 +26,7 @@ public class EnergyReservoir : MonoBehaviour
     public GameObject energyBarPrefab;
     public float maxStoredEnergy;
     public bool invisible;
+    private bool full;
 
     // private void Update()
     // {
@@ -48,12 +49,30 @@ public class EnergyReservoir : MonoBehaviour
     
     public bool Full()
     {
+        if (full)
+        {
+            return true;
+        }
+        
         float totalEnergy = 0;
         foreach (var type in storedEnergy.Values)
         {
             totalEnergy += type;
         }
-        return totalEnergy >= maxStoredEnergy;
+
+        var overFull = totalEnergy > maxStoredEnergy;
+
+        if (overFull)
+        {
+            full = true;
+            foreach (var key in storedEnergy.Keys.ToList())
+            {
+                storedEnergy[key] = Mathf.Round(storedEnergy[key]);
+            }
+            UpdateDisplay(storedEnergy);
+        }
+        
+        return full;
     }
 
     public void UpdateDisplay(Dictionary<Common.SoundType, float> energyInReactor)
@@ -85,6 +104,8 @@ public class EnergyReservoir : MonoBehaviour
 
             return false;
         }
+        
+        full = false;
 
         // ok now we actually remove the energy
         foreach (var key in cost.Keys)
@@ -101,6 +122,36 @@ public class EnergyReservoir : MonoBehaviour
     private void ChangeEnergy(Common.SoundType type, float amount)
     {
         if (invisible) return;
+
+        if (full)
+        {
+            var emptyModules = new List<GameObject>();
+            for (var i = 0; i < grid.transform.childCount; i++)
+            {
+                if (grid.transform.GetChild(i).Find("Fill").gameObject.GetComponent<Image>().fillAmount < .1f)
+                {
+                    emptyModules.Add(grid.transform.GetChild(i).gameObject);
+                }
+            }
+            emptyModules.ForEach(DestroyImmediate);
+
+            foreach (var list in energyCells)
+            {
+                var indices = new List<int>();
+                for (int i = 0; i < list.Value.Count; i++)
+                {
+                    if (list.Value[i] == null)
+                    {
+                        indices.Add(i);
+                    }
+                }
+
+                foreach (var i in indices)
+                {
+                    list.Value.RemoveAt(i);
+                }
+            }
+        }
         
         // no change -> return
         if (amount == 0)
@@ -181,16 +232,20 @@ public class EnergyReservoir : MonoBehaviour
         switch (type)
         {
             case Common.SoundType.Pure:
-                newEnergyBar.transform.Find("Fill").GetComponent<Image>().color = Color.white;
+                newEnergyBar.transform.Find("Fill").GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>("Sprites/NormalBall");
                 break;
             case Common.SoundType.Izki:
-                newEnergyBar.transform.Find("Fill").GetComponent<Image>().color = Color.yellow;
+                newEnergyBar.transform.Find("Fill").GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>("Sprites/IzkiBall");
                 break;
             case Common.SoundType.Aubo:
-                newEnergyBar.transform.Find("Fill").GetComponent<Image>().color = Color.cyan;
+                newEnergyBar.transform.Find("Fill").GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>("Sprites/AuboBall");
                 break;
             case Common.SoundType.Dwth:
-                newEnergyBar.transform.Find("Fill").GetComponent<Image>().color = Color.magenta;
+                newEnergyBar.transform.Find("Fill").GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>("Sprites/DwthBall");
                 break;
         }
 
@@ -289,7 +344,9 @@ public class EnergyReservoir : MonoBehaviour
             return 0;
         }
 
-        return energyCells[type].Count - 1 + energyCells[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount;
+        var amt = energyCells[type].Count - 1 +
+              energyCells[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount;
+        return amt;
     }
     
     private void OnCombatStarted()

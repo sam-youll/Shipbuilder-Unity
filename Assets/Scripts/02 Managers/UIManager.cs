@@ -28,6 +28,10 @@ public class UIManager : MonoBehaviour
             DontDestroyOnLoad(this);
         }
     }
+
+    [Header("Properties")] 
+    public Rect cameraBounds;
+    [SerializeField] private bool showBounds;
     
     [Header("Canvases")]
     public Canvas shipCanvas;
@@ -106,7 +110,22 @@ public class UIManager : MonoBehaviour
             pauseMenu.SetActive(!pauseMenu.activeSelf);
         }
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        if (showBounds)
+        {
+            var topLeft = new Vector2(cameraBounds.x, cameraBounds.y);
+            var topRight = new Vector2(cameraBounds.x + cameraBounds.width, cameraBounds.y);
+            var bottomRight = new Vector2(cameraBounds.x + cameraBounds.width, cameraBounds.y - cameraBounds.height);
+            var bottomLeft = new Vector2(cameraBounds.x, cameraBounds.y - cameraBounds.height);
+            Gizmos.DrawLine(topLeft, topRight);
+            Gizmos.DrawLine(topRight, bottomRight);
+            Gizmos.DrawLine(bottomRight, bottomLeft);
+            Gizmos.DrawLine(bottomLeft, topLeft);
+        }
+    }
+
     public void ShowHideScreen()
     {
         StopAllCoroutines();
@@ -173,6 +192,8 @@ public class UIManager : MonoBehaviour
             ? "READY FOR COMBAT"
             : "Not ready for combat";
         warningMessage.gameObject.SetActive(!ShipManager.Instance.PlayerReadyForCombat());
+        
+        enemySystems.transform.parent.gameObject.SetActive(CombatManager.Instance.state == CombatManager.State.inCombat);
     }
 
     public void InitPlayerSystemsDisplay()
@@ -311,14 +332,32 @@ public class UIManager : MonoBehaviour
             // we only want to move in 2D space
             delta.z = 0;
 
-            Global.Instance.cam.transform.position = panOriginCam - delta;
+            var pos = panOriginCam - delta;
             
+            // clamp to cameraBounds
+            pos.x = Mathf.Clamp(pos.x, cameraBounds.x + cam.orthographicSize * cam.aspect, cameraBounds.x + cameraBounds.width - cam.orthographicSize * cam.aspect);
+            pos.y = Mathf.Clamp(pos.y, cameraBounds.y - cameraBounds.height + cam.orthographicSize, cameraBounds.y - cam.orthographicSize);
+            
+            Global.Instance.cam.transform.position = pos;
         }
 
         if (Input.mouseScrollDelta.y != 0 &&
+            cam.rect.Contains(cam.ScreenToViewportPoint(Input.mousePosition)) &&
             AmIOnlyHittingShipCanvas()) 
         {
+            var mousePosBeforeZoom = cam.ScreenToWorldPoint(Input.mousePosition);
+            
             cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1.4375f, 16.4375f);
+
+            var mousePosAfterZoom = cam.ScreenToWorldPoint(Input.mousePosition);
+            
+            var pos = Global.Instance.cam.transform.position;
+            
+            pos += mousePosBeforeZoom - mousePosAfterZoom;
+            
+            pos.x = Mathf.Clamp(pos.x, cameraBounds.x + cam.orthographicSize * cam.aspect, cameraBounds.x + cameraBounds.width - cam.orthographicSize * cam.aspect);
+            pos.y = Mathf.Clamp(pos.y, cameraBounds.y - cameraBounds.height + cam.orthographicSize, cameraBounds.y - cam.orthographicSize);
+            Global.Instance.cam.transform.position = pos;
         }
     }
     
@@ -483,7 +522,7 @@ public class UIManager : MonoBehaviour
             }
         }
         results.Sort((a, b) => a.transform.position.z > b.transform.position.z ? 1 : -1);
-        results.Sort((a, b) => a.GetComponentInParent<Canvas>() != null && a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);
+        results.Sort((a, b) => a.GetComponentInParent<Canvas>() != null && b.GetComponentInParent<Canvas>() != null && a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);
         raycastResults = new();
         results.ForEach(x => raycastResults.Add(x.gameObject));
         hoverList = results;

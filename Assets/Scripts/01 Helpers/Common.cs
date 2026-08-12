@@ -61,6 +61,7 @@ public static class Common
         { "attack", 100 },
         { "decay", 70 },
         { "release", 100 },
+        { "delayTime", 0 }
     };
 
     public static readonly Dictionary<SoundType, float> EmptySoundType = new()
