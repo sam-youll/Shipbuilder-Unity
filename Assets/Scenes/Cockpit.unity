@@ -447,6 +447,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44b21143fe80ce4985cebf3842f19bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraBounds:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  showBounds: 0
   shipCanvas: {fileID: 1577274348}
   screenCanvas: {fileID: 975712686}
   overlayCanvas: {fileID: 1430520079}
@@ -9577,7 +9584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3144868513543360123, guid: ef71776b061424348b012c91fab6f19a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -2.6875
+      value: -2.4375
       objectReference: {fileID: 0}
     - target: {fileID: 3167783240501054674, guid: ef71776b061424348b012c91fab6f19a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -17031,7 +17038,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 819847061}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.31941316
+  m_Size: 0.31014118
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

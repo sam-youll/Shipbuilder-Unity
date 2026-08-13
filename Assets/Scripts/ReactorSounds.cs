@@ -33,6 +33,10 @@ public class ReactorSounds : MonoBehaviour
     private float constellation;
 
     private float powerMax = 120;
+    private float conversionMax = 100;
+
+    //theoretical maximum current value based on how many converters can fit in the reactor. can tweak as needed or tbh delete if we scale more
+    public float converterTMax = 22;
 
     private Reactor myReactor;
     
@@ -47,7 +51,7 @@ public class ReactorSounds : MonoBehaviour
         1,
         4
     };
-
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -65,12 +69,12 @@ public class ReactorSounds : MonoBehaviour
         
         //Subscribing all the instruments so they're quantized
         Conductor.Instance.onBar.AddListener(UpdateChord);
-
+        Conductor.Instance.onBar.AddListener(UpdateReactorListeners);
 
         //idk setting current chord to 0 
         changesIndex = 0;
 
-
+        
     }
 
     // Update is called once per frame
@@ -78,7 +82,7 @@ public class ReactorSounds : MonoBehaviour
     {
         pitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])));
         power = Funcs.Remap(myReactor.TotalPowerGenerated(), 0, 10, 0, powerMax);
-        conversion = myReactor.TotalPowerConverted();
+        conversion = Funcs.Remap(myReactor.TotalPowerConverted(), 0, converterTMax, 0, conversionMax);
         Debug.Log("power: " + power + " conversion: " + conversion);
         
         UpdateReactorParams();
@@ -112,9 +116,36 @@ public class ReactorSounds : MonoBehaviour
         reactor.setParameterByName("conversion", conversion);
     }
 
+    public void UpdateReactorListeners()
+    {
+        int subdivision = 4;
+        if (conversion <= 20)
+        {
+            subdivision = 4;
+        }
+        else if (conversion <= 40)
+        {
+            subdivision = 3;
+        }
+        else if (conversion <= 60)
+        {
+            subdivision = 2;
+        }
+        else if (conversion <= 80)
+        {
+            subdivision = 1;
+        }
+        else if (conversion > 80)
+        {
+            subdivision = 0;
+        }
+        
+        UpdateSubdivision(subdivision);
+    }
+
     
     //p much copied over from the weapons firing in audiomanager
-    IEnumerator PlayNoteCoroutine(EventInstance instrument, float noteLength)
+    IEnumerator PlayNoteCoroutine(int noteLength)
     {
         //need to feed in note length thru dictionary like in audiomanager 
 
@@ -122,13 +153,51 @@ public class ReactorSounds : MonoBehaviour
 
         if (!started)
         {
-            instrument.setParameterByName("adsr", 1);
+            reactor.setParameterByName("adsr", 1);
 
             started = true;
-            yield return new WaitForSeconds(noteLength);
+            yield return new WaitForSeconds(5);
         }
 
-        instrument.setParameterByName("adsr", 0);
+        reactor.setParameterByName("adsr", 0);
+    }
+
+    //ts is stupid surely there's a better way
+    void PlayNote()
+    {
+        PlayNoteCoroutine(Conductor.Instance.sixteenth);
+    }
+    
+    void UpdateSubdivision(int value)
+    {
+        Conductor.Instance.onSixteenth.RemoveListener(PlayNote);
+        Conductor.Instance.onEighth.RemoveListener(PlayNote);
+        Conductor.Instance.onQuarter.RemoveListener(PlayNote);
+        Conductor.Instance.onHalf.RemoveListener(PlayNote);
+        Conductor.Instance.onWhole.RemoveListener(PlayNote);
+        Conductor.Instance.onBar.RemoveListener(PlayNote);
+        
+        switch (value)
+        {
+            case 0:
+                Conductor.Instance.onSixteenth.AddListener(PlayNote);
+                break;
+            case 1:
+                Conductor.Instance.onEighth.AddListener(PlayNote);
+                break;
+            case 2:
+                Conductor.Instance.onQuarter.AddListener(PlayNote);
+                break;
+            case 3:
+                Conductor.Instance.onHalf.AddListener(PlayNote);
+                break;
+            case 4:
+                Conductor.Instance.onWhole.AddListener(PlayNote);
+                break;
+            case 5:
+                Conductor.Instance.onBar.AddListener(PlayNote);
+                break;
+        }
     }
 
 }

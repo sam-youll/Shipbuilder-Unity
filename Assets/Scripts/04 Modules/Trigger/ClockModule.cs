@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ClockModule : TriggerModule
 {
-    [SerializeField]
-    int frequency = 2;
+    [FormerlySerializedAs("frequency")] [SerializeField]
+    int subdivision = 2;
 
     public int Frequency
     {
-        get => frequency;
+        get => subdivision;
         set
         {
             value = Mathf.Clamp(value, 0, 5);
-            frequency = value;
-            UpdateFrequency(frequency);
+            subdivision = value;
+            UpdateSubdivision(subdivision);
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,7 +26,7 @@ public class ClockModule : TriggerModule
     public override string Info()
     {
         var info = "Triggers every ";
-        switch (frequency)
+        switch (subdivision)
         {
             case 0:
                 info += "sixteenth note.";
@@ -54,10 +55,10 @@ public class ClockModule : TriggerModule
     {
         base.Start();
         
-        UpdateFrequency(frequency);
+        UpdateSubdivision(subdivision);
     }
 
-    void UpdateFrequency(int value)
+    void UpdateSubdivision(int value)
     {
         Conductor.Instance.onSixteenth.RemoveListener(Trigger);
         Conductor.Instance.onEighth.RemoveListener(Trigger);

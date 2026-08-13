@@ -524,6 +524,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1824991723555137543, guid: 58646d3420b343a499a4720194421f55, type: 3}
       insertIndex: 1
       addedObject: {fileID: 5518900106219163376}
+    - targetCorrespondingSourceObject: {fileID: 1824991723555137543, guid: 58646d3420b343a499a4720194421f55, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5167307190759116384}
   m_SourcePrefab: {fileID: 100100000, guid: 58646d3420b343a499a4720194421f55, type: 3}
 --- !u!114 &897772293202782921 stripped
 MonoBehaviour:
@@ -572,6 +575,27 @@ MonoBehaviour:
   tempoOverride: 0
   invisible: 0
   maxStoredEnergy: 30
+--- !u!114 &5167307190759116384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3085206596359191705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 341143e1a09efe147942f3abb746d318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reactorRef:
+    Guid:
+      Data1: 549546827
+      Data2: 1246446719
+      Data3: 1915675546
+      Data4: 1481278323
+    Path: event:/Reactor
+  changesIndex: 0
+  changes: 00000000030000000100000004000000
 --- !u!224 &3873075043275240318 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 449403916791031776, guid: 58646d3420b343a499a4720194421f55, type: 3}

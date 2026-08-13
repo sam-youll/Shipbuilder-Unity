@@ -79,6 +79,10 @@
 		</relationship>
 	</object>
 	<object class="ProfilerTrack" id="{475e4ec7-5163-4f55-b0e5-6b2dc9018eac}">
+		<relationship name="automationTracks">
+			<destination>{4e50fddf-e345-4f2d-bc75-03bedd09a029}</destination>
+			<destination>{53b84350-0f45-41fb-93dd-f8bfb4d71777}</destination>
+		</relationship>
 		<relationship name="objectBeingTracked">
 			<destination>{ef574afa-7494-45b8-8fbb-6c5251824caf}</destination>
 		</relationship>
@@ -137,6 +141,22 @@
 		</relationship>
 		<relationship name="markerTrack">
 			<destination>{26f79462-eb5a-421b-b1a8-ccd00f281450}</destination>
+		</relationship>
+	</object>
+	<object class="ProfilerGraph" id="{4e50fddf-e345-4f2d-bc75-03bedd09a029}">
+		<property name="graphType">
+			<value>7</value>
+		</property>
+		<relationship name="objectBeingGraphed">
+			<destination>{ef574afa-7494-45b8-8fbb-6c5251824caf}</destination>
+		</relationship>
+	</object>
+	<object class="ProfilerGraph" id="{53b84350-0f45-41fb-93dd-f8bfb4d71777}">
+		<property name="graphType">
+			<value>4</value>
+		</property>
+		<relationship name="objectBeingGraphed">
+			<destination>{ef574afa-7494-45b8-8fbb-6c5251824caf}</destination>
 		</relationship>
 	</object>
 	<object class="ProfilerGraph" id="{a3ad9f7b-789d-4655-830e-3b00e719d5f9}">
