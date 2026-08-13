@@ -51,6 +51,8 @@ public class ReactorSounds : MonoBehaviour
         1,
         4
     };
+
+    private int currentLength;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -140,6 +142,7 @@ public class ReactorSounds : MonoBehaviour
             subdivision = 0;
         }
         
+        
         UpdateSubdivision(subdivision);
     }
 
@@ -147,16 +150,16 @@ public class ReactorSounds : MonoBehaviour
     //p much copied over from the weapons firing in audiomanager
     IEnumerator PlayNoteCoroutine(int noteLength)
     {
-        //need to feed in note length thru dictionary like in audiomanager 
 
         var started = false;
 
         if (!started)
         {
             reactor.setParameterByName("adsr", 1);
+            Debug.Log("playing reactor bass");
 
             started = true;
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(noteLength);
         }
 
         reactor.setParameterByName("adsr", 0);
@@ -165,7 +168,7 @@ public class ReactorSounds : MonoBehaviour
     //ts is stupid surely there's a better way
     void PlayNote()
     {
-        PlayNoteCoroutine(Conductor.Instance.sixteenth);
+        StartCoroutine(PlayNoteCoroutine(currentLength));
     }
     
     void UpdateSubdivision(int value)
@@ -181,21 +184,33 @@ public class ReactorSounds : MonoBehaviour
         {
             case 0:
                 Conductor.Instance.onSixteenth.AddListener(PlayNote);
+                currentLength = Conductor.Instance.sixteenth;
+                Debug.Log("subdivision updated to sixteenth");
                 break;
             case 1:
                 Conductor.Instance.onEighth.AddListener(PlayNote);
+                currentLength = Conductor.Instance.eighth;
+                Debug.Log("subdivision updated to eighth");
                 break;
             case 2:
                 Conductor.Instance.onQuarter.AddListener(PlayNote);
+                currentLength = Conductor.Instance.quarter;
+                Debug.Log("subdivision updated to quarter");
                 break;
             case 3:
                 Conductor.Instance.onHalf.AddListener(PlayNote);
+                currentLength = Conductor.Instance.half;
+                Debug.Log("subdivision updated to half");
                 break;
             case 4:
                 Conductor.Instance.onWhole.AddListener(PlayNote);
+                currentLength = Conductor.Instance.whole;
+                Debug.Log("subdivision updated to whole");
                 break;
             case 5:
                 Conductor.Instance.onBar.AddListener(PlayNote);
+                currentLength = Conductor.Instance.bar;
+                Debug.Log("subdivision updated to bar");
                 break;
         }
     }
