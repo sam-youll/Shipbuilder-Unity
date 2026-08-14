@@ -85,7 +85,7 @@ public class ReactorSounds : MonoBehaviour
         pitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])));
         power = Funcs.Remap(myReactor.TotalPowerGenerated(), 0, 10, 0, powerMax);
         conversion = Funcs.Remap(myReactor.TotalPowerConverted(), 0, converterTMax, 0, conversionMax);
-        Debug.Log("power: " + power + " conversion: " + conversion);
+        // Debug.Log("power: " + power + " conversion: " + conversion);
         
         UpdateReactorParams();
     }
@@ -185,32 +185,32 @@ public class ReactorSounds : MonoBehaviour
             case 0:
                 Conductor.Instance.onSixteenth.AddListener(PlayNote);
                 currentLength = Conductor.Instance.sixteenth;
-                Debug.Log("subdivision updated to sixteenth");
+                // Debug.Log("subdivision updated to sixteenth");
                 break;
             case 1:
                 Conductor.Instance.onEighth.AddListener(PlayNote);
                 currentLength = Conductor.Instance.eighth;
-                Debug.Log("subdivision updated to eighth");
+                // Debug.Log("subdivision updated to eighth");
                 break;
             case 2:
                 Conductor.Instance.onQuarter.AddListener(PlayNote);
                 currentLength = Conductor.Instance.quarter;
-                Debug.Log("subdivision updated to quarter");
+                // Debug.Log("subdivision updated to quarter");
                 break;
             case 3:
                 Conductor.Instance.onHalf.AddListener(PlayNote);
                 currentLength = Conductor.Instance.half;
-                Debug.Log("subdivision updated to half");
+                // Debug.Log("subdivision updated to half");
                 break;
             case 4:
                 Conductor.Instance.onWhole.AddListener(PlayNote);
                 currentLength = Conductor.Instance.whole;
-                Debug.Log("subdivision updated to whole");
+                // Debug.Log("subdivision updated to whole");
                 break;
             case 5:
                 Conductor.Instance.onBar.AddListener(PlayNote);
                 currentLength = Conductor.Instance.bar;
-                Debug.Log("subdivision updated to bar");
+                // Debug.Log("subdivision updated to bar");
                 break;
         }
     }

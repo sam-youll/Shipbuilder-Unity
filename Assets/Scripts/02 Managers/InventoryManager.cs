@@ -33,9 +33,11 @@ public class InventoryManager : MonoBehaviour
     public GameObject triggerModulesLabel;
     public GameObject primaryModulesLabel;
     public GameObject secondaryModulesLabel;
+    public GameObject accessoryModulesLabel;
     public List<GameObject> triggerModules = new();
     public List<GameObject> primaryModules = new();
     public List<GameObject> secondaryModules = new();
+    public List<GameObject> accessoryModules = new();
 
     public GameObject pauseMenu;
     public GameObject shopMenu;
@@ -160,6 +162,21 @@ public class InventoryManager : MonoBehaviour
             secondaryModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
 
+        for (int i = 0; i < accessoryModules.Count; i++)
+        {
+            DestroyImmediate(accessoryModules[i]);
+        }
+        accessoryModules = new();
+        accessoryModules = Resources.LoadAll<GameObject>("Prefabs/Modules/Accessory Modules").ToList();
+        for (var i = 0; i < accessoryModules.Count; i++)
+        {
+            accessoryModules[i] = Instantiate(accessoryModules[i]);
+            accessoryModules[i].SetActive(gameObject.activeSelf);
+            accessoryModules[i].transform.SetParent(accessoryModulesLabel.transform);
+            accessoryModules[i].name = accessoryModules[i].name.Replace("(Clone)", "");
+            accessoryModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
+        }
+
         foreach (var module in triggerModules)
         {
             SetToRenderInsideMask(module, true);
@@ -169,6 +186,10 @@ public class InventoryManager : MonoBehaviour
             SetToRenderInsideMask(module, true);
         }
         foreach (var module in secondaryModules)
+        {
+            SetToRenderInsideMask(module, true);
+        }
+        foreach (var module in accessoryModules)
         {
             SetToRenderInsideMask(module, true);
         }
@@ -286,6 +307,11 @@ public class InventoryManager : MonoBehaviour
                 triggerModules[^1].transform.position.y - 1 -
                 triggerModules[^1].GetComponent<Module>().dimensions.y * .5f, 0);
         }
+        else
+        {
+            primaryModulesLabel.transform.position = new Vector3(triggerModulesLabel.transform.position.x, 
+                triggerModulesLabel.transform.position.y - 1, 0);
+        }
         var primaryPos = primaryModulesLabel.transform.position;
         primaryPos.x -= primaryModulesLabel.GetComponent<RectTransform>().rect.width;
         ArrangeModulesOfType(primaryModules, primaryPos);
@@ -295,10 +321,33 @@ public class InventoryManager : MonoBehaviour
                 primaryModules[^1].transform.position.y - 1 -
                 primaryModules[^1].GetComponent<Module>().dimensions.y * .5f, 0);
         }
+        else
+        {
+            secondaryModulesLabel.transform.position = new Vector3(primaryModulesLabel.transform.position.x, 
+                primaryModulesLabel.transform.position.y - 1, 0);
+        }
         var secondaryPos = secondaryModulesLabel.transform.position;
         secondaryPos.x -= secondaryModulesLabel.GetComponent<RectTransform>().rect.width;
         ArrangeModulesOfType(secondaryModules, secondaryPos);
+        if (secondaryModules.Count > 0)
+        {
+            accessoryModulesLabel.transform.position = new Vector3(secondaryModulesLabel.transform.position.x,
+                secondaryModules[^1].transform.position.y - 1 - 
+                secondaryModules[^1].GetComponent<Module>().dimensions.y * .5f, 0);
+        }
+        else
+        {
+            accessoryModulesLabel.transform.position = new Vector3(secondaryModulesLabel.transform.position.x,
+                secondaryModulesLabel.transform.position.y - 1, 0);
+        }
+        var accessoryPos = accessoryModulesLabel.transform.position;
+        accessoryPos.x -= accessoryModulesLabel.GetComponent<RectTransform>().rect.width;
+        ArrangeModulesOfType(accessoryModules, accessoryPos);
         
+        
+        var tPos = triggerModulesLabel.transform.localPosition;
+        tPos.z = 0;
+        triggerModulesLabel.transform.localPosition = tPos;
         
         var pPos = primaryModulesLabel.transform.localPosition;
         pPos.z = 0;
@@ -307,6 +356,10 @@ public class InventoryManager : MonoBehaviour
         var sPos = secondaryModulesLabel.transform.localPosition;
         sPos.z = 0;
         secondaryModulesLabel.transform.localPosition = sPos;
+        
+        var aPos = accessoryModulesLabel.transform.localPosition;
+        aPos.z = 0;
+        accessoryModulesLabel.transform.localPosition = aPos;
     }
 
     public void ArrangeModulesOfType(List<GameObject> modulesInInventory, Vector3 headerPos)
@@ -439,6 +492,11 @@ public class InventoryManager : MonoBehaviour
             secondaryModules.Add(moduleObj);
             moduleObj.transform.SetParent(secondaryModulesLabel.transform);
         }
+        else if (module is AccessoryModule)
+        {
+            accessoryModules.Add(moduleObj);
+            moduleObj.transform.SetParent(accessoryModulesLabel.transform);
+        }
         
         transform.localPosition = Vector3.zero;
         moduleMov.isInInventory = true;
@@ -467,6 +525,10 @@ public class InventoryManager : MonoBehaviour
             {
                 secondaryModules[secondaryModules.FindIndex(x => x == module)] = replacement;
             }
+            else if (module.GetComponent<Module>() is AccessoryModule)
+            {
+                accessoryModules[accessoryModules.FindIndex(x => x == module)] = replacement;
+            }
         }
         else
         {
@@ -481,6 +543,10 @@ public class InventoryManager : MonoBehaviour
             else if (module.GetComponent<Module>() is SecondaryModule)
             {
                 secondaryModules.Remove(module);
+            }
+            else if (module.GetComponent<Module>() is AccessoryModule)
+            {
+                accessoryModules.Remove(module);
             }
         }
         
