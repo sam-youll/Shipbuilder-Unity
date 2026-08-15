@@ -67,6 +67,8 @@ public class EventBus : MonoBehaviour
     public UnityEvent enteredShop;
     public UnityEvent playerHullRepairAttempted;
     public UnityEvent enemyInitialized;
+    public UnityEvent constellationAdvanced;
+    public UnityEvent constellationReset;
     
     // in combat events
     public UnityEvent enemyShieldBroken;

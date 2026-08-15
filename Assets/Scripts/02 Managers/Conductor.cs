@@ -53,7 +53,9 @@ public class Conductor : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        EventBus.Instance.constellationAdvanced.AddListener(UpdateConstellationInfo);
+        EventBus.Instance.constellationReset.AddListener(UpdateConstellationInfo);
+        UpdateConstellationInfo();
     }
 
     // Update is called once per frame
@@ -109,7 +111,12 @@ public class Conductor : MonoBehaviour
             onBar.Invoke();
         }
         lastBar = bar;
+    }
 
-
+    public void UpdateConstellationInfo()
+    {
+        keyRoot = GameStateManager.Instance.constellationInfo.keyRoots[GameStateManager.Instance.constellationInfo.keyRoot];
+        tempo = GameStateManager.Instance.constellationInfo.tempo * 2;
+        mode = GameStateManager.Instance.constellationInfo.mode;
     }
 }
