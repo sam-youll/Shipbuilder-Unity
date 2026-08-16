@@ -103,6 +103,9 @@ public class EventBus : MonoBehaviour
     // scene changes
     public UnityEvent<string> loadScene;
     public UnityEvent gameExit;
+
+    // quests yipe
+    public UnityEvent<string> questStepCompleted;
     
     private void OnValidate()
     {

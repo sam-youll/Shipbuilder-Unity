@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -98,6 +99,10 @@ public class GameStateManager : MonoBehaviour
         EventBus.Instance.leftShop.AddListener(OnPlayerLeftShop);
 
         SceneManager.sceneLoaded += DeduplicateCameras;
+        
+        EventBus.Instance.questStepCompleted.AddListener(OnQuestStepCompleted);
+        
+        UIManager.Instance.UpdateQuestLog(activeQuests, stepsCompleted);
     }
 
     private void DeduplicateCameras(Scene scene, LoadSceneMode mode)
@@ -120,4 +125,39 @@ public class GameStateManager : MonoBehaviour
     private void OnPlayerLeftShop()
     {
     }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            EventBus.Instance.questStepCompleted.Invoke("pressSpace");
+        }
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            EventBus.Instance.questStepCompleted.Invoke("pressEnter");
+        }
+    }
+    
+    #region Quest Manager
+    
+    public List<QuestData> activeQuests = new();
+    public List<string> stepsCompleted = new();
+
+    private void OnQuestStepCompleted(string stepName)
+    {
+        foreach (var quest in activeQuests)
+        {
+            // the quest has to exist and it has to be active (i.e. the steps before it have to be completed)
+            if (quest.TryGetQuestStep(stepName, out var step) &&
+                quest.DependenciesCompleted(stepName, x => stepsCompleted.Contains(x.stepName)))
+            {
+                Debug.Log("yayyy quest step completed");
+                stepsCompleted.Add(stepName);
+            }
+        }
+
+        UIManager.Instance.UpdateQuestLog(activeQuests, stepsCompleted);
+    }
+    
+    #endregion
 }

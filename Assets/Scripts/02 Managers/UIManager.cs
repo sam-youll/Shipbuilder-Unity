@@ -69,12 +69,26 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GridLayoutGroup shopSlotGrid;
     
     private readonly float rerollPrice = 1;
+
+    [Header("Status Readout Elements")] 
+    [SerializeField] private GameObject statusReadout;
+    [SerializeField] private TextMeshProUGUI statusReadoutText;
+    [SerializeField] private Sprite escapeModuleIcon;
+    [SerializeField] private Transform escapeModuleCounterParent;
+    [SerializeField] private TextMeshProUGUI scrapCounter;
+    
+    [Header("Quest Log Components")] 
+    [SerializeField] private GameObject questLog;
+    [SerializeField] private TextMeshProUGUI questLogText;
+    [SerializeField] private Vector3 questLogOutPos;
+    [SerializeField] private Vector3 questLogStowedPos;
+
+    [ShowInInspector] private bool questLogOut;
     
     [Header("Pause Menu")]
     [SerializeField] private GameObject pauseMenu;
     
-    [Header("Overlay Elements")] 
-    [SerializeField] private TextMeshProUGUI scrapCounterLabel;
+    [Header("Overlay Elements")]
     [SerializeField] private GameObject cursorPrefab;
     [ReadOnly] public GameCursor cursor;
     [SerializeField] private GameObject tooltipPrefab;
@@ -94,6 +108,12 @@ public class UIManager : MonoBehaviour
         InitShopScreen();
         InitCursor();
         InitTooltip();
+        
+        EventBus.Instance.playerScrapValueChanged.AddListener(OnPlayerScrapValueChanged);
+        OnPlayerScrapValueChanged();
+
+
+        UpdateEscapeModuleCounter();
     }
 
     private void Update()
@@ -104,11 +124,30 @@ public class UIManager : MonoBehaviour
         HandleTooltip();
         UpdateCanvasRaycast();
         UpdateHoverList();
-        scrapCounterLabel.text = "Scrap: " + InventoryManager.Instance.scrap.ToString();
+        UpdateEscapeModuleCounter();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
+    }
+
+    private void UpdateEscapeModuleCounter()
+    {
+        var escModCount = ShipManager.Instance.PlayerReactor().ModulesOnRack().FindAll(x => x is EscapeModule).Count;
+        if (escapeModuleCounterParent.childCount > escModCount)
+        {
+            DestroyImmediate(escapeModuleCounterParent.transform.GetChild(0).gameObject);
+            return;
+        }
+        else if (escapeModuleCounterParent.childCount < escModCount)
+        {
+            var newIcon = new GameObject("icon", typeof(Image));
+            newIcon.transform.SetParent(escapeModuleCounterParent.transform);
+            newIcon.GetComponent<Image>().sprite = escapeModuleIcon;
+            newIcon.GetComponent<Image>().preserveAspect = true;
+            newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(escapeModuleIcon.texture.width*2/32f, escapeModuleIcon.texture.height*2/32f);
+            return;
         }
     }
 
@@ -127,6 +166,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void OnPlayerScrapValueChanged()
+    {
+        scrapCounter.text = InventoryManager.Instance.scrap.ToString();
+    }
+
     public void ShowHideScreen()
     {
         StopAllCoroutines();
@@ -137,6 +181,12 @@ public class UIManager : MonoBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(ShowHideShopScreenCoroutine());
+    }
+    
+    public void ShowHideQuestLog()
+    {
+        StopAllCoroutines();
+        StartCoroutine(ShowHideQuestLogCoroutine());
     }
 
     private IEnumerator ShowHideScreenCoroutine()
@@ -160,6 +210,19 @@ public class UIManager : MonoBehaviour
         while (shopScreen.transform.localPosition != targetPos)
         {
             shopScreen.transform.localPosition = Vector3.Lerp(shopScreen.transform.localPosition, targetPos, screenMoveSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+    }
+    
+    private IEnumerator ShowHideQuestLogCoroutine()
+    {
+        var targetPos = questLogOut ? questLogStowedPos : questLogOutPos;
+        questLogOut = !questLogOut;
+
+        while (questLog.transform.localPosition != targetPos)
+        {
+            questLog.transform.localPosition = Vector3.Lerp(questLog.transform.localPosition, targetPos, screenMoveSpeed * Time.deltaTime);
 
             yield return null;
         }
@@ -195,6 +258,36 @@ public class UIManager : MonoBehaviour
         warningMessage.gameObject.SetActive(!ShipManager.Instance.PlayerReadyForCombat());
         
         enemySystems.transform.parent.gameObject.SetActive(CombatManager.Instance.state == CombatManager.State.inCombat);
+    }
+    
+    public void UpdateQuestLog(List<QuestData> activeQuests, List<string> stepsCompleted)
+    {
+        var text = "";
+        foreach (var quest in activeQuests)
+        {
+            text += quest.questName + "\n";
+
+            foreach (var step in quest.questSteps)
+            {
+                if (quest.DependenciesCompleted(step.stepName, x => stepsCompleted.Contains(x.stepName)))
+                {
+                    if (stepsCompleted.Contains(step.stepName))
+                    {
+                        text += "[x] ";
+                    }
+                    else
+                    {
+                        text += "[ ] ";
+                    }
+                    text += step.objectiveText + "\n";
+                }
+            }
+
+            text += "\n";
+        }
+        questLogText.text = text;
+        var rt = questLogText.gameObject.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, questLogText.textInfo.lineCount * .43f);
     }
 
     public void InitPlayerSystemsDisplay()
@@ -258,6 +351,7 @@ public class UIManager : MonoBehaviour
         }
 
         InventoryManager.Instance.scrap -= rerollPrice;
+        EventBus.Instance.playerScrapValueChanged.Invoke();
         InitShopScreen();
     }
     
