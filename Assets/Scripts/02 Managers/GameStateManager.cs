@@ -39,7 +39,6 @@ public class GameStateManager : MonoBehaviour
 
     public enum Constellation
     {
-        None,
         Aries,
         Taurus,
         Gemini,
@@ -71,6 +70,27 @@ public class GameStateManager : MonoBehaviour
     }
     
     public Stage currentStage;
+    
+    public List<ConstellationInfo> constellationScrobjects = new List<ConstellationInfo>();
+    
+    public Dictionary<Constellation, int> ConstellationInfos = new Dictionary<Constellation, int>()
+    {
+        {Constellation.Aries, 0},
+        {Constellation.Taurus, 1},
+        {Constellation.Gemini, 2},
+        {Constellation.Cancer, 3},
+        {Constellation.Leo, 4},
+        {Constellation.Virgo, 5},
+        {Constellation.Libra, 6},
+        {Constellation.Scorpio, 7},
+        {Constellation.Sagittarius, 8},
+        {Constellation.Capricorn, 9},
+        {Constellation.Aquarius, 10},
+        {Constellation.Pisces, 11},
+    };
+
+    public ConstellationInfo constellationInfo;
+    
 
     /// <summary>
     /// Some ships require the player to reach a certain milestone to unlock.
@@ -92,12 +112,15 @@ public class GameStateManager : MonoBehaviour
         //This is just here to get the narrative stuff functioning
         Gamestate.Add("gameStarted", true);
         currentNode = Node.Base;
-        currentConstellation = Constellation.None;
+        currentConstellation = Constellation.Aries;
         currentStage = Stage.Testing;
+        constellationInfo = constellationScrobjects[ConstellationInfos[currentConstellation]];
         
         EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
         EventBus.Instance.leftShop.AddListener(OnPlayerLeftShop);
-
+        EventBus.Instance.constellationAdvanced.AddListener(OnConstellationAdvanced);
+        EventBus.Instance.constellationReset.AddListener(OnConstellationReset);
+        
         SceneManager.sceneLoaded += DeduplicateCameras;
         
         EventBus.Instance.questStepCompleted.AddListener(OnQuestStepCompleted);
@@ -160,4 +183,17 @@ public class GameStateManager : MonoBehaviour
     }
     
     #endregion
+
+    private void OnConstellationAdvanced()
+    {
+        currentConstellation += 1;
+        constellationInfo = constellationScrobjects[ConstellationInfos[currentConstellation]];
+        Debug.Log("current constellation: " + currentConstellation);
+    }
+
+    private void OnConstellationReset()
+    {
+        currentConstellation = Constellation.Aries;
+        constellationInfo = constellationScrobjects[ConstellationInfos[currentConstellation]];
+    }
 }

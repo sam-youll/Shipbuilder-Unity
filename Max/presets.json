@@ -2,244 +2,51 @@
   {
     "name": "untitled",
     "preset": {
-      "AM": {
-        "value": 0
-      },
-      "AM2": {
-        "value": 0
-      },
-      "AM2depth": {
-        "value": 1
-      },
-      "AM2freq": {
-        "value": 1
-      },
-      "AM2source": {
-        "value": 1
-      },
-      "AMdepth": {
-        "value": 1
-      },
-      "AMfreq": {
-        "value": 1
-      },
-      "AMsource": {
-        "value": 1
-      },
-      "FM": {
-        "value": 0
-      },
-      "FM2": {
-        "value": 0
-      },
-      "FM2Depth": {
-        "value": 10
-      },
-      "FM2freq": {
-        "value": 1
-      },
-      "FM2source": {
-        "value": 1
-      },
-      "FMDepth": {
-        "value": 10
-      },
-      "FMfreq": {
-        "value": 1
-      },
-      "FMsource": {
-        "value": 1
-      },
       "__sps": {
-        "AM[1]": {
+        "constellation[1]": {
           "__sps": {
-            "generator": {
-              "__sps": {
-                "phasor": {},
-                "sin": {},
-                "triangle": {}
-              }
-            },
-            "generator[1]": {
-              "__sps": {
-                "phasor": {
-                  "__sps": {
-                    "freq": {
-                      "__sps": {
-                        "FMLFO": {
-                          "__sps": {
-                            "generator": {
-                              "__sps": {
-                                "phasor": {},
-                                "sin": {},
-                                "triangle": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "sin": {
-                  "__sps": {
-                    "freq": {
-                      "__sps": {
-                        "FMLFO": {
-                          "__sps": {
-                            "generator": {
-                              "__sps": {
-                                "phasor": {},
-                                "sin": {},
-                                "triangle": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "triangle": {
-                  "__sps": {
-                    "freq": {
-                      "__sps": {
-                        "FMLFO": {
-                          "__sps": {
-                            "generator": {
-                              "__sps": {
-                                "phasor": {},
-                                "sin": {},
-                                "triangle": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+            "aquarius": {},
+            "aries": {},
+            "cancer": {},
+            "capricorn": {},
+            "gemini": {},
+            "leo": {},
+            "libra": {},
+            "pisces": {},
+            "sagittarius": {},
+            "scorpio": {},
+            "taurus": {},
+            "virgo": {}
+          }
+        },
+        "sparkles": {
+          "__sps": {
+            "bloops": {
+              "t": {
+                "value": 1
               }
             }
           }
         },
-        "env": {},
-        "generator": {
-          "__sps": {
-            "noise": {},
-            "phasor": {
-              "__sps": {
-                "freq": {
-                  "__sps": {
-                    "FMLFO": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
-                    "FMLFO[1]": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "sin": {
-              "__sps": {
-                "freq": {
-                  "__sps": {
-                    "FMLFO": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
-                    "FMLFO[1]": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "triangle": {
-              "__sps": {
-                "freq": {
-                  "__sps": {
-                    "FMLFO": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    },
-                    "FMLFO[1]": {
-                      "__sps": {
-                        "generator": {
-                          "__sps": {
-                            "phasor": {},
-                            "sin": {},
-                            "triangle": {}
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        "subbass": {}
       },
       "adsr": {
-        "value": 1
-      },
-      "attack": {
-        "value": 29
-      },
-      "decay": {
-        "value": 573
-      },
-      "pitch": {
-        "value": 144
-      },
-      "release": {
-        "value": 62.5
-      },
-      "source": {
-        "value": 5
-      },
-      "sustain": {
         "value": 0
+      },
+      "constellation": {
+        "value": 2.0100000000000002
+      },
+      "conversion": {
+        "value": 100
+      },
+      "freq": {
+        "value": 636
+      },
+      "power": {
+        "value": 120
+      },
+      "t": {
+        "value": 1
       }
     }
   }

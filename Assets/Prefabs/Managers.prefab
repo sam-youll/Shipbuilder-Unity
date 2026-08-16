@@ -144,14 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4310ad4c529b0141b5b9455e6efdd66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mousePos: {x: 0, y: 0, z: 0}
   cam: {fileID: 0}
-  cursorDefault: {fileID: 21300000, guid: 82761da2bf165fb49b6414c6591a362b, type: 3}
-  cursorGrabOpen: {fileID: 21300000, guid: 77695524eb73e1d45a564736e12e278e, type: 3}
-  cursorGrabClose: {fileID: 21300000, guid: dd8f95ed8e549ad4787930322d811be2, type: 3}
-  selectionReticleSprite: {fileID: 0}
-  cursorState: 0
-  hoverList: []
   allModules: []
   allJacks: []
 --- !u!1 &3874405217290460565
@@ -207,6 +200,9 @@ MonoBehaviour:
   playerDefeated:
     m_PersistentCalls:
       m_Calls: []
+  playerEscaped:
+    m_PersistentCalls:
+      m_Calls: []
   newCombatEncounterStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -220,6 +216,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   enemyInitialized:
+    m_PersistentCalls:
+      m_Calls: []
+  constellationAdvanced:
     m_PersistentCalls:
       m_Calls: []
   enemyShieldBroken:
@@ -280,6 +279,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   enemyHit:
+    m_PersistentCalls:
+      m_Calls: []
+  systemHit:
     m_PersistentCalls:
       m_Calls: []
   updateJackValidity:
@@ -438,6 +440,7 @@ MonoBehaviour:
     Path: event:/TEST ENEMIES/TestEnemy3
   enemySongs: []
   enemySongsPlayed: []
+  weapons: []
   noteLength: 0
   attackRatio: 0.3
   decayRatio: 0.4
@@ -497,8 +500,9 @@ MonoBehaviour:
     currentHull: 0
     maxHull: 0
     shield: 0
-    weapons: []
     reactor: {fileID: 0}
+    weapons: []
+    auxSystems: {fileID: 0}
     evasion: 0
   enemy:
     baseShip: {fileID: 0}
@@ -506,8 +510,9 @@ MonoBehaviour:
     currentHull: 0
     maxHull: 0
     shield: 0
-    weapons: []
     reactor: {fileID: 0}
+    weapons: []
+    auxSystems: {fileID: 0}
     evasion: 0
   baseEnemyShips: []
   baseEliteShips: []
@@ -521,7 +526,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2580497817753987097}
-  - component: {fileID: 296132312322612877}
   m_Layer: 0
   m_Name: Patch Manager
   m_TagString: Untagged
@@ -544,23 +548,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6474073650286890672}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &296132312322612877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5139520351222533933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74aaf22776d0dc340aac841720ebdf32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moduleRack: {fileID: 0}
-  weapons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &6304497298974990313
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +595,20 @@ MonoBehaviour:
   currentNode: 0
   currentConstellation: 0
   currentStage: 0
+  constellationScrobjects:
+  - {fileID: 11400000, guid: 2876505de17977146a3e279eb512eee9, type: 2}
+  - {fileID: 11400000, guid: 287fce9653004db43b19f8a6e90375d9, type: 2}
+  - {fileID: 11400000, guid: e6fcba44e25335844a7d4498ab32cc67, type: 2}
+  - {fileID: 11400000, guid: 5ee788d57119fc346b94fa1bf0ba88bf, type: 2}
+  - {fileID: 11400000, guid: 204a0d2642b259c4a876f2de18195ad7, type: 2}
+  - {fileID: 11400000, guid: 36c3da1ac3ae46d40b450c27dc8a5714, type: 2}
+  - {fileID: 11400000, guid: bb6e649ad9a22514d821aa3f09e5a514, type: 2}
+  - {fileID: 11400000, guid: dcb3ec4db4f48bb4bb467d0f61b9bb7e, type: 2}
+  - {fileID: 11400000, guid: b11719fabb9f2904bba066fe0d97cd91, type: 2}
+  - {fileID: 11400000, guid: cb4198db6fd2c504384efa3fee03827b, type: 2}
+  - {fileID: 11400000, guid: e9d0bc36e2823e84f9a8c80bef6bf41b, type: 2}
+  - {fileID: 11400000, guid: 3e9438d4e4285394b9f00d1ccfa45618, type: 2}
+  constellationInfo: {fileID: 11400000, guid: 2876505de17977146a3e279eb512eee9, type: 2}
 --- !u!1 &7333241537564771104
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,16 +781,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrap: 0
-  scrapLabel: {fileID: 0}
   inventoryOverlay: {fileID: 0}
   creativeMode: 0
   moduleContainer: {fileID: 0}
   triggerModulesLabel: {fileID: 0}
   primaryModulesLabel: {fileID: 0}
   secondaryModulesLabel: {fileID: 0}
+  accessoryModulesLabel: {fileID: 0}
   triggerModules: []
   primaryModules: []
   secondaryModules: []
+  accessoryModules: []
   pauseMenu: {fileID: 0}
   shopMenu: {fileID: 0}
 --- !u!1001 &2890274147819624919

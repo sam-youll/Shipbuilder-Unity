@@ -44,13 +44,7 @@ public class ReactorSounds : MonoBehaviour
     public int changesIndex;
 
     //THIS is a placeholder list. It's just a I IV II- V I progression. We will move this logic into the map and nav system when we get there.
-    public List<int> changes = new List<int>()
-    {
-        0,
-        3,
-        1,
-        4
-    };
+    public List<int> changes = new List<int>();
 
     private int currentLength;
     
@@ -72,7 +66,11 @@ public class ReactorSounds : MonoBehaviour
         //Subscribing all the instruments so they're quantized
         Conductor.Instance.onBar.AddListener(UpdateChord);
         Conductor.Instance.onBar.AddListener(UpdateReactorListeners);
+        
+        EventBus.Instance.constellationAdvanced.AddListener(UpdateChanges);
+        EventBus.Instance.constellationReset.AddListener(UpdateChanges);
 
+        changes = GameStateManager.Instance.constellationInfo.changes;
         //idk setting current chord to 0 
         changesIndex = 0;
 
@@ -85,7 +83,7 @@ public class ReactorSounds : MonoBehaviour
         pitch = (Notes.GetPitch(Conductor.Instance.keyRoot, Conductor.Instance.mode, (changes[changesIndex])));
         power = Funcs.Remap(myReactor.TotalPowerGenerated(), 0, 10, 0, powerMax);
         conversion = Funcs.Remap(myReactor.TotalPowerConverted(), 0, converterTMax, 0, conversionMax);
-        // Debug.Log("power: " + power + " conversion: " + conversion);
+        Debug.Log("power: " + power + " conversion: " + conversion);
         
         UpdateReactorParams();
     }
@@ -113,7 +111,7 @@ public class ReactorSounds : MonoBehaviour
     {
         reactor.setParameterByName("pitch", pitch);
         //TODO: make the constellations change
-        reactor.setParameterByName("constellation", 1);
+        reactor.setParameterByName("constellation", GameStateManager.Instance.constellationInfo.constellationParam);
         reactor.setParameterByName("power", power);
         reactor.setParameterByName("conversion", conversion);
     }
@@ -213,6 +211,12 @@ public class ReactorSounds : MonoBehaviour
                 // Debug.Log("subdivision updated to bar");
                 break;
         }
+    }
+
+    public void UpdateChanges()
+    {
+        changes = GameStateManager.Instance.constellationInfo.changes;
+        changesIndex = 0;
     }
 
 }

@@ -75,17 +75,17 @@ namespace RNBO {
 class rnbomatic : public PatcherInterfaceImpl {
 public:
 
-class RNBOSubpatcher_254 : public PatcherInterfaceImpl {
+class RNBOSubpatcher_322 : public PatcherInterfaceImpl {
     
     friend class rnbomatic;
     
     public:
     
-    RNBOSubpatcher_254()
+    RNBOSubpatcher_322()
     {
     }
     
-    ~RNBOSubpatcher_254()
+    ~RNBOSubpatcher_322()
     {
     }
     
@@ -4085,29 +4085,29 @@ class RNBOSubpatcher_254 : public PatcherInterfaceImpl {
     
 };
 
-class RNBOSubpatcher_255 : public PatcherInterfaceImpl {
+class RNBOSubpatcher_323 : public PatcherInterfaceImpl {
     
     friend class rnbomatic;
     
     public:
     
-    class RNBOSubpatcher_241 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_309 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_255;
+            friend class RNBOSubpatcher_323;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_241()
+            RNBOSubpatcher_309()
             {
             }
             
-            ~RNBOSubpatcher_241()
+            ~RNBOSubpatcher_309()
             {
             }
             
-            virtual RNBOSubpatcher_255* getPatcher() const {
-                return static_cast<RNBOSubpatcher_255 *>(_parentPatcher);
+            virtual RNBOSubpatcher_323* getPatcher() const {
+                return static_cast<RNBOSubpatcher_323 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -7750,11 +7750,11 @@ class RNBOSubpatcher_255 : public PatcherInterfaceImpl {
             
     };
     
-    RNBOSubpatcher_255()
+    RNBOSubpatcher_323()
     {
     }
     
-    ~RNBOSubpatcher_255()
+    ~RNBOSubpatcher_323()
     {
         delete this->p_01;
     }
@@ -7855,7 +7855,7 @@ class RNBOSubpatcher_255 : public PatcherInterfaceImpl {
     void getState(PatcherStateInterface& ) {}
     
     void setState() {
-        this->p_01 = new RNBOSubpatcher_241();
+        this->p_01 = new RNBOSubpatcher_309();
         this->p_01->setEngineAndPatcher(this->getEngine(), this);
         this->p_01->initialize();
         this->p_01->setParameterOffset(this->getParameterOffset(this->p_01));
@@ -8282,33 +8282,33 @@ class RNBOSubpatcher_255 : public PatcherInterfaceImpl {
         Int _noteNumber;
         Index isMuted;
         ParameterIndex parameterOffset;
-        RNBOSubpatcher_241* p_01;
+        RNBOSubpatcher_309* p_01;
     
 };
 
-class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
+class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
     
     friend class rnbomatic;
     
     public:
     
-    class RNBOSubpatcher_242 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_310 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_256;
+            friend class RNBOSubpatcher_324;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_242()
+            RNBOSubpatcher_310()
             {
             }
             
-            ~RNBOSubpatcher_242()
+            ~RNBOSubpatcher_310()
             {
             }
             
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -8317,6 +8317,65 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void cancelClockEvents()
             {
+                getEngine()->flushClockEvents(this, -1987572531, false);
+                getEngine()->flushClockEvents(this, 1935387534, false);
+                getEngine()->flushClockEvents(this, -1468824490, false);
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index voice() {
+                return this->_voiceIndex;
+            }
+            
+            number random(number low, number high) {
+                number range = high - low;
+                return rand01() * range + low;
+            }
+            
+            MillisecondTime currenttime() {
+                return this->_currentTime;
+            }
+            
+            Index vectorsize() {
+                return this->vs;
             }
             
             Index getNumMidiInputPorts() const {
@@ -8341,13 +8400,41 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->vs = n;
                 this->updateTime(this->getEngine()->getCurrentTime());
                 SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_01_perform(this->intnum_tilde_01_value, out1, n);
+            
+                this->cycle_tilde_05_perform(
+                    this->cycle_tilde_05_frequency,
+                    this->cycle_tilde_05_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->adsr_04_perform(
+                    this->adsr_04_attack,
+                    this->adsr_04_decay,
+                    this->adsr_04_sustain,
+                    this->adsr_04_release,
+                    this->zeroBuffer,
+                    this->signals[1],
+                    n
+                );
+            
+                this->dspexpr_05_perform(this->signals[0], this->signals[1], this->signals[2], n);
+                this->gaintilde_11_perform(this->signals[2], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
             }
             
             void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
                 if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 3; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->adsr_04_triggerBuf = resizeSignal(this->adsr_04_triggerBuf, this->maxvs, maxBlockSize);
+                    this->adsr_04_triggerValueBuf = resizeSignal(this->adsr_04_triggerValueBuf, this->maxvs, maxBlockSize);
                     this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
                     this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
                     this->didAllocateSignals = true;
@@ -8364,7 +8451,9 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->invsr = 1 / sampleRate;
                 }
             
-                RNBO_UNUSED(forceDSPSetup);
+                this->cycle_tilde_05_dspsetup(forceDSPSetup);
+                this->adsr_04_dspsetup(forceDSPSetup);
+                this->gaintilde_11_dspsetup(forceDSPSetup);
             
                 if (sampleRateChanged)
                     this->onSampleRateChanged(sampleRate);
@@ -8407,9 +8496,17 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void processTempoEvent(MillisecondTime , Tempo ) {}
             
-            void processTransportEvent(MillisecondTime , TransportState ) {}
+            void processTransportEvent(MillisecondTime time, TransportState state) {
+                this->updateTime(time);
+                this->metro_04_onTransportChanged(state);
+                this->metro_05_onTransportChanged(state);
+            }
             
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
+            void processBeatTimeEvent(MillisecondTime time, BeatTime beattime) {
+                this->updateTime(time);
+                this->metro_04_onBeatTimeChanged(beattime);
+                this->metro_05_onBeatTimeChanged(beattime);
+            }
             
             void onSampleRateChanged(double ) {}
             
@@ -8525,7 +8622,29 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
             }
             
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
+            void processClockEvent(MillisecondTime time, ClockId index, bool hasValue, ParameterValue value) {
+                RNBO_UNUSED(value);
+                RNBO_UNUSED(hasValue);
+                this->updateTime(time);
+            
+                switch (index) {
+                case -1987572531:
+                    {
+                    this->metro_04_tick_bang();
+                    break;
+                    }
+                case 1935387534:
+                    {
+                    this->metro_05_tick_bang();
+                    break;
+                    }
+                case -1468824490:
+                    {
+                    this->adsr_04_mute_bang();
+                    break;
+                    }
+                }
+            }
             
             void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
             
@@ -8539,15 +8658,168 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->processOutletAtCurrentTime(sender, index, value);
             }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
             
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/libra/number_obj-50") == objectId)
+                        this->numberobj_08_valin_set(payload);
             
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
+                    if (TAG("constellation[1]/libra/gain~_obj-2") == objectId)
+                        this->gaintilde_11_valin_set(payload);
+            
+                    if (TAG("constellation[1]/libra/toggle_obj-29") == objectId)
+                        this->toggle_02_valin_set(payload);
+            
+                    if (TAG("constellation[1]/libra/number_obj-48") == objectId)
+                        this->numberobj_09_valin_set(payload);
+            
+                    if (TAG("constellation[1]/libra/toggle_obj-18") == objectId)
+                        this->toggle_03_valin_set(payload);
+            
+                    if (TAG("constellation[1]/libra/number_obj-35") == objectId)
+                        this->numberobj_10_valin_set(payload);
+            
+                    break;
+                    }
+                case TAG("format"):
+                    {
+                    if (TAG("constellation[1]/libra/number_obj-50") == objectId)
+                        this->numberobj_08_format_set(payload);
+            
+                    if (TAG("constellation[1]/libra/number_obj-48") == objectId)
+                        this->numberobj_09_format_set(payload);
+            
+                    if (TAG("constellation[1]/libra/number_obj-35") == objectId)
+                        this->numberobj_10_format_set(payload);
+            
+                    break;
+                    }
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/libra/message_obj-37") == objectId)
+                        this->message_06_listin_number_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(
+                MessageTag tag,
+                MessageTag objectId,
+                MillisecondTime time,
+                const list& payload
+            ) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/libra/message_obj-37") == objectId)
+                        this->message_06_listin_list_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processBangMessage(MessageTag tag, MessageTag objectId, MillisecondTime time) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("bangin"):
+                    {
+                    if (TAG("constellation[1]/libra/button_obj-31") == objectId)
+                        this->button_04_bangin_bang();
+            
+                    if (TAG("constellation[1]/libra/button_obj-21") == objectId)
+                        this->button_05_bangin_bang();
+            
+                    break;
+                    }
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/libra/message_obj-37") == objectId)
+                        this->message_06_listin_bang_bang();
+            
+                    break;
+                    }
+                }
+            }
             
             MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/libra/number_obj-50"):
+                    {
+                    return "constellation[1]/libra/number_obj-50";
+                    }
+                case TAG("setup"):
+                    {
+                    return "setup";
+                    }
+                case TAG("constellation[1]/libra/gain~_obj-2"):
+                    {
+                    return "constellation[1]/libra/gain~_obj-2";
+                    }
+                case TAG("bangout"):
+                    {
+                    return "bangout";
+                    }
+                case TAG("constellation[1]/libra/button_obj-31"):
+                    {
+                    return "constellation[1]/libra/button_obj-31";
+                    }
+                case TAG("constellation[1]/libra/toggle_obj-29"):
+                    {
+                    return "constellation[1]/libra/toggle_obj-29";
+                    }
+                case TAG("constellation[1]/libra/number_obj-48"):
+                    {
+                    return "constellation[1]/libra/number_obj-48";
+                    }
+                case TAG("listout"):
+                    {
+                    return "listout";
+                    }
+                case TAG("constellation[1]/libra/message_obj-37"):
+                    {
+                    return "constellation[1]/libra/message_obj-37";
+                    }
+                case TAG("constellation[1]/libra/toggle_obj-18"):
+                    {
+                    return "constellation[1]/libra/toggle_obj-18";
+                    }
+                case TAG("constellation[1]/libra/button_obj-21"):
+                    {
+                    return "constellation[1]/libra/button_obj-21";
+                    }
+                case TAG("constellation[1]/libra/number_obj-35"):
+                    {
+                    return "constellation[1]/libra/number_obj-35";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                case TAG("format"):
+                    {
+                    return "format";
+                    }
+                case TAG("bangin"):
+                    {
+                    return "bangin";
+                    }
+                case TAG("listin"):
+                    {
+                    return "listin";
+                    }
                 }
             
                 return nullptr;
@@ -8568,14 +8840,108 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void fillDataRef(DataRefIndex , DataRef& ) {}
             
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_05_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_05_bufferUpdated();
+                }
+            }
             
             void initialize() {
                 this->assign_defaults();
                 this->setState();
+                this->cycle_tilde_05_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
             }
             
             protected:
+            
+            void numberobj_08_valin_set(number v) {
+                this->numberobj_08_value_set(v);
+            }
+            
+            void numberobj_08_format_set(number v) {
+                this->numberobj_08_currentFormat = trunc((v > 6 ? 6 : (v < 0 ? 0 : v)));
+            }
+            
+            void gaintilde_11_valin_set(number v) {
+                this->gaintilde_11_value_set(v);
+            }
+            
+            void button_04_bangin_bang() {
+                this->button_04_bangval_bang();
+            }
+            
+            void toggle_02_valin_set(number v) {
+                this->toggle_02_value_number_set(v);
+            }
+            
+            void metro_04_tick_bang() {
+                this->metro_04_tickout_bang();
+                this->getEngine()->flushClockEvents(this, -1987572531, false);;
+            
+                if ((bool)(this->metro_04_on)) {
+                    this->metro_04_last = this->currenttime();
+            
+                    {
+                        this->metro_04_next = this->metro_04_last + this->metro_04_interval;
+                        this->getEngine()->scheduleClockEvent(this, -1987572531, this->metro_04_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void numberobj_09_valin_set(number v) {
+                this->numberobj_09_value_set(v);
+            }
+            
+            void numberobj_09_format_set(number v) {
+                this->numberobj_09_currentFormat = trunc((v > 6 ? 6 : (v < 0 ? 0 : v)));
+            }
+            
+            void message_06_listin_list_set(const list& v) {
+                this->message_06_set_set(v);
+            }
+            
+            void message_06_listin_number_set(number v) {
+                this->message_06_set_set(v);
+            }
+            
+            void message_06_listin_bang_bang() {
+                this->message_06_trigger_bang();
+            }
+            
+            void toggle_03_valin_set(number v) {
+                this->toggle_03_value_number_set(v);
+            }
+            
+            void metro_05_tick_bang() {
+                this->metro_05_tickout_bang();
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(this->metro_05_on)) {
+                    this->metro_05_last = this->currenttime();
+            
+                    {
+                        this->metro_05_next = this->metro_05_last + this->metro_05_interval;
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_05_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void button_05_bangin_bang() {
+                this->button_05_bangval_bang();
+            }
+            
+            void numberobj_10_valin_set(number v) {
+                this->numberobj_10_value_set(v);
+            }
+            
+            void numberobj_10_format_set(number v) {
+                this->numberobj_10_currentFormat = trunc((v > 6 ? 6 : (v < 0 ? 0 : v)));
+            }
+            
+            void adsr_04_mute_bang() {}
             
             number msToSamps(MillisecondTime ms, number sampleRate) {
                 return ms * sampleRate * 0.001;
@@ -8605,22 +8971,557 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 return 1;
             }
             
-            void initializeObjects() {}
+            void initializeObjects() {
+                this->numberobj_08_init();
+                this->gaintilde_11_init();
+                this->random_03_nz_init();
+                this->numberobj_09_init();
+                this->message_06_init();
+                this->random_04_nz_init();
+                this->numberobj_10_init();
+            }
             
             void sendOutlet(OutletIndex index, ParameterValue value) {
                 this->getEngine()->sendOutlet(this, index, value);
             }
             
-            void startup() {}
+            void startup() {
+                this->updateTime(this->getEngine()->getCurrentTime());
             
-            void allocateDataRefs() {}
+                if ((bool)(this->metro_04_on))
+                    this->metro_04_on_set(1);
             
-            void intnum_tilde_01_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
+                if ((bool)(this->metro_05_on))
+                    this->metro_05_on_set(1);
+            }
+            
+            void allocateDataRefs() {
+                this->cycle_tilde_05_buffer->requestSize(16384, 1);
+                this->cycle_tilde_05_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_05_buffer = this->cycle_tilde_05_buffer->allocateIfNeeded();
+            }
+            
+            void metro_04_on_set(number v) {
+                this->metro_04_on = v;
+                this->getEngine()->flushClockEvents(this, -1987572531, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, -1987572531, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_02_output_set(number v) {
+                this->metro_04_on_set(v);
+            }
+            
+            void toggle_02_value_number_set(number v) {
+                this->toggle_02_value_number_setter(v);
+                v = this->toggle_02_value_number;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/libra/toggle_obj-29"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->toggle_02_output_set(v);
+            }
+            
+            void receive_21_output_number_set(number v) {
+                this->receive_21_output_number = v;
+                this->toggle_02_value_number_set(v);
+            }
+            
+            void metro_05_on_set(number v) {
+                this->metro_05_on = v;
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_03_output_set(number v) {
+                this->metro_05_on_set(v);
+            }
+            
+            void toggle_03_value_number_set(number v) {
+                this->toggle_03_value_number_setter(v);
+                v = this->toggle_03_value_number;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/libra/toggle_obj-18"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->toggle_03_output_set(v);
+            }
+            
+            void receive_23_output_number_set(number v) {
+                this->receive_23_output_number = v;
+                this->toggle_03_value_number_set(v);
+            }
+            
+            void numberobj_09_output_set(number ) {}
+            
+            void numberobj_09_value_set(number v) {
+                this->numberobj_09_value_setter(v);
+                v = this->numberobj_09_value;
+                number localvalue = v;
+            
+                if (this->numberobj_09_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/libra/number_obj-48"),
+                    localvalue,
+                    this->_currentTime
+                );
+            
+                this->numberobj_09_output_set(localvalue);
+            }
+            
+            void cycle_tilde_05_frequency_set(number v) {
+                this->cycle_tilde_05_frequency = v;
+            }
+            
+            void switchobj_01_out_number_set(number v) {
+                this->numberobj_09_value_set(v);
+                this->cycle_tilde_05_frequency_set(v);
+            }
+            
+            void switchobj_01_in3_number_set(number v) {
+                if (this->switchobj_01_onoff == 3) {
+                    this->switchobj_01_out_number_set(v);
+                }
+            }
+            
+            void expr_26_out1_set(number v) {
+                this->expr_26_out1 = v;
+                this->switchobj_01_in3_number_set(this->expr_26_out1);
+            }
+            
+            void expr_26_in1_set(number in1) {
+                this->expr_26_in1 = in1;
+                this->expr_26_out1_set(this->expr_26_in1 * this->expr_26_in2);//#map:constellation[1]/libra/*_obj-46:1
+            }
+            
+            void switchobj_01_in2_number_set(number v) {
+                if (this->switchobj_01_onoff == 2) {
+                    this->switchobj_01_out_number_set(v);
+                }
+            }
+            
+            void expr_25_out1_set(number v) {
+                this->expr_25_out1 = v;
+                this->switchobj_01_in2_number_set(this->expr_25_out1);
+            }
+            
+            void expr_25_in1_set(number in1) {
+                this->expr_25_in1 = in1;
+                this->expr_25_out1_set(this->expr_25_in1 * this->expr_25_in2);//#map:constellation[1]/libra/*_obj-45:1
+            }
+            
+            void switchobj_01_in1_number_set(number v) {
+                if (this->switchobj_01_onoff == 1) {
+                    this->switchobj_01_out_number_set(v);
+                }
+            }
+            
+            void expr_24_out1_set(number v) {
+                this->expr_24_out1 = v;
+                this->switchobj_01_in1_number_set(this->expr_24_out1);
+            }
+            
+            void expr_24_in1_set(number in1) {
+                this->expr_24_in1 = in1;
+                this->expr_24_out1_set(this->expr_24_in1 * this->expr_24_in2);//#map:constellation[1]/libra/*_obj-6:1
+            }
+            
+            void receive_22_output_number_set(number v) {
+                this->receive_22_output_number = v;
+                this->expr_26_in1_set(v);
+                this->expr_25_in1_set(v);
+                this->expr_24_in1_set(v);
+            }
+            
+            void gaintilde_11_outval_set(number ) {}
+            
+            void gaintilde_11_value_set(number v) {
+                this->gaintilde_11_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/libra/gain~_obj-2"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_11_outval_set(value);
+            }
+            
+            void gaintilde_11_input_number_set(number v) {
+                this->gaintilde_11_input_number = v;
+            
+                this->gaintilde_11_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_22_out1_set(number v) {
+                this->expr_22_out1 = v;
+                this->gaintilde_11_input_number_set(this->expr_22_out1);
+            }
+            
+            void expr_22_in1_set(number in1) {
+                this->expr_22_in1 = in1;
+                this->expr_22_out1_set(this->expr_22_in1 - this->expr_22_in2);//#map:constellation[1]/libra/-_obj-4:1
+            }
+            
+            void receive_20_output_number_set(number v) {
+                this->receive_20_output_number = v;
+                this->expr_22_in1_set(v);
+            }
+            
+            void numberobj_08_output_set(number ) {}
+            
+            void numberobj_08_value_set(number v) {
+                this->numberobj_08_value_setter(v);
+                v = this->numberobj_08_value;
+                number localvalue = v;
+            
+                if (this->numberobj_08_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/libra/number_obj-50"),
+                    localvalue,
+                    this->_currentTime
+                );
+            
+                this->numberobj_08_output_set(localvalue);
+            }
+            
+            void numberobj_10_output_set(number ) {}
+            
+            void numberobj_10_value_set(number v) {
+                this->numberobj_10_value_setter(v);
+                v = this->numberobj_10_value;
+                number localvalue = v;
+            
+                if (this->numberobj_10_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/libra/number_obj-35"),
+                    localvalue,
+                    this->_currentTime
+                );
+            
+                this->numberobj_10_output_set(localvalue);
+            }
+            
+            void metro_05_interval_set(number v) {
+                this->metro_05_interval_setter(v);
+                v = this->metro_05_interval;
+            }
+            
+            void random_04_result_set(number v) {
+                this->numberobj_10_value_set(v);
+                this->metro_05_interval_set(v);
+            }
+            
+            void random_04_trigger_bang() {
+                {
+                    this->random_04_result_set(this->random(0, this->random_04_limit));
+                }
+            }
+            
+            void switchobj_01_onoff_set(number v) {
+                this->switchobj_01_onoff = v;
+            }
+            
+            void expr_23_out1_set(number v) {
+                this->expr_23_out1 = v;
+                this->switchobj_01_onoff_set(this->expr_23_out1);
+            }
+            
+            void expr_23_in1_set(number in1) {
+                this->expr_23_in1 = in1;
+            
+                this->expr_23_out1_set(
+                    (this->expr_23_in2 == 0 ? 0 : rnbo_fround((this->expr_23_in2 == 0. ? 0. : this->expr_23_in1 * 1 / this->expr_23_in2)) * this->expr_23_in2)
+                );//#map:constellation[1]/libra/round_obj-25:1
+            }
+            
+            void random_03_result_set(number v) {
+                this->expr_23_in1_set(v);
+                this->numberobj_08_value_set(v);
+            }
+            
+            void random_03_trigger_bang() {
+                {
+                    this->random_03_result_set(this->random(0, this->random_03_limit));
+                }
+            }
+            
+            void button_04_output_bang() {
+                this->random_04_trigger_bang();
+                this->random_03_trigger_bang();
+            }
+            
+            void button_04_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/libra/button_obj-31"),
+                    this->_currentTime
+                );;
+            
+                this->button_04_output_bang();
+            }
+            
+            void metro_04_tickout_bang() {
+                this->button_04_bangval_bang();
+            }
+            
+            void message_06_set_set(const list& v) {
+                this->message_06_set = jsCreateListCopy(v);
+            
+                this->getEngine()->sendListMessage(
+                    TAG("listout"),
+                    TAG("constellation[1]/libra/message_obj-37"),
+                    v,
+                    this->_currentTime
+                );
+            }
+            
+            void adsr_04_trigger_number_set(number v) {
+                this->adsr_04_trigger_number = v;
+            
+                if (v != 0)
+                    this->adsr_04_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
+            
+                for (number i = this->sampleOffsetIntoNextAudioBuffer; i < this->vectorsize(); i++) {
+                    this->adsr_04_triggerValueBuf[(Index)i] = v;
+                }
+            }
+            
+            void message_06_out_set(const list& v) {
+                {
+                    number converted = (v->length > 0 ? v[0] : 0);
+                    this->adsr_04_trigger_number_set(converted);
+                }
+            }
+            
+            void message_06_trigger_bang() {
+                this->message_06_out_set(this->message_06_set);
+            }
+            
+            void button_05_output_bang() {
+                this->message_06_trigger_bang();
+            }
+            
+            void button_05_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/libra/button_obj-21"),
+                    this->_currentTime
+                );;
+            
+                this->button_05_output_bang();
+            }
+            
+            void metro_05_tickout_bang() {
+                this->button_05_bangval_bang();
+            }
+            
+            void cycle_tilde_05_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_05_f2i = this->cycle_tilde_05_f2i;
+                auto __cycle_tilde_05_buffer = this->cycle_tilde_05_buffer;
+                auto __cycle_tilde_05_phasei = this->cycle_tilde_05_phasei;
                 Index i;
             
                 for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_05_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_05_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_05_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency * __cycle_tilde_05_f2i));
+                            __cycle_tilde_05_phasei = uint32_add(__cycle_tilde_05_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_05_phasei = __cycle_tilde_05_phasei;
+            }
+            
+            void adsr_04_perform(
+                number attack,
+                number decay,
+                number sustain,
+                number release,
+                const SampleValue * trigger_signal,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(trigger_signal);
+                RNBO_UNUSED(release);
+                RNBO_UNUSED(sustain);
+                RNBO_UNUSED(decay);
+                RNBO_UNUSED(attack);
+                auto __adsr_04_trigger_number = this->adsr_04_trigger_number;
+                auto __adsr_04_time = this->adsr_04_time;
+                auto __adsr_04_amplitude = this->adsr_04_amplitude;
+                auto __adsr_04_outval = this->adsr_04_outval;
+                auto __adsr_04_startingpoint = this->adsr_04_startingpoint;
+                auto __adsr_04_phase = this->adsr_04_phase;
+                auto __adsr_04_legato = this->adsr_04_legato;
+                auto __adsr_04_lastTriggerVal = this->adsr_04_lastTriggerVal;
+                auto __adsr_04_mspersamp = this->adsr_04_mspersamp;
+                bool bangMute = false;
+            
+                for (Index i = 0; i < n; i++) {
+                    number clampedattack = (800 > __adsr_04_mspersamp ? 800 : __adsr_04_mspersamp);
+                    number clampeddecay = (1000 > __adsr_04_mspersamp ? 1000 : __adsr_04_mspersamp);
+                    number clampedrelease = (1000 > __adsr_04_mspersamp ? 1000 : __adsr_04_mspersamp);
+                    number currentTriggerVal = this->adsr_04_triggerValueBuf[(Index)i];
+            
+                    if ((__adsr_04_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_04_triggerBuf[(Index)i] == 1) {
+                        if ((bool)(__adsr_04_legato)) {
+                            if (__adsr_04_phase != 0) {
+                                __adsr_04_startingpoint = __adsr_04_outval;
+                            } else {
+                                __adsr_04_startingpoint = 0;
+                            }
+                        } else {
+                            __adsr_04_startingpoint = 0;
+                        }
+            
+                        __adsr_04_amplitude = currentTriggerVal;
+                        __adsr_04_phase = 1;
+                        __adsr_04_time = 0.0;
+                        bangMute = false;
+                    } else if (__adsr_04_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
+                        if (__adsr_04_phase != 4 && __adsr_04_phase != 0) {
+                            __adsr_04_phase = 4;
+                            __adsr_04_amplitude = __adsr_04_outval;
+                            __adsr_04_time = 0.0;
+                        }
+                    }
+            
+                    __adsr_04_time += __adsr_04_mspersamp;
+            
+                    if (__adsr_04_phase == 0) {
+                        __adsr_04_outval = 0;
+                    } else if (__adsr_04_phase == 1) {
+                        if (__adsr_04_time > clampedattack) {
+                            __adsr_04_time -= clampedattack;
+                            __adsr_04_phase = 2;
+                            __adsr_04_outval = __adsr_04_amplitude;
+                        } else {
+                            __adsr_04_outval = (__adsr_04_amplitude - __adsr_04_startingpoint) * __adsr_04_time / clampedattack + __adsr_04_startingpoint;
+                        }
+                    } else if (__adsr_04_phase == 2) {
+                        if (__adsr_04_time > clampeddecay) {
+                            __adsr_04_time -= clampeddecay;
+                            __adsr_04_phase = 3;
+                            __adsr_04_outval = __adsr_04_amplitude * 0;
+                        } else {
+                            __adsr_04_outval = __adsr_04_amplitude * 0 + (__adsr_04_amplitude - __adsr_04_amplitude * 0) * (1. - __adsr_04_time / clampeddecay);
+                        }
+                    } else if (__adsr_04_phase == 3) {
+                        __adsr_04_outval = __adsr_04_amplitude * 0;
+                    } else if (__adsr_04_phase == 4) {
+                        if (__adsr_04_time > clampedrelease) {
+                            __adsr_04_time = 0;
+                            __adsr_04_phase = 0;
+                            __adsr_04_outval = 0;
+                            __adsr_04_amplitude = 0;
+                            bangMute = true;
+                        } else {
+                            __adsr_04_outval = __adsr_04_amplitude * (1.0 - __adsr_04_time / clampedrelease);
+                        }
+                    }
+            
+                    out[(Index)i] = __adsr_04_outval;
+                    this->adsr_04_triggerBuf[(Index)i] = 0;
+                    this->adsr_04_triggerValueBuf[(Index)i] = __adsr_04_trigger_number;
+                    __adsr_04_lastTriggerVal = currentTriggerVal;
+                }
+            
+                if ((bool)(bangMute)) {
+                    this->getEngine()->scheduleClockEventWithValue(
+                        this,
+                        -1468824490,
+                        this->sampsToMs((SampleIndex)(this->vs)) + this->_currentTime,
+                        0
+                    );;
+                }
+            
+                this->adsr_04_lastTriggerVal = __adsr_04_lastTriggerVal;
+                this->adsr_04_phase = __adsr_04_phase;
+                this->adsr_04_startingpoint = __adsr_04_startingpoint;
+                this->adsr_04_outval = __adsr_04_outval;
+                this->adsr_04_amplitude = __adsr_04_amplitude;
+                this->adsr_04_time = __adsr_04_time;
+            }
+            
+            void dspexpr_05_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_11_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_11_interp = this->gaintilde_11_interp;
+                auto __gaintilde_11_loginc = this->gaintilde_11_loginc;
+                auto __gaintilde_11_zval = this->gaintilde_11_zval;
+                auto __gaintilde_11_value = this->gaintilde_11_value;
+                number mult = (__gaintilde_11_value <= 0 ? 0. : __gaintilde_11_zval * rnbo_exp(__gaintilde_11_value * __gaintilde_11_loginc));
+                auto iv = this->mstosamps(__gaintilde_11_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_11_ramp_next(mult, iv, iv);
                 }
             }
             
@@ -8629,6 +9530,328 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 auto __stackprotect_count = this->stackprotect_count;
                 __stackprotect_count = 0;
                 this->stackprotect_count = __stackprotect_count;
+            }
+            
+            void numberobj_08_value_setter(number v) {
+                number localvalue = v;
+            
+                if (this->numberobj_08_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->numberobj_08_value = localvalue;
+            }
+            
+            void random_03_limit_setter(number v) {
+                if (v >= 0)
+                    this->random_03_limit = v;
+            }
+            
+            void toggle_02_value_number_setter(number v) {
+                this->toggle_02_value_number = (v != 0 ? 1 : 0);
+            }
+            
+            void metro_04_interval_setter(number v) {
+                this->metro_04_interval = (v > 0 ? v : 0);
+            }
+            
+            void numberobj_09_value_setter(number v) {
+                number localvalue = v;
+            
+                if (this->numberobj_09_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->numberobj_09_value = localvalue;
+            }
+            
+            void toggle_03_value_number_setter(number v) {
+                this->toggle_03_value_number = (v != 0 ? 1 : 0);
+            }
+            
+            void metro_05_interval_setter(number v) {
+                this->metro_05_interval = (v > 0 ? v : 0);
+            }
+            
+            void random_04_limit_setter(number v) {
+                if (v >= 0)
+                    this->random_04_limit = v;
+            }
+            
+            void numberobj_10_value_setter(number v) {
+                number localvalue = v;
+            
+                if (this->numberobj_10_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->numberobj_10_value = localvalue;
+            }
+            
+            void numberobj_08_init() {
+                this->numberobj_08_currentFormat = 6;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("setup"),
+                    TAG("constellation[1]/libra/number_obj-50"),
+                    1,
+                    this->_currentTime
+                );
+            }
+            
+            void numberobj_08_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->numberobj_08_value;
+            }
+            
+            void numberobj_08_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->numberobj_08_value_set(preset["value"]);
+            }
+            
+            number cycle_tilde_05_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_05_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_05_ph_conv;
+            
+                if (this->cycle_tilde_05_ph_currentPhase < 0.)
+                    this->cycle_tilde_05_ph_currentPhase = 1. + this->cycle_tilde_05_ph_currentPhase;
+            
+                if (this->cycle_tilde_05_ph_currentPhase > 1.)
+                    this->cycle_tilde_05_ph_currentPhase = this->cycle_tilde_05_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_05_ph_currentPhase;
+                this->cycle_tilde_05_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_05_ph_reset() {
+                this->cycle_tilde_05_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_05_ph_dspsetup() {
+                this->cycle_tilde_05_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_05_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_05_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_05_phasei = 0;
+                this->cycle_tilde_05_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_05_wrap = (long)(this->cycle_tilde_05_buffer->getSize()) - 1;
+                this->cycle_tilde_05_setupDone = true;
+                this->cycle_tilde_05_ph_dspsetup();
+            }
+            
+            void cycle_tilde_05_bufferUpdated() {
+                this->cycle_tilde_05_wrap = (long)(this->cycle_tilde_05_buffer->getSize()) - 1;
+            }
+            
+            number gaintilde_11_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_11_ramp_d_prev);
+                this->gaintilde_11_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_11_ramp_d_dspsetup() {
+                this->gaintilde_11_ramp_d_reset();
+            }
+            
+            void gaintilde_11_ramp_d_reset() {
+                this->gaintilde_11_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_11_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_11_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_11_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_11_ramp_index = _up;
+                        this->gaintilde_11_ramp_increment = (x - this->gaintilde_11_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_11_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_11_ramp_index = _down;
+                        this->gaintilde_11_ramp_increment = (x - this->gaintilde_11_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_11_ramp_index > 0) {
+                    this->gaintilde_11_ramp_prev += this->gaintilde_11_ramp_increment;
+                    this->gaintilde_11_ramp_index -= 1;
+                } else {
+                    this->gaintilde_11_ramp_prev = x;
+                }
+            
+                return this->gaintilde_11_ramp_prev;
+            }
+            
+            void gaintilde_11_ramp_reset() {
+                this->gaintilde_11_ramp_prev = 0;
+                this->gaintilde_11_ramp_index = 0;
+                this->gaintilde_11_ramp_increment = 0;
+                this->gaintilde_11_ramp_d_reset();
+            }
+            
+            void gaintilde_11_init() {
+                this->gaintilde_11_loginc = rnbo_log(1.072);
+                this->gaintilde_11_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_11_loginc));
+            }
+            
+            void gaintilde_11_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_11_value;
+            }
+            
+            void gaintilde_11_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_11_value_set(preset["value"]);
+            }
+            
+            void gaintilde_11_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_11_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_11_setupDone = true;
+                this->gaintilde_11_ramp_d_dspsetup();
+            }
+            
+            void random_03_nz_reset() {
+                xoshiro_reset(
+                    systemticks() + this->voice() + this->random(0, 10000),
+                    this->random_03_nz_state
+                );
+            }
+            
+            void random_03_nz_init() {
+                this->random_03_nz_reset();
+            }
+            
+            void random_03_nz_seed(number v) {
+                xoshiro_reset(v, this->random_03_nz_state);
+            }
+            
+            number random_03_nz_next() {
+                return xoshiro_next(this->random_03_nz_state);
+            }
+            
+            void toggle_02_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_02_value_number;
+            }
+            
+            void toggle_02_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_02_value_number_set(preset["value"]);
+            }
+            
+            void metro_04_onTransportChanged(number ) {}
+            
+            void metro_04_onBeatTimeChanged(number ) {}
+            
+            void numberobj_09_init() {
+                this->numberobj_09_currentFormat = 6;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("setup"),
+                    TAG("constellation[1]/libra/number_obj-48"),
+                    1,
+                    this->_currentTime
+                );
+            }
+            
+            void numberobj_09_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->numberobj_09_value;
+            }
+            
+            void numberobj_09_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->numberobj_09_value_set(preset["value"]);
+            }
+            
+            void message_06_init() {
+                this->message_06_set_set({1});
+            }
+            
+            void adsr_04_dspsetup(bool force) {
+                if ((bool)(this->adsr_04_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->adsr_04_mspersamp = (number)1000 / this->sr;
+                this->adsr_04_setupDone = true;
+            }
+            
+            void toggle_03_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_03_value_number;
+            }
+            
+            void toggle_03_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_03_value_number_set(preset["value"]);
+            }
+            
+            void metro_05_onTransportChanged(number ) {}
+            
+            void metro_05_onBeatTimeChanged(number ) {}
+            
+            void random_04_nz_reset() {
+                xoshiro_reset(
+                    systemticks() + this->voice() + this->random(0, 10000),
+                    this->random_04_nz_state
+                );
+            }
+            
+            void random_04_nz_init() {
+                this->random_04_nz_reset();
+            }
+            
+            void random_04_nz_seed(number v) {
+                xoshiro_reset(v, this->random_04_nz_state);
+            }
+            
+            number random_04_nz_next() {
+                return xoshiro_next(this->random_04_nz_state);
+            }
+            
+            void numberobj_10_init() {
+                this->numberobj_10_currentFormat = 6;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("setup"),
+                    TAG("constellation[1]/libra/number_obj-35"),
+                    1,
+                    this->_currentTime
+                );
+            }
+            
+            void numberobj_10_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->numberobj_10_value;
+            }
+            
+            void numberobj_10_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->numberobj_10_value_set(preset["value"]);
             }
             
             bool stackprotect_check() {
@@ -8655,17 +9878,108 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void assign_defaults()
             {
-                intnum_tilde_01_value = 0;
+                expr_22_in1 = 0;
+                expr_22_in2 = 40;
+                expr_22_out1 = 0;
+                receive_20_output_number = 0;
+                numberobj_08_value = 0;
+                numberobj_08_value_setter(numberobj_08_value);
+                switchobj_01_onoff = 0;
+                cycle_tilde_05_frequency = 0;
+                cycle_tilde_05_phase_offset = 0;
+                gaintilde_11_input_number = 0;
+                gaintilde_11_value = 0;
+                gaintilde_11_interp = 10;
+                dspexpr_05_in1 = 0;
+                dspexpr_05_in2 = 0;
+                random_03_limit = 3;
+                random_03_limit_setter(random_03_limit);
+                random_03_seed = 0;
+                expr_23_in1 = 0;
+                expr_23_in2 = 1;
+                expr_23_out1 = 0;
+                toggle_02_value_number = 0;
+                toggle_02_value_number_setter(toggle_02_value_number);
+                metro_04_on = 0;
+                metro_04_interval = 500;
+                metro_04_interval_setter(metro_04_interval);
+                receive_21_output_number = 0;
+                numberobj_09_value = 0;
+                numberobj_09_value_setter(numberobj_09_value);
+                expr_24_in1 = 0;
+                expr_24_in2 = 2;
+                expr_24_out1 = 0;
+                receive_22_output_number = 0;
+                expr_25_in1 = 0;
+                expr_25_in2 = 1.498307;
+                expr_25_out1 = 0;
+                adsr_04_trigger_number = 0;
+                adsr_04_attack = 800;
+                adsr_04_decay = 1000;
+                adsr_04_sustain = 0;
+                adsr_04_release = 1000;
+                adsr_04_legato = 0;
+                toggle_03_value_number = 0;
+                toggle_03_value_number_setter(toggle_03_value_number);
+                metro_05_on = 0;
+                metro_05_interval = 500;
+                metro_05_interval_setter(metro_05_interval);
+                receive_23_output_number = 0;
+                random_04_limit = 8000;
+                random_04_limit_setter(random_04_limit);
+                random_04_seed = 0;
+                numberobj_10_value = 0;
+                numberobj_10_value_setter(numberobj_10_value);
+                expr_26_in1 = 0;
+                expr_26_in2 = 1.414214;
+                expr_26_out1 = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
                 zeroBuffer = nullptr;
                 dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
                 didAllocateSignals = 0;
                 vs = 0;
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
+                numberobj_08_currentFormat = 6;
+                numberobj_08_lastValue = 0;
+                cycle_tilde_05_wrap = 0;
+                cycle_tilde_05_ph_currentPhase = 0;
+                cycle_tilde_05_ph_conv = 0;
+                cycle_tilde_05_setupDone = false;
+                gaintilde_11_lastValue = 0;
+                gaintilde_11_loginc = 1;
+                gaintilde_11_zval = 0;
+                gaintilde_11_ramp_d_prev = 0;
+                gaintilde_11_ramp_prev = 0;
+                gaintilde_11_ramp_index = 0;
+                gaintilde_11_ramp_increment = 0;
+                gaintilde_11_setupDone = false;
+                toggle_02_lastValue = 0;
+                metro_04_last = -1;
+                metro_04_next = -1;
+                numberobj_09_currentFormat = 6;
+                numberobj_09_lastValue = 0;
+                adsr_04_phase = 3;
+                adsr_04_mspersamp = 0;
+                adsr_04_time = 0;
+                adsr_04_lastTriggerVal = 0;
+                adsr_04_amplitude = 0;
+                adsr_04_outval = 0;
+                adsr_04_startingpoint = 0;
+                adsr_04_triggerBuf = nullptr;
+                adsr_04_triggerValueBuf = nullptr;
+                adsr_04_setupDone = false;
+                toggle_03_lastValue = 0;
+                metro_05_last = -1;
+                metro_05_next = -1;
+                numberobj_10_currentFormat = 6;
+                numberobj_10_lastValue = 0;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -8675,17 +9989,107 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             // member variables
             
-                number intnum_tilde_01_value;
+                number expr_22_in1;
+                number expr_22_in2;
+                number expr_22_out1;
+                number receive_20_output_number;
+                list receive_20_output_list;
+                number numberobj_08_value;
+                number switchobj_01_onoff;
+                number cycle_tilde_05_frequency;
+                number cycle_tilde_05_phase_offset;
+                number gaintilde_11_input_number;
+                number gaintilde_11_value;
+                number gaintilde_11_interp;
+                number dspexpr_05_in1;
+                number dspexpr_05_in2;
+                number random_03_limit;
+                number random_03_seed;
+                number expr_23_in1;
+                number expr_23_in2;
+                number expr_23_out1;
+                number toggle_02_value_number;
+                number metro_04_on;
+                number metro_04_interval;
+                number receive_21_output_number;
+                list receive_21_output_list;
+                number numberobj_09_value;
+                number expr_24_in1;
+                number expr_24_in2;
+                number expr_24_out1;
+                number receive_22_output_number;
+                list receive_22_output_list;
+                number expr_25_in1;
+                number expr_25_in2;
+                number expr_25_out1;
+                list message_06_set;
+                number adsr_04_trigger_number;
+                number adsr_04_attack;
+                number adsr_04_decay;
+                number adsr_04_sustain;
+                number adsr_04_release;
+                number adsr_04_legato;
+                number toggle_03_value_number;
+                number metro_05_on;
+                number metro_05_interval;
+                number receive_23_output_number;
+                list receive_23_output_list;
+                number random_04_limit;
+                number random_04_seed;
+                number numberobj_10_value;
+                number expr_26_in1;
+                number expr_26_in2;
+                number expr_26_out1;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
                 signal zeroBuffer;
                 signal dummyBuffer;
+                SampleValue * signals[3];
                 bool didAllocateSignals;
                 Index vs;
                 Index maxvs;
                 number sr;
                 number invsr;
+                Int numberobj_08_currentFormat;
+                number numberobj_08_lastValue;
+                Float64BufferRef cycle_tilde_05_buffer;
+                long cycle_tilde_05_wrap;
+                uint32_t cycle_tilde_05_phasei;
+                SampleValue cycle_tilde_05_f2i;
+                number cycle_tilde_05_ph_currentPhase;
+                number cycle_tilde_05_ph_conv;
+                bool cycle_tilde_05_setupDone;
+                number gaintilde_11_lastValue;
+                number gaintilde_11_loginc;
+                number gaintilde_11_zval;
+                number gaintilde_11_ramp_d_prev;
+                number gaintilde_11_ramp_prev;
+                number gaintilde_11_ramp_index;
+                number gaintilde_11_ramp_increment;
+                bool gaintilde_11_setupDone;
+                UInt random_03_nz_state[4] = { };
+                number toggle_02_lastValue;
+                number metro_04_last;
+                number metro_04_next;
+                Int numberobj_09_currentFormat;
+                number numberobj_09_lastValue;
+                Int adsr_04_phase;
+                number adsr_04_mspersamp;
+                number adsr_04_time;
+                number adsr_04_lastTriggerVal;
+                number adsr_04_amplitude;
+                number adsr_04_outval;
+                number adsr_04_startingpoint;
+                signal adsr_04_triggerBuf;
+                signal adsr_04_triggerValueBuf;
+                bool adsr_04_setupDone;
+                number toggle_03_lastValue;
+                number metro_05_last;
+                number metro_05_next;
+                UInt random_04_nz_state[4] = { };
+                Int numberobj_10_currentFormat;
+                number numberobj_10_lastValue;
                 number stackprotect_count;
                 Index _voiceIndex;
                 Int _noteNumber;
@@ -8694,23 +10098,23 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_243 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_311 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_256;
+            friend class RNBOSubpatcher_324;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_243()
+            RNBOSubpatcher_311()
             {
             }
             
-            ~RNBOSubpatcher_243()
+            ~RNBOSubpatcher_311()
             {
             }
             
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -8794,18 +10198,18 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
                 this->phasor_06_perform(this->phasor_06_freq, this->signals[0], n);
             
-                this->adsr_04_perform(
-                    this->adsr_04_attack,
-                    this->adsr_04_decay,
-                    this->adsr_04_sustain,
-                    this->adsr_04_release,
+                this->adsr_05_perform(
+                    this->adsr_05_attack,
+                    this->adsr_05_decay,
+                    this->adsr_05_sustain,
+                    this->adsr_05_release,
                     this->zeroBuffer,
                     this->signals[1],
                     n
                 );
             
-                this->dspexpr_05_perform(this->signals[0], this->signals[1], this->signals[2], n);
-                this->gaintilde_11_perform(this->signals[2], out1, n);
+                this->dspexpr_06_perform(this->signals[0], this->signals[1], this->signals[2], n);
+                this->gaintilde_12_perform(this->signals[2], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
             }
@@ -8819,8 +10223,8 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     }
             
                     this->phasor_06_sigbuf = resizeSignal(this->phasor_06_sigbuf, this->maxvs, maxBlockSize);
-                    this->adsr_04_triggerBuf = resizeSignal(this->adsr_04_triggerBuf, this->maxvs, maxBlockSize);
-                    this->adsr_04_triggerValueBuf = resizeSignal(this->adsr_04_triggerValueBuf, this->maxvs, maxBlockSize);
+                    this->adsr_05_triggerBuf = resizeSignal(this->adsr_05_triggerBuf, this->maxvs, maxBlockSize);
+                    this->adsr_05_triggerValueBuf = resizeSignal(this->adsr_05_triggerValueBuf, this->maxvs, maxBlockSize);
                     this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
                     this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
                     this->didAllocateSignals = true;
@@ -8838,8 +10242,8 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 }
             
                 this->phasor_06_dspsetup(forceDSPSetup);
-                this->adsr_04_dspsetup(forceDSPSetup);
-                this->gaintilde_11_dspsetup(forceDSPSetup);
+                this->adsr_05_dspsetup(forceDSPSetup);
+                this->gaintilde_12_dspsetup(forceDSPSetup);
             
                 if (sampleRateChanged)
                     this->onSampleRateChanged(sampleRate);
@@ -8884,12 +10288,12 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void processTransportEvent(MillisecondTime time, TransportState state) {
                 this->updateTime(time);
-                this->metro_04_onTransportChanged(state);
+                this->metro_06_onTransportChanged(state);
             }
             
             void processBeatTimeEvent(MillisecondTime time, BeatTime beattime) {
                 this->updateTime(time);
-                this->metro_04_onBeatTimeChanged(beattime);
+                this->metro_06_onBeatTimeChanged(beattime);
             }
             
             void onSampleRateChanged(double ) {}
@@ -9014,12 +10418,12 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 switch (index) {
                 case 1935387534:
                     {
-                    this->metro_04_tick_bang();
+                    this->metro_06_tick_bang();
                     break;
                     }
                 case -1468824490:
                     {
-                    this->adsr_04_mute_bang();
+                    this->adsr_05_mute_bang();
                     break;
                     }
                 }
@@ -9044,17 +10448,17 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 case TAG("valin"):
                     {
                     if (TAG("constellation[1]/aries/gain~_obj-6") == objectId)
-                        this->gaintilde_11_valin_set(payload);
+                        this->gaintilde_12_valin_set(payload);
             
                     if (TAG("constellation[1]/aries/toggle_obj-13") == objectId)
-                        this->toggle_02_valin_set(payload);
+                        this->toggle_04_valin_set(payload);
             
                     break;
                     }
                 case TAG("listin"):
                     {
                     if (TAG("constellation[1]/aries/message_obj-18") == objectId)
-                        this->message_06_listin_number_set(payload);
+                        this->message_07_listin_number_set(payload);
             
                     break;
                     }
@@ -9073,7 +10477,7 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 case TAG("listin"):
                     {
                     if (TAG("constellation[1]/aries/message_obj-18") == objectId)
-                        this->message_06_listin_list_set(payload);
+                        this->message_07_listin_list_set(payload);
             
                     break;
                     }
@@ -9087,14 +10491,14 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 case TAG("listin"):
                     {
                     if (TAG("constellation[1]/aries/message_obj-18") == objectId)
-                        this->message_06_listin_bang_bang();
+                        this->message_07_listin_bang_bang();
             
                     break;
                     }
                 case TAG("bangin"):
                     {
                     if (TAG("constellation[1]/aries/button_obj-16") == objectId)
-                        this->button_04_bangin_bang();
+                        this->button_06_bangin_bang();
             
                     break;
                     }
@@ -9172,45 +10576,45 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             protected:
             
-            void gaintilde_11_valin_set(number v) {
-                this->gaintilde_11_value_set(v);
+            void gaintilde_12_valin_set(number v) {
+                this->gaintilde_12_value_set(v);
             }
             
-            void message_06_listin_list_set(const list& v) {
-                this->message_06_set_set(v);
+            void message_07_listin_list_set(const list& v) {
+                this->message_07_set_set(v);
             }
             
-            void message_06_listin_number_set(number v) {
-                this->message_06_set_set(v);
+            void message_07_listin_number_set(number v) {
+                this->message_07_set_set(v);
             }
             
-            void message_06_listin_bang_bang() {
-                this->message_06_trigger_bang();
+            void message_07_listin_bang_bang() {
+                this->message_07_trigger_bang();
             }
             
-            void toggle_02_valin_set(number v) {
-                this->toggle_02_value_number_set(v);
+            void toggle_04_valin_set(number v) {
+                this->toggle_04_value_number_set(v);
             }
             
-            void metro_04_tick_bang() {
-                this->metro_04_tickout_bang();
+            void metro_06_tick_bang() {
+                this->metro_06_tickout_bang();
                 this->getEngine()->flushClockEvents(this, 1935387534, false);;
             
-                if ((bool)(this->metro_04_on)) {
-                    this->metro_04_last = this->currenttime();
+                if ((bool)(this->metro_06_on)) {
+                    this->metro_06_last = this->currenttime();
             
                     {
-                        this->metro_04_next = this->metro_04_last + this->metro_04_interval;
-                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_04_interval + this->_currentTime);;
+                        this->metro_06_next = this->metro_06_last + this->metro_06_interval;
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_06_interval + this->_currentTime);;
                     }
                 }
             }
             
-            void button_04_bangin_bang() {
-                this->button_04_bangval_bang();
+            void button_06_bangin_bang() {
+                this->button_06_bangval_bang();
             }
             
-            void adsr_04_mute_bang() {}
+            void adsr_05_mute_bang() {}
             
             number msToSamps(MillisecondTime ms, number sampleRate) {
                 return ms * sampleRate * 0.001;
@@ -9241,8 +10645,8 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             }
             
             void initializeObjects() {
-                this->gaintilde_11_init();
-                this->message_06_init();
+                this->gaintilde_12_init();
+                this->message_07_init();
             }
             
             void sendOutlet(OutletIndex index, ParameterValue value) {
@@ -9252,14 +10656,14 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             void startup() {
                 this->updateTime(this->getEngine()->getCurrentTime());
             
-                if ((bool)(this->metro_04_on))
-                    this->metro_04_on_set(1);
+                if ((bool)(this->metro_06_on))
+                    this->metro_06_on_set(1);
             }
             
             void allocateDataRefs() {}
             
-            void metro_04_on_set(number v) {
-                this->metro_04_on = v;
+            void metro_06_on_set(number v) {
+                this->metro_06_on = v;
                 this->getEngine()->flushClockEvents(this, 1935387534, false);;
             
                 if ((bool)(v)) {
@@ -9269,13 +10673,13 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 }
             }
             
-            void toggle_02_output_set(number v) {
-                this->metro_04_on_set(v);
+            void toggle_04_output_set(number v) {
+                this->metro_06_on_set(v);
             }
             
-            void toggle_02_value_number_set(number v) {
-                this->toggle_02_value_number_setter(v);
-                v = this->toggle_02_value_number;
+            void toggle_04_value_number_set(number v) {
+                this->toggle_04_value_number_setter(v);
+                v = this->toggle_04_value_number;
             
                 this->getEngine()->sendNumMessage(
                     TAG("valout"),
@@ -9284,40 +10688,40 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->_currentTime
                 );
             
-                this->toggle_02_output_set(v);
+                this->toggle_04_output_set(v);
             }
             
-            void receive_22_output_number_set(number v) {
-                this->receive_22_output_number = v;
-                this->toggle_02_value_number_set(v);
+            void receive_26_output_number_set(number v) {
+                this->receive_26_output_number = v;
+                this->toggle_04_value_number_set(v);
             }
             
             void phasor_06_freq_set(number v) {
                 this->phasor_06_freq = v;
             }
             
-            void expr_22_out1_set(number v) {
-                this->expr_22_out1 = v;
-                this->phasor_06_freq_set(this->expr_22_out1);
+            void expr_27_out1_set(number v) {
+                this->expr_27_out1 = v;
+                this->phasor_06_freq_set(this->expr_27_out1);
             }
             
-            void expr_22_in1_set(number in1) {
-                this->expr_22_in1 = in1;
+            void expr_27_in1_set(number in1) {
+                this->expr_27_in1 = in1;
             
-                this->expr_22_out1_set(
-                    (this->expr_22_in2 == 0 ? 0 : (this->expr_22_in2 == 0. ? 0. : this->expr_22_in1 / this->expr_22_in2))
+                this->expr_27_out1_set(
+                    (this->expr_27_in2 == 0 ? 0 : (this->expr_27_in2 == 0. ? 0. : this->expr_27_in1 / this->expr_27_in2))
                 );//#map:constellation[1]/aries//_obj-4:1
             }
             
-            void receive_20_output_number_set(number v) {
-                this->receive_20_output_number = v;
-                this->expr_22_in1_set(v);
+            void receive_24_output_number_set(number v) {
+                this->receive_24_output_number = v;
+                this->expr_27_in1_set(v);
             }
             
-            void gaintilde_11_outval_set(number ) {}
+            void gaintilde_12_outval_set(number ) {}
             
-            void gaintilde_11_value_set(number v) {
-                this->gaintilde_11_value = v;
+            void gaintilde_12_value_set(number v) {
+                this->gaintilde_12_value = v;
                 number value;
                 value = this->scale(v, 0, 157, 0, 158 - 1, 1);
             
@@ -9328,34 +10732,34 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->_currentTime
                 );
             
-                this->gaintilde_11_outval_set(value);
+                this->gaintilde_12_outval_set(value);
             }
             
-            void gaintilde_11_input_number_set(number v) {
-                this->gaintilde_11_input_number = v;
+            void gaintilde_12_input_number_set(number v) {
+                this->gaintilde_12_input_number = v;
             
-                this->gaintilde_11_value_set(
+                this->gaintilde_12_value_set(
                     this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
                 );
             }
             
-            void expr_23_out1_set(number v) {
-                this->expr_23_out1 = v;
-                this->gaintilde_11_input_number_set(this->expr_23_out1);
+            void expr_28_out1_set(number v) {
+                this->expr_28_out1 = v;
+                this->gaintilde_12_input_number_set(this->expr_28_out1);
             }
             
-            void expr_23_in1_set(number in1) {
-                this->expr_23_in1 = in1;
-                this->expr_23_out1_set(this->expr_23_in1 - this->expr_23_in2);//#map:constellation[1]/aries/-_obj-20:1
+            void expr_28_in1_set(number in1) {
+                this->expr_28_in1 = in1;
+                this->expr_28_out1_set(this->expr_28_in1 - this->expr_28_in2);//#map:constellation[1]/aries/-_obj-20:1
             }
             
-            void receive_21_output_number_set(number v) {
-                this->receive_21_output_number = v;
-                this->expr_23_in1_set(v);
+            void receive_25_output_number_set(number v) {
+                this->receive_25_output_number = v;
+                this->expr_28_in1_set(v);
             }
             
-            void message_06_set_set(const list& v) {
-                this->message_06_set = jsCreateListCopy(v);
+            void message_07_set_set(const list& v) {
+                this->message_07_set = jsCreateListCopy(v);
             
                 this->getEngine()->sendListMessage(
                     TAG("listout"),
@@ -9365,44 +10769,44 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 );
             }
             
-            void adsr_04_trigger_number_set(number v) {
-                this->adsr_04_trigger_number = v;
+            void adsr_05_trigger_number_set(number v) {
+                this->adsr_05_trigger_number = v;
             
                 if (v != 0)
-                    this->adsr_04_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
+                    this->adsr_05_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
             
                 for (number i = this->sampleOffsetIntoNextAudioBuffer; i < this->vectorsize(); i++) {
-                    this->adsr_04_triggerValueBuf[(Index)i] = v;
+                    this->adsr_05_triggerValueBuf[(Index)i] = v;
                 }
             }
             
-            void message_06_out_set(const list& v) {
+            void message_07_out_set(const list& v) {
                 {
                     number converted = (v->length > 0 ? v[0] : 0);
-                    this->adsr_04_trigger_number_set(converted);
+                    this->adsr_05_trigger_number_set(converted);
                 }
             }
             
-            void message_06_trigger_bang() {
-                this->message_06_out_set(this->message_06_set);
+            void message_07_trigger_bang() {
+                this->message_07_out_set(this->message_07_set);
             }
             
-            void button_04_output_bang() {
-                this->message_06_trigger_bang();
+            void button_06_output_bang() {
+                this->message_07_trigger_bang();
             }
             
-            void button_04_bangval_bang() {
+            void button_06_bangval_bang() {
                 this->getEngine()->sendBangMessage(
                     TAG("bangout"),
                     TAG("constellation[1]/aries/button_obj-16"),
                     this->_currentTime
                 );;
             
-                this->button_04_output_bang();
+                this->button_06_output_bang();
             }
             
-            void metro_04_tickout_bang() {
-                this->button_04_bangval_bang();
+            void metro_06_tickout_bang() {
+                this->button_06_bangval_bang();
             }
             
             void phasor_06_perform(number freq, SampleValue * out, Index n) {
@@ -9412,7 +10816,7 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 }
             }
             
-            void adsr_04_perform(
+            void adsr_05_perform(
                 number attack,
                 number decay,
                 number sustain,
@@ -9426,84 +10830,84 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 RNBO_UNUSED(sustain);
                 RNBO_UNUSED(decay);
                 RNBO_UNUSED(attack);
-                auto __adsr_04_trigger_number = this->adsr_04_trigger_number;
-                auto __adsr_04_time = this->adsr_04_time;
-                auto __adsr_04_amplitude = this->adsr_04_amplitude;
-                auto __adsr_04_outval = this->adsr_04_outval;
-                auto __adsr_04_startingpoint = this->adsr_04_startingpoint;
-                auto __adsr_04_phase = this->adsr_04_phase;
-                auto __adsr_04_legato = this->adsr_04_legato;
-                auto __adsr_04_lastTriggerVal = this->adsr_04_lastTriggerVal;
-                auto __adsr_04_mspersamp = this->adsr_04_mspersamp;
+                auto __adsr_05_trigger_number = this->adsr_05_trigger_number;
+                auto __adsr_05_time = this->adsr_05_time;
+                auto __adsr_05_amplitude = this->adsr_05_amplitude;
+                auto __adsr_05_outval = this->adsr_05_outval;
+                auto __adsr_05_startingpoint = this->adsr_05_startingpoint;
+                auto __adsr_05_phase = this->adsr_05_phase;
+                auto __adsr_05_legato = this->adsr_05_legato;
+                auto __adsr_05_lastTriggerVal = this->adsr_05_lastTriggerVal;
+                auto __adsr_05_mspersamp = this->adsr_05_mspersamp;
                 bool bangMute = false;
             
                 for (Index i = 0; i < n; i++) {
-                    number clampedattack = (1000 > __adsr_04_mspersamp ? 1000 : __adsr_04_mspersamp);
-                    number clampeddecay = (3000 > __adsr_04_mspersamp ? 3000 : __adsr_04_mspersamp);
-                    number clampedrelease = (0 > __adsr_04_mspersamp ? 0 : __adsr_04_mspersamp);
-                    number currentTriggerVal = this->adsr_04_triggerValueBuf[(Index)i];
+                    number clampedattack = (1000 > __adsr_05_mspersamp ? 1000 : __adsr_05_mspersamp);
+                    number clampeddecay = (3000 > __adsr_05_mspersamp ? 3000 : __adsr_05_mspersamp);
+                    number clampedrelease = (0 > __adsr_05_mspersamp ? 0 : __adsr_05_mspersamp);
+                    number currentTriggerVal = this->adsr_05_triggerValueBuf[(Index)i];
             
-                    if ((__adsr_04_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_04_triggerBuf[(Index)i] == 1) {
-                        if ((bool)(__adsr_04_legato)) {
-                            if (__adsr_04_phase != 0) {
-                                __adsr_04_startingpoint = __adsr_04_outval;
+                    if ((__adsr_05_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_05_triggerBuf[(Index)i] == 1) {
+                        if ((bool)(__adsr_05_legato)) {
+                            if (__adsr_05_phase != 0) {
+                                __adsr_05_startingpoint = __adsr_05_outval;
                             } else {
-                                __adsr_04_startingpoint = 0;
+                                __adsr_05_startingpoint = 0;
                             }
                         } else {
-                            __adsr_04_startingpoint = 0;
+                            __adsr_05_startingpoint = 0;
                         }
             
-                        __adsr_04_amplitude = currentTriggerVal;
-                        __adsr_04_phase = 1;
-                        __adsr_04_time = 0.0;
+                        __adsr_05_amplitude = currentTriggerVal;
+                        __adsr_05_phase = 1;
+                        __adsr_05_time = 0.0;
                         bangMute = false;
-                    } else if (__adsr_04_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
-                        if (__adsr_04_phase != 4 && __adsr_04_phase != 0) {
-                            __adsr_04_phase = 4;
-                            __adsr_04_amplitude = __adsr_04_outval;
-                            __adsr_04_time = 0.0;
+                    } else if (__adsr_05_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
+                        if (__adsr_05_phase != 4 && __adsr_05_phase != 0) {
+                            __adsr_05_phase = 4;
+                            __adsr_05_amplitude = __adsr_05_outval;
+                            __adsr_05_time = 0.0;
                         }
                     }
             
-                    __adsr_04_time += __adsr_04_mspersamp;
+                    __adsr_05_time += __adsr_05_mspersamp;
             
-                    if (__adsr_04_phase == 0) {
-                        __adsr_04_outval = 0;
-                    } else if (__adsr_04_phase == 1) {
-                        if (__adsr_04_time > clampedattack) {
-                            __adsr_04_time -= clampedattack;
-                            __adsr_04_phase = 2;
-                            __adsr_04_outval = __adsr_04_amplitude;
+                    if (__adsr_05_phase == 0) {
+                        __adsr_05_outval = 0;
+                    } else if (__adsr_05_phase == 1) {
+                        if (__adsr_05_time > clampedattack) {
+                            __adsr_05_time -= clampedattack;
+                            __adsr_05_phase = 2;
+                            __adsr_05_outval = __adsr_05_amplitude;
                         } else {
-                            __adsr_04_outval = (__adsr_04_amplitude - __adsr_04_startingpoint) * __adsr_04_time / clampedattack + __adsr_04_startingpoint;
+                            __adsr_05_outval = (__adsr_05_amplitude - __adsr_05_startingpoint) * __adsr_05_time / clampedattack + __adsr_05_startingpoint;
                         }
-                    } else if (__adsr_04_phase == 2) {
-                        if (__adsr_04_time > clampeddecay) {
-                            __adsr_04_time -= clampeddecay;
-                            __adsr_04_phase = 3;
-                            __adsr_04_outval = __adsr_04_amplitude * 0;
+                    } else if (__adsr_05_phase == 2) {
+                        if (__adsr_05_time > clampeddecay) {
+                            __adsr_05_time -= clampeddecay;
+                            __adsr_05_phase = 3;
+                            __adsr_05_outval = __adsr_05_amplitude * 0;
                         } else {
-                            __adsr_04_outval = __adsr_04_amplitude * 0 + (__adsr_04_amplitude - __adsr_04_amplitude * 0) * (1. - __adsr_04_time / clampeddecay);
+                            __adsr_05_outval = __adsr_05_amplitude * 0 + (__adsr_05_amplitude - __adsr_05_amplitude * 0) * (1. - __adsr_05_time / clampeddecay);
                         }
-                    } else if (__adsr_04_phase == 3) {
-                        __adsr_04_outval = __adsr_04_amplitude * 0;
-                    } else if (__adsr_04_phase == 4) {
-                        if (__adsr_04_time > clampedrelease) {
-                            __adsr_04_time = 0;
-                            __adsr_04_phase = 0;
-                            __adsr_04_outval = 0;
-                            __adsr_04_amplitude = 0;
+                    } else if (__adsr_05_phase == 3) {
+                        __adsr_05_outval = __adsr_05_amplitude * 0;
+                    } else if (__adsr_05_phase == 4) {
+                        if (__adsr_05_time > clampedrelease) {
+                            __adsr_05_time = 0;
+                            __adsr_05_phase = 0;
+                            __adsr_05_outval = 0;
+                            __adsr_05_amplitude = 0;
                             bangMute = true;
                         } else {
-                            __adsr_04_outval = __adsr_04_amplitude * (1.0 - __adsr_04_time / clampedrelease);
+                            __adsr_05_outval = __adsr_05_amplitude * (1.0 - __adsr_05_time / clampedrelease);
                         }
                     }
             
-                    out[(Index)i] = __adsr_04_outval;
-                    this->adsr_04_triggerBuf[(Index)i] = 0;
-                    this->adsr_04_triggerValueBuf[(Index)i] = __adsr_04_trigger_number;
-                    __adsr_04_lastTriggerVal = currentTriggerVal;
+                    out[(Index)i] = __adsr_05_outval;
+                    this->adsr_05_triggerBuf[(Index)i] = 0;
+                    this->adsr_05_triggerValueBuf[(Index)i] = __adsr_05_trigger_number;
+                    __adsr_05_lastTriggerVal = currentTriggerVal;
                 }
             
                 if ((bool)(bangMute)) {
@@ -9515,15 +10919,15 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     );;
                 }
             
-                this->adsr_04_lastTriggerVal = __adsr_04_lastTriggerVal;
-                this->adsr_04_phase = __adsr_04_phase;
-                this->adsr_04_startingpoint = __adsr_04_startingpoint;
-                this->adsr_04_outval = __adsr_04_outval;
-                this->adsr_04_amplitude = __adsr_04_amplitude;
-                this->adsr_04_time = __adsr_04_time;
+                this->adsr_05_lastTriggerVal = __adsr_05_lastTriggerVal;
+                this->adsr_05_phase = __adsr_05_phase;
+                this->adsr_05_startingpoint = __adsr_05_startingpoint;
+                this->adsr_05_outval = __adsr_05_outval;
+                this->adsr_05_amplitude = __adsr_05_amplitude;
+                this->adsr_05_time = __adsr_05_time;
             }
             
-            void dspexpr_05_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+            void dspexpr_06_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
                 Index i;
             
                 for (i = 0; i < n; i++) {
@@ -9531,16 +10935,16 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 }
             }
             
-            void gaintilde_11_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
-                auto __gaintilde_11_interp = this->gaintilde_11_interp;
-                auto __gaintilde_11_loginc = this->gaintilde_11_loginc;
-                auto __gaintilde_11_zval = this->gaintilde_11_zval;
-                auto __gaintilde_11_value = this->gaintilde_11_value;
-                number mult = (__gaintilde_11_value <= 0 ? 0. : __gaintilde_11_zval * rnbo_exp(__gaintilde_11_value * __gaintilde_11_loginc));
-                auto iv = this->mstosamps(__gaintilde_11_interp);
+            void gaintilde_12_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_12_interp = this->gaintilde_12_interp;
+                auto __gaintilde_12_loginc = this->gaintilde_12_loginc;
+                auto __gaintilde_12_zval = this->gaintilde_12_zval;
+                auto __gaintilde_12_value = this->gaintilde_12_value;
+                number mult = (__gaintilde_12_value <= 0 ? 0. : __gaintilde_12_zval * rnbo_exp(__gaintilde_12_value * __gaintilde_12_loginc));
+                auto iv = this->mstosamps(__gaintilde_12_interp);
             
                 for (Index i = 0; i < n; i++) {
-                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_11_ramp_next(mult, iv, iv);
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_12_ramp_next(mult, iv, iv);
                 }
             }
             
@@ -9551,12 +10955,12 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->stackprotect_count = __stackprotect_count;
             }
             
-            void toggle_02_value_number_setter(number v) {
-                this->toggle_02_value_number = (v != 0 ? 1 : 0);
+            void toggle_04_value_number_setter(number v) {
+                this->toggle_04_value_number = (v != 0 ? 1 : 0);
             }
             
-            void metro_04_interval_setter(number v) {
-                this->metro_04_interval = (v > 0 ? v : 0);
+            void metro_06_interval_setter(number v) {
+                this->metro_06_interval = (v > 0 ? v : 0);
             }
             
             number phasor_06_ph_next(number freq, number reset) {
@@ -9589,1203 +10993,6 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->phasor_06_conv = (number)1 / this->samplerate();
                 this->phasor_06_setupDone = true;
                 this->phasor_06_ph_dspsetup();
-            }
-            
-            number gaintilde_11_ramp_d_next(number x) {
-                number temp = (number)(x - this->gaintilde_11_ramp_d_prev);
-                this->gaintilde_11_ramp_d_prev = x;
-                return temp;
-            }
-            
-            void gaintilde_11_ramp_d_dspsetup() {
-                this->gaintilde_11_ramp_d_reset();
-            }
-            
-            void gaintilde_11_ramp_d_reset() {
-                this->gaintilde_11_ramp_d_prev = 0;
-            }
-            
-            number gaintilde_11_ramp_next(number x, number up, number down) {
-                if (this->gaintilde_11_ramp_d_next(x) != 0.) {
-                    if (x > this->gaintilde_11_ramp_prev) {
-                        number _up = up;
-            
-                        if (_up < 1)
-                            _up = 1;
-            
-                        this->gaintilde_11_ramp_index = _up;
-                        this->gaintilde_11_ramp_increment = (x - this->gaintilde_11_ramp_prev) / _up;
-                    } else if (x < this->gaintilde_11_ramp_prev) {
-                        number _down = down;
-            
-                        if (_down < 1)
-                            _down = 1;
-            
-                        this->gaintilde_11_ramp_index = _down;
-                        this->gaintilde_11_ramp_increment = (x - this->gaintilde_11_ramp_prev) / _down;
-                    }
-                }
-            
-                if (this->gaintilde_11_ramp_index > 0) {
-                    this->gaintilde_11_ramp_prev += this->gaintilde_11_ramp_increment;
-                    this->gaintilde_11_ramp_index -= 1;
-                } else {
-                    this->gaintilde_11_ramp_prev = x;
-                }
-            
-                return this->gaintilde_11_ramp_prev;
-            }
-            
-            void gaintilde_11_ramp_reset() {
-                this->gaintilde_11_ramp_prev = 0;
-                this->gaintilde_11_ramp_index = 0;
-                this->gaintilde_11_ramp_increment = 0;
-                this->gaintilde_11_ramp_d_reset();
-            }
-            
-            void gaintilde_11_init() {
-                this->gaintilde_11_loginc = rnbo_log(1.072);
-                this->gaintilde_11_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_11_loginc));
-            }
-            
-            void gaintilde_11_getPresetValue(PatcherStateInterface& preset) {
-                preset["value"] = this->gaintilde_11_value;
-            }
-            
-            void gaintilde_11_setPresetValue(PatcherStateInterface& preset) {
-                if ((bool)(stateIsEmpty(preset)))
-                    return;
-            
-                this->gaintilde_11_value_set(preset["value"]);
-            }
-            
-            void gaintilde_11_dspsetup(bool force) {
-                if ((bool)(this->gaintilde_11_setupDone) && (bool)(!(bool)(force)))
-                    return;
-            
-                this->gaintilde_11_setupDone = true;
-                this->gaintilde_11_ramp_d_dspsetup();
-            }
-            
-            void message_06_init() {
-                this->message_06_set_set({1});
-            }
-            
-            void adsr_04_dspsetup(bool force) {
-                if ((bool)(this->adsr_04_setupDone) && (bool)(!(bool)(force)))
-                    return;
-            
-                this->adsr_04_mspersamp = (number)1000 / this->sr;
-                this->adsr_04_setupDone = true;
-            }
-            
-            void toggle_02_getPresetValue(PatcherStateInterface& preset) {
-                preset["value"] = this->toggle_02_value_number;
-            }
-            
-            void toggle_02_setPresetValue(PatcherStateInterface& preset) {
-                if ((bool)(stateIsEmpty(preset)))
-                    return;
-            
-                this->toggle_02_value_number_set(preset["value"]);
-            }
-            
-            void metro_04_onTransportChanged(number ) {}
-            
-            void metro_04_onBeatTimeChanged(number ) {}
-            
-            bool stackprotect_check() {
-                this->stackprotect_count++;
-            
-                if (this->stackprotect_count > 128) {
-                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
-                    return true;
-                }
-            
-                return false;
-            }
-            
-            void updateTime(MillisecondTime time) {
-                this->_currentTime = time;
-                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
-            
-                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
-                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
-            
-                if (this->sampleOffsetIntoNextAudioBuffer < 0)
-                    this->sampleOffsetIntoNextAudioBuffer = 0;
-            }
-            
-            void assign_defaults()
-            {
-                receive_20_output_number = 0;
-                phasor_06_freq = 0;
-                expr_22_in1 = 0;
-                expr_22_in2 = 16;
-                expr_22_out1 = 0;
-                dspexpr_05_in1 = 0;
-                dspexpr_05_in2 = 0;
-                gaintilde_11_input_number = 0;
-                gaintilde_11_value = 0;
-                gaintilde_11_interp = 10;
-                expr_23_in1 = 0;
-                expr_23_in2 = 10;
-                expr_23_out1 = 0;
-                receive_21_output_number = 0;
-                adsr_04_trigger_number = 0;
-                adsr_04_attack = 1000;
-                adsr_04_decay = 3000;
-                adsr_04_sustain = 0;
-                adsr_04_release = 0;
-                adsr_04_legato = 0;
-                toggle_02_value_number = 0;
-                toggle_02_value_number_setter(toggle_02_value_number);
-                metro_04_on = 0;
-                metro_04_interval = 6000;
-                metro_04_interval_setter(metro_04_interval);
-                receive_22_output_number = 0;
-                _currentTime = 0;
-                audioProcessSampleCount = 0;
-                sampleOffsetIntoNextAudioBuffer = 0;
-                zeroBuffer = nullptr;
-                dummyBuffer = nullptr;
-                signals[0] = nullptr;
-                signals[1] = nullptr;
-                signals[2] = nullptr;
-                didAllocateSignals = 0;
-                vs = 0;
-                maxvs = 0;
-                sr = 44100;
-                invsr = 0.00002267573696;
-                phasor_06_sigbuf = nullptr;
-                phasor_06_lastLockedPhase = 0;
-                phasor_06_conv = 0;
-                phasor_06_ph_currentPhase = 0;
-                phasor_06_ph_conv = 0;
-                phasor_06_setupDone = false;
-                gaintilde_11_lastValue = 0;
-                gaintilde_11_loginc = 1;
-                gaintilde_11_zval = 0;
-                gaintilde_11_ramp_d_prev = 0;
-                gaintilde_11_ramp_prev = 0;
-                gaintilde_11_ramp_index = 0;
-                gaintilde_11_ramp_increment = 0;
-                gaintilde_11_setupDone = false;
-                adsr_04_phase = 3;
-                adsr_04_mspersamp = 0;
-                adsr_04_time = 0;
-                adsr_04_lastTriggerVal = 0;
-                adsr_04_amplitude = 0;
-                adsr_04_outval = 0;
-                adsr_04_startingpoint = 0;
-                adsr_04_triggerBuf = nullptr;
-                adsr_04_triggerValueBuf = nullptr;
-                adsr_04_setupDone = false;
-                toggle_02_lastValue = 0;
-                metro_04_last = -1;
-                metro_04_next = -1;
-                stackprotect_count = 0;
-                _voiceIndex = 0;
-                _noteNumber = 0;
-                isMuted = 1;
-                parameterOffset = 0;
-            }
-            
-            // member variables
-            
-                number receive_20_output_number;
-                list receive_20_output_list;
-                number phasor_06_freq;
-                number expr_22_in1;
-                number expr_22_in2;
-                number expr_22_out1;
-                number dspexpr_05_in1;
-                number dspexpr_05_in2;
-                number gaintilde_11_input_number;
-                number gaintilde_11_value;
-                number gaintilde_11_interp;
-                number expr_23_in1;
-                number expr_23_in2;
-                number expr_23_out1;
-                number receive_21_output_number;
-                list receive_21_output_list;
-                list message_06_set;
-                number adsr_04_trigger_number;
-                number adsr_04_attack;
-                number adsr_04_decay;
-                number adsr_04_sustain;
-                number adsr_04_release;
-                number adsr_04_legato;
-                number toggle_02_value_number;
-                number metro_04_on;
-                number metro_04_interval;
-                number receive_22_output_number;
-                list receive_22_output_list;
-                MillisecondTime _currentTime;
-                SampleIndex audioProcessSampleCount;
-                SampleIndex sampleOffsetIntoNextAudioBuffer;
-                signal zeroBuffer;
-                signal dummyBuffer;
-                SampleValue * signals[3];
-                bool didAllocateSignals;
-                Index vs;
-                Index maxvs;
-                number sr;
-                number invsr;
-                signal phasor_06_sigbuf;
-                number phasor_06_lastLockedPhase;
-                number phasor_06_conv;
-                number phasor_06_ph_currentPhase;
-                number phasor_06_ph_conv;
-                bool phasor_06_setupDone;
-                number gaintilde_11_lastValue;
-                number gaintilde_11_loginc;
-                number gaintilde_11_zval;
-                number gaintilde_11_ramp_d_prev;
-                number gaintilde_11_ramp_prev;
-                number gaintilde_11_ramp_index;
-                number gaintilde_11_ramp_increment;
-                bool gaintilde_11_setupDone;
-                Int adsr_04_phase;
-                number adsr_04_mspersamp;
-                number adsr_04_time;
-                number adsr_04_lastTriggerVal;
-                number adsr_04_amplitude;
-                number adsr_04_outval;
-                number adsr_04_startingpoint;
-                signal adsr_04_triggerBuf;
-                signal adsr_04_triggerValueBuf;
-                bool adsr_04_setupDone;
-                number toggle_02_lastValue;
-                number metro_04_last;
-                number metro_04_next;
-                number stackprotect_count;
-                Index _voiceIndex;
-                Int _noteNumber;
-                Index isMuted;
-                ParameterIndex parameterOffset;
-            
-    };
-    
-    class RNBOSubpatcher_244 : public PatcherInterfaceImpl {
-            
-            friend class RNBOSubpatcher_256;
-            friend class rnbomatic;
-            
-            public:
-            
-            RNBOSubpatcher_244()
-            {
-            }
-            
-            ~RNBOSubpatcher_244()
-            {
-            }
-            
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
-            }
-            
-            rnbomatic* getTopLevelPatcher() {
-                return this->getPatcher()->getTopLevelPatcher();
-            }
-            
-            void cancelClockEvents()
-            {
-            }
-            
-            Index getNumMidiInputPorts() const {
-                return 0;
-            }
-            
-            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
-            
-            Index getNumMidiOutputPorts() const {
-                return 0;
-            }
-            
-            void process(
-                const SampleValue * const* inputs,
-                Index numInputs,
-                SampleValue * const* outputs,
-                Index numOutputs,
-                Index n
-            ) {
-                RNBO_UNUSED(numInputs);
-                RNBO_UNUSED(inputs);
-                this->vs = n;
-                this->updateTime(this->getEngine()->getCurrentTime());
-                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_02_perform(this->intnum_tilde_02_value, out1, n);
-                this->stackprotect_perform(n);
-                this->audioProcessSampleCount += this->vs;
-            }
-            
-            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
-                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
-                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
-                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
-                    this->didAllocateSignals = true;
-                }
-            
-                const bool sampleRateChanged = sampleRate != this->sr;
-                const bool maxvsChanged = maxBlockSize != this->maxvs;
-                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
-            
-                if (sampleRateChanged || maxvsChanged) {
-                    this->vs = maxBlockSize;
-                    this->maxvs = maxBlockSize;
-                    this->sr = sampleRate;
-                    this->invsr = 1 / sampleRate;
-                }
-            
-                RNBO_UNUSED(forceDSPSetup);
-            
-                if (sampleRateChanged)
-                    this->onSampleRateChanged(sampleRate);
-            }
-            
-            void setProbingTarget(MessageTag id) {
-                switch (id) {
-                default:
-                    {
-                    this->setProbingIndex(-1);
-                    break;
-                    }
-                }
-            }
-            
-            void setProbingIndex(ProbingIndex ) {}
-            
-            Index getProbingChannels(MessageTag outletId) const {
-                RNBO_UNUSED(outletId);
-                return 0;
-            }
-            
-            Index getIsMuted()  {
-                return this->isMuted;
-            }
-            
-            void setIsMuted(Index v)  {
-                this->isMuted = v;
-            }
-            
-            Index getPatcherSerial() const {
-                return 0;
-            }
-            
-            void getState(PatcherStateInterface& ) {}
-            
-            void setState() {}
-            
-            void getPreset(PatcherStateInterface& ) {}
-            
-            void processTempoEvent(MillisecondTime , Tempo ) {}
-            
-            void processTransportEvent(MillisecondTime , TransportState ) {}
-            
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
-            
-            void onSampleRateChanged(double ) {}
-            
-            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
-            
-            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
-            
-            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValue(index, value, time);
-            }
-            
-            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
-                this->setParameterValue(index, this->getParameterValue(index), time);
-            }
-            
-            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValueNormalized(index, value, time);
-            }
-            
-            ParameterValue getParameterValue(ParameterIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return 0;
-                    }
-                }
-            }
-            
-            ParameterIndex getNumSignalInParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumSignalOutParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumParameters() const {
-                return 0;
-            }
-            
-            ConstCharPointer getParameterName(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            ConstCharPointer getParameterId(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
-            
-            void sendParameter(ParameterIndex index, bool ignoreValue) {
-                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
-            }
-            
-            void setParameterOffset(ParameterIndex offset) {
-                this->parameterOffset = offset;
-            }
-            
-            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
-                if (steps == 1) {
-                    if (normalizedValue > 0) {
-                        normalizedValue = 1.;
-                    }
-                } else {
-                    ParameterValue oneStep = (number)1. / (steps - 1);
-                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
-                    normalizedValue = numberOfSteps * oneStep;
-                }
-            
-                return normalizedValue;
-            }
-            
-            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
-            
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            void scheduleParamInit(ParameterIndex index, Index order) {
-                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
-            }
-            
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
-            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
-            
-            void processOutletEvent(
-                EngineLink* sender,
-                OutletIndex index,
-                ParameterValue value,
-                MillisecondTime time
-            ) {
-                this->updateTime(time);
-                this->processOutletAtCurrentTime(sender, index, value);
-            }
-            
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
-            
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
-            MessageTagInfo resolveTag(MessageTag tag) const {
-                switch (tag) {
-            
-                }
-            
-                return nullptr;
-            }
-            
-            DataRef* getDataRef(DataRefIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return nullptr;
-                    }
-                }
-            }
-            
-            DataRefIndex getNumDataRefs() const {
-                return 0;
-            }
-            
-            void fillDataRef(DataRefIndex , DataRef& ) {}
-            
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
-            
-            void initialize() {
-                this->assign_defaults();
-                this->setState();
-            }
-            
-            protected:
-            
-            number msToSamps(MillisecondTime ms, number sampleRate) {
-                return ms * sampleRate * 0.001;
-            }
-            
-            MillisecondTime sampsToMs(SampleIndex samps) {
-                return samps * (this->invsr * 1000);
-            }
-            
-            Index getMaxBlockSize() const {
-                return this->maxvs;
-            }
-            
-            number getSampleRate() const {
-                return this->sr;
-            }
-            
-            bool hasFixedVectorSize() const {
-                return false;
-            }
-            
-            Index getNumInputChannels() const {
-                return 0;
-            }
-            
-            Index getNumOutputChannels() const {
-                return 1;
-            }
-            
-            void initializeObjects() {}
-            
-            void sendOutlet(OutletIndex index, ParameterValue value) {
-                this->getEngine()->sendOutlet(this, index, value);
-            }
-            
-            void startup() {}
-            
-            void allocateDataRefs() {}
-            
-            void intnum_tilde_02_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
-                Index i;
-            
-                for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
-                }
-            }
-            
-            void stackprotect_perform(Index n) {
-                RNBO_UNUSED(n);
-                auto __stackprotect_count = this->stackprotect_count;
-                __stackprotect_count = 0;
-                this->stackprotect_count = __stackprotect_count;
-            }
-            
-            bool stackprotect_check() {
-                this->stackprotect_count++;
-            
-                if (this->stackprotect_count > 128) {
-                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
-                    return true;
-                }
-            
-                return false;
-            }
-            
-            void updateTime(MillisecondTime time) {
-                this->_currentTime = time;
-                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
-            
-                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
-                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
-            
-                if (this->sampleOffsetIntoNextAudioBuffer < 0)
-                    this->sampleOffsetIntoNextAudioBuffer = 0;
-            }
-            
-            void assign_defaults()
-            {
-                intnum_tilde_02_value = 0;
-                _currentTime = 0;
-                audioProcessSampleCount = 0;
-                sampleOffsetIntoNextAudioBuffer = 0;
-                zeroBuffer = nullptr;
-                dummyBuffer = nullptr;
-                didAllocateSignals = 0;
-                vs = 0;
-                maxvs = 0;
-                sr = 44100;
-                invsr = 0.00002267573696;
-                stackprotect_count = 0;
-                _voiceIndex = 0;
-                _noteNumber = 0;
-                isMuted = 1;
-                parameterOffset = 0;
-            }
-            
-            // member variables
-            
-                number intnum_tilde_02_value;
-                MillisecondTime _currentTime;
-                SampleIndex audioProcessSampleCount;
-                SampleIndex sampleOffsetIntoNextAudioBuffer;
-                signal zeroBuffer;
-                signal dummyBuffer;
-                bool didAllocateSignals;
-                Index vs;
-                Index maxvs;
-                number sr;
-                number invsr;
-                number stackprotect_count;
-                Index _voiceIndex;
-                Int _noteNumber;
-                Index isMuted;
-                ParameterIndex parameterOffset;
-            
-    };
-    
-    class RNBOSubpatcher_245 : public PatcherInterfaceImpl {
-            
-            friend class RNBOSubpatcher_256;
-            friend class rnbomatic;
-            
-            public:
-            
-            RNBOSubpatcher_245()
-            {
-            }
-            
-            ~RNBOSubpatcher_245()
-            {
-            }
-            
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
-            }
-            
-            rnbomatic* getTopLevelPatcher() {
-                return this->getPatcher()->getTopLevelPatcher();
-            }
-            
-            void cancelClockEvents()
-            {
-            }
-            
-            inline number safediv(number num, number denom) {
-                return (denom == 0.0 ? 0.0 : num / denom);
-            }
-            
-            number safepow(number base, number exponent) {
-                return fixnan(rnbo_pow(base, exponent));
-            }
-            
-            number scale(
-                number x,
-                number lowin,
-                number hiin,
-                number lowout,
-                number highout,
-                number pow
-            ) {
-                auto inscale = this->safediv(1., hiin - lowin);
-                number outdiff = highout - lowout;
-                number value = (x - lowin) * inscale;
-            
-                if (pow != 1) {
-                    if (value > 0)
-                        value = this->safepow(value, pow);
-                    else
-                        value = -this->safepow(-value, pow);
-                }
-            
-                value = value * outdiff + lowout;
-                return value;
-            }
-            
-            number mstosamps(MillisecondTime ms) {
-                return ms * this->sr * 0.001;
-            }
-            
-            number wrap(number x, number low, number high) {
-                number lo;
-                number hi;
-            
-                if (low == high)
-                    return low;
-            
-                if (low > high) {
-                    hi = low;
-                    lo = high;
-                } else {
-                    lo = low;
-                    hi = high;
-                }
-            
-                number range = hi - lo;
-            
-                if (x >= lo && x < hi)
-                    return x;
-            
-                if (range <= 0.000000001)
-                    return lo;
-            
-                long numWraps = (long)(trunc((x - lo) / range));
-                numWraps = numWraps - ((x < lo ? 1 : 0));
-                number result = x - range * numWraps;
-            
-                if (result >= hi)
-                    return result - range;
-                else
-                    return result;
-            }
-            
-            number samplerate() {
-                return this->sr;
-            }
-            
-            Index getNumMidiInputPorts() const {
-                return 0;
-            }
-            
-            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
-            
-            Index getNumMidiOutputPorts() const {
-                return 0;
-            }
-            
-            void process(
-                const SampleValue * const* inputs,
-                Index numInputs,
-                SampleValue * const* outputs,
-                Index numOutputs,
-                Index n
-            ) {
-                RNBO_UNUSED(numInputs);
-                RNBO_UNUSED(inputs);
-                this->vs = n;
-                this->updateTime(this->getEngine()->getCurrentTime());
-                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->phasor_07_perform(this->phasor_07_freq, this->signals[0], n);
-                this->triangle_tilde_01_perform(this->signals[0], this->triangle_tilde_01_duty, this->signals[1], n);
-                this->gaintilde_12_perform(this->signals[1], out1, n);
-                this->stackprotect_perform(n);
-                this->audioProcessSampleCount += this->vs;
-            }
-            
-            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
-                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
-                    Index i;
-            
-                    for (i = 0; i < 2; i++) {
-                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
-                    }
-            
-                    this->phasor_07_sigbuf = resizeSignal(this->phasor_07_sigbuf, this->maxvs, maxBlockSize);
-                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
-                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
-                    this->didAllocateSignals = true;
-                }
-            
-                const bool sampleRateChanged = sampleRate != this->sr;
-                const bool maxvsChanged = maxBlockSize != this->maxvs;
-                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
-            
-                if (sampleRateChanged || maxvsChanged) {
-                    this->vs = maxBlockSize;
-                    this->maxvs = maxBlockSize;
-                    this->sr = sampleRate;
-                    this->invsr = 1 / sampleRate;
-                }
-            
-                this->phasor_07_dspsetup(forceDSPSetup);
-                this->gaintilde_12_dspsetup(forceDSPSetup);
-            
-                if (sampleRateChanged)
-                    this->onSampleRateChanged(sampleRate);
-            }
-            
-            void setProbingTarget(MessageTag id) {
-                switch (id) {
-                default:
-                    {
-                    this->setProbingIndex(-1);
-                    break;
-                    }
-                }
-            }
-            
-            void setProbingIndex(ProbingIndex ) {}
-            
-            Index getProbingChannels(MessageTag outletId) const {
-                RNBO_UNUSED(outletId);
-                return 0;
-            }
-            
-            Index getIsMuted()  {
-                return this->isMuted;
-            }
-            
-            void setIsMuted(Index v)  {
-                this->isMuted = v;
-            }
-            
-            Index getPatcherSerial() const {
-                return 0;
-            }
-            
-            void getState(PatcherStateInterface& ) {}
-            
-            void setState() {}
-            
-            void getPreset(PatcherStateInterface& ) {}
-            
-            void processTempoEvent(MillisecondTime , Tempo ) {}
-            
-            void processTransportEvent(MillisecondTime , TransportState ) {}
-            
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
-            
-            void onSampleRateChanged(double ) {}
-            
-            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
-            
-            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
-            
-            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValue(index, value, time);
-            }
-            
-            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
-                this->setParameterValue(index, this->getParameterValue(index), time);
-            }
-            
-            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValueNormalized(index, value, time);
-            }
-            
-            ParameterValue getParameterValue(ParameterIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return 0;
-                    }
-                }
-            }
-            
-            ParameterIndex getNumSignalInParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumSignalOutParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumParameters() const {
-                return 0;
-            }
-            
-            ConstCharPointer getParameterName(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            ConstCharPointer getParameterId(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
-            
-            void sendParameter(ParameterIndex index, bool ignoreValue) {
-                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
-            }
-            
-            void setParameterOffset(ParameterIndex offset) {
-                this->parameterOffset = offset;
-            }
-            
-            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
-                if (steps == 1) {
-                    if (normalizedValue > 0) {
-                        normalizedValue = 1.;
-                    }
-                } else {
-                    ParameterValue oneStep = (number)1. / (steps - 1);
-                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
-                    normalizedValue = numberOfSteps * oneStep;
-                }
-            
-                return normalizedValue;
-            }
-            
-            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
-            
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            void scheduleParamInit(ParameterIndex index, Index order) {
-                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
-            }
-            
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
-            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
-            
-            void processOutletEvent(
-                EngineLink* sender,
-                OutletIndex index,
-                ParameterValue value,
-                MillisecondTime time
-            ) {
-                this->updateTime(time);
-                this->processOutletAtCurrentTime(sender, index, value);
-            }
-            
-            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
-                this->updateTime(time);
-            
-                switch (tag) {
-                case TAG("valin"):
-                    {
-                    if (TAG("constellation[1]/taurus/gain~_obj-7") == objectId)
-                        this->gaintilde_12_valin_set(payload);
-            
-                    break;
-                    }
-                }
-            }
-            
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
-            MessageTagInfo resolveTag(MessageTag tag) const {
-                switch (tag) {
-                case TAG("valout"):
-                    {
-                    return "valout";
-                    }
-                case TAG("constellation[1]/taurus/gain~_obj-7"):
-                    {
-                    return "constellation[1]/taurus/gain~_obj-7";
-                    }
-                case TAG("valin"):
-                    {
-                    return "valin";
-                    }
-                }
-            
-                return nullptr;
-            }
-            
-            DataRef* getDataRef(DataRefIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return nullptr;
-                    }
-                }
-            }
-            
-            DataRefIndex getNumDataRefs() const {
-                return 0;
-            }
-            
-            void fillDataRef(DataRefIndex , DataRef& ) {}
-            
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
-            
-            void initialize() {
-                this->assign_defaults();
-                this->setState();
-            }
-            
-            protected:
-            
-            void gaintilde_12_valin_set(number v) {
-                this->gaintilde_12_value_set(v);
-            }
-            
-            number msToSamps(MillisecondTime ms, number sampleRate) {
-                return ms * sampleRate * 0.001;
-            }
-            
-            MillisecondTime sampsToMs(SampleIndex samps) {
-                return samps * (this->invsr * 1000);
-            }
-            
-            Index getMaxBlockSize() const {
-                return this->maxvs;
-            }
-            
-            number getSampleRate() const {
-                return this->sr;
-            }
-            
-            bool hasFixedVectorSize() const {
-                return false;
-            }
-            
-            Index getNumInputChannels() const {
-                return 0;
-            }
-            
-            Index getNumOutputChannels() const {
-                return 1;
-            }
-            
-            void initializeObjects() {
-                this->gaintilde_12_init();
-            }
-            
-            void sendOutlet(OutletIndex index, ParameterValue value) {
-                this->getEngine()->sendOutlet(this, index, value);
-            }
-            
-            void startup() {}
-            
-            void allocateDataRefs() {}
-            
-            void phasor_07_freq_set(number v) {
-                this->phasor_07_freq = v;
-            }
-            
-            void expr_24_out1_set(number v) {
-                this->expr_24_out1 = v;
-                this->phasor_07_freq_set(this->expr_24_out1);
-            }
-            
-            void expr_24_in1_set(number in1) {
-                this->expr_24_in1 = in1;
-            
-                this->expr_24_out1_set(
-                    (this->expr_24_in2 == 0 ? 0 : (this->expr_24_in2 == 0. ? 0. : this->expr_24_in1 / this->expr_24_in2))
-                );//#map:constellation[1]/taurus//_obj-2:1
-            }
-            
-            void receive_23_output_number_set(number v) {
-                this->receive_23_output_number = v;
-                this->expr_24_in1_set(v);
-            }
-            
-            void gaintilde_12_outval_set(number ) {}
-            
-            void gaintilde_12_value_set(number v) {
-                this->gaintilde_12_value = v;
-                number value;
-                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
-            
-                this->getEngine()->sendNumMessage(
-                    TAG("valout"),
-                    TAG("constellation[1]/taurus/gain~_obj-7"),
-                    v,
-                    this->_currentTime
-                );
-            
-                this->gaintilde_12_outval_set(value);
-            }
-            
-            void phasor_07_perform(number freq, SampleValue * out, Index n) {
-                for (Index i = 0; i < n; i++) {
-                    out[(Index)i] = this->phasor_07_ph_next(freq, -1);
-                    this->phasor_07_sigbuf[(Index)i] = -1;
-                }
-            }
-            
-            void triangle_tilde_01_perform(const Sample * phase, number duty, SampleValue * out1, Index n) {
-                RNBO_UNUSED(duty);
-                Index i;
-            
-                for (i = 0; i < n; i++) {
-                    number p1 = 0.5;
-                    auto wrappedPhase = this->wrap(phase[(Index)i], 0., 1.);
-                    p1 = (p1 > 1. ? 1. : (p1 < 0. ? 0. : p1));
-            
-                    if (wrappedPhase < p1) {
-                        out1[(Index)i] = wrappedPhase / p1;
-                        continue;
-                    } else {
-                        out1[(Index)i] = (p1 == 1. ? wrappedPhase : 1. - (wrappedPhase - p1) / (1. - p1));
-                        continue;
-                    }
-                }
-            }
-            
-            void gaintilde_12_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
-                auto __gaintilde_12_interp = this->gaintilde_12_interp;
-                auto __gaintilde_12_loginc = this->gaintilde_12_loginc;
-                auto __gaintilde_12_zval = this->gaintilde_12_zval;
-                auto __gaintilde_12_value = this->gaintilde_12_value;
-                number mult = (__gaintilde_12_value <= 0 ? 0. : __gaintilde_12_zval * rnbo_exp(__gaintilde_12_value * __gaintilde_12_loginc));
-                auto iv = this->mstosamps(__gaintilde_12_interp);
-            
-                for (Index i = 0; i < n; i++) {
-                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_12_ramp_next(mult, iv, iv);
-                }
-            }
-            
-            void stackprotect_perform(Index n) {
-                RNBO_UNUSED(n);
-                auto __stackprotect_count = this->stackprotect_count;
-                __stackprotect_count = 0;
-                this->stackprotect_count = __stackprotect_count;
             }
             
             number gaintilde_12_ramp_d_next(number x) {
@@ -10864,6 +11071,1906 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->gaintilde_12_ramp_d_dspsetup();
             }
             
+            void message_07_init() {
+                this->message_07_set_set({1});
+            }
+            
+            void adsr_05_dspsetup(bool force) {
+                if ((bool)(this->adsr_05_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->adsr_05_mspersamp = (number)1000 / this->sr;
+                this->adsr_05_setupDone = true;
+            }
+            
+            void toggle_04_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_04_value_number;
+            }
+            
+            void toggle_04_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_04_value_number_set(preset["value"]);
+            }
+            
+            void metro_06_onTransportChanged(number ) {}
+            
+            void metro_06_onBeatTimeChanged(number ) {}
+            
+            bool stackprotect_check() {
+                this->stackprotect_count++;
+            
+                if (this->stackprotect_count > 128) {
+                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
+                    return true;
+                }
+            
+                return false;
+            }
+            
+            void updateTime(MillisecondTime time) {
+                this->_currentTime = time;
+                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
+            
+                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
+                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
+            
+                if (this->sampleOffsetIntoNextAudioBuffer < 0)
+                    this->sampleOffsetIntoNextAudioBuffer = 0;
+            }
+            
+            void assign_defaults()
+            {
+                receive_24_output_number = 0;
+                phasor_06_freq = 0;
+                expr_27_in1 = 0;
+                expr_27_in2 = 16;
+                expr_27_out1 = 0;
+                dspexpr_06_in1 = 0;
+                dspexpr_06_in2 = 0;
+                gaintilde_12_input_number = 0;
+                gaintilde_12_value = 0;
+                gaintilde_12_interp = 10;
+                expr_28_in1 = 0;
+                expr_28_in2 = 10;
+                expr_28_out1 = 0;
+                receive_25_output_number = 0;
+                adsr_05_trigger_number = 0;
+                adsr_05_attack = 1000;
+                adsr_05_decay = 3000;
+                adsr_05_sustain = 0;
+                adsr_05_release = 0;
+                adsr_05_legato = 0;
+                toggle_04_value_number = 0;
+                toggle_04_value_number_setter(toggle_04_value_number);
+                metro_06_on = 0;
+                metro_06_interval = 6000;
+                metro_06_interval_setter(metro_06_interval);
+                receive_26_output_number = 0;
+                _currentTime = 0;
+                audioProcessSampleCount = 0;
+                sampleOffsetIntoNextAudioBuffer = 0;
+                zeroBuffer = nullptr;
+                dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
+                didAllocateSignals = 0;
+                vs = 0;
+                maxvs = 0;
+                sr = 44100;
+                invsr = 0.00002267573696;
+                phasor_06_sigbuf = nullptr;
+                phasor_06_lastLockedPhase = 0;
+                phasor_06_conv = 0;
+                phasor_06_ph_currentPhase = 0;
+                phasor_06_ph_conv = 0;
+                phasor_06_setupDone = false;
+                gaintilde_12_lastValue = 0;
+                gaintilde_12_loginc = 1;
+                gaintilde_12_zval = 0;
+                gaintilde_12_ramp_d_prev = 0;
+                gaintilde_12_ramp_prev = 0;
+                gaintilde_12_ramp_index = 0;
+                gaintilde_12_ramp_increment = 0;
+                gaintilde_12_setupDone = false;
+                adsr_05_phase = 3;
+                adsr_05_mspersamp = 0;
+                adsr_05_time = 0;
+                adsr_05_lastTriggerVal = 0;
+                adsr_05_amplitude = 0;
+                adsr_05_outval = 0;
+                adsr_05_startingpoint = 0;
+                adsr_05_triggerBuf = nullptr;
+                adsr_05_triggerValueBuf = nullptr;
+                adsr_05_setupDone = false;
+                toggle_04_lastValue = 0;
+                metro_06_last = -1;
+                metro_06_next = -1;
+                stackprotect_count = 0;
+                _voiceIndex = 0;
+                _noteNumber = 0;
+                isMuted = 1;
+                parameterOffset = 0;
+            }
+            
+            // member variables
+            
+                number receive_24_output_number;
+                list receive_24_output_list;
+                number phasor_06_freq;
+                number expr_27_in1;
+                number expr_27_in2;
+                number expr_27_out1;
+                number dspexpr_06_in1;
+                number dspexpr_06_in2;
+                number gaintilde_12_input_number;
+                number gaintilde_12_value;
+                number gaintilde_12_interp;
+                number expr_28_in1;
+                number expr_28_in2;
+                number expr_28_out1;
+                number receive_25_output_number;
+                list receive_25_output_list;
+                list message_07_set;
+                number adsr_05_trigger_number;
+                number adsr_05_attack;
+                number adsr_05_decay;
+                number adsr_05_sustain;
+                number adsr_05_release;
+                number adsr_05_legato;
+                number toggle_04_value_number;
+                number metro_06_on;
+                number metro_06_interval;
+                number receive_26_output_number;
+                list receive_26_output_list;
+                MillisecondTime _currentTime;
+                SampleIndex audioProcessSampleCount;
+                SampleIndex sampleOffsetIntoNextAudioBuffer;
+                signal zeroBuffer;
+                signal dummyBuffer;
+                SampleValue * signals[3];
+                bool didAllocateSignals;
+                Index vs;
+                Index maxvs;
+                number sr;
+                number invsr;
+                signal phasor_06_sigbuf;
+                number phasor_06_lastLockedPhase;
+                number phasor_06_conv;
+                number phasor_06_ph_currentPhase;
+                number phasor_06_ph_conv;
+                bool phasor_06_setupDone;
+                number gaintilde_12_lastValue;
+                number gaintilde_12_loginc;
+                number gaintilde_12_zval;
+                number gaintilde_12_ramp_d_prev;
+                number gaintilde_12_ramp_prev;
+                number gaintilde_12_ramp_index;
+                number gaintilde_12_ramp_increment;
+                bool gaintilde_12_setupDone;
+                Int adsr_05_phase;
+                number adsr_05_mspersamp;
+                number adsr_05_time;
+                number adsr_05_lastTriggerVal;
+                number adsr_05_amplitude;
+                number adsr_05_outval;
+                number adsr_05_startingpoint;
+                signal adsr_05_triggerBuf;
+                signal adsr_05_triggerValueBuf;
+                bool adsr_05_setupDone;
+                number toggle_04_lastValue;
+                number metro_06_last;
+                number metro_06_next;
+                number stackprotect_count;
+                Index _voiceIndex;
+                Int _noteNumber;
+                Index isMuted;
+                ParameterIndex parameterOffset;
+            
+    };
+    
+    class RNBOSubpatcher_312 : public PatcherInterfaceImpl {
+            
+            friend class RNBOSubpatcher_324;
+            friend class rnbomatic;
+            
+            public:
+            
+            RNBOSubpatcher_312()
+            {
+            }
+            
+            ~RNBOSubpatcher_312()
+            {
+            }
+            
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            }
+            
+            rnbomatic* getTopLevelPatcher() {
+                return this->getPatcher()->getTopLevelPatcher();
+            }
+            
+            void cancelClockEvents()
+            {
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            Index getNumMidiInputPorts() const {
+                return 0;
+            }
+            
+            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
+            
+            Index getNumMidiOutputPorts() const {
+                return 0;
+            }
+            
+            void process(
+                const SampleValue * const* inputs,
+                Index numInputs,
+                SampleValue * const* outputs,
+                Index numOutputs,
+                Index n
+            ) {
+                RNBO_UNUSED(numInputs);
+                RNBO_UNUSED(inputs);
+                this->vs = n;
+                this->updateTime(this->getEngine()->getCurrentTime());
+                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
+            
+                this->cycle_tilde_06_perform(
+                    this->cycle_tilde_06_frequency,
+                    this->cycle_tilde_06_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->gaintilde_13_perform(this->signals[0], out1, n);
+                this->stackprotect_perform(n);
+                this->audioProcessSampleCount += this->vs;
+            }
+            
+            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
+                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 1; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
+                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
+                    this->didAllocateSignals = true;
+                }
+            
+                const bool sampleRateChanged = sampleRate != this->sr;
+                const bool maxvsChanged = maxBlockSize != this->maxvs;
+                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
+            
+                if (sampleRateChanged || maxvsChanged) {
+                    this->vs = maxBlockSize;
+                    this->maxvs = maxBlockSize;
+                    this->sr = sampleRate;
+                    this->invsr = 1 / sampleRate;
+                }
+            
+                this->cycle_tilde_06_dspsetup(forceDSPSetup);
+                this->gaintilde_13_dspsetup(forceDSPSetup);
+            
+                if (sampleRateChanged)
+                    this->onSampleRateChanged(sampleRate);
+            }
+            
+            void setProbingTarget(MessageTag id) {
+                switch (id) {
+                default:
+                    {
+                    this->setProbingIndex(-1);
+                    break;
+                    }
+                }
+            }
+            
+            void setProbingIndex(ProbingIndex ) {}
+            
+            Index getProbingChannels(MessageTag outletId) const {
+                RNBO_UNUSED(outletId);
+                return 0;
+            }
+            
+            Index getIsMuted()  {
+                return this->isMuted;
+            }
+            
+            void setIsMuted(Index v)  {
+                this->isMuted = v;
+            }
+            
+            Index getPatcherSerial() const {
+                return 0;
+            }
+            
+            void getState(PatcherStateInterface& ) {}
+            
+            void setState() {}
+            
+            void getPreset(PatcherStateInterface& ) {}
+            
+            void processTempoEvent(MillisecondTime , Tempo ) {}
+            
+            void processTransportEvent(MillisecondTime , TransportState ) {}
+            
+            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
+            
+            void onSampleRateChanged(double ) {}
+            
+            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
+            
+            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
+            
+            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValue(index, value, time);
+            }
+            
+            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
+                this->setParameterValue(index, this->getParameterValue(index), time);
+            }
+            
+            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValueNormalized(index, value, time);
+            }
+            
+            ParameterValue getParameterValue(ParameterIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return 0;
+                    }
+                }
+            }
+            
+            ParameterIndex getNumSignalInParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumSignalOutParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumParameters() const {
+                return 0;
+            }
+            
+            ConstCharPointer getParameterName(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            ConstCharPointer getParameterId(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
+            
+            void sendParameter(ParameterIndex index, bool ignoreValue) {
+                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
+            }
+            
+            void setParameterOffset(ParameterIndex offset) {
+                this->parameterOffset = offset;
+            }
+            
+            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
+                if (steps == 1) {
+                    if (normalizedValue > 0) {
+                        normalizedValue = 1.;
+                    }
+                } else {
+                    ParameterValue oneStep = (number)1. / (steps - 1);
+                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
+                    normalizedValue = numberOfSteps * oneStep;
+                }
+            
+                return normalizedValue;
+            }
+            
+            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+            
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            void scheduleParamInit(ParameterIndex index, Index order) {
+                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
+            }
+            
+            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
+            
+            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
+            
+            void processOutletEvent(
+                EngineLink* sender,
+                OutletIndex index,
+                ParameterValue value,
+                MillisecondTime time
+            ) {
+                this->updateTime(time);
+                this->processOutletAtCurrentTime(sender, index, value);
+            }
+            
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/scorpio/gain~_obj-5") == objectId)
+                        this->gaintilde_13_valin_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
+            
+            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
+            
+            MessageTagInfo resolveTag(MessageTag tag) const {
+                switch (tag) {
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/scorpio/gain~_obj-5"):
+                    {
+                    return "constellation[1]/scorpio/gain~_obj-5";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                }
+            
+                return nullptr;
+            }
+            
+            DataRef* getDataRef(DataRefIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return nullptr;
+                    }
+                }
+            }
+            
+            DataRefIndex getNumDataRefs() const {
+                return 0;
+            }
+            
+            void fillDataRef(DataRefIndex , DataRef& ) {}
+            
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_06_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_06_bufferUpdated();
+                }
+            }
+            
+            void initialize() {
+                this->assign_defaults();
+                this->setState();
+                this->cycle_tilde_06_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+            }
+            
+            protected:
+            
+            void gaintilde_13_valin_set(number v) {
+                this->gaintilde_13_value_set(v);
+            }
+            
+            number msToSamps(MillisecondTime ms, number sampleRate) {
+                return ms * sampleRate * 0.001;
+            }
+            
+            MillisecondTime sampsToMs(SampleIndex samps) {
+                return samps * (this->invsr * 1000);
+            }
+            
+            Index getMaxBlockSize() const {
+                return this->maxvs;
+            }
+            
+            number getSampleRate() const {
+                return this->sr;
+            }
+            
+            bool hasFixedVectorSize() const {
+                return false;
+            }
+            
+            Index getNumInputChannels() const {
+                return 0;
+            }
+            
+            Index getNumOutputChannels() const {
+                return 1;
+            }
+            
+            void initializeObjects() {
+                this->gaintilde_13_init();
+            }
+            
+            void sendOutlet(OutletIndex index, ParameterValue value) {
+                this->getEngine()->sendOutlet(this, index, value);
+            }
+            
+            void startup() {}
+            
+            void allocateDataRefs() {
+                this->cycle_tilde_06_buffer->requestSize(16384, 1);
+                this->cycle_tilde_06_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_06_buffer = this->cycle_tilde_06_buffer->allocateIfNeeded();
+            }
+            
+            void cycle_tilde_06_frequency_set(number v) {
+                this->cycle_tilde_06_frequency = v;
+            }
+            
+            void expr_30_out1_set(number v) {
+                this->expr_30_out1 = v;
+                this->cycle_tilde_06_frequency_set(this->expr_30_out1);
+            }
+            
+            void expr_30_in1_set(number in1) {
+                this->expr_30_in1 = in1;
+            
+                this->expr_30_out1_set(
+                    (this->expr_30_in2 == 0 ? 0 : (this->expr_30_in2 == 0. ? 0. : this->expr_30_in1 / this->expr_30_in2))
+                );//#map:constellation[1]/scorpio//_obj-4:1
+            }
+            
+            void receive_28_output_number_set(number v) {
+                this->receive_28_output_number = v;
+                this->expr_30_in1_set(v);
+            }
+            
+            void gaintilde_13_outval_set(number ) {}
+            
+            void gaintilde_13_value_set(number v) {
+                this->gaintilde_13_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/scorpio/gain~_obj-5"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_13_outval_set(value);
+            }
+            
+            void gaintilde_13_input_number_set(number v) {
+                this->gaintilde_13_input_number = v;
+            
+                this->gaintilde_13_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_29_out1_set(number v) {
+                this->expr_29_out1 = v;
+                this->gaintilde_13_input_number_set(this->expr_29_out1);
+            }
+            
+            void expr_29_in1_set(number in1) {
+                this->expr_29_in1 = in1;
+                this->expr_29_out1_set(this->expr_29_in1 - this->expr_29_in2);//#map:constellation[1]/scorpio/-_obj-7:1
+            }
+            
+            void receive_27_output_number_set(number v) {
+                this->receive_27_output_number = v;
+                this->expr_29_in1_set(v);
+            }
+            
+            void cycle_tilde_06_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_06_f2i = this->cycle_tilde_06_f2i;
+                auto __cycle_tilde_06_buffer = this->cycle_tilde_06_buffer;
+                auto __cycle_tilde_06_phasei = this->cycle_tilde_06_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_06_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_06_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_06_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency * __cycle_tilde_06_f2i));
+                            __cycle_tilde_06_phasei = uint32_add(__cycle_tilde_06_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_06_phasei = __cycle_tilde_06_phasei;
+            }
+            
+            void gaintilde_13_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_13_interp = this->gaintilde_13_interp;
+                auto __gaintilde_13_loginc = this->gaintilde_13_loginc;
+                auto __gaintilde_13_zval = this->gaintilde_13_zval;
+                auto __gaintilde_13_value = this->gaintilde_13_value;
+                number mult = (__gaintilde_13_value <= 0 ? 0. : __gaintilde_13_zval * rnbo_exp(__gaintilde_13_value * __gaintilde_13_loginc));
+                auto iv = this->mstosamps(__gaintilde_13_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_13_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void stackprotect_perform(Index n) {
+                RNBO_UNUSED(n);
+                auto __stackprotect_count = this->stackprotect_count;
+                __stackprotect_count = 0;
+                this->stackprotect_count = __stackprotect_count;
+            }
+            
+            number gaintilde_13_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_13_ramp_d_prev);
+                this->gaintilde_13_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_13_ramp_d_dspsetup() {
+                this->gaintilde_13_ramp_d_reset();
+            }
+            
+            void gaintilde_13_ramp_d_reset() {
+                this->gaintilde_13_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_13_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_13_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_13_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_13_ramp_index = _up;
+                        this->gaintilde_13_ramp_increment = (x - this->gaintilde_13_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_13_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_13_ramp_index = _down;
+                        this->gaintilde_13_ramp_increment = (x - this->gaintilde_13_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_13_ramp_index > 0) {
+                    this->gaintilde_13_ramp_prev += this->gaintilde_13_ramp_increment;
+                    this->gaintilde_13_ramp_index -= 1;
+                } else {
+                    this->gaintilde_13_ramp_prev = x;
+                }
+            
+                return this->gaintilde_13_ramp_prev;
+            }
+            
+            void gaintilde_13_ramp_reset() {
+                this->gaintilde_13_ramp_prev = 0;
+                this->gaintilde_13_ramp_index = 0;
+                this->gaintilde_13_ramp_increment = 0;
+                this->gaintilde_13_ramp_d_reset();
+            }
+            
+            void gaintilde_13_init() {
+                this->gaintilde_13_loginc = rnbo_log(1.072);
+                this->gaintilde_13_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_13_loginc));
+            }
+            
+            void gaintilde_13_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_13_value;
+            }
+            
+            void gaintilde_13_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_13_value_set(preset["value"]);
+            }
+            
+            void gaintilde_13_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_13_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_13_setupDone = true;
+                this->gaintilde_13_ramp_d_dspsetup();
+            }
+            
+            number cycle_tilde_06_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_06_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_06_ph_conv;
+            
+                if (this->cycle_tilde_06_ph_currentPhase < 0.)
+                    this->cycle_tilde_06_ph_currentPhase = 1. + this->cycle_tilde_06_ph_currentPhase;
+            
+                if (this->cycle_tilde_06_ph_currentPhase > 1.)
+                    this->cycle_tilde_06_ph_currentPhase = this->cycle_tilde_06_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_06_ph_currentPhase;
+                this->cycle_tilde_06_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_06_ph_reset() {
+                this->cycle_tilde_06_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_06_ph_dspsetup() {
+                this->cycle_tilde_06_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_06_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_06_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_06_phasei = 0;
+                this->cycle_tilde_06_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_06_wrap = (long)(this->cycle_tilde_06_buffer->getSize()) - 1;
+                this->cycle_tilde_06_setupDone = true;
+                this->cycle_tilde_06_ph_dspsetup();
+            }
+            
+            void cycle_tilde_06_bufferUpdated() {
+                this->cycle_tilde_06_wrap = (long)(this->cycle_tilde_06_buffer->getSize()) - 1;
+            }
+            
+            bool stackprotect_check() {
+                this->stackprotect_count++;
+            
+                if (this->stackprotect_count > 128) {
+                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
+                    return true;
+                }
+            
+                return false;
+            }
+            
+            void updateTime(MillisecondTime time) {
+                this->_currentTime = time;
+                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
+            
+                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
+                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
+            
+                if (this->sampleOffsetIntoNextAudioBuffer < 0)
+                    this->sampleOffsetIntoNextAudioBuffer = 0;
+            }
+            
+            void assign_defaults()
+            {
+                receive_27_output_number = 0;
+                expr_29_in1 = 0;
+                expr_29_in2 = 10;
+                expr_29_out1 = 0;
+                expr_30_in1 = 0;
+                expr_30_in2 = 16;
+                expr_30_out1 = 0;
+                receive_28_output_number = 0;
+                gaintilde_13_input_number = 0;
+                gaintilde_13_value = 0;
+                gaintilde_13_interp = 10;
+                cycle_tilde_06_frequency = 0;
+                cycle_tilde_06_phase_offset = 0;
+                _currentTime = 0;
+                audioProcessSampleCount = 0;
+                sampleOffsetIntoNextAudioBuffer = 0;
+                zeroBuffer = nullptr;
+                dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                didAllocateSignals = 0;
+                vs = 0;
+                maxvs = 0;
+                sr = 44100;
+                invsr = 0.00002267573696;
+                gaintilde_13_lastValue = 0;
+                gaintilde_13_loginc = 1;
+                gaintilde_13_zval = 0;
+                gaintilde_13_ramp_d_prev = 0;
+                gaintilde_13_ramp_prev = 0;
+                gaintilde_13_ramp_index = 0;
+                gaintilde_13_ramp_increment = 0;
+                gaintilde_13_setupDone = false;
+                cycle_tilde_06_wrap = 0;
+                cycle_tilde_06_ph_currentPhase = 0;
+                cycle_tilde_06_ph_conv = 0;
+                cycle_tilde_06_setupDone = false;
+                stackprotect_count = 0;
+                _voiceIndex = 0;
+                _noteNumber = 0;
+                isMuted = 1;
+                parameterOffset = 0;
+            }
+            
+            // member variables
+            
+                number receive_27_output_number;
+                list receive_27_output_list;
+                number expr_29_in1;
+                number expr_29_in2;
+                number expr_29_out1;
+                number expr_30_in1;
+                number expr_30_in2;
+                number expr_30_out1;
+                number receive_28_output_number;
+                list receive_28_output_list;
+                number gaintilde_13_input_number;
+                number gaintilde_13_value;
+                number gaintilde_13_interp;
+                number cycle_tilde_06_frequency;
+                number cycle_tilde_06_phase_offset;
+                MillisecondTime _currentTime;
+                SampleIndex audioProcessSampleCount;
+                SampleIndex sampleOffsetIntoNextAudioBuffer;
+                signal zeroBuffer;
+                signal dummyBuffer;
+                SampleValue * signals[1];
+                bool didAllocateSignals;
+                Index vs;
+                Index maxvs;
+                number sr;
+                number invsr;
+                number gaintilde_13_lastValue;
+                number gaintilde_13_loginc;
+                number gaintilde_13_zval;
+                number gaintilde_13_ramp_d_prev;
+                number gaintilde_13_ramp_prev;
+                number gaintilde_13_ramp_index;
+                number gaintilde_13_ramp_increment;
+                bool gaintilde_13_setupDone;
+                Float64BufferRef cycle_tilde_06_buffer;
+                long cycle_tilde_06_wrap;
+                uint32_t cycle_tilde_06_phasei;
+                SampleValue cycle_tilde_06_f2i;
+                number cycle_tilde_06_ph_currentPhase;
+                number cycle_tilde_06_ph_conv;
+                bool cycle_tilde_06_setupDone;
+                number stackprotect_count;
+                Index _voiceIndex;
+                Int _noteNumber;
+                Index isMuted;
+                ParameterIndex parameterOffset;
+            
+    };
+    
+    class RNBOSubpatcher_313 : public PatcherInterfaceImpl {
+            
+            friend class RNBOSubpatcher_324;
+            friend class rnbomatic;
+            
+            public:
+            
+            RNBOSubpatcher_313()
+            {
+            }
+            
+            ~RNBOSubpatcher_313()
+            {
+            }
+            
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            }
+            
+            rnbomatic* getTopLevelPatcher() {
+                return this->getPatcher()->getTopLevelPatcher();
+            }
+            
+            void cancelClockEvents()
+            {
+                getEngine()->flushClockEvents(this, 1935387534, false);
+                getEngine()->flushClockEvents(this, -1468824490, false);
+            }
+            
+            number wrap(number x, number low, number high) {
+                number lo;
+                number hi;
+            
+                if (low == high)
+                    return low;
+            
+                if (low > high) {
+                    hi = low;
+                    lo = high;
+                } else {
+                    lo = low;
+                    hi = high;
+                }
+            
+                number range = hi - lo;
+            
+                if (x >= lo && x < hi)
+                    return x;
+            
+                if (range <= 0.000000001)
+                    return lo;
+            
+                long numWraps = (long)(trunc((x - lo) / range));
+                numWraps = numWraps - ((x < lo ? 1 : 0));
+                number result = x - range * numWraps;
+            
+                if (result >= hi)
+                    return result - range;
+                else
+                    return result;
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index vectorsize() {
+                return this->vs;
+            }
+            
+            MillisecondTime currenttime() {
+                return this->_currentTime;
+            }
+            
+            Index getNumMidiInputPorts() const {
+                return 0;
+            }
+            
+            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
+            
+            Index getNumMidiOutputPorts() const {
+                return 0;
+            }
+            
+            void process(
+                const SampleValue * const* inputs,
+                Index numInputs,
+                SampleValue * const* outputs,
+                Index numOutputs,
+                Index n
+            ) {
+                RNBO_UNUSED(numInputs);
+                RNBO_UNUSED(inputs);
+                this->vs = n;
+                this->updateTime(this->getEngine()->getCurrentTime());
+                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
+                this->phasor_07_perform(this->phasor_07_freq, this->signals[0], n);
+                this->triangle_tilde_01_perform(this->signals[0], this->triangle_tilde_01_duty, this->signals[1], n);
+            
+                this->adsr_06_perform(
+                    this->adsr_06_attack,
+                    this->adsr_06_decay,
+                    this->adsr_06_sustain,
+                    this->adsr_06_release,
+                    this->zeroBuffer,
+                    this->signals[0],
+                    n
+                );
+            
+                this->dspexpr_07_perform(this->signals[1], this->signals[0], this->signals[2], n);
+                this->gaintilde_14_perform(this->signals[2], out1, n);
+                this->stackprotect_perform(n);
+                this->audioProcessSampleCount += this->vs;
+            }
+            
+            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
+                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 3; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_07_sigbuf = resizeSignal(this->phasor_07_sigbuf, this->maxvs, maxBlockSize);
+                    this->adsr_06_triggerBuf = resizeSignal(this->adsr_06_triggerBuf, this->maxvs, maxBlockSize);
+                    this->adsr_06_triggerValueBuf = resizeSignal(this->adsr_06_triggerValueBuf, this->maxvs, maxBlockSize);
+                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
+                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
+                    this->didAllocateSignals = true;
+                }
+            
+                const bool sampleRateChanged = sampleRate != this->sr;
+                const bool maxvsChanged = maxBlockSize != this->maxvs;
+                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
+            
+                if (sampleRateChanged || maxvsChanged) {
+                    this->vs = maxBlockSize;
+                    this->maxvs = maxBlockSize;
+                    this->sr = sampleRate;
+                    this->invsr = 1 / sampleRate;
+                }
+            
+                this->phasor_07_dspsetup(forceDSPSetup);
+                this->adsr_06_dspsetup(forceDSPSetup);
+                this->gaintilde_14_dspsetup(forceDSPSetup);
+            
+                if (sampleRateChanged)
+                    this->onSampleRateChanged(sampleRate);
+            }
+            
+            void setProbingTarget(MessageTag id) {
+                switch (id) {
+                default:
+                    {
+                    this->setProbingIndex(-1);
+                    break;
+                    }
+                }
+            }
+            
+            void setProbingIndex(ProbingIndex ) {}
+            
+            Index getProbingChannels(MessageTag outletId) const {
+                RNBO_UNUSED(outletId);
+                return 0;
+            }
+            
+            Index getIsMuted()  {
+                return this->isMuted;
+            }
+            
+            void setIsMuted(Index v)  {
+                this->isMuted = v;
+            }
+            
+            Index getPatcherSerial() const {
+                return 0;
+            }
+            
+            void getState(PatcherStateInterface& ) {}
+            
+            void setState() {}
+            
+            void getPreset(PatcherStateInterface& ) {}
+            
+            void processTempoEvent(MillisecondTime , Tempo ) {}
+            
+            void processTransportEvent(MillisecondTime time, TransportState state) {
+                this->updateTime(time);
+                this->metro_07_onTransportChanged(state);
+            }
+            
+            void processBeatTimeEvent(MillisecondTime time, BeatTime beattime) {
+                this->updateTime(time);
+                this->metro_07_onBeatTimeChanged(beattime);
+            }
+            
+            void onSampleRateChanged(double ) {}
+            
+            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
+            
+            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
+            
+            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValue(index, value, time);
+            }
+            
+            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
+                this->setParameterValue(index, this->getParameterValue(index), time);
+            }
+            
+            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValueNormalized(index, value, time);
+            }
+            
+            ParameterValue getParameterValue(ParameterIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return 0;
+                    }
+                }
+            }
+            
+            ParameterIndex getNumSignalInParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumSignalOutParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumParameters() const {
+                return 0;
+            }
+            
+            ConstCharPointer getParameterName(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            ConstCharPointer getParameterId(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
+            
+            void sendParameter(ParameterIndex index, bool ignoreValue) {
+                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
+            }
+            
+            void setParameterOffset(ParameterIndex offset) {
+                this->parameterOffset = offset;
+            }
+            
+            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
+                if (steps == 1) {
+                    if (normalizedValue > 0) {
+                        normalizedValue = 1.;
+                    }
+                } else {
+                    ParameterValue oneStep = (number)1. / (steps - 1);
+                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
+                    normalizedValue = numberOfSteps * oneStep;
+                }
+            
+                return normalizedValue;
+            }
+            
+            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+            
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            void scheduleParamInit(ParameterIndex index, Index order) {
+                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
+            }
+            
+            void processClockEvent(MillisecondTime time, ClockId index, bool hasValue, ParameterValue value) {
+                RNBO_UNUSED(value);
+                RNBO_UNUSED(hasValue);
+                this->updateTime(time);
+            
+                switch (index) {
+                case 1935387534:
+                    {
+                    this->metro_07_tick_bang();
+                    break;
+                    }
+                case -1468824490:
+                    {
+                    this->adsr_06_mute_bang();
+                    break;
+                    }
+                }
+            }
+            
+            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
+            
+            void processOutletEvent(
+                EngineLink* sender,
+                OutletIndex index,
+                ParameterValue value,
+                MillisecondTime time
+            ) {
+                this->updateTime(time);
+                this->processOutletAtCurrentTime(sender, index, value);
+            }
+            
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/taurus/gain~_obj-7") == objectId)
+                        this->gaintilde_14_valin_set(payload);
+            
+                    if (TAG("constellation[1]/taurus/toggle_obj-13") == objectId)
+                        this->toggle_05_valin_set(payload);
+            
+                    break;
+                    }
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/taurus/message_obj-18") == objectId)
+                        this->message_08_listin_number_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(
+                MessageTag tag,
+                MessageTag objectId,
+                MillisecondTime time,
+                const list& payload
+            ) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/taurus/message_obj-18") == objectId)
+                        this->message_08_listin_list_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processBangMessage(MessageTag tag, MessageTag objectId, MillisecondTime time) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/taurus/message_obj-18") == objectId)
+                        this->message_08_listin_bang_bang();
+            
+                    break;
+                    }
+                case TAG("bangin"):
+                    {
+                    if (TAG("constellation[1]/taurus/button_obj-16") == objectId)
+                        this->button_07_bangin_bang();
+            
+                    break;
+                    }
+                }
+            }
+            
+            MessageTagInfo resolveTag(MessageTag tag) const {
+                switch (tag) {
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/taurus/gain~_obj-7"):
+                    {
+                    return "constellation[1]/taurus/gain~_obj-7";
+                    }
+                case TAG("listout"):
+                    {
+                    return "listout";
+                    }
+                case TAG("constellation[1]/taurus/message_obj-18"):
+                    {
+                    return "constellation[1]/taurus/message_obj-18";
+                    }
+                case TAG("constellation[1]/taurus/toggle_obj-13"):
+                    {
+                    return "constellation[1]/taurus/toggle_obj-13";
+                    }
+                case TAG("bangout"):
+                    {
+                    return "bangout";
+                    }
+                case TAG("constellation[1]/taurus/button_obj-16"):
+                    {
+                    return "constellation[1]/taurus/button_obj-16";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                case TAG("listin"):
+                    {
+                    return "listin";
+                    }
+                case TAG("bangin"):
+                    {
+                    return "bangin";
+                    }
+                }
+            
+                return nullptr;
+            }
+            
+            DataRef* getDataRef(DataRefIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return nullptr;
+                    }
+                }
+            }
+            
+            DataRefIndex getNumDataRefs() const {
+                return 0;
+            }
+            
+            void fillDataRef(DataRefIndex , DataRef& ) {}
+            
+            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
+            
+            void initialize() {
+                this->assign_defaults();
+                this->setState();
+            }
+            
+            protected:
+            
+            void gaintilde_14_valin_set(number v) {
+                this->gaintilde_14_value_set(v);
+            }
+            
+            void message_08_listin_list_set(const list& v) {
+                this->message_08_set_set(v);
+            }
+            
+            void message_08_listin_number_set(number v) {
+                this->message_08_set_set(v);
+            }
+            
+            void message_08_listin_bang_bang() {
+                this->message_08_trigger_bang();
+            }
+            
+            void toggle_05_valin_set(number v) {
+                this->toggle_05_value_number_set(v);
+            }
+            
+            void metro_07_tick_bang() {
+                this->metro_07_tickout_bang();
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(this->metro_07_on)) {
+                    this->metro_07_last = this->currenttime();
+            
+                    {
+                        this->metro_07_next = this->metro_07_last + this->metro_07_interval;
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_07_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void button_07_bangin_bang() {
+                this->button_07_bangval_bang();
+            }
+            
+            void adsr_06_mute_bang() {}
+            
+            number msToSamps(MillisecondTime ms, number sampleRate) {
+                return ms * sampleRate * 0.001;
+            }
+            
+            MillisecondTime sampsToMs(SampleIndex samps) {
+                return samps * (this->invsr * 1000);
+            }
+            
+            Index getMaxBlockSize() const {
+                return this->maxvs;
+            }
+            
+            number getSampleRate() const {
+                return this->sr;
+            }
+            
+            bool hasFixedVectorSize() const {
+                return false;
+            }
+            
+            Index getNumInputChannels() const {
+                return 0;
+            }
+            
+            Index getNumOutputChannels() const {
+                return 1;
+            }
+            
+            void initializeObjects() {
+                this->gaintilde_14_init();
+                this->message_08_init();
+            }
+            
+            void sendOutlet(OutletIndex index, ParameterValue value) {
+                this->getEngine()->sendOutlet(this, index, value);
+            }
+            
+            void startup() {
+                this->updateTime(this->getEngine()->getCurrentTime());
+            
+                if ((bool)(this->metro_07_on))
+                    this->metro_07_on_set(1);
+            }
+            
+            void allocateDataRefs() {}
+            
+            void metro_07_on_set(number v) {
+                this->metro_07_on = v;
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_05_output_set(number v) {
+                this->metro_07_on_set(v);
+            }
+            
+            void toggle_05_value_number_set(number v) {
+                this->toggle_05_value_number_setter(v);
+                v = this->toggle_05_value_number;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/taurus/toggle_obj-13"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->toggle_05_output_set(v);
+            }
+            
+            void receive_30_output_number_set(number v) {
+                this->receive_30_output_number = v;
+                this->toggle_05_value_number_set(v);
+            }
+            
+            void phasor_07_freq_set(number v) {
+                this->phasor_07_freq = v;
+            }
+            
+            void expr_31_out1_set(number v) {
+                this->expr_31_out1 = v;
+                this->phasor_07_freq_set(this->expr_31_out1);
+            }
+            
+            void expr_31_in1_set(number in1) {
+                this->expr_31_in1 = in1;
+            
+                this->expr_31_out1_set(
+                    (this->expr_31_in2 == 0 ? 0 : (this->expr_31_in2 == 0. ? 0. : this->expr_31_in1 / this->expr_31_in2))
+                );//#map:constellation[1]/taurus//_obj-2:1
+            }
+            
+            void receive_29_output_number_set(number v) {
+                this->receive_29_output_number = v;
+                this->expr_31_in1_set(v);
+            }
+            
+            void gaintilde_14_outval_set(number ) {}
+            
+            void gaintilde_14_value_set(number v) {
+                this->gaintilde_14_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/taurus/gain~_obj-7"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_14_outval_set(value);
+            }
+            
+            void gaintilde_14_input_number_set(number v) {
+                this->gaintilde_14_input_number = v;
+            
+                this->gaintilde_14_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_32_out1_set(number v) {
+                this->expr_32_out1 = v;
+                this->gaintilde_14_input_number_set(this->expr_32_out1);
+            }
+            
+            void expr_32_in1_set(number in1) {
+                this->expr_32_in1 = in1;
+                this->expr_32_out1_set(this->expr_32_in1 + this->expr_32_in2);//#map:constellation[1]/taurus/+_obj-8:1
+            }
+            
+            void receive_31_output_number_set(number v) {
+                this->receive_31_output_number = v;
+                this->expr_32_in1_set(v);
+            }
+            
+            void message_08_set_set(const list& v) {
+                this->message_08_set = jsCreateListCopy(v);
+            
+                this->getEngine()->sendListMessage(
+                    TAG("listout"),
+                    TAG("constellation[1]/taurus/message_obj-18"),
+                    v,
+                    this->_currentTime
+                );
+            }
+            
+            void adsr_06_trigger_number_set(number v) {
+                this->adsr_06_trigger_number = v;
+            
+                if (v != 0)
+                    this->adsr_06_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
+            
+                for (number i = this->sampleOffsetIntoNextAudioBuffer; i < this->vectorsize(); i++) {
+                    this->adsr_06_triggerValueBuf[(Index)i] = v;
+                }
+            }
+            
+            void message_08_out_set(const list& v) {
+                {
+                    number converted = (v->length > 0 ? v[0] : 0);
+                    this->adsr_06_trigger_number_set(converted);
+                }
+            }
+            
+            void message_08_trigger_bang() {
+                this->message_08_out_set(this->message_08_set);
+            }
+            
+            void button_07_output_bang() {
+                this->message_08_trigger_bang();
+            }
+            
+            void button_07_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/taurus/button_obj-16"),
+                    this->_currentTime
+                );;
+            
+                this->button_07_output_bang();
+            }
+            
+            void metro_07_tickout_bang() {
+                this->button_07_bangval_bang();
+            }
+            
+            void phasor_07_perform(number freq, SampleValue * out, Index n) {
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_07_ph_next(freq, -1);
+                    this->phasor_07_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void triangle_tilde_01_perform(const Sample * phase, number duty, SampleValue * out1, Index n) {
+                RNBO_UNUSED(duty);
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    number p1 = 0.5;
+                    auto wrappedPhase = this->wrap(phase[(Index)i], 0., 1.);
+                    p1 = (p1 > 1. ? 1. : (p1 < 0. ? 0. : p1));
+            
+                    if (wrappedPhase < p1) {
+                        out1[(Index)i] = wrappedPhase / p1;
+                        continue;
+                    } else {
+                        out1[(Index)i] = (p1 == 1. ? wrappedPhase : 1. - (wrappedPhase - p1) / (1. - p1));
+                        continue;
+                    }
+                }
+            }
+            
+            void adsr_06_perform(
+                number attack,
+                number decay,
+                number sustain,
+                number release,
+                const SampleValue * trigger_signal,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(trigger_signal);
+                RNBO_UNUSED(release);
+                RNBO_UNUSED(sustain);
+                RNBO_UNUSED(decay);
+                RNBO_UNUSED(attack);
+                auto __adsr_06_trigger_number = this->adsr_06_trigger_number;
+                auto __adsr_06_time = this->adsr_06_time;
+                auto __adsr_06_amplitude = this->adsr_06_amplitude;
+                auto __adsr_06_outval = this->adsr_06_outval;
+                auto __adsr_06_startingpoint = this->adsr_06_startingpoint;
+                auto __adsr_06_phase = this->adsr_06_phase;
+                auto __adsr_06_legato = this->adsr_06_legato;
+                auto __adsr_06_lastTriggerVal = this->adsr_06_lastTriggerVal;
+                auto __adsr_06_mspersamp = this->adsr_06_mspersamp;
+                bool bangMute = false;
+            
+                for (Index i = 0; i < n; i++) {
+                    number clampedattack = (500 > __adsr_06_mspersamp ? 500 : __adsr_06_mspersamp);
+                    number clampeddecay = (8000 > __adsr_06_mspersamp ? 8000 : __adsr_06_mspersamp);
+                    number clampedrelease = (0 > __adsr_06_mspersamp ? 0 : __adsr_06_mspersamp);
+                    number currentTriggerVal = this->adsr_06_triggerValueBuf[(Index)i];
+            
+                    if ((__adsr_06_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_06_triggerBuf[(Index)i] == 1) {
+                        if ((bool)(__adsr_06_legato)) {
+                            if (__adsr_06_phase != 0) {
+                                __adsr_06_startingpoint = __adsr_06_outval;
+                            } else {
+                                __adsr_06_startingpoint = 0;
+                            }
+                        } else {
+                            __adsr_06_startingpoint = 0;
+                        }
+            
+                        __adsr_06_amplitude = currentTriggerVal;
+                        __adsr_06_phase = 1;
+                        __adsr_06_time = 0.0;
+                        bangMute = false;
+                    } else if (__adsr_06_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
+                        if (__adsr_06_phase != 4 && __adsr_06_phase != 0) {
+                            __adsr_06_phase = 4;
+                            __adsr_06_amplitude = __adsr_06_outval;
+                            __adsr_06_time = 0.0;
+                        }
+                    }
+            
+                    __adsr_06_time += __adsr_06_mspersamp;
+            
+                    if (__adsr_06_phase == 0) {
+                        __adsr_06_outval = 0;
+                    } else if (__adsr_06_phase == 1) {
+                        if (__adsr_06_time > clampedattack) {
+                            __adsr_06_time -= clampedattack;
+                            __adsr_06_phase = 2;
+                            __adsr_06_outval = __adsr_06_amplitude;
+                        } else {
+                            __adsr_06_outval = (__adsr_06_amplitude - __adsr_06_startingpoint) * __adsr_06_time / clampedattack + __adsr_06_startingpoint;
+                        }
+                    } else if (__adsr_06_phase == 2) {
+                        if (__adsr_06_time > clampeddecay) {
+                            __adsr_06_time -= clampeddecay;
+                            __adsr_06_phase = 3;
+                            __adsr_06_outval = __adsr_06_amplitude * 0;
+                        } else {
+                            __adsr_06_outval = __adsr_06_amplitude * 0 + (__adsr_06_amplitude - __adsr_06_amplitude * 0) * (1. - __adsr_06_time / clampeddecay);
+                        }
+                    } else if (__adsr_06_phase == 3) {
+                        __adsr_06_outval = __adsr_06_amplitude * 0;
+                    } else if (__adsr_06_phase == 4) {
+                        if (__adsr_06_time > clampedrelease) {
+                            __adsr_06_time = 0;
+                            __adsr_06_phase = 0;
+                            __adsr_06_outval = 0;
+                            __adsr_06_amplitude = 0;
+                            bangMute = true;
+                        } else {
+                            __adsr_06_outval = __adsr_06_amplitude * (1.0 - __adsr_06_time / clampedrelease);
+                        }
+                    }
+            
+                    out[(Index)i] = __adsr_06_outval;
+                    this->adsr_06_triggerBuf[(Index)i] = 0;
+                    this->adsr_06_triggerValueBuf[(Index)i] = __adsr_06_trigger_number;
+                    __adsr_06_lastTriggerVal = currentTriggerVal;
+                }
+            
+                if ((bool)(bangMute)) {
+                    this->getEngine()->scheduleClockEventWithValue(
+                        this,
+                        -1468824490,
+                        this->sampsToMs((SampleIndex)(this->vs)) + this->_currentTime,
+                        0
+                    );;
+                }
+            
+                this->adsr_06_lastTriggerVal = __adsr_06_lastTriggerVal;
+                this->adsr_06_phase = __adsr_06_phase;
+                this->adsr_06_startingpoint = __adsr_06_startingpoint;
+                this->adsr_06_outval = __adsr_06_outval;
+                this->adsr_06_amplitude = __adsr_06_amplitude;
+                this->adsr_06_time = __adsr_06_time;
+            }
+            
+            void dspexpr_07_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_14_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_14_interp = this->gaintilde_14_interp;
+                auto __gaintilde_14_loginc = this->gaintilde_14_loginc;
+                auto __gaintilde_14_zval = this->gaintilde_14_zval;
+                auto __gaintilde_14_value = this->gaintilde_14_value;
+                number mult = (__gaintilde_14_value <= 0 ? 0. : __gaintilde_14_zval * rnbo_exp(__gaintilde_14_value * __gaintilde_14_loginc));
+                auto iv = this->mstosamps(__gaintilde_14_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_14_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void stackprotect_perform(Index n) {
+                RNBO_UNUSED(n);
+                auto __stackprotect_count = this->stackprotect_count;
+                __stackprotect_count = 0;
+                this->stackprotect_count = __stackprotect_count;
+            }
+            
+            void toggle_05_value_number_setter(number v) {
+                this->toggle_05_value_number = (v != 0 ? 1 : 0);
+            }
+            
+            void metro_07_interval_setter(number v) {
+                this->metro_07_interval = (v > 0 ? v : 0);
+            }
+            
             number phasor_07_ph_next(number freq, number reset) {
                 RNBO_UNUSED(reset);
                 number pincr = freq * this->phasor_07_ph_conv;
@@ -10896,6 +13003,109 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->phasor_07_ph_dspsetup();
             }
             
+            number gaintilde_14_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_14_ramp_d_prev);
+                this->gaintilde_14_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_14_ramp_d_dspsetup() {
+                this->gaintilde_14_ramp_d_reset();
+            }
+            
+            void gaintilde_14_ramp_d_reset() {
+                this->gaintilde_14_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_14_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_14_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_14_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_14_ramp_index = _up;
+                        this->gaintilde_14_ramp_increment = (x - this->gaintilde_14_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_14_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_14_ramp_index = _down;
+                        this->gaintilde_14_ramp_increment = (x - this->gaintilde_14_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_14_ramp_index > 0) {
+                    this->gaintilde_14_ramp_prev += this->gaintilde_14_ramp_increment;
+                    this->gaintilde_14_ramp_index -= 1;
+                } else {
+                    this->gaintilde_14_ramp_prev = x;
+                }
+            
+                return this->gaintilde_14_ramp_prev;
+            }
+            
+            void gaintilde_14_ramp_reset() {
+                this->gaintilde_14_ramp_prev = 0;
+                this->gaintilde_14_ramp_index = 0;
+                this->gaintilde_14_ramp_increment = 0;
+                this->gaintilde_14_ramp_d_reset();
+            }
+            
+            void gaintilde_14_init() {
+                this->gaintilde_14_loginc = rnbo_log(1.072);
+                this->gaintilde_14_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_14_loginc));
+            }
+            
+            void gaintilde_14_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_14_value;
+            }
+            
+            void gaintilde_14_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_14_value_set(preset["value"]);
+            }
+            
+            void gaintilde_14_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_14_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_14_setupDone = true;
+                this->gaintilde_14_ramp_d_dspsetup();
+            }
+            
+            void message_08_init() {
+                this->message_08_set_set({1});
+            }
+            
+            void adsr_06_dspsetup(bool force) {
+                if ((bool)(this->adsr_06_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->adsr_06_mspersamp = (number)1000 / this->sr;
+                this->adsr_06_setupDone = true;
+            }
+            
+            void toggle_05_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_05_value_number;
+            }
+            
+            void toggle_05_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_05_value_number_set(preset["value"]);
+            }
+            
+            void metro_07_onTransportChanged(number ) {}
+            
+            void metro_07_onBeatTimeChanged(number ) {}
+            
             bool stackprotect_check() {
                 this->stackprotect_count++;
             
@@ -10920,16 +13130,4367 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void assign_defaults()
             {
-                gaintilde_12_input_number = 0;
-                gaintilde_12_value = 0;
-                gaintilde_12_interp = 10;
-                receive_23_output_number = 0;
+                receive_29_output_number = 0;
                 triangle_tilde_01_phase = 0;
                 triangle_tilde_01_duty = 0.5;
                 phasor_07_freq = 0;
-                expr_24_in1 = 0;
-                expr_24_in2 = 16;
-                expr_24_out1 = 0;
+                expr_31_in1 = 0;
+                expr_31_in2 = 16;
+                expr_31_out1 = 0;
+                gaintilde_14_input_number = 0;
+                gaintilde_14_value = 0;
+                gaintilde_14_interp = 10;
+                dspexpr_07_in1 = 0;
+                dspexpr_07_in2 = 0;
+                adsr_06_trigger_number = 0;
+                adsr_06_attack = 500;
+                adsr_06_decay = 8000;
+                adsr_06_sustain = 0;
+                adsr_06_release = 0;
+                adsr_06_legato = 0;
+                toggle_05_value_number = 0;
+                toggle_05_value_number_setter(toggle_05_value_number);
+                metro_07_on = 0;
+                metro_07_interval = 10000;
+                metro_07_interval_setter(metro_07_interval);
+                receive_30_output_number = 0;
+                expr_32_in1 = 0;
+                expr_32_in2 = 20;
+                expr_32_out1 = 0;
+                receive_31_output_number = 0;
+                _currentTime = 0;
+                audioProcessSampleCount = 0;
+                sampleOffsetIntoNextAudioBuffer = 0;
+                zeroBuffer = nullptr;
+                dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
+                didAllocateSignals = 0;
+                vs = 0;
+                maxvs = 0;
+                sr = 44100;
+                invsr = 0.00002267573696;
+                phasor_07_sigbuf = nullptr;
+                phasor_07_lastLockedPhase = 0;
+                phasor_07_conv = 0;
+                phasor_07_ph_currentPhase = 0;
+                phasor_07_ph_conv = 0;
+                phasor_07_setupDone = false;
+                gaintilde_14_lastValue = 0;
+                gaintilde_14_loginc = 1;
+                gaintilde_14_zval = 0;
+                gaintilde_14_ramp_d_prev = 0;
+                gaintilde_14_ramp_prev = 0;
+                gaintilde_14_ramp_index = 0;
+                gaintilde_14_ramp_increment = 0;
+                gaintilde_14_setupDone = false;
+                adsr_06_phase = 3;
+                adsr_06_mspersamp = 0;
+                adsr_06_time = 0;
+                adsr_06_lastTriggerVal = 0;
+                adsr_06_amplitude = 0;
+                adsr_06_outval = 0;
+                adsr_06_startingpoint = 0;
+                adsr_06_triggerBuf = nullptr;
+                adsr_06_triggerValueBuf = nullptr;
+                adsr_06_setupDone = false;
+                toggle_05_lastValue = 0;
+                metro_07_last = -1;
+                metro_07_next = -1;
+                stackprotect_count = 0;
+                _voiceIndex = 0;
+                _noteNumber = 0;
+                isMuted = 1;
+                parameterOffset = 0;
+            }
+            
+            // member variables
+            
+                number receive_29_output_number;
+                list receive_29_output_list;
+                number triangle_tilde_01_phase;
+                number triangle_tilde_01_duty;
+                number phasor_07_freq;
+                number expr_31_in1;
+                number expr_31_in2;
+                number expr_31_out1;
+                number gaintilde_14_input_number;
+                number gaintilde_14_value;
+                number gaintilde_14_interp;
+                number dspexpr_07_in1;
+                number dspexpr_07_in2;
+                list message_08_set;
+                number adsr_06_trigger_number;
+                number adsr_06_attack;
+                number adsr_06_decay;
+                number adsr_06_sustain;
+                number adsr_06_release;
+                number adsr_06_legato;
+                number toggle_05_value_number;
+                number metro_07_on;
+                number metro_07_interval;
+                number receive_30_output_number;
+                list receive_30_output_list;
+                number expr_32_in1;
+                number expr_32_in2;
+                number expr_32_out1;
+                number receive_31_output_number;
+                list receive_31_output_list;
+                MillisecondTime _currentTime;
+                SampleIndex audioProcessSampleCount;
+                SampleIndex sampleOffsetIntoNextAudioBuffer;
+                signal zeroBuffer;
+                signal dummyBuffer;
+                SampleValue * signals[3];
+                bool didAllocateSignals;
+                Index vs;
+                Index maxvs;
+                number sr;
+                number invsr;
+                signal phasor_07_sigbuf;
+                number phasor_07_lastLockedPhase;
+                number phasor_07_conv;
+                number phasor_07_ph_currentPhase;
+                number phasor_07_ph_conv;
+                bool phasor_07_setupDone;
+                number gaintilde_14_lastValue;
+                number gaintilde_14_loginc;
+                number gaintilde_14_zval;
+                number gaintilde_14_ramp_d_prev;
+                number gaintilde_14_ramp_prev;
+                number gaintilde_14_ramp_index;
+                number gaintilde_14_ramp_increment;
+                bool gaintilde_14_setupDone;
+                Int adsr_06_phase;
+                number adsr_06_mspersamp;
+                number adsr_06_time;
+                number adsr_06_lastTriggerVal;
+                number adsr_06_amplitude;
+                number adsr_06_outval;
+                number adsr_06_startingpoint;
+                signal adsr_06_triggerBuf;
+                signal adsr_06_triggerValueBuf;
+                bool adsr_06_setupDone;
+                number toggle_05_lastValue;
+                number metro_07_last;
+                number metro_07_next;
+                number stackprotect_count;
+                Index _voiceIndex;
+                Int _noteNumber;
+                Index isMuted;
+                ParameterIndex parameterOffset;
+            
+    };
+    
+    class RNBOSubpatcher_314 : public PatcherInterfaceImpl {
+            
+            friend class RNBOSubpatcher_324;
+            friend class rnbomatic;
+            
+            public:
+            
+            RNBOSubpatcher_314()
+            {
+            }
+            
+            ~RNBOSubpatcher_314()
+            {
+            }
+            
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            }
+            
+            rnbomatic* getTopLevelPatcher() {
+                return this->getPatcher()->getTopLevelPatcher();
+            }
+            
+            void cancelClockEvents()
+            {
+                getEngine()->flushClockEvents(this, 1935387534, false);
+                getEngine()->flushClockEvents(this, -1468824490, false);
+            }
+            
+            MillisecondTime currenttime() {
+                return this->_currentTime;
+            }
+            
+            Index voice() {
+                return this->_voiceIndex;
+            }
+            
+            number random(number low, number high) {
+                number range = high - low;
+                return rand01() * range + low;
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index vectorsize() {
+                return this->vs;
+            }
+            
+            Index getNumMidiInputPorts() const {
+                return 0;
+            }
+            
+            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
+            
+            Index getNumMidiOutputPorts() const {
+                return 0;
+            }
+            
+            void process(
+                const SampleValue * const* inputs,
+                Index numInputs,
+                SampleValue * const* outputs,
+                Index numOutputs,
+                Index n
+            ) {
+                RNBO_UNUSED(numInputs);
+                RNBO_UNUSED(inputs);
+                this->vs = n;
+                this->updateTime(this->getEngine()->getCurrentTime());
+                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
+                this->phasor_08_perform(this->phasor_08_freq, this->signals[0], n);
+            
+                this->adsr_07_perform(
+                    this->adsr_07_attack,
+                    this->adsr_07_decay,
+                    this->adsr_07_sustain,
+                    this->adsr_07_release,
+                    this->zeroBuffer,
+                    this->signals[1],
+                    n
+                );
+            
+                this->dspexpr_08_perform(this->signals[0], this->signals[1], this->signals[2], n);
+                this->gaintilde_15_perform(this->signals[2], out1, n);
+                this->stackprotect_perform(n);
+                this->audioProcessSampleCount += this->vs;
+            }
+            
+            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
+                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 3; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_08_sigbuf = resizeSignal(this->phasor_08_sigbuf, this->maxvs, maxBlockSize);
+                    this->adsr_07_triggerBuf = resizeSignal(this->adsr_07_triggerBuf, this->maxvs, maxBlockSize);
+                    this->adsr_07_triggerValueBuf = resizeSignal(this->adsr_07_triggerValueBuf, this->maxvs, maxBlockSize);
+                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
+                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
+                    this->didAllocateSignals = true;
+                }
+            
+                const bool sampleRateChanged = sampleRate != this->sr;
+                const bool maxvsChanged = maxBlockSize != this->maxvs;
+                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
+            
+                if (sampleRateChanged || maxvsChanged) {
+                    this->vs = maxBlockSize;
+                    this->maxvs = maxBlockSize;
+                    this->sr = sampleRate;
+                    this->invsr = 1 / sampleRate;
+                }
+            
+                this->phasor_08_dspsetup(forceDSPSetup);
+                this->adsr_07_dspsetup(forceDSPSetup);
+                this->gaintilde_15_dspsetup(forceDSPSetup);
+            
+                if (sampleRateChanged)
+                    this->onSampleRateChanged(sampleRate);
+            }
+            
+            void setProbingTarget(MessageTag id) {
+                switch (id) {
+                default:
+                    {
+                    this->setProbingIndex(-1);
+                    break;
+                    }
+                }
+            }
+            
+            void setProbingIndex(ProbingIndex ) {}
+            
+            Index getProbingChannels(MessageTag outletId) const {
+                RNBO_UNUSED(outletId);
+                return 0;
+            }
+            
+            Index getIsMuted()  {
+                return this->isMuted;
+            }
+            
+            void setIsMuted(Index v)  {
+                this->isMuted = v;
+            }
+            
+            Index getPatcherSerial() const {
+                return 0;
+            }
+            
+            void getState(PatcherStateInterface& ) {}
+            
+            void setState() {}
+            
+            void getPreset(PatcherStateInterface& ) {}
+            
+            void processTempoEvent(MillisecondTime , Tempo ) {}
+            
+            void processTransportEvent(MillisecondTime time, TransportState state) {
+                this->updateTime(time);
+                this->metro_08_onTransportChanged(state);
+            }
+            
+            void processBeatTimeEvent(MillisecondTime time, BeatTime beattime) {
+                this->updateTime(time);
+                this->metro_08_onBeatTimeChanged(beattime);
+            }
+            
+            void onSampleRateChanged(double ) {}
+            
+            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
+            
+            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
+            
+            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValue(index, value, time);
+            }
+            
+            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
+                this->setParameterValue(index, this->getParameterValue(index), time);
+            }
+            
+            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValueNormalized(index, value, time);
+            }
+            
+            ParameterValue getParameterValue(ParameterIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return 0;
+                    }
+                }
+            }
+            
+            ParameterIndex getNumSignalInParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumSignalOutParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumParameters() const {
+                return 0;
+            }
+            
+            ConstCharPointer getParameterName(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            ConstCharPointer getParameterId(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
+            
+            void sendParameter(ParameterIndex index, bool ignoreValue) {
+                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
+            }
+            
+            void setParameterOffset(ParameterIndex offset) {
+                this->parameterOffset = offset;
+            }
+            
+            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
+                if (steps == 1) {
+                    if (normalizedValue > 0) {
+                        normalizedValue = 1.;
+                    }
+                } else {
+                    ParameterValue oneStep = (number)1. / (steps - 1);
+                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
+                    normalizedValue = numberOfSteps * oneStep;
+                }
+            
+                return normalizedValue;
+            }
+            
+            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+            
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            void scheduleParamInit(ParameterIndex index, Index order) {
+                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
+            }
+            
+            void processClockEvent(MillisecondTime time, ClockId index, bool hasValue, ParameterValue value) {
+                RNBO_UNUSED(value);
+                RNBO_UNUSED(hasValue);
+                this->updateTime(time);
+            
+                switch (index) {
+                case 1935387534:
+                    {
+                    this->metro_08_tick_bang();
+                    break;
+                    }
+                case -1468824490:
+                    {
+                    this->adsr_07_mute_bang();
+                    break;
+                    }
+                }
+            }
+            
+            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
+            
+            void processOutletEvent(
+                EngineLink* sender,
+                OutletIndex index,
+                ParameterValue value,
+                MillisecondTime time
+            ) {
+                this->updateTime(time);
+                this->processOutletAtCurrentTime(sender, index, value);
+            }
+            
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/sagittarius/toggle_obj-8") == objectId)
+                        this->toggle_06_valin_set(payload);
+            
+                    if (TAG("constellation[1]/sagittarius/gain~_obj-17") == objectId)
+                        this->gaintilde_15_valin_set(payload);
+            
+                    break;
+                    }
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/sagittarius/message_obj-16") == objectId)
+                        this->message_09_listin_number_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(
+                MessageTag tag,
+                MessageTag objectId,
+                MillisecondTime time,
+                const list& payload
+            ) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/sagittarius/message_obj-16") == objectId)
+                        this->message_09_listin_list_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processBangMessage(MessageTag tag, MessageTag objectId, MillisecondTime time) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("bangin"):
+                    {
+                    if (TAG("constellation[1]/sagittarius/button_obj-10") == objectId)
+                        this->button_08_bangin_bang();
+            
+                    break;
+                    }
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/sagittarius/message_obj-16") == objectId)
+                        this->message_09_listin_bang_bang();
+            
+                    break;
+                    }
+                }
+            }
+            
+            MessageTagInfo resolveTag(MessageTag tag) const {
+                switch (tag) {
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/sagittarius/toggle_obj-8"):
+                    {
+                    return "constellation[1]/sagittarius/toggle_obj-8";
+                    }
+                case TAG("bangout"):
+                    {
+                    return "bangout";
+                    }
+                case TAG("constellation[1]/sagittarius/button_obj-10"):
+                    {
+                    return "constellation[1]/sagittarius/button_obj-10";
+                    }
+                case TAG("constellation[1]/sagittarius/gain~_obj-17"):
+                    {
+                    return "constellation[1]/sagittarius/gain~_obj-17";
+                    }
+                case TAG("listout"):
+                    {
+                    return "listout";
+                    }
+                case TAG("constellation[1]/sagittarius/message_obj-16"):
+                    {
+                    return "constellation[1]/sagittarius/message_obj-16";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                case TAG("bangin"):
+                    {
+                    return "bangin";
+                    }
+                case TAG("listin"):
+                    {
+                    return "listin";
+                    }
+                }
+            
+                return nullptr;
+            }
+            
+            DataRef* getDataRef(DataRefIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return nullptr;
+                    }
+                }
+            }
+            
+            DataRefIndex getNumDataRefs() const {
+                return 0;
+            }
+            
+            void fillDataRef(DataRefIndex , DataRef& ) {}
+            
+            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
+            
+            void initialize() {
+                this->assign_defaults();
+                this->setState();
+            }
+            
+            protected:
+            
+            void toggle_06_valin_set(number v) {
+                this->toggle_06_value_number_set(v);
+            }
+            
+            void metro_08_tick_bang() {
+                this->metro_08_tickout_bang();
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(this->metro_08_on)) {
+                    this->metro_08_last = this->currenttime();
+            
+                    {
+                        this->metro_08_next = this->metro_08_last + this->metro_08_interval;
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_08_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void button_08_bangin_bang() {
+                this->button_08_bangval_bang();
+            }
+            
+            void gaintilde_15_valin_set(number v) {
+                this->gaintilde_15_value_set(v);
+            }
+            
+            void message_09_listin_list_set(const list& v) {
+                this->message_09_set_set(v);
+            }
+            
+            void message_09_listin_number_set(number v) {
+                this->message_09_set_set(v);
+            }
+            
+            void message_09_listin_bang_bang() {
+                this->message_09_trigger_bang();
+            }
+            
+            void adsr_07_mute_bang() {}
+            
+            number msToSamps(MillisecondTime ms, number sampleRate) {
+                return ms * sampleRate * 0.001;
+            }
+            
+            MillisecondTime sampsToMs(SampleIndex samps) {
+                return samps * (this->invsr * 1000);
+            }
+            
+            Index getMaxBlockSize() const {
+                return this->maxvs;
+            }
+            
+            number getSampleRate() const {
+                return this->sr;
+            }
+            
+            bool hasFixedVectorSize() const {
+                return false;
+            }
+            
+            Index getNumInputChannels() const {
+                return 0;
+            }
+            
+            Index getNumOutputChannels() const {
+                return 1;
+            }
+            
+            void initializeObjects() {
+                this->random_05_nz_init();
+                this->gaintilde_15_init();
+                this->message_09_init();
+            }
+            
+            void sendOutlet(OutletIndex index, ParameterValue value) {
+                this->getEngine()->sendOutlet(this, index, value);
+            }
+            
+            void startup() {
+                this->updateTime(this->getEngine()->getCurrentTime());
+            
+                if ((bool)(this->metro_08_on))
+                    this->metro_08_on_set(1);
+            }
+            
+            void allocateDataRefs() {}
+            
+            void metro_08_on_set(number v) {
+                this->metro_08_on = v;
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_06_output_set(number v) {
+                this->metro_08_on_set(v);
+            }
+            
+            void toggle_06_value_number_set(number v) {
+                this->toggle_06_value_number_setter(v);
+                v = this->toggle_06_value_number;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/sagittarius/toggle_obj-8"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->toggle_06_output_set(v);
+            }
+            
+            void receive_33_output_number_set(number v) {
+                this->receive_33_output_number = v;
+                this->toggle_06_value_number_set(v);
+            }
+            
+            void quantize_03_quantum_set(number v) {
+                this->quantize_03_quantum = v;
+            }
+            
+            void receive_34_output_number_set(number v) {
+                this->receive_34_output_number = v;
+                this->quantize_03_quantum_set(v);
+            }
+            
+            void gaintilde_15_outval_set(number ) {}
+            
+            void gaintilde_15_value_set(number v) {
+                this->gaintilde_15_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/sagittarius/gain~_obj-17"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_15_outval_set(value);
+            }
+            
+            void gaintilde_15_input_number_set(number v) {
+                this->gaintilde_15_input_number = v;
+            
+                this->gaintilde_15_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_33_out1_set(number v) {
+                this->expr_33_out1 = v;
+                this->gaintilde_15_input_number_set(this->expr_33_out1);
+            }
+            
+            void expr_33_in1_set(number in1) {
+                this->expr_33_in1 = in1;
+                this->expr_33_out1_set(this->expr_33_in1 - this->expr_33_in2);//#map:constellation[1]/sagittarius/-_obj-19:1
+            }
+            
+            void receive_32_output_number_set(number v) {
+                this->receive_32_output_number = v;
+                this->expr_33_in1_set(v);
+            }
+            
+            void adsr_07_trigger_number_set(number v) {
+                this->adsr_07_trigger_number = v;
+            
+                if (v != 0)
+                    this->adsr_07_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
+            
+                for (number i = this->sampleOffsetIntoNextAudioBuffer; i < this->vectorsize(); i++) {
+                    this->adsr_07_triggerValueBuf[(Index)i] = v;
+                }
+            }
+            
+            void message_09_out_set(const list& v) {
+                {
+                    number converted = (v->length > 0 ? v[0] : 0);
+                    this->adsr_07_trigger_number_set(converted);
+                }
+            }
+            
+            void message_09_trigger_bang() {
+                this->message_09_out_set(this->message_09_set);
+            }
+            
+            void phasor_08_freq_set(number v) {
+                this->phasor_08_freq = v;
+            }
+            
+            void quantize_03_out1_set(number v) {
+                this->phasor_08_freq_set(v);
+            }
+            
+            void quantize_03_value_set(number value) {
+                this->quantize_03_value = value;
+                auto quantum = this->quantize_03_quantum;
+            
+                {
+                    this->quantize_03_out1_set(rnbo_floor(value * quantum + 0.5) / quantum);
+                    return;
+                }
+            }
+            
+            void random_05_result_set(number v) {
+                this->quantize_03_value_set(v);
+            }
+            
+            void random_05_trigger_bang() {
+                {
+                    this->random_05_result_set(this->random(0, this->random_05_limit));
+                }
+            }
+            
+            void button_08_output_bang() {
+                this->message_09_trigger_bang();
+                this->random_05_trigger_bang();
+            }
+            
+            void button_08_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/sagittarius/button_obj-10"),
+                    this->_currentTime
+                );;
+            
+                this->button_08_output_bang();
+            }
+            
+            void metro_08_tickout_bang() {
+                this->button_08_bangval_bang();
+            }
+            
+            void message_09_set_set(const list& v) {
+                this->message_09_set = jsCreateListCopy(v);
+            
+                this->getEngine()->sendListMessage(
+                    TAG("listout"),
+                    TAG("constellation[1]/sagittarius/message_obj-16"),
+                    v,
+                    this->_currentTime
+                );
+            }
+            
+            void phasor_08_perform(number freq, SampleValue * out, Index n) {
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_08_ph_next(freq, -1);
+                    this->phasor_08_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void adsr_07_perform(
+                number attack,
+                number decay,
+                number sustain,
+                number release,
+                const SampleValue * trigger_signal,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(trigger_signal);
+                RNBO_UNUSED(release);
+                RNBO_UNUSED(sustain);
+                RNBO_UNUSED(decay);
+                RNBO_UNUSED(attack);
+                auto __adsr_07_trigger_number = this->adsr_07_trigger_number;
+                auto __adsr_07_time = this->adsr_07_time;
+                auto __adsr_07_amplitude = this->adsr_07_amplitude;
+                auto __adsr_07_outval = this->adsr_07_outval;
+                auto __adsr_07_startingpoint = this->adsr_07_startingpoint;
+                auto __adsr_07_phase = this->adsr_07_phase;
+                auto __adsr_07_legato = this->adsr_07_legato;
+                auto __adsr_07_lastTriggerVal = this->adsr_07_lastTriggerVal;
+                auto __adsr_07_mspersamp = this->adsr_07_mspersamp;
+                bool bangMute = false;
+            
+                for (Index i = 0; i < n; i++) {
+                    number clampedattack = (10 > __adsr_07_mspersamp ? 10 : __adsr_07_mspersamp);
+                    number clampeddecay = (600 > __adsr_07_mspersamp ? 600 : __adsr_07_mspersamp);
+                    number clampedrelease = (600 > __adsr_07_mspersamp ? 600 : __adsr_07_mspersamp);
+                    number currentTriggerVal = this->adsr_07_triggerValueBuf[(Index)i];
+            
+                    if ((__adsr_07_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_07_triggerBuf[(Index)i] == 1) {
+                        if ((bool)(__adsr_07_legato)) {
+                            if (__adsr_07_phase != 0) {
+                                __adsr_07_startingpoint = __adsr_07_outval;
+                            } else {
+                                __adsr_07_startingpoint = 0;
+                            }
+                        } else {
+                            __adsr_07_startingpoint = 0;
+                        }
+            
+                        __adsr_07_amplitude = currentTriggerVal;
+                        __adsr_07_phase = 1;
+                        __adsr_07_time = 0.0;
+                        bangMute = false;
+                    } else if (__adsr_07_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
+                        if (__adsr_07_phase != 4 && __adsr_07_phase != 0) {
+                            __adsr_07_phase = 4;
+                            __adsr_07_amplitude = __adsr_07_outval;
+                            __adsr_07_time = 0.0;
+                        }
+                    }
+            
+                    __adsr_07_time += __adsr_07_mspersamp;
+            
+                    if (__adsr_07_phase == 0) {
+                        __adsr_07_outval = 0;
+                    } else if (__adsr_07_phase == 1) {
+                        if (__adsr_07_time > clampedattack) {
+                            __adsr_07_time -= clampedattack;
+                            __adsr_07_phase = 2;
+                            __adsr_07_outval = __adsr_07_amplitude;
+                        } else {
+                            __adsr_07_outval = (__adsr_07_amplitude - __adsr_07_startingpoint) * __adsr_07_time / clampedattack + __adsr_07_startingpoint;
+                        }
+                    } else if (__adsr_07_phase == 2) {
+                        if (__adsr_07_time > clampeddecay) {
+                            __adsr_07_time -= clampeddecay;
+                            __adsr_07_phase = 3;
+                            __adsr_07_outval = __adsr_07_amplitude * 0;
+                        } else {
+                            __adsr_07_outval = __adsr_07_amplitude * 0 + (__adsr_07_amplitude - __adsr_07_amplitude * 0) * (1. - __adsr_07_time / clampeddecay);
+                        }
+                    } else if (__adsr_07_phase == 3) {
+                        __adsr_07_outval = __adsr_07_amplitude * 0;
+                    } else if (__adsr_07_phase == 4) {
+                        if (__adsr_07_time > clampedrelease) {
+                            __adsr_07_time = 0;
+                            __adsr_07_phase = 0;
+                            __adsr_07_outval = 0;
+                            __adsr_07_amplitude = 0;
+                            bangMute = true;
+                        } else {
+                            __adsr_07_outval = __adsr_07_amplitude * (1.0 - __adsr_07_time / clampedrelease);
+                        }
+                    }
+            
+                    out[(Index)i] = __adsr_07_outval;
+                    this->adsr_07_triggerBuf[(Index)i] = 0;
+                    this->adsr_07_triggerValueBuf[(Index)i] = __adsr_07_trigger_number;
+                    __adsr_07_lastTriggerVal = currentTriggerVal;
+                }
+            
+                if ((bool)(bangMute)) {
+                    this->getEngine()->scheduleClockEventWithValue(
+                        this,
+                        -1468824490,
+                        this->sampsToMs((SampleIndex)(this->vs)) + this->_currentTime,
+                        0
+                    );;
+                }
+            
+                this->adsr_07_lastTriggerVal = __adsr_07_lastTriggerVal;
+                this->adsr_07_phase = __adsr_07_phase;
+                this->adsr_07_startingpoint = __adsr_07_startingpoint;
+                this->adsr_07_outval = __adsr_07_outval;
+                this->adsr_07_amplitude = __adsr_07_amplitude;
+                this->adsr_07_time = __adsr_07_time;
+            }
+            
+            void dspexpr_08_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_15_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_15_interp = this->gaintilde_15_interp;
+                auto __gaintilde_15_loginc = this->gaintilde_15_loginc;
+                auto __gaintilde_15_zval = this->gaintilde_15_zval;
+                auto __gaintilde_15_value = this->gaintilde_15_value;
+                number mult = (__gaintilde_15_value <= 0 ? 0. : __gaintilde_15_zval * rnbo_exp(__gaintilde_15_value * __gaintilde_15_loginc));
+                auto iv = this->mstosamps(__gaintilde_15_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_15_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void stackprotect_perform(Index n) {
+                RNBO_UNUSED(n);
+                auto __stackprotect_count = this->stackprotect_count;
+                __stackprotect_count = 0;
+                this->stackprotect_count = __stackprotect_count;
+            }
+            
+            void toggle_06_value_number_setter(number v) {
+                this->toggle_06_value_number = (v != 0 ? 1 : 0);
+            }
+            
+            void metro_08_interval_setter(number v) {
+                this->metro_08_interval = (v > 0 ? v : 0);
+            }
+            
+            void random_05_limit_setter(number v) {
+                if (v >= 0)
+                    this->random_05_limit = v;
+            }
+            
+            void toggle_06_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_06_value_number;
+            }
+            
+            void toggle_06_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_06_value_number_set(preset["value"]);
+            }
+            
+            void metro_08_onTransportChanged(number ) {}
+            
+            void metro_08_onBeatTimeChanged(number ) {}
+            
+            void random_05_nz_reset() {
+                xoshiro_reset(
+                    systemticks() + this->voice() + this->random(0, 10000),
+                    this->random_05_nz_state
+                );
+            }
+            
+            void random_05_nz_init() {
+                this->random_05_nz_reset();
+            }
+            
+            void random_05_nz_seed(number v) {
+                xoshiro_reset(v, this->random_05_nz_state);
+            }
+            
+            number random_05_nz_next() {
+                return xoshiro_next(this->random_05_nz_state);
+            }
+            
+            number phasor_08_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                number pincr = freq * this->phasor_08_ph_conv;
+            
+                if (this->phasor_08_ph_currentPhase < 0.)
+                    this->phasor_08_ph_currentPhase = 1. + this->phasor_08_ph_currentPhase;
+            
+                if (this->phasor_08_ph_currentPhase > 1.)
+                    this->phasor_08_ph_currentPhase = this->phasor_08_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_08_ph_currentPhase;
+                this->phasor_08_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_08_ph_reset() {
+                this->phasor_08_ph_currentPhase = 0;
+            }
+            
+            void phasor_08_ph_dspsetup() {
+                this->phasor_08_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_08_dspsetup(bool force) {
+                if ((bool)(this->phasor_08_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_08_conv = (number)1 / this->samplerate();
+                this->phasor_08_setupDone = true;
+                this->phasor_08_ph_dspsetup();
+            }
+            
+            number gaintilde_15_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_15_ramp_d_prev);
+                this->gaintilde_15_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_15_ramp_d_dspsetup() {
+                this->gaintilde_15_ramp_d_reset();
+            }
+            
+            void gaintilde_15_ramp_d_reset() {
+                this->gaintilde_15_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_15_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_15_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_15_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_15_ramp_index = _up;
+                        this->gaintilde_15_ramp_increment = (x - this->gaintilde_15_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_15_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_15_ramp_index = _down;
+                        this->gaintilde_15_ramp_increment = (x - this->gaintilde_15_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_15_ramp_index > 0) {
+                    this->gaintilde_15_ramp_prev += this->gaintilde_15_ramp_increment;
+                    this->gaintilde_15_ramp_index -= 1;
+                } else {
+                    this->gaintilde_15_ramp_prev = x;
+                }
+            
+                return this->gaintilde_15_ramp_prev;
+            }
+            
+            void gaintilde_15_ramp_reset() {
+                this->gaintilde_15_ramp_prev = 0;
+                this->gaintilde_15_ramp_index = 0;
+                this->gaintilde_15_ramp_increment = 0;
+                this->gaintilde_15_ramp_d_reset();
+            }
+            
+            void gaintilde_15_init() {
+                this->gaintilde_15_loginc = rnbo_log(1.072);
+                this->gaintilde_15_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_15_loginc));
+            }
+            
+            void gaintilde_15_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_15_value;
+            }
+            
+            void gaintilde_15_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_15_value_set(preset["value"]);
+            }
+            
+            void gaintilde_15_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_15_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_15_setupDone = true;
+                this->gaintilde_15_ramp_d_dspsetup();
+            }
+            
+            void message_09_init() {
+                this->message_09_set_set({1});
+            }
+            
+            void adsr_07_dspsetup(bool force) {
+                if ((bool)(this->adsr_07_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->adsr_07_mspersamp = (number)1000 / this->sr;
+                this->adsr_07_setupDone = true;
+            }
+            
+            bool stackprotect_check() {
+                this->stackprotect_count++;
+            
+                if (this->stackprotect_count > 128) {
+                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
+                    return true;
+                }
+            
+                return false;
+            }
+            
+            void updateTime(MillisecondTime time) {
+                this->_currentTime = time;
+                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
+            
+                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
+                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
+            
+                if (this->sampleOffsetIntoNextAudioBuffer < 0)
+                    this->sampleOffsetIntoNextAudioBuffer = 0;
+            }
+            
+            void assign_defaults()
+            {
+                receive_32_output_number = 0;
+                toggle_06_value_number = 0;
+                toggle_06_value_number_setter(toggle_06_value_number);
+                metro_08_on = 0;
+                metro_08_interval = 700;
+                metro_08_interval_setter(metro_08_interval);
+                expr_33_in1 = 0;
+                expr_33_in2 = 20;
+                expr_33_out1 = 0;
+                receive_33_output_number = 0;
+                random_05_limit = 20000;
+                random_05_limit_setter(random_05_limit);
+                random_05_seed = 0;
+                phasor_08_freq = 0;
+                quantize_03_value = 0;
+                quantize_03_quantum = 1;
+                gaintilde_15_input_number = 0;
+                gaintilde_15_value = 0;
+                gaintilde_15_interp = 10;
+                dspexpr_08_in1 = 0;
+                dspexpr_08_in2 = 0;
+                receive_34_output_number = 0;
+                adsr_07_trigger_number = 0;
+                adsr_07_attack = 10;
+                adsr_07_decay = 600;
+                adsr_07_sustain = 0;
+                adsr_07_release = 600;
+                adsr_07_legato = 0;
+                _currentTime = 0;
+                audioProcessSampleCount = 0;
+                sampleOffsetIntoNextAudioBuffer = 0;
+                zeroBuffer = nullptr;
+                dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
+                didAllocateSignals = 0;
+                vs = 0;
+                maxvs = 0;
+                sr = 44100;
+                invsr = 0.00002267573696;
+                toggle_06_lastValue = 0;
+                metro_08_last = -1;
+                metro_08_next = -1;
+                phasor_08_sigbuf = nullptr;
+                phasor_08_lastLockedPhase = 0;
+                phasor_08_conv = 0;
+                phasor_08_ph_currentPhase = 0;
+                phasor_08_ph_conv = 0;
+                phasor_08_setupDone = false;
+                gaintilde_15_lastValue = 0;
+                gaintilde_15_loginc = 1;
+                gaintilde_15_zval = 0;
+                gaintilde_15_ramp_d_prev = 0;
+                gaintilde_15_ramp_prev = 0;
+                gaintilde_15_ramp_index = 0;
+                gaintilde_15_ramp_increment = 0;
+                gaintilde_15_setupDone = false;
+                adsr_07_phase = 3;
+                adsr_07_mspersamp = 0;
+                adsr_07_time = 0;
+                adsr_07_lastTriggerVal = 0;
+                adsr_07_amplitude = 0;
+                adsr_07_outval = 0;
+                adsr_07_startingpoint = 0;
+                adsr_07_triggerBuf = nullptr;
+                adsr_07_triggerValueBuf = nullptr;
+                adsr_07_setupDone = false;
+                stackprotect_count = 0;
+                _voiceIndex = 0;
+                _noteNumber = 0;
+                isMuted = 1;
+                parameterOffset = 0;
+            }
+            
+            // member variables
+            
+                number receive_32_output_number;
+                list receive_32_output_list;
+                number toggle_06_value_number;
+                number metro_08_on;
+                number metro_08_interval;
+                number expr_33_in1;
+                number expr_33_in2;
+                number expr_33_out1;
+                number receive_33_output_number;
+                list receive_33_output_list;
+                number random_05_limit;
+                number random_05_seed;
+                number phasor_08_freq;
+                number quantize_03_value;
+                number quantize_03_quantum;
+                number gaintilde_15_input_number;
+                number gaintilde_15_value;
+                number gaintilde_15_interp;
+                number dspexpr_08_in1;
+                number dspexpr_08_in2;
+                number receive_34_output_number;
+                list receive_34_output_list;
+                list message_09_set;
+                number adsr_07_trigger_number;
+                number adsr_07_attack;
+                number adsr_07_decay;
+                number adsr_07_sustain;
+                number adsr_07_release;
+                number adsr_07_legato;
+                MillisecondTime _currentTime;
+                SampleIndex audioProcessSampleCount;
+                SampleIndex sampleOffsetIntoNextAudioBuffer;
+                signal zeroBuffer;
+                signal dummyBuffer;
+                SampleValue * signals[3];
+                bool didAllocateSignals;
+                Index vs;
+                Index maxvs;
+                number sr;
+                number invsr;
+                number toggle_06_lastValue;
+                number metro_08_last;
+                number metro_08_next;
+                UInt random_05_nz_state[4] = { };
+                signal phasor_08_sigbuf;
+                number phasor_08_lastLockedPhase;
+                number phasor_08_conv;
+                number phasor_08_ph_currentPhase;
+                number phasor_08_ph_conv;
+                bool phasor_08_setupDone;
+                number gaintilde_15_lastValue;
+                number gaintilde_15_loginc;
+                number gaintilde_15_zval;
+                number gaintilde_15_ramp_d_prev;
+                number gaintilde_15_ramp_prev;
+                number gaintilde_15_ramp_index;
+                number gaintilde_15_ramp_increment;
+                bool gaintilde_15_setupDone;
+                Int adsr_07_phase;
+                number adsr_07_mspersamp;
+                number adsr_07_time;
+                number adsr_07_lastTriggerVal;
+                number adsr_07_amplitude;
+                number adsr_07_outval;
+                number adsr_07_startingpoint;
+                signal adsr_07_triggerBuf;
+                signal adsr_07_triggerValueBuf;
+                bool adsr_07_setupDone;
+                number stackprotect_count;
+                Index _voiceIndex;
+                Int _noteNumber;
+                Index isMuted;
+                ParameterIndex parameterOffset;
+            
+    };
+    
+    class RNBOSubpatcher_315 : public PatcherInterfaceImpl {
+            
+            friend class RNBOSubpatcher_324;
+            friend class rnbomatic;
+            
+            public:
+            
+            RNBOSubpatcher_315()
+            {
+            }
+            
+            ~RNBOSubpatcher_315()
+            {
+            }
+            
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            }
+            
+            rnbomatic* getTopLevelPatcher() {
+                return this->getPatcher()->getTopLevelPatcher();
+            }
+            
+            void cancelClockEvents()
+            {
+            }
+            
+            inline number linearinterp(number frac, number x, number y) {
+                return x + (y - x) * frac;
+            }
+            
+            inline number cubicinterp(number a, number w, number x, number y, number z) {
+                number a2 = a * a;
+                number f0 = z - y - w + x;
+                number f1 = w - x - f0;
+                number f2 = y - w;
+                number f3 = x;
+                return f0 * a * a2 + f1 * a2 + f2 * a + f3;
+            }
+            
+            inline number splineinterp(number a, number w, number x, number y, number z) {
+                number a2 = a * a;
+                number f0 = -0.5 * w + 1.5 * x - 1.5 * y + 0.5 * z;
+                number f1 = w - 2.5 * x + 2 * y - 0.5 * z;
+                number f2 = -0.5 * w + 0.5 * y;
+                return f0 * a * a2 + f1 * a2 + f2 * a + x;
+            }
+            
+            inline number cosT8(number r) {
+                number t84 = 56.0;
+                number t83 = 1680.0;
+                number t82 = 20160.0;
+                number t81 = 2.4801587302e-05;
+                number t73 = 42.0;
+                number t72 = 840.0;
+                number t71 = 1.9841269841e-04;
+            
+                if (r < 0.785398163397448309615660845819875721 && r > -0.785398163397448309615660845819875721) {
+                    number rr = r * r;
+                    return 1.0 - rr * t81 * (t82 - rr * (t83 - rr * (t84 - rr)));
+                } else if (r > 0.0) {
+                    r -= 1.57079632679489661923132169163975144;
+                    number rr = r * r;
+                    return -r * (1.0 - t71 * rr * (t72 - rr * (t73 - rr)));
+                } else {
+                    r += 1.57079632679489661923132169163975144;
+                    number rr = r * r;
+                    return r * (1.0 - t71 * rr * (t72 - rr * (t73 - rr)));
+                }
+            }
+            
+            inline number cosineinterp(number frac, number x, number y) {
+                number a2 = (1.0 - this->cosT8(frac * 3.14159265358979323846)) / (number)2.0;
+                return x * (1.0 - a2) + y * a2;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            Index vectorsize() {
+                return this->vs;
+            }
+            
+            number maximum(number x, number y) {
+                return (x < y ? y : x);
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            Index getNumMidiInputPorts() const {
+                return 0;
+            }
+            
+            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
+            
+            Index getNumMidiOutputPorts() const {
+                return 0;
+            }
+            
+            void process(
+                const SampleValue * const* inputs,
+                Index numInputs,
+                SampleValue * const* outputs,
+                Index numOutputs,
+                Index n
+            ) {
+                RNBO_UNUSED(numInputs);
+                RNBO_UNUSED(inputs);
+                this->vs = n;
+                this->updateTime(this->getEngine()->getCurrentTime());
+                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
+                this->phasor_09_perform(this->phasor_09_freq, this->signals[0], n);
+            
+                this->cycle_tilde_07_perform(
+                    this->cycle_tilde_07_frequency,
+                    this->cycle_tilde_07_phase_offset,
+                    this->signals[1],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->dspexpr_11_perform(this->signals[1], this->dspexpr_11_in2, this->signals[2], n);
+                this->phasor_10_perform(this->signals[2], this->signals[3], n);
+                this->gaintilde_16_perform(this->signals[3], this->signals[4], n);
+                this->phasor_12_perform(this->phasor_12_freq, this->signals[3], n);
+            
+                this->cycle_tilde_08_perform(
+                    this->cycle_tilde_08_frequency,
+                    this->cycle_tilde_08_phase_offset,
+                    this->signals[5],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->dspexpr_13_perform(this->dspexpr_13_in1, this->signals[5], this->signals[6], n);
+                this->phasor_11_perform(this->signals[6], this->signals[7], n);
+                this->gaintilde_17_perform(this->signals[7], this->signals[6], n);
+                this->dspexpr_15_perform(this->signals[6], this->signals[1], this->signals[8], n);
+                this->delaytilde_03_perform(this->delaytilde_03_delay, this->signals[8], this->signals[1], n);
+            
+                this->lores_03_perform(
+                    this->signals[2],
+                    this->lores_03_resonance,
+                    this->signals[8],
+                    this->signals[6],
+                    n
+                );
+            
+                this->dspexpr_12_perform(this->signals[4], this->signals[5], this->signals[2], n);
+                this->delaytilde_04_perform(this->delaytilde_04_delay, this->signals[2], this->signals[5], n);
+                this->dspexpr_16_perform(this->signals[5], this->signals[6], this->signals[4], n);
+                this->dspexpr_14_perform(this->signals[4], this->signals[3], this->signals[6], n);
+            
+                this->lores_02_perform(
+                    this->signals[7],
+                    this->lores_02_resonance,
+                    this->signals[2],
+                    this->signals[3],
+                    n
+                );
+            
+                this->dspexpr_09_perform(this->signals[1], this->signals[3], this->signals[7], n);
+                this->dspexpr_10_perform(this->signals[7], this->signals[0], this->signals[3], n);
+                this->signaladder_08_perform(this->signals[3], this->signals[6], out1, n);
+                this->stackprotect_perform(n);
+                this->audioProcessSampleCount += this->vs;
+            }
+            
+            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
+                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 9; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_09_sigbuf = resizeSignal(this->phasor_09_sigbuf, this->maxvs, maxBlockSize);
+                    this->phasor_10_sigbuf = resizeSignal(this->phasor_10_sigbuf, this->maxvs, maxBlockSize);
+                    this->phasor_11_sigbuf = resizeSignal(this->phasor_11_sigbuf, this->maxvs, maxBlockSize);
+                    this->phasor_12_sigbuf = resizeSignal(this->phasor_12_sigbuf, this->maxvs, maxBlockSize);
+                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
+                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
+                    this->didAllocateSignals = true;
+                }
+            
+                const bool sampleRateChanged = sampleRate != this->sr;
+                const bool maxvsChanged = maxBlockSize != this->maxvs;
+                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
+            
+                if (sampleRateChanged || maxvsChanged) {
+                    this->vs = maxBlockSize;
+                    this->maxvs = maxBlockSize;
+                    this->sr = sampleRate;
+                    this->invsr = 1 / sampleRate;
+                }
+            
+                this->phasor_09_dspsetup(forceDSPSetup);
+                this->cycle_tilde_07_dspsetup(forceDSPSetup);
+                this->phasor_10_dspsetup(forceDSPSetup);
+                this->gaintilde_16_dspsetup(forceDSPSetup);
+                this->phasor_12_dspsetup(forceDSPSetup);
+                this->cycle_tilde_08_dspsetup(forceDSPSetup);
+                this->phasor_11_dspsetup(forceDSPSetup);
+                this->gaintilde_17_dspsetup(forceDSPSetup);
+                this->delaytilde_03_dspsetup(forceDSPSetup);
+                this->lores_03_dspsetup(forceDSPSetup);
+                this->delaytilde_04_dspsetup(forceDSPSetup);
+                this->lores_02_dspsetup(forceDSPSetup);
+            
+                if (sampleRateChanged)
+                    this->onSampleRateChanged(sampleRate);
+            }
+            
+            void setProbingTarget(MessageTag id) {
+                switch (id) {
+                default:
+                    {
+                    this->setProbingIndex(-1);
+                    break;
+                    }
+                }
+            }
+            
+            void setProbingIndex(ProbingIndex ) {}
+            
+            Index getProbingChannels(MessageTag outletId) const {
+                RNBO_UNUSED(outletId);
+                return 0;
+            }
+            
+            Index getIsMuted()  {
+                return this->isMuted;
+            }
+            
+            void setIsMuted(Index v)  {
+                this->isMuted = v;
+            }
+            
+            Index getPatcherSerial() const {
+                return 0;
+            }
+            
+            void getState(PatcherStateInterface& ) {}
+            
+            void setState() {}
+            
+            void getPreset(PatcherStateInterface& ) {}
+            
+            void processTempoEvent(MillisecondTime , Tempo ) {}
+            
+            void processTransportEvent(MillisecondTime , TransportState ) {}
+            
+            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
+            
+            void onSampleRateChanged(double ) {}
+            
+            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
+            
+            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
+            
+            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValue(index, value, time);
+            }
+            
+            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
+                this->setParameterValue(index, this->getParameterValue(index), time);
+            }
+            
+            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValueNormalized(index, value, time);
+            }
+            
+            ParameterValue getParameterValue(ParameterIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return 0;
+                    }
+                }
+            }
+            
+            ParameterIndex getNumSignalInParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumSignalOutParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumParameters() const {
+                return 0;
+            }
+            
+            ConstCharPointer getParameterName(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            ConstCharPointer getParameterId(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
+            
+            void sendParameter(ParameterIndex index, bool ignoreValue) {
+                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
+            }
+            
+            void setParameterOffset(ParameterIndex offset) {
+                this->parameterOffset = offset;
+            }
+            
+            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
+                if (steps == 1) {
+                    if (normalizedValue > 0) {
+                        normalizedValue = 1.;
+                    }
+                } else {
+                    ParameterValue oneStep = (number)1. / (steps - 1);
+                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
+                    normalizedValue = numberOfSteps * oneStep;
+                }
+            
+                return normalizedValue;
+            }
+            
+            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+            
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            void scheduleParamInit(ParameterIndex index, Index order) {
+                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
+            }
+            
+            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
+            
+            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
+            
+            void processOutletEvent(
+                EngineLink* sender,
+                OutletIndex index,
+                ParameterValue value,
+                MillisecondTime time
+            ) {
+                this->updateTime(time);
+                this->processOutletAtCurrentTime(sender, index, value);
+            }
+            
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/gemini/gain~_obj-15") == objectId)
+                        this->gaintilde_16_valin_set(payload);
+            
+                    if (TAG("constellation[1]/gemini/gain~_obj-14") == objectId)
+                        this->gaintilde_17_valin_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
+            
+            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
+            
+            MessageTagInfo resolveTag(MessageTag tag) const {
+                switch (tag) {
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/gemini/gain~_obj-15"):
+                    {
+                    return "constellation[1]/gemini/gain~_obj-15";
+                    }
+                case TAG("constellation[1]/gemini/gain~_obj-14"):
+                    {
+                    return "constellation[1]/gemini/gain~_obj-14";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                }
+            
+                return nullptr;
+            }
+            
+            DataRef* getDataRef(DataRefIndex index)  {
+                switch (index) {
+                case 1:
+                    {
+                    return addressOf(this->delaytilde_03_del_bufferobj);
+                    break;
+                    }
+                case 2:
+                    {
+                    return addressOf(this->delaytilde_04_del_bufferobj);
+                    break;
+                    }
+                default:
+                    {
+                    return nullptr;
+                    }
+                }
+            }
+            
+            DataRefIndex getNumDataRefs() const {
+                return 2;
+            }
+            
+            void fillDataRef(DataRefIndex , DataRef& ) {}
+            
+            void zeroDataRef(DataRef& ref) {
+                ref->setZero();
+            }
+            
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 1) {
+                    this->delaytilde_03_del_buffer = new Float64Buffer(this->delaytilde_03_del_bufferobj);
+                }
+            
+                if (index == 0) {
+                    this->cycle_tilde_07_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_07_bufferUpdated();
+                    this->cycle_tilde_08_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_08_bufferUpdated();
+                }
+            
+                if (index == 2) {
+                    this->delaytilde_04_del_buffer = new Float64Buffer(this->delaytilde_04_del_bufferobj);
+                }
+            }
+            
+            void initialize() {
+                this->delaytilde_03_del_bufferobj = initDataRef("delaytilde_03_del_bufferobj", true, nullptr, "buffer~");
+                this->delaytilde_04_del_bufferobj = initDataRef("delaytilde_04_del_bufferobj", true, nullptr, "buffer~");
+                this->assign_defaults();
+                this->setState();
+                this->delaytilde_03_del_bufferobj->setIndex(1);
+                this->delaytilde_03_del_buffer = new Float64Buffer(this->delaytilde_03_del_bufferobj);
+                this->cycle_tilde_07_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                this->cycle_tilde_08_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                this->delaytilde_04_del_bufferobj->setIndex(2);
+                this->delaytilde_04_del_buffer = new Float64Buffer(this->delaytilde_04_del_bufferobj);
+            }
+            
+            protected:
+            
+            void gaintilde_16_valin_set(number v) {
+                this->gaintilde_16_value_set(v);
+            }
+            
+            void gaintilde_17_valin_set(number v) {
+                this->gaintilde_17_value_set(v);
+            }
+            
+            number msToSamps(MillisecondTime ms, number sampleRate) {
+                return ms * sampleRate * 0.001;
+            }
+            
+            MillisecondTime sampsToMs(SampleIndex samps) {
+                return samps * (this->invsr * 1000);
+            }
+            
+            Index getMaxBlockSize() const {
+                return this->maxvs;
+            }
+            
+            number getSampleRate() const {
+                return this->sr;
+            }
+            
+            bool hasFixedVectorSize() const {
+                return false;
+            }
+            
+            Index getNumInputChannels() const {
+                return 0;
+            }
+            
+            Index getNumOutputChannels() const {
+                return 1;
+            }
+            
+            void initializeObjects() {
+                this->delaytilde_03_del_init();
+                this->gaintilde_16_init();
+                this->gaintilde_17_init();
+                this->delaytilde_04_del_init();
+            }
+            
+            void sendOutlet(OutletIndex index, ParameterValue value) {
+                this->getEngine()->sendOutlet(this, index, value);
+            }
+            
+            void startup() {}
+            
+            void allocateDataRefs() {
+                this->cycle_tilde_07_buffer->requestSize(16384, 1);
+                this->cycle_tilde_07_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_08_buffer->requestSize(16384, 1);
+                this->cycle_tilde_08_buffer->setSampleRate(this->sr);
+                this->delaytilde_03_del_buffer = this->delaytilde_03_del_buffer->allocateIfNeeded();
+            
+                if (this->delaytilde_03_del_bufferobj->hasRequestedSize()) {
+                    if (this->delaytilde_03_del_bufferobj->wantsFill())
+                        this->zeroDataRef(this->delaytilde_03_del_bufferobj);
+            
+                    this->getEngine()->sendDataRefUpdated(1);
+                }
+            
+                this->cycle_tilde_07_buffer = this->cycle_tilde_07_buffer->allocateIfNeeded();
+                this->cycle_tilde_08_buffer = this->cycle_tilde_08_buffer->allocateIfNeeded();
+                this->delaytilde_04_del_buffer = this->delaytilde_04_del_buffer->allocateIfNeeded();
+            
+                if (this->delaytilde_04_del_bufferobj->hasRequestedSize()) {
+                    if (this->delaytilde_04_del_bufferobj->wantsFill())
+                        this->zeroDataRef(this->delaytilde_04_del_bufferobj);
+            
+                    this->getEngine()->sendDataRefUpdated(2);
+                }
+            }
+            
+            void dspexpr_13_in1_set(number v) {
+                this->dspexpr_13_in1 = v;
+            }
+            
+            void expr_36_out1_set(number v) {
+                this->expr_36_out1 = v;
+                this->dspexpr_13_in1_set(this->expr_36_out1);
+            }
+            
+            void expr_36_in1_set(number in1) {
+                this->expr_36_in1 = in1;
+                this->expr_36_out1_set(this->expr_36_in1 - this->expr_36_in2);//#map:constellation[1]/gemini/-_obj-5:1
+            }
+            
+            void dspexpr_11_in2_set(number v) {
+                this->dspexpr_11_in2 = v;
+            }
+            
+            void expr_35_out1_set(number v) {
+                this->expr_35_out1 = v;
+                this->dspexpr_11_in2_set(this->expr_35_out1);
+            }
+            
+            void expr_35_in1_set(number in1) {
+                this->expr_35_in1 = in1;
+                this->expr_35_out1_set(this->expr_35_in1 + this->expr_35_in2);//#map:constellation[1]/gemini/+_obj-4:1
+            }
+            
+            void expr_34_out1_set(number v) {
+                this->expr_34_out1 = v;
+                this->expr_36_in1_set(this->expr_34_out1);
+                this->expr_35_in1_set(this->expr_34_out1);
+            }
+            
+            void expr_34_in1_set(number in1) {
+                this->expr_34_in1 = in1;
+                this->expr_34_out1_set(this->expr_34_in1 * this->expr_34_in2);//#map:constellation[1]/gemini/*_obj-3:1
+            }
+            
+            void receive_35_output_number_set(number v) {
+                this->receive_35_output_number = v;
+                this->expr_34_in1_set(v);
+            }
+            
+            void gaintilde_17_outval_set(number ) {}
+            
+            void gaintilde_17_value_set(number v) {
+                this->gaintilde_17_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/gemini/gain~_obj-14"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_17_outval_set(value);
+            }
+            
+            void gaintilde_17_input_number_set(number v) {
+                this->gaintilde_17_input_number = v;
+            
+                this->gaintilde_17_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void gaintilde_16_outval_set(number ) {}
+            
+            void gaintilde_16_value_set(number v) {
+                this->gaintilde_16_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/gemini/gain~_obj-15"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_16_outval_set(value);
+            }
+            
+            void gaintilde_16_input_number_set(number v) {
+                this->gaintilde_16_input_number = v;
+            
+                this->gaintilde_16_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void floatnum_01_out_set(number v) {
+                this->gaintilde_17_input_number_set(v);
+                this->gaintilde_16_input_number_set(v);
+            }
+            
+            void floatnum_01_input_number_set(number v) {
+                this->floatnum_01_input_number = v;
+                this->floatnum_01_stored = v;
+                this->floatnum_01_out_set(v);
+            }
+            
+            void receive_36_output_number_set(number v) {
+                this->receive_36_output_number = v;
+                this->floatnum_01_input_number_set(v);
+            }
+            
+            void phasor_09_perform(number freq, SampleValue * out, Index n) {
+                RNBO_UNUSED(freq);
+            
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_09_ph_next(2, -1);
+                    this->phasor_09_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void cycle_tilde_07_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                RNBO_UNUSED(frequency);
+                auto __cycle_tilde_07_f2i = this->cycle_tilde_07_f2i;
+                auto __cycle_tilde_07_buffer = this->cycle_tilde_07_buffer;
+                auto __cycle_tilde_07_phasei = this->cycle_tilde_07_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_07_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_07_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_07_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(0.02 * __cycle_tilde_07_f2i));
+                            __cycle_tilde_07_phasei = uint32_add(__cycle_tilde_07_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_07_phasei = __cycle_tilde_07_phasei;
+            }
+            
+            void dspexpr_11_perform(const Sample * in1, number in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] + in2;//#map:_###_obj_###_:1
+                }
+            }
+            
+            void phasor_10_perform(const Sample * freq, SampleValue * out, Index n) {
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_10_ph_next(freq[(Index)i], -1);
+                    this->phasor_10_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void gaintilde_16_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_16_interp = this->gaintilde_16_interp;
+                auto __gaintilde_16_loginc = this->gaintilde_16_loginc;
+                auto __gaintilde_16_zval = this->gaintilde_16_zval;
+                auto __gaintilde_16_value = this->gaintilde_16_value;
+                number mult = (__gaintilde_16_value <= 0 ? 0. : __gaintilde_16_zval * rnbo_exp(__gaintilde_16_value * __gaintilde_16_loginc));
+                auto iv = this->mstosamps(__gaintilde_16_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_16_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void phasor_12_perform(number freq, SampleValue * out, Index n) {
+                RNBO_UNUSED(freq);
+            
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_12_ph_next(1, -1);
+                    this->phasor_12_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void cycle_tilde_08_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                RNBO_UNUSED(frequency);
+                auto __cycle_tilde_08_f2i = this->cycle_tilde_08_f2i;
+                auto __cycle_tilde_08_buffer = this->cycle_tilde_08_buffer;
+                auto __cycle_tilde_08_phasei = this->cycle_tilde_08_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_08_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_08_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_08_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(0.01 * __cycle_tilde_08_f2i));
+                            __cycle_tilde_08_phasei = uint32_add(__cycle_tilde_08_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_08_phasei = __cycle_tilde_08_phasei;
+            }
+            
+            void dspexpr_13_perform(number in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1 + in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void phasor_11_perform(const Sample * freq, SampleValue * out, Index n) {
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_11_ph_next(freq[(Index)i], -1);
+                    this->phasor_11_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void gaintilde_17_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_17_interp = this->gaintilde_17_interp;
+                auto __gaintilde_17_loginc = this->gaintilde_17_loginc;
+                auto __gaintilde_17_zval = this->gaintilde_17_zval;
+                auto __gaintilde_17_value = this->gaintilde_17_value;
+                number mult = (__gaintilde_17_value <= 0 ? 0. : __gaintilde_17_zval * rnbo_exp(__gaintilde_17_value * __gaintilde_17_loginc));
+                auto iv = this->mstosamps(__gaintilde_17_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_17_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void dspexpr_15_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void delaytilde_03_perform(number delay, const SampleValue * input, SampleValue * output, Index n) {
+                RNBO_UNUSED(delay);
+                auto __delaytilde_03_crossfadeDelay = this->delaytilde_03_crossfadeDelay;
+                auto __delaytilde_03_rampInSamples = this->delaytilde_03_rampInSamples;
+                auto __delaytilde_03_ramp = this->delaytilde_03_ramp;
+                auto __delaytilde_03_lastDelay = this->delaytilde_03_lastDelay;
+            
+                for (Index i = 0; i < n; i++) {
+                    if (__delaytilde_03_lastDelay == -1) {
+                        __delaytilde_03_lastDelay = this->delaytilde_03_del_size();
+                    }
+            
+                    if (__delaytilde_03_ramp > 0) {
+                        number factor = __delaytilde_03_ramp / __delaytilde_03_rampInSamples;
+                        output[(Index)i] = this->delaytilde_03_del_read(__delaytilde_03_crossfadeDelay, 0) * factor + this->delaytilde_03_del_read(__delaytilde_03_lastDelay, 0) * (1. - factor);
+                        __delaytilde_03_ramp--;
+                    } else {
+                        number effectiveDelay = this->delaytilde_03_del_size();
+            
+                        if (effectiveDelay != __delaytilde_03_lastDelay) {
+                            __delaytilde_03_ramp = __delaytilde_03_rampInSamples;
+                            __delaytilde_03_crossfadeDelay = __delaytilde_03_lastDelay;
+                            __delaytilde_03_lastDelay = effectiveDelay;
+                            output[(Index)i] = this->delaytilde_03_del_read(__delaytilde_03_crossfadeDelay, 0);
+                            __delaytilde_03_ramp--;
+                        } else {
+                            output[(Index)i] = this->delaytilde_03_del_read(effectiveDelay, 0);
+                        }
+                    }
+            
+                    this->delaytilde_03_del_write(input[(Index)i]);
+                    this->delaytilde_03_del_step();
+                }
+            
+                this->delaytilde_03_lastDelay = __delaytilde_03_lastDelay;
+                this->delaytilde_03_ramp = __delaytilde_03_ramp;
+                this->delaytilde_03_crossfadeDelay = __delaytilde_03_crossfadeDelay;
+            }
+            
+            void lores_03_perform(
+                const Sample * cutoff,
+                number resonance,
+                const SampleValue * input,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(resonance);
+                auto __lores_03_y_2 = this->lores_03_y_2;
+                auto __lores_03_y_1 = this->lores_03_y_1;
+                auto __lores_03_x_0 = this->lores_03_x_0;
+                auto __lores_03_b_0 = this->lores_03_b_0;
+                auto __lores_03_a_1 = this->lores_03_a_1;
+                auto __lores_03_a_2 = this->lores_03_a_2;
+                auto __lores_03_last_freq_calc = this->lores_03_last_freq_calc;
+                auto __lores_03_last_res_calc = this->lores_03_last_res_calc;
+                auto __lores_03_last_frequency = this->lores_03_last_frequency;
+                auto __lores_03_last_resonance = this->lores_03_last_resonance;
+            
+                for (Index i = 0; i < n; i++) {
+                    if (0 != __lores_03_last_resonance || cutoff[(Index)i] != __lores_03_last_frequency) {
+                        __lores_03_last_res_calc = rnbo_exp(0 * 0.125) * 0.882497;
+                        __lores_03_last_freq_calc = rnbo_cos(2.0 * pi01() / this->sr * cutoff[(Index)i]);
+                        __lores_03_last_resonance = 0;
+                        __lores_03_last_frequency = cutoff[(Index)i];
+                    }
+            
+                    number res_temp = __lores_03_last_res_calc;
+                    number freq_temp = __lores_03_last_freq_calc;
+                    __lores_03_a_2 = res_temp * res_temp;
+                    __lores_03_a_1 = -2.0 * res_temp * freq_temp;
+                    __lores_03_b_0 = 1.0 + __lores_03_a_1 + __lores_03_a_2;
+                    __lores_03_x_0 = input[(Index)i];
+                    number y_0 = __lores_03_x_0 * __lores_03_b_0 - __lores_03_y_1 * __lores_03_a_1 - __lores_03_y_2 * __lores_03_a_2;
+                    __lores_03_y_2 = __lores_03_y_1;
+                    __lores_03_y_1 = y_0;
+                    out[(Index)i] = y_0;
+                }
+            
+                this->lores_03_last_resonance = __lores_03_last_resonance;
+                this->lores_03_last_frequency = __lores_03_last_frequency;
+                this->lores_03_last_res_calc = __lores_03_last_res_calc;
+                this->lores_03_last_freq_calc = __lores_03_last_freq_calc;
+                this->lores_03_a_2 = __lores_03_a_2;
+                this->lores_03_a_1 = __lores_03_a_1;
+                this->lores_03_b_0 = __lores_03_b_0;
+                this->lores_03_x_0 = __lores_03_x_0;
+                this->lores_03_y_1 = __lores_03_y_1;
+                this->lores_03_y_2 = __lores_03_y_2;
+            }
+            
+            void dspexpr_12_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void delaytilde_04_perform(number delay, const SampleValue * input, SampleValue * output, Index n) {
+                RNBO_UNUSED(delay);
+                auto __delaytilde_04_crossfadeDelay = this->delaytilde_04_crossfadeDelay;
+                auto __delaytilde_04_rampInSamples = this->delaytilde_04_rampInSamples;
+                auto __delaytilde_04_ramp = this->delaytilde_04_ramp;
+                auto __delaytilde_04_lastDelay = this->delaytilde_04_lastDelay;
+            
+                for (Index i = 0; i < n; i++) {
+                    if (__delaytilde_04_lastDelay == -1) {
+                        __delaytilde_04_lastDelay = this->delaytilde_04_del_size();
+                    }
+            
+                    if (__delaytilde_04_ramp > 0) {
+                        number factor = __delaytilde_04_ramp / __delaytilde_04_rampInSamples;
+                        output[(Index)i] = this->delaytilde_04_del_read(__delaytilde_04_crossfadeDelay, 0) * factor + this->delaytilde_04_del_read(__delaytilde_04_lastDelay, 0) * (1. - factor);
+                        __delaytilde_04_ramp--;
+                    } else {
+                        number effectiveDelay = this->delaytilde_04_del_size();
+            
+                        if (effectiveDelay != __delaytilde_04_lastDelay) {
+                            __delaytilde_04_ramp = __delaytilde_04_rampInSamples;
+                            __delaytilde_04_crossfadeDelay = __delaytilde_04_lastDelay;
+                            __delaytilde_04_lastDelay = effectiveDelay;
+                            output[(Index)i] = this->delaytilde_04_del_read(__delaytilde_04_crossfadeDelay, 0);
+                            __delaytilde_04_ramp--;
+                        } else {
+                            output[(Index)i] = this->delaytilde_04_del_read(effectiveDelay, 0);
+                        }
+                    }
+            
+                    this->delaytilde_04_del_write(input[(Index)i]);
+                    this->delaytilde_04_del_step();
+                }
+            
+                this->delaytilde_04_lastDelay = __delaytilde_04_lastDelay;
+                this->delaytilde_04_ramp = __delaytilde_04_ramp;
+                this->delaytilde_04_crossfadeDelay = __delaytilde_04_crossfadeDelay;
+            }
+            
+            void dspexpr_16_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] + in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void dspexpr_14_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void lores_02_perform(
+                const Sample * cutoff,
+                number resonance,
+                const SampleValue * input,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(resonance);
+                auto __lores_02_y_2 = this->lores_02_y_2;
+                auto __lores_02_y_1 = this->lores_02_y_1;
+                auto __lores_02_x_0 = this->lores_02_x_0;
+                auto __lores_02_b_0 = this->lores_02_b_0;
+                auto __lores_02_a_1 = this->lores_02_a_1;
+                auto __lores_02_a_2 = this->lores_02_a_2;
+                auto __lores_02_last_freq_calc = this->lores_02_last_freq_calc;
+                auto __lores_02_last_res_calc = this->lores_02_last_res_calc;
+                auto __lores_02_last_frequency = this->lores_02_last_frequency;
+                auto __lores_02_last_resonance = this->lores_02_last_resonance;
+            
+                for (Index i = 0; i < n; i++) {
+                    if (0 != __lores_02_last_resonance || cutoff[(Index)i] != __lores_02_last_frequency) {
+                        __lores_02_last_res_calc = rnbo_exp(0 * 0.125) * 0.882497;
+                        __lores_02_last_freq_calc = rnbo_cos(2.0 * pi01() / this->sr * cutoff[(Index)i]);
+                        __lores_02_last_resonance = 0;
+                        __lores_02_last_frequency = cutoff[(Index)i];
+                    }
+            
+                    number res_temp = __lores_02_last_res_calc;
+                    number freq_temp = __lores_02_last_freq_calc;
+                    __lores_02_a_2 = res_temp * res_temp;
+                    __lores_02_a_1 = -2.0 * res_temp * freq_temp;
+                    __lores_02_b_0 = 1.0 + __lores_02_a_1 + __lores_02_a_2;
+                    __lores_02_x_0 = input[(Index)i];
+                    number y_0 = __lores_02_x_0 * __lores_02_b_0 - __lores_02_y_1 * __lores_02_a_1 - __lores_02_y_2 * __lores_02_a_2;
+                    __lores_02_y_2 = __lores_02_y_1;
+                    __lores_02_y_1 = y_0;
+                    out[(Index)i] = y_0;
+                }
+            
+                this->lores_02_last_resonance = __lores_02_last_resonance;
+                this->lores_02_last_frequency = __lores_02_last_frequency;
+                this->lores_02_last_res_calc = __lores_02_last_res_calc;
+                this->lores_02_last_freq_calc = __lores_02_last_freq_calc;
+                this->lores_02_a_2 = __lores_02_a_2;
+                this->lores_02_a_1 = __lores_02_a_1;
+                this->lores_02_b_0 = __lores_02_b_0;
+                this->lores_02_x_0 = __lores_02_x_0;
+                this->lores_02_y_1 = __lores_02_y_1;
+                this->lores_02_y_2 = __lores_02_y_2;
+            }
+            
+            void dspexpr_09_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] + in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void dspexpr_10_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void signaladder_08_perform(
+                const SampleValue * in1,
+                const SampleValue * in2,
+                SampleValue * out,
+                Index n
+            ) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out[(Index)i] = in1[(Index)i] + in2[(Index)i];
+                }
+            }
+            
+            void stackprotect_perform(Index n) {
+                RNBO_UNUSED(n);
+                auto __stackprotect_count = this->stackprotect_count;
+                __stackprotect_count = 0;
+                this->stackprotect_count = __stackprotect_count;
+            }
+            
+            void lores_02_resonance_setter(number v) {
+                if (v < 0.0) {
+                    v = 0.0;
+                } else if (v >= 1.0) {
+                    v = 1.0 - 1E-20;
+                }
+            
+                this->lores_02_resonance = v;
+            }
+            
+            void lores_03_resonance_setter(number v) {
+                if (v < 0.0) {
+                    v = 0.0;
+                } else if (v >= 1.0) {
+                    v = 1.0 - 1E-20;
+                }
+            
+                this->lores_03_resonance = v;
+            }
+            
+            void delaytilde_03_del_step() {
+                this->delaytilde_03_del_reader++;
+            
+                if (this->delaytilde_03_del_reader >= (int)(this->delaytilde_03_del_buffer->getSize()))
+                    this->delaytilde_03_del_reader = 0;
+            }
+            
+            number delaytilde_03_del_read(number size, Int interp) {
+                if (interp == 0) {
+                    number r = (int)(this->delaytilde_03_del_buffer->getSize()) + this->delaytilde_03_del_reader - ((size > this->delaytilde_03_del__maxdelay ? this->delaytilde_03_del__maxdelay : (size < (this->delaytilde_03_del_reader != this->delaytilde_03_del_writer) ? this->delaytilde_03_del_reader != this->delaytilde_03_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    long index2 = (long)(index1 + 1);
+            
+                    return this->linearinterp(frac, this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ));
+                } else if (interp == 1) {
+                    number r = (int)(this->delaytilde_03_del_buffer->getSize()) + this->delaytilde_03_del_reader - ((size > this->delaytilde_03_del__maxdelay ? this->delaytilde_03_del__maxdelay : (size < (1 + this->delaytilde_03_del_reader != this->delaytilde_03_del_writer) ? 1 + this->delaytilde_03_del_reader != this->delaytilde_03_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    Index index2 = (Index)(index1 + 1);
+                    Index index3 = (Index)(index2 + 1);
+                    Index index4 = (Index)(index3 + 1);
+            
+                    return this->cubicinterp(frac, this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index3 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index4 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ));
+                } else if (interp == 2) {
+                    number r = (int)(this->delaytilde_03_del_buffer->getSize()) + this->delaytilde_03_del_reader - ((size > this->delaytilde_03_del__maxdelay ? this->delaytilde_03_del__maxdelay : (size < (1 + this->delaytilde_03_del_reader != this->delaytilde_03_del_writer) ? 1 + this->delaytilde_03_del_reader != this->delaytilde_03_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    Index index2 = (Index)(index1 + 1);
+                    Index index3 = (Index)(index2 + 1);
+                    Index index4 = (Index)(index3 + 1);
+            
+                    return this->splineinterp(frac, this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index3 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index4 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ));
+                } else if (interp == 3) {
+                    number r = (int)(this->delaytilde_03_del_buffer->getSize()) + this->delaytilde_03_del_reader - ((size > this->delaytilde_03_del__maxdelay ? this->delaytilde_03_del__maxdelay : (size < (this->delaytilde_03_del_reader != this->delaytilde_03_del_writer) ? this->delaytilde_03_del_reader != this->delaytilde_03_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    Index index2 = (Index)(index1 + 1);
+            
+                    return this->cosineinterp(frac, this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ), this->delaytilde_03_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_03_del_wrap))
+                    ));
+                }
+            
+                number r = (int)(this->delaytilde_03_del_buffer->getSize()) + this->delaytilde_03_del_reader - ((size > this->delaytilde_03_del__maxdelay ? this->delaytilde_03_del__maxdelay : (size < (this->delaytilde_03_del_reader != this->delaytilde_03_del_writer) ? this->delaytilde_03_del_reader != this->delaytilde_03_del_writer : size)));
+                long index1 = (long)(rnbo_floor(r));
+            
+                return this->delaytilde_03_del_buffer->getSample(
+                    0,
+                    (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_03_del_wrap))
+                );
+            }
+            
+            void delaytilde_03_del_write(number v) {
+                this->delaytilde_03_del_writer = this->delaytilde_03_del_reader;
+                this->delaytilde_03_del_buffer[(Index)this->delaytilde_03_del_writer] = v;
+            }
+            
+            number delaytilde_03_del_next(number v, int size) {
+                number effectiveSize = (size == -1 ? this->delaytilde_03_del__maxdelay : size);
+                number val = this->delaytilde_03_del_read(effectiveSize, 0);
+                this->delaytilde_03_del_write(v);
+                this->delaytilde_03_del_step();
+                return val;
+            }
+            
+            array<Index, 2> delaytilde_03_del_calcSizeInSamples() {
+                number sizeInSamples = 0;
+                Index allocatedSizeInSamples = 0;
+            
+                {
+                    sizeInSamples = this->delaytilde_03_del_evaluateSizeExpr(this->samplerate(), this->vectorsize());
+                    this->delaytilde_03_del_sizemode = 0;
+                }
+            
+                sizeInSamples = rnbo_floor(sizeInSamples);
+                sizeInSamples = this->maximum(sizeInSamples, 2);
+                allocatedSizeInSamples = (Index)(sizeInSamples);
+                allocatedSizeInSamples = nextpoweroftwo(allocatedSizeInSamples);
+                return {sizeInSamples, allocatedSizeInSamples};
+            }
+            
+            void delaytilde_03_del_init() {
+                auto result = this->delaytilde_03_del_calcSizeInSamples();
+                this->delaytilde_03_del__maxdelay = result[0];
+                Index requestedSizeInSamples = (Index)(result[1]);
+                this->delaytilde_03_del_buffer->requestSize(requestedSizeInSamples, 1);
+                this->delaytilde_03_del_wrap = requestedSizeInSamples - 1;
+            }
+            
+            void delaytilde_03_del_clear() {
+                this->delaytilde_03_del_buffer->setZero();
+            }
+            
+            void delaytilde_03_del_reset() {
+                auto result = this->delaytilde_03_del_calcSizeInSamples();
+                this->delaytilde_03_del__maxdelay = result[0];
+                Index allocatedSizeInSamples = (Index)(result[1]);
+                this->delaytilde_03_del_buffer->setSize(allocatedSizeInSamples);
+                updateDataRef(this, this->delaytilde_03_del_buffer);
+                this->delaytilde_03_del_wrap = this->delaytilde_03_del_buffer->getSize() - 1;
+                this->delaytilde_03_del_clear();
+            
+                if (this->delaytilde_03_del_reader >= this->delaytilde_03_del__maxdelay || this->delaytilde_03_del_writer >= this->delaytilde_03_del__maxdelay) {
+                    this->delaytilde_03_del_reader = 0;
+                    this->delaytilde_03_del_writer = 0;
+                }
+            }
+            
+            void delaytilde_03_del_dspsetup() {
+                this->delaytilde_03_del_reset();
+            }
+            
+            number delaytilde_03_del_evaluateSizeExpr(number samplerate, number vectorsize) {
+                RNBO_UNUSED(vectorsize);
+                RNBO_UNUSED(samplerate);
+                return 500;
+            }
+            
+            number delaytilde_03_del_size() {
+                return this->delaytilde_03_del__maxdelay;
+            }
+            
+            void delaytilde_03_dspsetup(bool force) {
+                if ((bool)(this->delaytilde_03_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->delaytilde_03_rampInSamples = (long)(this->mstosamps(50));
+                this->delaytilde_03_lastDelay = -1;
+                this->delaytilde_03_setupDone = true;
+                this->delaytilde_03_del_dspsetup();
+            }
+            
+            number phasor_09_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                RNBO_UNUSED(freq);
+                number pincr = 2 * this->phasor_09_ph_conv;
+            
+                if (this->phasor_09_ph_currentPhase < 0.)
+                    this->phasor_09_ph_currentPhase = 1. + this->phasor_09_ph_currentPhase;
+            
+                if (this->phasor_09_ph_currentPhase > 1.)
+                    this->phasor_09_ph_currentPhase = this->phasor_09_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_09_ph_currentPhase;
+                this->phasor_09_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_09_ph_reset() {
+                this->phasor_09_ph_currentPhase = 0;
+            }
+            
+            void phasor_09_ph_dspsetup() {
+                this->phasor_09_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_09_dspsetup(bool force) {
+                if ((bool)(this->phasor_09_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_09_conv = (number)1 / this->samplerate();
+                this->phasor_09_setupDone = true;
+                this->phasor_09_ph_dspsetup();
+            }
+            
+            number cycle_tilde_07_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_07_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_07_ph_conv;
+            
+                if (this->cycle_tilde_07_ph_currentPhase < 0.)
+                    this->cycle_tilde_07_ph_currentPhase = 1. + this->cycle_tilde_07_ph_currentPhase;
+            
+                if (this->cycle_tilde_07_ph_currentPhase > 1.)
+                    this->cycle_tilde_07_ph_currentPhase = this->cycle_tilde_07_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_07_ph_currentPhase;
+                this->cycle_tilde_07_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_07_ph_reset() {
+                this->cycle_tilde_07_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_07_ph_dspsetup() {
+                this->cycle_tilde_07_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_07_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_07_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_07_phasei = 0;
+                this->cycle_tilde_07_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_07_wrap = (long)(this->cycle_tilde_07_buffer->getSize()) - 1;
+                this->cycle_tilde_07_setupDone = true;
+                this->cycle_tilde_07_ph_dspsetup();
+            }
+            
+            void cycle_tilde_07_bufferUpdated() {
+                this->cycle_tilde_07_wrap = (long)(this->cycle_tilde_07_buffer->getSize()) - 1;
+            }
+            
+            number phasor_10_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                number pincr = freq * this->phasor_10_ph_conv;
+            
+                if (this->phasor_10_ph_currentPhase < 0.)
+                    this->phasor_10_ph_currentPhase = 1. + this->phasor_10_ph_currentPhase;
+            
+                if (this->phasor_10_ph_currentPhase > 1.)
+                    this->phasor_10_ph_currentPhase = this->phasor_10_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_10_ph_currentPhase;
+                this->phasor_10_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_10_ph_reset() {
+                this->phasor_10_ph_currentPhase = 0;
+            }
+            
+            void phasor_10_ph_dspsetup() {
+                this->phasor_10_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_10_dspsetup(bool force) {
+                if ((bool)(this->phasor_10_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_10_conv = (number)1 / this->samplerate();
+                this->phasor_10_setupDone = true;
+                this->phasor_10_ph_dspsetup();
+            }
+            
+            void lores_02_reset() {
+                this->lores_02_y_1 = 0;
+                this->lores_02_y_2 = 0;
+                this->lores_02_last_resonance = 0;
+                this->lores_02_last_frequency = 0;
+                this->lores_02_last_res_calc = 0;
+                this->lores_02_last_freq_calc = 0;
+            }
+            
+            void lores_02_dspsetup(bool force) {
+                if ((bool)(this->lores_02_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->lores_02_reset();
+                this->lores_02_setupDone = true;
+            }
+            
+            number gaintilde_16_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_16_ramp_d_prev);
+                this->gaintilde_16_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_16_ramp_d_dspsetup() {
+                this->gaintilde_16_ramp_d_reset();
+            }
+            
+            void gaintilde_16_ramp_d_reset() {
+                this->gaintilde_16_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_16_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_16_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_16_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_16_ramp_index = _up;
+                        this->gaintilde_16_ramp_increment = (x - this->gaintilde_16_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_16_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_16_ramp_index = _down;
+                        this->gaintilde_16_ramp_increment = (x - this->gaintilde_16_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_16_ramp_index > 0) {
+                    this->gaintilde_16_ramp_prev += this->gaintilde_16_ramp_increment;
+                    this->gaintilde_16_ramp_index -= 1;
+                } else {
+                    this->gaintilde_16_ramp_prev = x;
+                }
+            
+                return this->gaintilde_16_ramp_prev;
+            }
+            
+            void gaintilde_16_ramp_reset() {
+                this->gaintilde_16_ramp_prev = 0;
+                this->gaintilde_16_ramp_index = 0;
+                this->gaintilde_16_ramp_increment = 0;
+                this->gaintilde_16_ramp_d_reset();
+            }
+            
+            void gaintilde_16_init() {
+                this->gaintilde_16_loginc = rnbo_log(1.072);
+                this->gaintilde_16_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_16_loginc));
+            }
+            
+            void gaintilde_16_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_16_value;
+            }
+            
+            void gaintilde_16_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_16_value_set(preset["value"]);
+            }
+            
+            void gaintilde_16_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_16_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_16_setupDone = true;
+                this->gaintilde_16_ramp_d_dspsetup();
+            }
+            
+            number phasor_11_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                number pincr = freq * this->phasor_11_ph_conv;
+            
+                if (this->phasor_11_ph_currentPhase < 0.)
+                    this->phasor_11_ph_currentPhase = 1. + this->phasor_11_ph_currentPhase;
+            
+                if (this->phasor_11_ph_currentPhase > 1.)
+                    this->phasor_11_ph_currentPhase = this->phasor_11_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_11_ph_currentPhase;
+                this->phasor_11_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_11_ph_reset() {
+                this->phasor_11_ph_currentPhase = 0;
+            }
+            
+            void phasor_11_ph_dspsetup() {
+                this->phasor_11_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_11_dspsetup(bool force) {
+                if ((bool)(this->phasor_11_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_11_conv = (number)1 / this->samplerate();
+                this->phasor_11_setupDone = true;
+                this->phasor_11_ph_dspsetup();
+            }
+            
+            number gaintilde_17_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_17_ramp_d_prev);
+                this->gaintilde_17_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_17_ramp_d_dspsetup() {
+                this->gaintilde_17_ramp_d_reset();
+            }
+            
+            void gaintilde_17_ramp_d_reset() {
+                this->gaintilde_17_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_17_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_17_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_17_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_17_ramp_index = _up;
+                        this->gaintilde_17_ramp_increment = (x - this->gaintilde_17_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_17_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_17_ramp_index = _down;
+                        this->gaintilde_17_ramp_increment = (x - this->gaintilde_17_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_17_ramp_index > 0) {
+                    this->gaintilde_17_ramp_prev += this->gaintilde_17_ramp_increment;
+                    this->gaintilde_17_ramp_index -= 1;
+                } else {
+                    this->gaintilde_17_ramp_prev = x;
+                }
+            
+                return this->gaintilde_17_ramp_prev;
+            }
+            
+            void gaintilde_17_ramp_reset() {
+                this->gaintilde_17_ramp_prev = 0;
+                this->gaintilde_17_ramp_index = 0;
+                this->gaintilde_17_ramp_increment = 0;
+                this->gaintilde_17_ramp_d_reset();
+            }
+            
+            void gaintilde_17_init() {
+                this->gaintilde_17_loginc = rnbo_log(1.072);
+                this->gaintilde_17_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_17_loginc));
+            }
+            
+            void gaintilde_17_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_17_value;
+            }
+            
+            void gaintilde_17_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_17_value_set(preset["value"]);
+            }
+            
+            void gaintilde_17_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_17_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_17_setupDone = true;
+                this->gaintilde_17_ramp_d_dspsetup();
+            }
+            
+            void lores_03_reset() {
+                this->lores_03_y_1 = 0;
+                this->lores_03_y_2 = 0;
+                this->lores_03_last_resonance = 0;
+                this->lores_03_last_frequency = 0;
+                this->lores_03_last_res_calc = 0;
+                this->lores_03_last_freq_calc = 0;
+            }
+            
+            void lores_03_dspsetup(bool force) {
+                if ((bool)(this->lores_03_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->lores_03_reset();
+                this->lores_03_setupDone = true;
+            }
+            
+            number phasor_12_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                RNBO_UNUSED(freq);
+                number pincr = 1 * this->phasor_12_ph_conv;
+            
+                if (this->phasor_12_ph_currentPhase < 0.)
+                    this->phasor_12_ph_currentPhase = 1. + this->phasor_12_ph_currentPhase;
+            
+                if (this->phasor_12_ph_currentPhase > 1.)
+                    this->phasor_12_ph_currentPhase = this->phasor_12_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_12_ph_currentPhase;
+                this->phasor_12_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_12_ph_reset() {
+                this->phasor_12_ph_currentPhase = 0;
+            }
+            
+            void phasor_12_ph_dspsetup() {
+                this->phasor_12_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_12_dspsetup(bool force) {
+                if ((bool)(this->phasor_12_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_12_conv = (number)1 / this->samplerate();
+                this->phasor_12_setupDone = true;
+                this->phasor_12_ph_dspsetup();
+            }
+            
+            void delaytilde_04_del_step() {
+                this->delaytilde_04_del_reader++;
+            
+                if (this->delaytilde_04_del_reader >= (int)(this->delaytilde_04_del_buffer->getSize()))
+                    this->delaytilde_04_del_reader = 0;
+            }
+            
+            number delaytilde_04_del_read(number size, Int interp) {
+                if (interp == 0) {
+                    number r = (int)(this->delaytilde_04_del_buffer->getSize()) + this->delaytilde_04_del_reader - ((size > this->delaytilde_04_del__maxdelay ? this->delaytilde_04_del__maxdelay : (size < (this->delaytilde_04_del_reader != this->delaytilde_04_del_writer) ? this->delaytilde_04_del_reader != this->delaytilde_04_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    long index2 = (long)(index1 + 1);
+            
+                    return this->linearinterp(frac, this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ));
+                } else if (interp == 1) {
+                    number r = (int)(this->delaytilde_04_del_buffer->getSize()) + this->delaytilde_04_del_reader - ((size > this->delaytilde_04_del__maxdelay ? this->delaytilde_04_del__maxdelay : (size < (1 + this->delaytilde_04_del_reader != this->delaytilde_04_del_writer) ? 1 + this->delaytilde_04_del_reader != this->delaytilde_04_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    Index index2 = (Index)(index1 + 1);
+                    Index index3 = (Index)(index2 + 1);
+                    Index index4 = (Index)(index3 + 1);
+            
+                    return this->cubicinterp(frac, this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index3 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index4 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ));
+                } else if (interp == 2) {
+                    number r = (int)(this->delaytilde_04_del_buffer->getSize()) + this->delaytilde_04_del_reader - ((size > this->delaytilde_04_del__maxdelay ? this->delaytilde_04_del__maxdelay : (size < (1 + this->delaytilde_04_del_reader != this->delaytilde_04_del_writer) ? 1 + this->delaytilde_04_del_reader != this->delaytilde_04_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    Index index2 = (Index)(index1 + 1);
+                    Index index3 = (Index)(index2 + 1);
+                    Index index4 = (Index)(index3 + 1);
+            
+                    return this->splineinterp(frac, this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index3 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index4 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ));
+                } else if (interp == 3) {
+                    number r = (int)(this->delaytilde_04_del_buffer->getSize()) + this->delaytilde_04_del_reader - ((size > this->delaytilde_04_del__maxdelay ? this->delaytilde_04_del__maxdelay : (size < (this->delaytilde_04_del_reader != this->delaytilde_04_del_writer) ? this->delaytilde_04_del_reader != this->delaytilde_04_del_writer : size)));
+                    long index1 = (long)(rnbo_floor(r));
+                    number frac = r - index1;
+                    Index index2 = (Index)(index1 + 1);
+            
+                    return this->cosineinterp(frac, this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ), this->delaytilde_04_del_buffer->getSample(
+                        0,
+                        (Index)((BinOpInt)((BinOpInt)index2 & (BinOpInt)this->delaytilde_04_del_wrap))
+                    ));
+                }
+            
+                number r = (int)(this->delaytilde_04_del_buffer->getSize()) + this->delaytilde_04_del_reader - ((size > this->delaytilde_04_del__maxdelay ? this->delaytilde_04_del__maxdelay : (size < (this->delaytilde_04_del_reader != this->delaytilde_04_del_writer) ? this->delaytilde_04_del_reader != this->delaytilde_04_del_writer : size)));
+                long index1 = (long)(rnbo_floor(r));
+            
+                return this->delaytilde_04_del_buffer->getSample(
+                    0,
+                    (Index)((BinOpInt)((BinOpInt)index1 & (BinOpInt)this->delaytilde_04_del_wrap))
+                );
+            }
+            
+            void delaytilde_04_del_write(number v) {
+                this->delaytilde_04_del_writer = this->delaytilde_04_del_reader;
+                this->delaytilde_04_del_buffer[(Index)this->delaytilde_04_del_writer] = v;
+            }
+            
+            number delaytilde_04_del_next(number v, int size) {
+                number effectiveSize = (size == -1 ? this->delaytilde_04_del__maxdelay : size);
+                number val = this->delaytilde_04_del_read(effectiveSize, 0);
+                this->delaytilde_04_del_write(v);
+                this->delaytilde_04_del_step();
+                return val;
+            }
+            
+            array<Index, 2> delaytilde_04_del_calcSizeInSamples() {
+                number sizeInSamples = 0;
+                Index allocatedSizeInSamples = 0;
+            
+                {
+                    sizeInSamples = this->delaytilde_04_del_evaluateSizeExpr(this->samplerate(), this->vectorsize());
+                    this->delaytilde_04_del_sizemode = 0;
+                }
+            
+                sizeInSamples = rnbo_floor(sizeInSamples);
+                sizeInSamples = this->maximum(sizeInSamples, 2);
+                allocatedSizeInSamples = (Index)(sizeInSamples);
+                allocatedSizeInSamples = nextpoweroftwo(allocatedSizeInSamples);
+                return {sizeInSamples, allocatedSizeInSamples};
+            }
+            
+            void delaytilde_04_del_init() {
+                auto result = this->delaytilde_04_del_calcSizeInSamples();
+                this->delaytilde_04_del__maxdelay = result[0];
+                Index requestedSizeInSamples = (Index)(result[1]);
+                this->delaytilde_04_del_buffer->requestSize(requestedSizeInSamples, 1);
+                this->delaytilde_04_del_wrap = requestedSizeInSamples - 1;
+            }
+            
+            void delaytilde_04_del_clear() {
+                this->delaytilde_04_del_buffer->setZero();
+            }
+            
+            void delaytilde_04_del_reset() {
+                auto result = this->delaytilde_04_del_calcSizeInSamples();
+                this->delaytilde_04_del__maxdelay = result[0];
+                Index allocatedSizeInSamples = (Index)(result[1]);
+                this->delaytilde_04_del_buffer->setSize(allocatedSizeInSamples);
+                updateDataRef(this, this->delaytilde_04_del_buffer);
+                this->delaytilde_04_del_wrap = this->delaytilde_04_del_buffer->getSize() - 1;
+                this->delaytilde_04_del_clear();
+            
+                if (this->delaytilde_04_del_reader >= this->delaytilde_04_del__maxdelay || this->delaytilde_04_del_writer >= this->delaytilde_04_del__maxdelay) {
+                    this->delaytilde_04_del_reader = 0;
+                    this->delaytilde_04_del_writer = 0;
+                }
+            }
+            
+            void delaytilde_04_del_dspsetup() {
+                this->delaytilde_04_del_reset();
+            }
+            
+            number delaytilde_04_del_evaluateSizeExpr(number samplerate, number vectorsize) {
+                RNBO_UNUSED(vectorsize);
+                RNBO_UNUSED(samplerate);
+                return 500;
+            }
+            
+            number delaytilde_04_del_size() {
+                return this->delaytilde_04_del__maxdelay;
+            }
+            
+            void delaytilde_04_dspsetup(bool force) {
+                if ((bool)(this->delaytilde_04_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->delaytilde_04_rampInSamples = (long)(this->mstosamps(50));
+                this->delaytilde_04_lastDelay = -1;
+                this->delaytilde_04_setupDone = true;
+                this->delaytilde_04_del_dspsetup();
+            }
+            
+            number cycle_tilde_08_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_08_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_08_ph_conv;
+            
+                if (this->cycle_tilde_08_ph_currentPhase < 0.)
+                    this->cycle_tilde_08_ph_currentPhase = 1. + this->cycle_tilde_08_ph_currentPhase;
+            
+                if (this->cycle_tilde_08_ph_currentPhase > 1.)
+                    this->cycle_tilde_08_ph_currentPhase = this->cycle_tilde_08_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_08_ph_currentPhase;
+                this->cycle_tilde_08_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_08_ph_reset() {
+                this->cycle_tilde_08_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_08_ph_dspsetup() {
+                this->cycle_tilde_08_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_08_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_08_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_08_phasei = 0;
+                this->cycle_tilde_08_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_08_wrap = (long)(this->cycle_tilde_08_buffer->getSize()) - 1;
+                this->cycle_tilde_08_setupDone = true;
+                this->cycle_tilde_08_ph_dspsetup();
+            }
+            
+            void cycle_tilde_08_bufferUpdated() {
+                this->cycle_tilde_08_wrap = (long)(this->cycle_tilde_08_buffer->getSize()) - 1;
+            }
+            
+            bool stackprotect_check() {
+                this->stackprotect_count++;
+            
+                if (this->stackprotect_count > 128) {
+                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
+                    return true;
+                }
+            
+                return false;
+            }
+            
+            void updateTime(MillisecondTime time) {
+                this->_currentTime = time;
+                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
+            
+                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
+                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
+            
+                if (this->sampleOffsetIntoNextAudioBuffer < 0)
+                    this->sampleOffsetIntoNextAudioBuffer = 0;
+            }
+            
+            void assign_defaults()
+            {
+                delaytilde_03_delay = 0;
+                phasor_09_freq = 2;
+                cycle_tilde_07_frequency = 0.02;
+                cycle_tilde_07_phase_offset = 0;
+                dspexpr_09_in1 = 0;
+                dspexpr_09_in2 = 0;
+                expr_34_in1 = 0;
+                expr_34_in2 = 4;
+                expr_34_out1 = 0;
+                dspexpr_10_in1 = 0;
+                dspexpr_10_in2 = 0;
+                expr_35_in1 = 0;
+                expr_35_in2 = 1;
+                expr_35_out1 = 0;
+                phasor_10_freq = 0;
+                dspexpr_11_in1 = 0;
+                dspexpr_11_in2 = 0;
+                dspexpr_12_in1 = 0;
+                dspexpr_12_in2 = 0;
+                lores_02_cutoff = 0;
+                lores_02_resonance = 0;
+                lores_02_resonance_setter(lores_02_resonance);
+                gaintilde_16_input_number = 0;
+                gaintilde_16_value = 0;
+                gaintilde_16_interp = 10;
+                receive_35_output_number = 0;
+                dspexpr_13_in1 = 0;
+                dspexpr_13_in2 = 0;
+                phasor_11_freq = 0;
+                expr_36_in1 = 0;
+                expr_36_in2 = 2;
+                expr_36_out1 = 0;
+                dspexpr_14_in1 = 0;
+                dspexpr_14_in2 = 0;
+                gaintilde_17_input_number = 0;
+                gaintilde_17_value = 0;
+                gaintilde_17_interp = 10;
+                lores_03_cutoff = 0;
+                lores_03_resonance = 0;
+                lores_03_resonance_setter(lores_03_resonance);
+                dspexpr_15_in1 = 0;
+                dspexpr_15_in2 = 0;
+                dspexpr_16_in1 = 0;
+                dspexpr_16_in2 = 0;
+                phasor_12_freq = 1;
+                delaytilde_04_delay = 0;
+                cycle_tilde_08_frequency = 0.01;
+                cycle_tilde_08_phase_offset = 0;
+                floatnum_01_input_number = 0;
+                floatnum_01_value = 0;
+                receive_36_output_number = 0;
+                _currentTime = 0;
+                audioProcessSampleCount = 0;
+                sampleOffsetIntoNextAudioBuffer = 0;
+                zeroBuffer = nullptr;
+                dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
+                signals[3] = nullptr;
+                signals[4] = nullptr;
+                signals[5] = nullptr;
+                signals[6] = nullptr;
+                signals[7] = nullptr;
+                signals[8] = nullptr;
+                didAllocateSignals = 0;
+                vs = 0;
+                maxvs = 0;
+                sr = 44100;
+                invsr = 0.00002267573696;
+                delaytilde_03_lastDelay = -1;
+                delaytilde_03_crossfadeDelay = 0;
+                delaytilde_03_ramp = 0;
+                delaytilde_03_rampInSamples = 0;
+                delaytilde_03_del__maxdelay = 0;
+                delaytilde_03_del_sizemode = 0;
+                delaytilde_03_del_wrap = 0;
+                delaytilde_03_del_reader = 0;
+                delaytilde_03_del_writer = 0;
+                delaytilde_03_setupDone = false;
+                phasor_09_sigbuf = nullptr;
+                phasor_09_lastLockedPhase = 0;
+                phasor_09_conv = 0;
+                phasor_09_ph_currentPhase = 0;
+                phasor_09_ph_conv = 0;
+                phasor_09_setupDone = false;
+                cycle_tilde_07_wrap = 0;
+                cycle_tilde_07_ph_currentPhase = 0;
+                cycle_tilde_07_ph_conv = 0;
+                cycle_tilde_07_setupDone = false;
+                phasor_10_sigbuf = nullptr;
+                phasor_10_lastLockedPhase = 0;
+                phasor_10_conv = 0;
+                phasor_10_ph_currentPhase = 0;
+                phasor_10_ph_conv = 0;
+                phasor_10_setupDone = false;
+                lores_02_setupDone = false;
+                gaintilde_16_lastValue = 0;
+                gaintilde_16_loginc = 1;
+                gaintilde_16_zval = 0;
+                gaintilde_16_ramp_d_prev = 0;
+                gaintilde_16_ramp_prev = 0;
+                gaintilde_16_ramp_index = 0;
+                gaintilde_16_ramp_increment = 0;
+                gaintilde_16_setupDone = false;
+                phasor_11_sigbuf = nullptr;
+                phasor_11_lastLockedPhase = 0;
+                phasor_11_conv = 0;
+                phasor_11_ph_currentPhase = 0;
+                phasor_11_ph_conv = 0;
+                phasor_11_setupDone = false;
+                gaintilde_17_lastValue = 0;
+                gaintilde_17_loginc = 1;
+                gaintilde_17_zval = 0;
+                gaintilde_17_ramp_d_prev = 0;
+                gaintilde_17_ramp_prev = 0;
+                gaintilde_17_ramp_index = 0;
+                gaintilde_17_ramp_increment = 0;
+                gaintilde_17_setupDone = false;
+                lores_03_setupDone = false;
+                phasor_12_sigbuf = nullptr;
+                phasor_12_lastLockedPhase = 0;
+                phasor_12_conv = 0;
+                phasor_12_ph_currentPhase = 0;
+                phasor_12_ph_conv = 0;
+                phasor_12_setupDone = false;
+                delaytilde_04_lastDelay = -1;
+                delaytilde_04_crossfadeDelay = 0;
+                delaytilde_04_ramp = 0;
+                delaytilde_04_rampInSamples = 0;
+                delaytilde_04_del__maxdelay = 0;
+                delaytilde_04_del_sizemode = 0;
+                delaytilde_04_del_wrap = 0;
+                delaytilde_04_del_reader = 0;
+                delaytilde_04_del_writer = 0;
+                delaytilde_04_setupDone = false;
+                cycle_tilde_08_wrap = 0;
+                cycle_tilde_08_ph_currentPhase = 0;
+                cycle_tilde_08_ph_conv = 0;
+                cycle_tilde_08_setupDone = false;
+                floatnum_01_stored = -50;
+                stackprotect_count = 0;
+                _voiceIndex = 0;
+                _noteNumber = 0;
+                isMuted = 1;
+                parameterOffset = 0;
+            }
+            
+            // member variables
+            
+                number delaytilde_03_delay;
+                number phasor_09_freq;
+                number cycle_tilde_07_frequency;
+                number cycle_tilde_07_phase_offset;
+                number dspexpr_09_in1;
+                number dspexpr_09_in2;
+                number expr_34_in1;
+                number expr_34_in2;
+                number expr_34_out1;
+                number dspexpr_10_in1;
+                number dspexpr_10_in2;
+                number expr_35_in1;
+                number expr_35_in2;
+                number expr_35_out1;
+                number phasor_10_freq;
+                number dspexpr_11_in1;
+                number dspexpr_11_in2;
+                number dspexpr_12_in1;
+                number dspexpr_12_in2;
+                number lores_02_cutoff;
+                number lores_02_resonance;
+                number gaintilde_16_input_number;
+                number gaintilde_16_value;
+                number gaintilde_16_interp;
+                number receive_35_output_number;
+                list receive_35_output_list;
+                number dspexpr_13_in1;
+                number dspexpr_13_in2;
+                number phasor_11_freq;
+                number expr_36_in1;
+                number expr_36_in2;
+                number expr_36_out1;
+                number dspexpr_14_in1;
+                number dspexpr_14_in2;
+                number gaintilde_17_input_number;
+                number gaintilde_17_value;
+                number gaintilde_17_interp;
+                number lores_03_cutoff;
+                number lores_03_resonance;
+                number dspexpr_15_in1;
+                number dspexpr_15_in2;
+                number dspexpr_16_in1;
+                number dspexpr_16_in2;
+                number phasor_12_freq;
+                number delaytilde_04_delay;
+                number cycle_tilde_08_frequency;
+                number cycle_tilde_08_phase_offset;
+                number floatnum_01_input_number;
+                number floatnum_01_value;
+                number receive_36_output_number;
+                list receive_36_output_list;
+                MillisecondTime _currentTime;
+                SampleIndex audioProcessSampleCount;
+                SampleIndex sampleOffsetIntoNextAudioBuffer;
+                signal zeroBuffer;
+                signal dummyBuffer;
+                SampleValue * signals[9];
+                bool didAllocateSignals;
+                Index vs;
+                Index maxvs;
+                number sr;
+                number invsr;
+                number delaytilde_03_lastDelay;
+                number delaytilde_03_crossfadeDelay;
+                number delaytilde_03_ramp;
+                long delaytilde_03_rampInSamples;
+                Float64BufferRef delaytilde_03_del_buffer;
+                Index delaytilde_03_del__maxdelay;
+                Int delaytilde_03_del_sizemode;
+                Index delaytilde_03_del_wrap;
+                Int delaytilde_03_del_reader;
+                Int delaytilde_03_del_writer;
+                bool delaytilde_03_setupDone;
+                signal phasor_09_sigbuf;
+                number phasor_09_lastLockedPhase;
+                number phasor_09_conv;
+                number phasor_09_ph_currentPhase;
+                number phasor_09_ph_conv;
+                bool phasor_09_setupDone;
+                Float64BufferRef cycle_tilde_07_buffer;
+                long cycle_tilde_07_wrap;
+                uint32_t cycle_tilde_07_phasei;
+                SampleValue cycle_tilde_07_f2i;
+                number cycle_tilde_07_ph_currentPhase;
+                number cycle_tilde_07_ph_conv;
+                bool cycle_tilde_07_setupDone;
+                signal phasor_10_sigbuf;
+                number phasor_10_lastLockedPhase;
+                number phasor_10_conv;
+                number phasor_10_ph_currentPhase;
+                number phasor_10_ph_conv;
+                bool phasor_10_setupDone;
+                number lores_02_b_0;
+                number lores_02_a_1;
+                number lores_02_a_2;
+                number lores_02_x_0;
+                number lores_02_y_1;
+                number lores_02_y_2;
+                number lores_02_last_resonance;
+                number lores_02_last_frequency;
+                number lores_02_last_res_calc;
+                number lores_02_last_freq_calc;
+                bool lores_02_setupDone;
+                number gaintilde_16_lastValue;
+                number gaintilde_16_loginc;
+                number gaintilde_16_zval;
+                number gaintilde_16_ramp_d_prev;
+                number gaintilde_16_ramp_prev;
+                number gaintilde_16_ramp_index;
+                number gaintilde_16_ramp_increment;
+                bool gaintilde_16_setupDone;
+                signal phasor_11_sigbuf;
+                number phasor_11_lastLockedPhase;
+                number phasor_11_conv;
+                number phasor_11_ph_currentPhase;
+                number phasor_11_ph_conv;
+                bool phasor_11_setupDone;
+                number gaintilde_17_lastValue;
+                number gaintilde_17_loginc;
+                number gaintilde_17_zval;
+                number gaintilde_17_ramp_d_prev;
+                number gaintilde_17_ramp_prev;
+                number gaintilde_17_ramp_index;
+                number gaintilde_17_ramp_increment;
+                bool gaintilde_17_setupDone;
+                number lores_03_b_0;
+                number lores_03_a_1;
+                number lores_03_a_2;
+                number lores_03_x_0;
+                number lores_03_y_1;
+                number lores_03_y_2;
+                number lores_03_last_resonance;
+                number lores_03_last_frequency;
+                number lores_03_last_res_calc;
+                number lores_03_last_freq_calc;
+                bool lores_03_setupDone;
+                signal phasor_12_sigbuf;
+                number phasor_12_lastLockedPhase;
+                number phasor_12_conv;
+                number phasor_12_ph_currentPhase;
+                number phasor_12_ph_conv;
+                bool phasor_12_setupDone;
+                number delaytilde_04_lastDelay;
+                number delaytilde_04_crossfadeDelay;
+                number delaytilde_04_ramp;
+                long delaytilde_04_rampInSamples;
+                Float64BufferRef delaytilde_04_del_buffer;
+                Index delaytilde_04_del__maxdelay;
+                Int delaytilde_04_del_sizemode;
+                Index delaytilde_04_del_wrap;
+                Int delaytilde_04_del_reader;
+                Int delaytilde_04_del_writer;
+                bool delaytilde_04_setupDone;
+                Float64BufferRef cycle_tilde_08_buffer;
+                long cycle_tilde_08_wrap;
+                uint32_t cycle_tilde_08_phasei;
+                SampleValue cycle_tilde_08_f2i;
+                number cycle_tilde_08_ph_currentPhase;
+                number cycle_tilde_08_ph_conv;
+                bool cycle_tilde_08_setupDone;
+                number floatnum_01_stored;
+                number stackprotect_count;
+                DataRef delaytilde_03_del_bufferobj;
+                DataRef delaytilde_04_del_bufferobj;
+                Index _voiceIndex;
+                Int _noteNumber;
+                Index isMuted;
+                ParameterIndex parameterOffset;
+            
+    };
+    
+    class RNBOSubpatcher_316 : public PatcherInterfaceImpl {
+            
+            friend class RNBOSubpatcher_324;
+            friend class rnbomatic;
+            
+            public:
+            
+            RNBOSubpatcher_316()
+            {
+            }
+            
+            ~RNBOSubpatcher_316()
+            {
+            }
+            
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            }
+            
+            rnbomatic* getTopLevelPatcher() {
+                return this->getPatcher()->getTopLevelPatcher();
+            }
+            
+            void cancelClockEvents()
+            {
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index getNumMidiInputPorts() const {
+                return 0;
+            }
+            
+            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
+            
+            Index getNumMidiOutputPorts() const {
+                return 0;
+            }
+            
+            void process(
+                const SampleValue * const* inputs,
+                Index numInputs,
+                SampleValue * const* outputs,
+                Index numOutputs,
+                Index n
+            ) {
+                RNBO_UNUSED(numInputs);
+                RNBO_UNUSED(inputs);
+                this->vs = n;
+                this->updateTime(this->getEngine()->getCurrentTime());
+                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
+            
+                this->cycle_tilde_09_perform(
+                    this->cycle_tilde_09_frequency,
+                    this->cycle_tilde_09_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->phasor_13_perform(this->phasor_13_freq, this->signals[1], n);
+                this->signaladder_09_perform(this->signals[1], this->signals[0], this->signals[0], n);
+                this->gaintilde_18_perform(this->signals[0], out1, n);
+                this->stackprotect_perform(n);
+                this->audioProcessSampleCount += this->vs;
+            }
+            
+            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
+                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 2; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_13_sigbuf = resizeSignal(this->phasor_13_sigbuf, this->maxvs, maxBlockSize);
+                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
+                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
+                    this->didAllocateSignals = true;
+                }
+            
+                const bool sampleRateChanged = sampleRate != this->sr;
+                const bool maxvsChanged = maxBlockSize != this->maxvs;
+                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
+            
+                if (sampleRateChanged || maxvsChanged) {
+                    this->vs = maxBlockSize;
+                    this->maxvs = maxBlockSize;
+                    this->sr = sampleRate;
+                    this->invsr = 1 / sampleRate;
+                }
+            
+                this->cycle_tilde_09_dspsetup(forceDSPSetup);
+                this->phasor_13_dspsetup(forceDSPSetup);
+                this->gaintilde_18_dspsetup(forceDSPSetup);
+            
+                if (sampleRateChanged)
+                    this->onSampleRateChanged(sampleRate);
+            }
+            
+            void setProbingTarget(MessageTag id) {
+                switch (id) {
+                default:
+                    {
+                    this->setProbingIndex(-1);
+                    break;
+                    }
+                }
+            }
+            
+            void setProbingIndex(ProbingIndex ) {}
+            
+            Index getProbingChannels(MessageTag outletId) const {
+                RNBO_UNUSED(outletId);
+                return 0;
+            }
+            
+            Index getIsMuted()  {
+                return this->isMuted;
+            }
+            
+            void setIsMuted(Index v)  {
+                this->isMuted = v;
+            }
+            
+            Index getPatcherSerial() const {
+                return 0;
+            }
+            
+            void getState(PatcherStateInterface& ) {}
+            
+            void setState() {}
+            
+            void getPreset(PatcherStateInterface& ) {}
+            
+            void processTempoEvent(MillisecondTime , Tempo ) {}
+            
+            void processTransportEvent(MillisecondTime , TransportState ) {}
+            
+            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
+            
+            void onSampleRateChanged(double ) {}
+            
+            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
+            
+            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
+            
+            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValue(index, value, time);
+            }
+            
+            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
+                this->setParameterValue(index, this->getParameterValue(index), time);
+            }
+            
+            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValueNormalized(index, value, time);
+            }
+            
+            ParameterValue getParameterValue(ParameterIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return 0;
+                    }
+                }
+            }
+            
+            ParameterIndex getNumSignalInParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumSignalOutParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumParameters() const {
+                return 0;
+            }
+            
+            ConstCharPointer getParameterName(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            ConstCharPointer getParameterId(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
+            
+            void sendParameter(ParameterIndex index, bool ignoreValue) {
+                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
+            }
+            
+            void setParameterOffset(ParameterIndex offset) {
+                this->parameterOffset = offset;
+            }
+            
+            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
+                if (steps == 1) {
+                    if (normalizedValue > 0) {
+                        normalizedValue = 1.;
+                    }
+                } else {
+                    ParameterValue oneStep = (number)1. / (steps - 1);
+                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
+                    normalizedValue = numberOfSteps * oneStep;
+                }
+            
+                return normalizedValue;
+            }
+            
+            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+            
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            void scheduleParamInit(ParameterIndex index, Index order) {
+                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
+            }
+            
+            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
+            
+            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
+            
+            void processOutletEvent(
+                EngineLink* sender,
+                OutletIndex index,
+                ParameterValue value,
+                MillisecondTime time
+            ) {
+                this->updateTime(time);
+                this->processOutletAtCurrentTime(sender, index, value);
+            }
+            
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/capricorn/gain~_obj-17") == objectId)
+                        this->gaintilde_18_valin_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
+            
+            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
+            
+            MessageTagInfo resolveTag(MessageTag tag) const {
+                switch (tag) {
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/capricorn/gain~_obj-17"):
+                    {
+                    return "constellation[1]/capricorn/gain~_obj-17";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                }
+            
+                return nullptr;
+            }
+            
+            DataRef* getDataRef(DataRefIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return nullptr;
+                    }
+                }
+            }
+            
+            DataRefIndex getNumDataRefs() const {
+                return 0;
+            }
+            
+            void fillDataRef(DataRefIndex , DataRef& ) {}
+            
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_09_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_09_bufferUpdated();
+                }
+            }
+            
+            void initialize() {
+                this->assign_defaults();
+                this->setState();
+                this->cycle_tilde_09_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+            }
+            
+            protected:
+            
+            void gaintilde_18_valin_set(number v) {
+                this->gaintilde_18_value_set(v);
+            }
+            
+            number msToSamps(MillisecondTime ms, number sampleRate) {
+                return ms * sampleRate * 0.001;
+            }
+            
+            MillisecondTime sampsToMs(SampleIndex samps) {
+                return samps * (this->invsr * 1000);
+            }
+            
+            Index getMaxBlockSize() const {
+                return this->maxvs;
+            }
+            
+            number getSampleRate() const {
+                return this->sr;
+            }
+            
+            bool hasFixedVectorSize() const {
+                return false;
+            }
+            
+            Index getNumInputChannels() const {
+                return 0;
+            }
+            
+            Index getNumOutputChannels() const {
+                return 1;
+            }
+            
+            void initializeObjects() {
+                this->gaintilde_18_init();
+            }
+            
+            void sendOutlet(OutletIndex index, ParameterValue value) {
+                this->getEngine()->sendOutlet(this, index, value);
+            }
+            
+            void startup() {}
+            
+            void allocateDataRefs() {
+                this->cycle_tilde_09_buffer->requestSize(16384, 1);
+                this->cycle_tilde_09_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_09_buffer = this->cycle_tilde_09_buffer->allocateIfNeeded();
+            }
+            
+            void phasor_13_freq_set(number v) {
+                this->phasor_13_freq = v;
+            }
+            
+            void expr_38_out1_set(number v) {
+                this->expr_38_out1 = v;
+                this->phasor_13_freq_set(this->expr_38_out1);
+            }
+            
+            void expr_38_in1_set(number in1) {
+                this->expr_38_in1 = in1;
+                this->expr_38_out1_set(this->expr_38_in1 * this->expr_38_in2);//#map:constellation[1]/capricorn/*_obj-16:1
+            }
+            
+            void cycle_tilde_09_frequency_set(number v) {
+                this->cycle_tilde_09_frequency = v;
+            }
+            
+            void receive_38_output_number_set(number v) {
+                this->receive_38_output_number = v;
+                this->expr_38_in1_set(v);
+                this->cycle_tilde_09_frequency_set(v);
+            }
+            
+            void gaintilde_18_outval_set(number ) {}
+            
+            void gaintilde_18_value_set(number v) {
+                this->gaintilde_18_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/capricorn/gain~_obj-17"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_18_outval_set(value);
+            }
+            
+            void gaintilde_18_input_number_set(number v) {
+                this->gaintilde_18_input_number = v;
+            
+                this->gaintilde_18_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_37_out1_set(number v) {
+                this->expr_37_out1 = v;
+                this->gaintilde_18_input_number_set(this->expr_37_out1);
+            }
+            
+            void expr_37_in1_set(number in1) {
+                this->expr_37_in1 = in1;
+                this->expr_37_out1_set(this->expr_37_in1 - this->expr_37_in2);//#map:constellation[1]/capricorn/-_obj-18:1
+            }
+            
+            void receive_37_output_number_set(number v) {
+                this->receive_37_output_number = v;
+                this->expr_37_in1_set(v);
+            }
+            
+            void cycle_tilde_09_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_09_f2i = this->cycle_tilde_09_f2i;
+                auto __cycle_tilde_09_buffer = this->cycle_tilde_09_buffer;
+                auto __cycle_tilde_09_phasei = this->cycle_tilde_09_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_09_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_09_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_09_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency * __cycle_tilde_09_f2i));
+                            __cycle_tilde_09_phasei = uint32_add(__cycle_tilde_09_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_09_phasei = __cycle_tilde_09_phasei;
+            }
+            
+            void phasor_13_perform(number freq, SampleValue * out, Index n) {
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_13_ph_next(freq, -1);
+                    this->phasor_13_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void signaladder_09_perform(
+                const SampleValue * in1,
+                const SampleValue * in2,
+                SampleValue * out,
+                Index n
+            ) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out[(Index)i] = in1[(Index)i] + in2[(Index)i];
+                }
+            }
+            
+            void gaintilde_18_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_18_interp = this->gaintilde_18_interp;
+                auto __gaintilde_18_loginc = this->gaintilde_18_loginc;
+                auto __gaintilde_18_zval = this->gaintilde_18_zval;
+                auto __gaintilde_18_value = this->gaintilde_18_value;
+                number mult = (__gaintilde_18_value <= 0 ? 0. : __gaintilde_18_zval * rnbo_exp(__gaintilde_18_value * __gaintilde_18_loginc));
+                auto iv = this->mstosamps(__gaintilde_18_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_18_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void stackprotect_perform(Index n) {
+                RNBO_UNUSED(n);
+                auto __stackprotect_count = this->stackprotect_count;
+                __stackprotect_count = 0;
+                this->stackprotect_count = __stackprotect_count;
+            }
+            
+            number cycle_tilde_09_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_09_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_09_ph_conv;
+            
+                if (this->cycle_tilde_09_ph_currentPhase < 0.)
+                    this->cycle_tilde_09_ph_currentPhase = 1. + this->cycle_tilde_09_ph_currentPhase;
+            
+                if (this->cycle_tilde_09_ph_currentPhase > 1.)
+                    this->cycle_tilde_09_ph_currentPhase = this->cycle_tilde_09_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_09_ph_currentPhase;
+                this->cycle_tilde_09_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_09_ph_reset() {
+                this->cycle_tilde_09_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_09_ph_dspsetup() {
+                this->cycle_tilde_09_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_09_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_09_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_09_phasei = 0;
+                this->cycle_tilde_09_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_09_wrap = (long)(this->cycle_tilde_09_buffer->getSize()) - 1;
+                this->cycle_tilde_09_setupDone = true;
+                this->cycle_tilde_09_ph_dspsetup();
+            }
+            
+            void cycle_tilde_09_bufferUpdated() {
+                this->cycle_tilde_09_wrap = (long)(this->cycle_tilde_09_buffer->getSize()) - 1;
+            }
+            
+            number gaintilde_18_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_18_ramp_d_prev);
+                this->gaintilde_18_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_18_ramp_d_dspsetup() {
+                this->gaintilde_18_ramp_d_reset();
+            }
+            
+            void gaintilde_18_ramp_d_reset() {
+                this->gaintilde_18_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_18_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_18_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_18_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_18_ramp_index = _up;
+                        this->gaintilde_18_ramp_increment = (x - this->gaintilde_18_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_18_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_18_ramp_index = _down;
+                        this->gaintilde_18_ramp_increment = (x - this->gaintilde_18_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_18_ramp_index > 0) {
+                    this->gaintilde_18_ramp_prev += this->gaintilde_18_ramp_increment;
+                    this->gaintilde_18_ramp_index -= 1;
+                } else {
+                    this->gaintilde_18_ramp_prev = x;
+                }
+            
+                return this->gaintilde_18_ramp_prev;
+            }
+            
+            void gaintilde_18_ramp_reset() {
+                this->gaintilde_18_ramp_prev = 0;
+                this->gaintilde_18_ramp_index = 0;
+                this->gaintilde_18_ramp_increment = 0;
+                this->gaintilde_18_ramp_d_reset();
+            }
+            
+            void gaintilde_18_init() {
+                this->gaintilde_18_loginc = rnbo_log(1.072);
+                this->gaintilde_18_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_18_loginc));
+            }
+            
+            void gaintilde_18_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_18_value;
+            }
+            
+            void gaintilde_18_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_18_value_set(preset["value"]);
+            }
+            
+            void gaintilde_18_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_18_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_18_setupDone = true;
+                this->gaintilde_18_ramp_d_dspsetup();
+            }
+            
+            number phasor_13_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                number pincr = freq * this->phasor_13_ph_conv;
+            
+                if (this->phasor_13_ph_currentPhase < 0.)
+                    this->phasor_13_ph_currentPhase = 1. + this->phasor_13_ph_currentPhase;
+            
+                if (this->phasor_13_ph_currentPhase > 1.)
+                    this->phasor_13_ph_currentPhase = this->phasor_13_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_13_ph_currentPhase;
+                this->phasor_13_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_13_ph_reset() {
+                this->phasor_13_ph_currentPhase = 0;
+            }
+            
+            void phasor_13_ph_dspsetup() {
+                this->phasor_13_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_13_dspsetup(bool force) {
+                if ((bool)(this->phasor_13_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_13_conv = (number)1 / this->samplerate();
+                this->phasor_13_setupDone = true;
+                this->phasor_13_ph_dspsetup();
+            }
+            
+            bool stackprotect_check() {
+                this->stackprotect_count++;
+            
+                if (this->stackprotect_count > 128) {
+                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
+                    return true;
+                }
+            
+                return false;
+            }
+            
+            void updateTime(MillisecondTime time) {
+                this->_currentTime = time;
+                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
+            
+                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
+                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
+            
+                if (this->sampleOffsetIntoNextAudioBuffer < 0)
+                    this->sampleOffsetIntoNextAudioBuffer = 0;
+            }
+            
+            void assign_defaults()
+            {
+                receive_37_output_number = 0;
+                expr_37_in1 = 0;
+                expr_37_in2 = 20;
+                expr_37_out1 = 0;
+                cycle_tilde_09_frequency = 0;
+                cycle_tilde_09_phase_offset = 0;
+                receive_38_output_number = 0;
+                gaintilde_18_input_number = 0;
+                gaintilde_18_value = 0;
+                gaintilde_18_interp = 10;
+                expr_38_in1 = 0;
+                expr_38_in2 = 1.498307;
+                expr_38_out1 = 0;
+                phasor_13_freq = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
@@ -10942,20 +17503,24 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
-                gaintilde_12_lastValue = 0;
-                gaintilde_12_loginc = 1;
-                gaintilde_12_zval = 0;
-                gaintilde_12_ramp_d_prev = 0;
-                gaintilde_12_ramp_prev = 0;
-                gaintilde_12_ramp_index = 0;
-                gaintilde_12_ramp_increment = 0;
-                gaintilde_12_setupDone = false;
-                phasor_07_sigbuf = nullptr;
-                phasor_07_lastLockedPhase = 0;
-                phasor_07_conv = 0;
-                phasor_07_ph_currentPhase = 0;
-                phasor_07_ph_conv = 0;
-                phasor_07_setupDone = false;
+                cycle_tilde_09_wrap = 0;
+                cycle_tilde_09_ph_currentPhase = 0;
+                cycle_tilde_09_ph_conv = 0;
+                cycle_tilde_09_setupDone = false;
+                gaintilde_18_lastValue = 0;
+                gaintilde_18_loginc = 1;
+                gaintilde_18_zval = 0;
+                gaintilde_18_ramp_d_prev = 0;
+                gaintilde_18_ramp_prev = 0;
+                gaintilde_18_ramp_index = 0;
+                gaintilde_18_ramp_increment = 0;
+                gaintilde_18_setupDone = false;
+                phasor_13_sigbuf = nullptr;
+                phasor_13_lastLockedPhase = 0;
+                phasor_13_conv = 0;
+                phasor_13_ph_currentPhase = 0;
+                phasor_13_ph_conv = 0;
+                phasor_13_setupDone = false;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -10965,17 +17530,22 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             // member variables
             
-                number gaintilde_12_input_number;
-                number gaintilde_12_value;
-                number gaintilde_12_interp;
-                number receive_23_output_number;
-                list receive_23_output_list;
-                number triangle_tilde_01_phase;
-                number triangle_tilde_01_duty;
-                number phasor_07_freq;
-                number expr_24_in1;
-                number expr_24_in2;
-                number expr_24_out1;
+                number receive_37_output_number;
+                list receive_37_output_list;
+                number expr_37_in1;
+                number expr_37_in2;
+                number expr_37_out1;
+                number cycle_tilde_09_frequency;
+                number cycle_tilde_09_phase_offset;
+                number receive_38_output_number;
+                list receive_38_output_list;
+                number gaintilde_18_input_number;
+                number gaintilde_18_value;
+                number gaintilde_18_interp;
+                number expr_38_in1;
+                number expr_38_in2;
+                number expr_38_out1;
+                number phasor_13_freq;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
@@ -10987,20 +17557,27 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 Index maxvs;
                 number sr;
                 number invsr;
-                number gaintilde_12_lastValue;
-                number gaintilde_12_loginc;
-                number gaintilde_12_zval;
-                number gaintilde_12_ramp_d_prev;
-                number gaintilde_12_ramp_prev;
-                number gaintilde_12_ramp_index;
-                number gaintilde_12_ramp_increment;
-                bool gaintilde_12_setupDone;
-                signal phasor_07_sigbuf;
-                number phasor_07_lastLockedPhase;
-                number phasor_07_conv;
-                number phasor_07_ph_currentPhase;
-                number phasor_07_ph_conv;
-                bool phasor_07_setupDone;
+                Float64BufferRef cycle_tilde_09_buffer;
+                long cycle_tilde_09_wrap;
+                uint32_t cycle_tilde_09_phasei;
+                SampleValue cycle_tilde_09_f2i;
+                number cycle_tilde_09_ph_currentPhase;
+                number cycle_tilde_09_ph_conv;
+                bool cycle_tilde_09_setupDone;
+                number gaintilde_18_lastValue;
+                number gaintilde_18_loginc;
+                number gaintilde_18_zval;
+                number gaintilde_18_ramp_d_prev;
+                number gaintilde_18_ramp_prev;
+                number gaintilde_18_ramp_index;
+                number gaintilde_18_ramp_increment;
+                bool gaintilde_18_setupDone;
+                signal phasor_13_sigbuf;
+                number phasor_13_lastLockedPhase;
+                number phasor_13_conv;
+                number phasor_13_ph_currentPhase;
+                number phasor_13_ph_conv;
+                bool phasor_13_setupDone;
                 number stackprotect_count;
                 Index _voiceIndex;
                 Int _noteNumber;
@@ -11009,23 +17586,23 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_246 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_317 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_256;
+            friend class RNBOSubpatcher_324;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_246()
+            RNBOSubpatcher_317()
             {
             }
             
-            ~RNBOSubpatcher_246()
+            ~RNBOSubpatcher_317()
             {
             }
             
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -11034,6 +17611,65 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void cancelClockEvents()
             {
+                getEngine()->flushClockEvents(this, -1987572531, false);
+                getEngine()->flushClockEvents(this, 1935387534, false);
+                getEngine()->flushClockEvents(this, -1468824490, false);
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index vectorsize() {
+                return this->vs;
+            }
+            
+            MillisecondTime currenttime() {
+                return this->_currentTime;
+            }
+            
+            Index voice() {
+                return this->_voiceIndex;
+            }
+            
+            number random(number low, number high) {
+                number range = high - low;
+                return rand01() * range + low;
             }
             
             Index getNumMidiInputPorts() const {
@@ -11058,13 +17694,52 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->vs = n;
                 this->updateTime(this->getEngine()->getCurrentTime());
                 SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_03_perform(this->intnum_tilde_03_value, out1, n);
+                this->phasor_14_perform(this->phasor_14_freq, this->signals[0], n);
+                this->dspexpr_17_perform(this->dspexpr_17_in1, this->signals[0], this->signals[1], n);
+            
+                this->cycle_tilde_10_perform(
+                    this->signals[1],
+                    this->cycle_tilde_10_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->lores_04_perform(
+                    this->lores_04_cutoff,
+                    this->lores_04_resonance,
+                    this->signals[0],
+                    this->signals[1],
+                    n
+                );
+            
+                this->adsr_08_perform(
+                    this->adsr_08_attack,
+                    this->adsr_08_decay,
+                    this->adsr_08_sustain,
+                    this->adsr_08_release,
+                    this->zeroBuffer,
+                    this->signals[0],
+                    n
+                );
+            
+                this->dspexpr_18_perform(this->signals[1], this->signals[0], this->signals[2], n);
+                this->gaintilde_19_perform(this->signals[2], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
             }
             
             void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
                 if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 3; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_14_sigbuf = resizeSignal(this->phasor_14_sigbuf, this->maxvs, maxBlockSize);
+                    this->adsr_08_triggerBuf = resizeSignal(this->adsr_08_triggerBuf, this->maxvs, maxBlockSize);
+                    this->adsr_08_triggerValueBuf = resizeSignal(this->adsr_08_triggerValueBuf, this->maxvs, maxBlockSize);
                     this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
                     this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
                     this->didAllocateSignals = true;
@@ -11081,7 +17756,1591 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->invsr = 1 / sampleRate;
                 }
             
-                RNBO_UNUSED(forceDSPSetup);
+                this->phasor_14_dspsetup(forceDSPSetup);
+                this->cycle_tilde_10_dspsetup(forceDSPSetup);
+                this->lores_04_dspsetup(forceDSPSetup);
+                this->adsr_08_dspsetup(forceDSPSetup);
+                this->gaintilde_19_dspsetup(forceDSPSetup);
+            
+                if (sampleRateChanged)
+                    this->onSampleRateChanged(sampleRate);
+            }
+            
+            void setProbingTarget(MessageTag id) {
+                switch (id) {
+                default:
+                    {
+                    this->setProbingIndex(-1);
+                    break;
+                    }
+                }
+            }
+            
+            void setProbingIndex(ProbingIndex ) {}
+            
+            Index getProbingChannels(MessageTag outletId) const {
+                RNBO_UNUSED(outletId);
+                return 0;
+            }
+            
+            Index getIsMuted()  {
+                return this->isMuted;
+            }
+            
+            void setIsMuted(Index v)  {
+                this->isMuted = v;
+            }
+            
+            Index getPatcherSerial() const {
+                return 0;
+            }
+            
+            void getState(PatcherStateInterface& ) {}
+            
+            void setState() {}
+            
+            void getPreset(PatcherStateInterface& ) {}
+            
+            void processTempoEvent(MillisecondTime , Tempo ) {}
+            
+            void processTransportEvent(MillisecondTime time, TransportState state) {
+                this->updateTime(time);
+                this->metro_09_onTransportChanged(state);
+                this->metro_10_onTransportChanged(state);
+            }
+            
+            void processBeatTimeEvent(MillisecondTime time, BeatTime beattime) {
+                this->updateTime(time);
+                this->metro_09_onBeatTimeChanged(beattime);
+                this->metro_10_onBeatTimeChanged(beattime);
+            }
+            
+            void onSampleRateChanged(double ) {}
+            
+            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
+            
+            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
+            
+            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValue(index, value, time);
+            }
+            
+            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
+                this->setParameterValue(index, this->getParameterValue(index), time);
+            }
+            
+            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
+                this->setParameterValueNormalized(index, value, time);
+            }
+            
+            ParameterValue getParameterValue(ParameterIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return 0;
+                    }
+                }
+            }
+            
+            ParameterIndex getNumSignalInParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumSignalOutParameters() const {
+                return 0;
+            }
+            
+            ParameterIndex getNumParameters() const {
+                return 0;
+            }
+            
+            ConstCharPointer getParameterName(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            ConstCharPointer getParameterId(ParameterIndex index) const {
+                switch (index) {
+                default:
+                    {
+                    return "bogus";
+                    }
+                }
+            }
+            
+            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
+            
+            void sendParameter(ParameterIndex index, bool ignoreValue) {
+                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
+            }
+            
+            void setParameterOffset(ParameterIndex offset) {
+                this->parameterOffset = offset;
+            }
+            
+            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
+                if (steps == 1) {
+                    if (normalizedValue > 0) {
+                        normalizedValue = 1.;
+                    }
+                } else {
+                    ParameterValue oneStep = (number)1. / (steps - 1);
+                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
+                    normalizedValue = numberOfSteps * oneStep;
+                }
+            
+                return normalizedValue;
+            }
+            
+            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
+                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
+            
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
+                switch (index) {
+                default:
+                    {
+                    return value;
+                    }
+                }
+            }
+            
+            void scheduleParamInit(ParameterIndex index, Index order) {
+                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
+            }
+            
+            void processClockEvent(MillisecondTime time, ClockId index, bool hasValue, ParameterValue value) {
+                RNBO_UNUSED(value);
+                RNBO_UNUSED(hasValue);
+                this->updateTime(time);
+            
+                switch (index) {
+                case -1987572531:
+                    {
+                    this->metro_09_tick_bang();
+                    break;
+                    }
+                case 1935387534:
+                    {
+                    this->metro_10_tick_bang();
+                    break;
+                    }
+                case -1468824490:
+                    {
+                    this->adsr_08_mute_bang();
+                    break;
+                    }
+                }
+            }
+            
+            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
+            
+            void processOutletEvent(
+                EngineLink* sender,
+                OutletIndex index,
+                ParameterValue value,
+                MillisecondTime time
+            ) {
+                this->updateTime(time);
+                this->processOutletAtCurrentTime(sender, index, value);
+            }
+            
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/cancer/gain~_obj-7") == objectId)
+                        this->gaintilde_19_valin_set(payload);
+            
+                    if (TAG("constellation[1]/cancer/toggle_obj-18") == objectId)
+                        this->toggle_07_valin_set(payload);
+            
+                    if (TAG("constellation[1]/cancer/number_obj-25") == objectId)
+                        this->numberobj_11_valin_set(payload);
+            
+                    break;
+                    }
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/cancer/message_obj-12") == objectId)
+                        this->message_10_listin_number_set(payload);
+            
+                    break;
+                    }
+                case TAG("format"):
+                    {
+                    if (TAG("constellation[1]/cancer/number_obj-25") == objectId)
+                        this->numberobj_11_format_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processListMessage(
+                MessageTag tag,
+                MessageTag objectId,
+                MillisecondTime time,
+                const list& payload
+            ) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/cancer/message_obj-12") == objectId)
+                        this->message_10_listin_list_set(payload);
+            
+                    break;
+                    }
+                }
+            }
+            
+            void processBangMessage(MessageTag tag, MessageTag objectId, MillisecondTime time) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("listin"):
+                    {
+                    if (TAG("constellation[1]/cancer/message_obj-12") == objectId)
+                        this->message_10_listin_bang_bang();
+            
+                    break;
+                    }
+                case TAG("bangin"):
+                    {
+                    if (TAG("constellation[1]/cancer/button_obj-21") == objectId)
+                        this->button_09_bangin_bang();
+            
+                    if (TAG("constellation[1]/cancer/button_obj-29") == objectId)
+                        this->button_10_bangin_bang();
+            
+                    break;
+                    }
+                }
+            }
+            
+            MessageTagInfo resolveTag(MessageTag tag) const {
+                switch (tag) {
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/cancer/gain~_obj-7"):
+                    {
+                    return "constellation[1]/cancer/gain~_obj-7";
+                    }
+                case TAG("listout"):
+                    {
+                    return "listout";
+                    }
+                case TAG("constellation[1]/cancer/message_obj-12"):
+                    {
+                    return "constellation[1]/cancer/message_obj-12";
+                    }
+                case TAG("constellation[1]/cancer/toggle_obj-18"):
+                    {
+                    return "constellation[1]/cancer/toggle_obj-18";
+                    }
+                case TAG("bangout"):
+                    {
+                    return "bangout";
+                    }
+                case TAG("constellation[1]/cancer/button_obj-21"):
+                    {
+                    return "constellation[1]/cancer/button_obj-21";
+                    }
+                case TAG("constellation[1]/cancer/button_obj-29"):
+                    {
+                    return "constellation[1]/cancer/button_obj-29";
+                    }
+                case TAG("constellation[1]/cancer/number_obj-25"):
+                    {
+                    return "constellation[1]/cancer/number_obj-25";
+                    }
+                case TAG("setup"):
+                    {
+                    return "setup";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                case TAG("listin"):
+                    {
+                    return "listin";
+                    }
+                case TAG("bangin"):
+                    {
+                    return "bangin";
+                    }
+                case TAG("format"):
+                    {
+                    return "format";
+                    }
+                }
+            
+                return nullptr;
+            }
+            
+            DataRef* getDataRef(DataRefIndex index)  {
+                switch (index) {
+                default:
+                    {
+                    return nullptr;
+                    }
+                }
+            }
+            
+            DataRefIndex getNumDataRefs() const {
+                return 0;
+            }
+            
+            void fillDataRef(DataRefIndex , DataRef& ) {}
+            
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_10_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_10_bufferUpdated();
+                }
+            }
+            
+            void initialize() {
+                this->assign_defaults();
+                this->setState();
+                this->cycle_tilde_10_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+            }
+            
+            protected:
+            
+            void gaintilde_19_valin_set(number v) {
+                this->gaintilde_19_value_set(v);
+            }
+            
+            void message_10_listin_list_set(const list& v) {
+                this->message_10_set_set(v);
+            }
+            
+            void message_10_listin_number_set(number v) {
+                this->message_10_set_set(v);
+            }
+            
+            void message_10_listin_bang_bang() {
+                this->message_10_trigger_bang();
+            }
+            
+            void toggle_07_valin_set(number v) {
+                this->toggle_07_value_number_set(v);
+            }
+            
+            void metro_09_tick_bang() {
+                this->metro_09_tickout_bang();
+                this->getEngine()->flushClockEvents(this, -1987572531, false);;
+            
+                if ((bool)(this->metro_09_on)) {
+                    this->metro_09_last = this->currenttime();
+            
+                    {
+                        this->metro_09_next = this->metro_09_last + this->metro_09_interval;
+                        this->getEngine()->scheduleClockEvent(this, -1987572531, this->metro_09_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void metro_10_tick_bang() {
+                this->metro_10_tickout_bang();
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(this->metro_10_on)) {
+                    this->metro_10_last = this->currenttime();
+            
+                    {
+                        this->metro_10_next = this->metro_10_last + this->metro_10_interval;
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_10_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void button_09_bangin_bang() {
+                this->button_09_bangval_bang();
+            }
+            
+            void button_10_bangin_bang() {
+                this->button_10_bangval_bang();
+            }
+            
+            void numberobj_11_valin_set(number v) {
+                this->numberobj_11_value_set(v);
+            }
+            
+            void numberobj_11_format_set(number v) {
+                this->numberobj_11_currentFormat = trunc((v > 6 ? 6 : (v < 0 ? 0 : v)));
+            }
+            
+            void adsr_08_mute_bang() {}
+            
+            number msToSamps(MillisecondTime ms, number sampleRate) {
+                return ms * sampleRate * 0.001;
+            }
+            
+            MillisecondTime sampsToMs(SampleIndex samps) {
+                return samps * (this->invsr * 1000);
+            }
+            
+            Index getMaxBlockSize() const {
+                return this->maxvs;
+            }
+            
+            number getSampleRate() const {
+                return this->sr;
+            }
+            
+            bool hasFixedVectorSize() const {
+                return false;
+            }
+            
+            Index getNumInputChannels() const {
+                return 0;
+            }
+            
+            Index getNumOutputChannels() const {
+                return 1;
+            }
+            
+            void initializeObjects() {
+                this->gaintilde_19_init();
+                this->message_10_init();
+                this->random_06_nz_init();
+                this->numberobj_11_init();
+            }
+            
+            void sendOutlet(OutletIndex index, ParameterValue value) {
+                this->getEngine()->sendOutlet(this, index, value);
+            }
+            
+            void startup() {
+                this->updateTime(this->getEngine()->getCurrentTime());
+            
+                if ((bool)(this->metro_09_on))
+                    this->metro_09_on_set(1);
+            
+                if ((bool)(this->metro_10_on))
+                    this->metro_10_on_set(1);
+            }
+            
+            void allocateDataRefs() {
+                this->cycle_tilde_10_buffer->requestSize(16384, 1);
+                this->cycle_tilde_10_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_10_buffer = this->cycle_tilde_10_buffer->allocateIfNeeded();
+            }
+            
+            void metro_10_on_set(number v) {
+                this->metro_10_on = v;
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void metro_09_on_set(number v) {
+                this->metro_09_on = v;
+                this->getEngine()->flushClockEvents(this, -1987572531, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, -1987572531, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_07_output_set(number v) {
+                this->metro_10_on_set(v);
+                this->metro_09_on_set(v);
+            }
+            
+            void toggle_07_value_number_set(number v) {
+                this->toggle_07_value_number_setter(v);
+                v = this->toggle_07_value_number;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/cancer/toggle_obj-18"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->toggle_07_output_set(v);
+            }
+            
+            void receive_41_output_number_set(number v) {
+                this->receive_41_output_number = v;
+                this->toggle_07_value_number_set(v);
+            }
+            
+            void dspexpr_17_in1_set(number v) {
+                this->dspexpr_17_in1 = v;
+            }
+            
+            void receive_40_output_number_set(number v) {
+                this->receive_40_output_number = v;
+                this->dspexpr_17_in1_set(v);
+            }
+            
+            void gaintilde_19_outval_set(number ) {}
+            
+            void gaintilde_19_value_set(number v) {
+                this->gaintilde_19_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/cancer/gain~_obj-7"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_19_outval_set(value);
+            }
+            
+            void gaintilde_19_input_number_set(number v) {
+                this->gaintilde_19_input_number = v;
+            
+                this->gaintilde_19_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void receive_39_output_number_set(number v) {
+                this->receive_39_output_number = v;
+                this->gaintilde_19_input_number_set(v);
+            }
+            
+            void message_10_set_set(const list& v) {
+                this->message_10_set = jsCreateListCopy(v);
+            
+                this->getEngine()->sendListMessage(
+                    TAG("listout"),
+                    TAG("constellation[1]/cancer/message_obj-12"),
+                    v,
+                    this->_currentTime
+                );
+            }
+            
+            void adsr_08_trigger_number_set(number v) {
+                this->adsr_08_trigger_number = v;
+            
+                if (v != 0)
+                    this->adsr_08_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
+            
+                for (number i = this->sampleOffsetIntoNextAudioBuffer; i < this->vectorsize(); i++) {
+                    this->adsr_08_triggerValueBuf[(Index)i] = v;
+                }
+            }
+            
+            void message_10_out_set(const list& v) {
+                {
+                    number converted = (v->length > 0 ? v[0] : 0);
+                    this->adsr_08_trigger_number_set(converted);
+                }
+            }
+            
+            void message_10_trigger_bang() {
+                this->message_10_out_set(this->message_10_set);
+            }
+            
+            void button_09_output_bang() {
+                this->message_10_trigger_bang();
+            }
+            
+            void button_09_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/cancer/button_obj-21"),
+                    this->_currentTime
+                );;
+            
+                this->button_09_output_bang();
+            }
+            
+            void metro_09_tickout_bang() {
+                this->button_09_bangval_bang();
+            }
+            
+            void numberobj_11_output_set(number ) {}
+            
+            void numberobj_11_value_set(number v) {
+                this->numberobj_11_value_setter(v);
+                v = this->numberobj_11_value;
+                number localvalue = v;
+            
+                if (this->numberobj_11_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/cancer/number_obj-25"),
+                    localvalue,
+                    this->_currentTime
+                );
+            
+                this->numberobj_11_output_set(localvalue);
+            }
+            
+            void metro_09_interval_set(number v) {
+                this->metro_09_interval_setter(v);
+                v = this->metro_09_interval;
+            }
+            
+            void random_06_result_set(number v) {
+                this->numberobj_11_value_set(v);
+                this->metro_09_interval_set(v);
+            }
+            
+            void random_06_trigger_bang() {
+                {
+                    this->random_06_result_set(this->random(0, this->random_06_limit));
+                }
+            }
+            
+            void button_10_output_bang() {
+                this->random_06_trigger_bang();
+            }
+            
+            void button_10_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/cancer/button_obj-29"),
+                    this->_currentTime
+                );;
+            
+                this->button_10_output_bang();
+            }
+            
+            void metro_10_tickout_bang() {
+                this->button_10_bangval_bang();
+            }
+            
+            void phasor_14_perform(number freq, SampleValue * out, Index n) {
+                RNBO_UNUSED(freq);
+            
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_14_ph_next(0.05, -1);
+                    this->phasor_14_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void dspexpr_17_perform(number in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1 * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void cycle_tilde_10_perform(
+                const Sample * frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_10_f2i = this->cycle_tilde_10_f2i;
+                auto __cycle_tilde_10_buffer = this->cycle_tilde_10_buffer;
+                auto __cycle_tilde_10_phasei = this->cycle_tilde_10_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_10_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_10_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_10_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency[(Index)i] * __cycle_tilde_10_f2i));
+                            __cycle_tilde_10_phasei = uint32_add(__cycle_tilde_10_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_10_phasei = __cycle_tilde_10_phasei;
+            }
+            
+            void lores_04_perform(
+                number cutoff,
+                number resonance,
+                const SampleValue * input,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(resonance);
+                RNBO_UNUSED(cutoff);
+                auto __lores_04_y_2 = this->lores_04_y_2;
+                auto __lores_04_y_1 = this->lores_04_y_1;
+                auto __lores_04_x_0 = this->lores_04_x_0;
+                auto __lores_04_b_0 = this->lores_04_b_0;
+                auto __lores_04_a_1 = this->lores_04_a_1;
+                auto __lores_04_a_2 = this->lores_04_a_2;
+                auto __lores_04_last_freq_calc = this->lores_04_last_freq_calc;
+                auto __lores_04_last_res_calc = this->lores_04_last_res_calc;
+                auto __lores_04_last_frequency = this->lores_04_last_frequency;
+                auto __lores_04_last_resonance = this->lores_04_last_resonance;
+            
+                for (Index i = 0; i < n; i++) {
+                    if (0 != __lores_04_last_resonance || 500 != __lores_04_last_frequency) {
+                        __lores_04_last_res_calc = rnbo_exp(0 * 0.125) * 0.882497;
+                        __lores_04_last_freq_calc = rnbo_cos(2.0 * pi01() / this->sr * 500);
+                        __lores_04_last_resonance = 0;
+                        __lores_04_last_frequency = 500;
+                    }
+            
+                    number res_temp = __lores_04_last_res_calc;
+                    number freq_temp = __lores_04_last_freq_calc;
+                    __lores_04_a_2 = res_temp * res_temp;
+                    __lores_04_a_1 = -2.0 * res_temp * freq_temp;
+                    __lores_04_b_0 = 1.0 + __lores_04_a_1 + __lores_04_a_2;
+                    __lores_04_x_0 = input[(Index)i];
+                    number y_0 = __lores_04_x_0 * __lores_04_b_0 - __lores_04_y_1 * __lores_04_a_1 - __lores_04_y_2 * __lores_04_a_2;
+                    __lores_04_y_2 = __lores_04_y_1;
+                    __lores_04_y_1 = y_0;
+                    out[(Index)i] = y_0;
+                }
+            
+                this->lores_04_last_resonance = __lores_04_last_resonance;
+                this->lores_04_last_frequency = __lores_04_last_frequency;
+                this->lores_04_last_res_calc = __lores_04_last_res_calc;
+                this->lores_04_last_freq_calc = __lores_04_last_freq_calc;
+                this->lores_04_a_2 = __lores_04_a_2;
+                this->lores_04_a_1 = __lores_04_a_1;
+                this->lores_04_b_0 = __lores_04_b_0;
+                this->lores_04_x_0 = __lores_04_x_0;
+                this->lores_04_y_1 = __lores_04_y_1;
+                this->lores_04_y_2 = __lores_04_y_2;
+            }
+            
+            void adsr_08_perform(
+                number attack,
+                number decay,
+                number sustain,
+                number release,
+                const SampleValue * trigger_signal,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(trigger_signal);
+                RNBO_UNUSED(release);
+                RNBO_UNUSED(sustain);
+                RNBO_UNUSED(decay);
+                RNBO_UNUSED(attack);
+                auto __adsr_08_trigger_number = this->adsr_08_trigger_number;
+                auto __adsr_08_time = this->adsr_08_time;
+                auto __adsr_08_amplitude = this->adsr_08_amplitude;
+                auto __adsr_08_outval = this->adsr_08_outval;
+                auto __adsr_08_startingpoint = this->adsr_08_startingpoint;
+                auto __adsr_08_phase = this->adsr_08_phase;
+                auto __adsr_08_legato = this->adsr_08_legato;
+                auto __adsr_08_lastTriggerVal = this->adsr_08_lastTriggerVal;
+                auto __adsr_08_mspersamp = this->adsr_08_mspersamp;
+                bool bangMute = false;
+            
+                for (Index i = 0; i < n; i++) {
+                    number clampedattack = (100 > __adsr_08_mspersamp ? 100 : __adsr_08_mspersamp);
+                    number clampeddecay = (500 > __adsr_08_mspersamp ? 500 : __adsr_08_mspersamp);
+                    number clampedrelease = (500 > __adsr_08_mspersamp ? 500 : __adsr_08_mspersamp);
+                    number currentTriggerVal = this->adsr_08_triggerValueBuf[(Index)i];
+            
+                    if ((__adsr_08_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_08_triggerBuf[(Index)i] == 1) {
+                        if ((bool)(__adsr_08_legato)) {
+                            if (__adsr_08_phase != 0) {
+                                __adsr_08_startingpoint = __adsr_08_outval;
+                            } else {
+                                __adsr_08_startingpoint = 0;
+                            }
+                        } else {
+                            __adsr_08_startingpoint = 0;
+                        }
+            
+                        __adsr_08_amplitude = currentTriggerVal;
+                        __adsr_08_phase = 1;
+                        __adsr_08_time = 0.0;
+                        bangMute = false;
+                    } else if (__adsr_08_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
+                        if (__adsr_08_phase != 4 && __adsr_08_phase != 0) {
+                            __adsr_08_phase = 4;
+                            __adsr_08_amplitude = __adsr_08_outval;
+                            __adsr_08_time = 0.0;
+                        }
+                    }
+            
+                    __adsr_08_time += __adsr_08_mspersamp;
+            
+                    if (__adsr_08_phase == 0) {
+                        __adsr_08_outval = 0;
+                    } else if (__adsr_08_phase == 1) {
+                        if (__adsr_08_time > clampedattack) {
+                            __adsr_08_time -= clampedattack;
+                            __adsr_08_phase = 2;
+                            __adsr_08_outval = __adsr_08_amplitude;
+                        } else {
+                            __adsr_08_outval = (__adsr_08_amplitude - __adsr_08_startingpoint) * __adsr_08_time / clampedattack + __adsr_08_startingpoint;
+                        }
+                    } else if (__adsr_08_phase == 2) {
+                        if (__adsr_08_time > clampeddecay) {
+                            __adsr_08_time -= clampeddecay;
+                            __adsr_08_phase = 3;
+                            __adsr_08_outval = __adsr_08_amplitude * 0;
+                        } else {
+                            __adsr_08_outval = __adsr_08_amplitude * 0 + (__adsr_08_amplitude - __adsr_08_amplitude * 0) * (1. - __adsr_08_time / clampeddecay);
+                        }
+                    } else if (__adsr_08_phase == 3) {
+                        __adsr_08_outval = __adsr_08_amplitude * 0;
+                    } else if (__adsr_08_phase == 4) {
+                        if (__adsr_08_time > clampedrelease) {
+                            __adsr_08_time = 0;
+                            __adsr_08_phase = 0;
+                            __adsr_08_outval = 0;
+                            __adsr_08_amplitude = 0;
+                            bangMute = true;
+                        } else {
+                            __adsr_08_outval = __adsr_08_amplitude * (1.0 - __adsr_08_time / clampedrelease);
+                        }
+                    }
+            
+                    out[(Index)i] = __adsr_08_outval;
+                    this->adsr_08_triggerBuf[(Index)i] = 0;
+                    this->adsr_08_triggerValueBuf[(Index)i] = __adsr_08_trigger_number;
+                    __adsr_08_lastTriggerVal = currentTriggerVal;
+                }
+            
+                if ((bool)(bangMute)) {
+                    this->getEngine()->scheduleClockEventWithValue(
+                        this,
+                        -1468824490,
+                        this->sampsToMs((SampleIndex)(this->vs)) + this->_currentTime,
+                        0
+                    );;
+                }
+            
+                this->adsr_08_lastTriggerVal = __adsr_08_lastTriggerVal;
+                this->adsr_08_phase = __adsr_08_phase;
+                this->adsr_08_startingpoint = __adsr_08_startingpoint;
+                this->adsr_08_outval = __adsr_08_outval;
+                this->adsr_08_amplitude = __adsr_08_amplitude;
+                this->adsr_08_time = __adsr_08_time;
+            }
+            
+            void dspexpr_18_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_19_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_19_interp = this->gaintilde_19_interp;
+                auto __gaintilde_19_loginc = this->gaintilde_19_loginc;
+                auto __gaintilde_19_zval = this->gaintilde_19_zval;
+                auto __gaintilde_19_value = this->gaintilde_19_value;
+                number mult = (__gaintilde_19_value <= 0 ? 0. : __gaintilde_19_zval * rnbo_exp(__gaintilde_19_value * __gaintilde_19_loginc));
+                auto iv = this->mstosamps(__gaintilde_19_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_19_ramp_next(mult, iv, iv);
+                }
+            }
+            
+            void stackprotect_perform(Index n) {
+                RNBO_UNUSED(n);
+                auto __stackprotect_count = this->stackprotect_count;
+                __stackprotect_count = 0;
+                this->stackprotect_count = __stackprotect_count;
+            }
+            
+            void lores_04_resonance_setter(number v) {
+                if (v < 0.0) {
+                    v = 0.0;
+                } else if (v >= 1.0) {
+                    v = 1.0 - 1E-20;
+                }
+            
+                this->lores_04_resonance = v;
+            }
+            
+            void toggle_07_value_number_setter(number v) {
+                this->toggle_07_value_number = (v != 0 ? 1 : 0);
+            }
+            
+            void metro_09_interval_setter(number v) {
+                this->metro_09_interval = (v > 0 ? v : 0);
+            }
+            
+            void metro_10_interval_setter(number v) {
+                this->metro_10_interval = (v > 0 ? v : 0);
+            }
+            
+            void random_06_limit_setter(number v) {
+                if (v >= 0)
+                    this->random_06_limit = v;
+            }
+            
+            void numberobj_11_value_setter(number v) {
+                number localvalue = v;
+            
+                if (this->numberobj_11_currentFormat != 6) {
+                    localvalue = trunc(localvalue);
+                }
+            
+                this->numberobj_11_value = localvalue;
+            }
+            
+            void lores_04_reset() {
+                this->lores_04_y_1 = 0;
+                this->lores_04_y_2 = 0;
+                this->lores_04_last_resonance = 0;
+                this->lores_04_last_frequency = 0;
+                this->lores_04_last_res_calc = 0;
+                this->lores_04_last_freq_calc = 0;
+            }
+            
+            void lores_04_dspsetup(bool force) {
+                if ((bool)(this->lores_04_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->lores_04_reset();
+                this->lores_04_setupDone = true;
+            }
+            
+            number cycle_tilde_10_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_10_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_10_ph_conv;
+            
+                if (this->cycle_tilde_10_ph_currentPhase < 0.)
+                    this->cycle_tilde_10_ph_currentPhase = 1. + this->cycle_tilde_10_ph_currentPhase;
+            
+                if (this->cycle_tilde_10_ph_currentPhase > 1.)
+                    this->cycle_tilde_10_ph_currentPhase = this->cycle_tilde_10_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_10_ph_currentPhase;
+                this->cycle_tilde_10_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_10_ph_reset() {
+                this->cycle_tilde_10_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_10_ph_dspsetup() {
+                this->cycle_tilde_10_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_10_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_10_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_10_phasei = 0;
+                this->cycle_tilde_10_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_10_wrap = (long)(this->cycle_tilde_10_buffer->getSize()) - 1;
+                this->cycle_tilde_10_setupDone = true;
+                this->cycle_tilde_10_ph_dspsetup();
+            }
+            
+            void cycle_tilde_10_bufferUpdated() {
+                this->cycle_tilde_10_wrap = (long)(this->cycle_tilde_10_buffer->getSize()) - 1;
+            }
+            
+            number gaintilde_19_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_19_ramp_d_prev);
+                this->gaintilde_19_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_19_ramp_d_dspsetup() {
+                this->gaintilde_19_ramp_d_reset();
+            }
+            
+            void gaintilde_19_ramp_d_reset() {
+                this->gaintilde_19_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_19_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_19_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_19_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_19_ramp_index = _up;
+                        this->gaintilde_19_ramp_increment = (x - this->gaintilde_19_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_19_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_19_ramp_index = _down;
+                        this->gaintilde_19_ramp_increment = (x - this->gaintilde_19_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_19_ramp_index > 0) {
+                    this->gaintilde_19_ramp_prev += this->gaintilde_19_ramp_increment;
+                    this->gaintilde_19_ramp_index -= 1;
+                } else {
+                    this->gaintilde_19_ramp_prev = x;
+                }
+            
+                return this->gaintilde_19_ramp_prev;
+            }
+            
+            void gaintilde_19_ramp_reset() {
+                this->gaintilde_19_ramp_prev = 0;
+                this->gaintilde_19_ramp_index = 0;
+                this->gaintilde_19_ramp_increment = 0;
+                this->gaintilde_19_ramp_d_reset();
+            }
+            
+            void gaintilde_19_init() {
+                this->gaintilde_19_loginc = rnbo_log(1.072);
+                this->gaintilde_19_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_19_loginc));
+            }
+            
+            void gaintilde_19_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_19_value;
+            }
+            
+            void gaintilde_19_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_19_value_set(preset["value"]);
+            }
+            
+            void gaintilde_19_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_19_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_19_setupDone = true;
+                this->gaintilde_19_ramp_d_dspsetup();
+            }
+            
+            number phasor_14_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                RNBO_UNUSED(freq);
+                number pincr = 0.05 * this->phasor_14_ph_conv;
+            
+                if (this->phasor_14_ph_currentPhase < 0.)
+                    this->phasor_14_ph_currentPhase = 1. + this->phasor_14_ph_currentPhase;
+            
+                if (this->phasor_14_ph_currentPhase > 1.)
+                    this->phasor_14_ph_currentPhase = this->phasor_14_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_14_ph_currentPhase;
+                this->phasor_14_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_14_ph_reset() {
+                this->phasor_14_ph_currentPhase = 0;
+            }
+            
+            void phasor_14_ph_dspsetup() {
+                this->phasor_14_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_14_dspsetup(bool force) {
+                if ((bool)(this->phasor_14_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_14_conv = (number)1 / this->samplerate();
+                this->phasor_14_setupDone = true;
+                this->phasor_14_ph_dspsetup();
+            }
+            
+            void message_10_init() {
+                this->message_10_set_set({1});
+            }
+            
+            void adsr_08_dspsetup(bool force) {
+                if ((bool)(this->adsr_08_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->adsr_08_mspersamp = (number)1000 / this->sr;
+                this->adsr_08_setupDone = true;
+            }
+            
+            void toggle_07_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_07_value_number;
+            }
+            
+            void toggle_07_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_07_value_number_set(preset["value"]);
+            }
+            
+            void metro_09_onTransportChanged(number ) {}
+            
+            void metro_09_onBeatTimeChanged(number ) {}
+            
+            void metro_10_onTransportChanged(number ) {}
+            
+            void metro_10_onBeatTimeChanged(number ) {}
+            
+            void random_06_nz_reset() {
+                xoshiro_reset(
+                    systemticks() + this->voice() + this->random(0, 10000),
+                    this->random_06_nz_state
+                );
+            }
+            
+            void random_06_nz_init() {
+                this->random_06_nz_reset();
+            }
+            
+            void random_06_nz_seed(number v) {
+                xoshiro_reset(v, this->random_06_nz_state);
+            }
+            
+            number random_06_nz_next() {
+                return xoshiro_next(this->random_06_nz_state);
+            }
+            
+            void numberobj_11_init() {
+                this->numberobj_11_currentFormat = 6;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("setup"),
+                    TAG("constellation[1]/cancer/number_obj-25"),
+                    1,
+                    this->_currentTime
+                );
+            }
+            
+            void numberobj_11_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->numberobj_11_value;
+            }
+            
+            void numberobj_11_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->numberobj_11_value_set(preset["value"]);
+            }
+            
+            bool stackprotect_check() {
+                this->stackprotect_count++;
+            
+                if (this->stackprotect_count > 128) {
+                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
+                    return true;
+                }
+            
+                return false;
+            }
+            
+            void updateTime(MillisecondTime time) {
+                this->_currentTime = time;
+                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
+            
+                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
+                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
+            
+                if (this->sampleOffsetIntoNextAudioBuffer < 0)
+                    this->sampleOffsetIntoNextAudioBuffer = 0;
+            }
+            
+            void assign_defaults()
+            {
+                receive_39_output_number = 0;
+                receive_40_output_number = 0;
+                dspexpr_17_in1 = 0;
+                dspexpr_17_in2 = 0;
+                lores_04_cutoff = 500;
+                lores_04_resonance = 0;
+                lores_04_resonance_setter(lores_04_resonance);
+                cycle_tilde_10_frequency = 0;
+                cycle_tilde_10_phase_offset = 0;
+                gaintilde_19_input_number = 0;
+                gaintilde_19_value = 0;
+                gaintilde_19_interp = 10;
+                dspexpr_18_in1 = 0;
+                dspexpr_18_in2 = 0;
+                phasor_14_freq = 0.05;
+                adsr_08_trigger_number = 0;
+                adsr_08_attack = 100;
+                adsr_08_decay = 500;
+                adsr_08_sustain = 0;
+                adsr_08_release = 500;
+                adsr_08_legato = 0;
+                toggle_07_value_number = 0;
+                toggle_07_value_number_setter(toggle_07_value_number);
+                metro_09_on = 0;
+                metro_09_interval = 500;
+                metro_09_interval_setter(metro_09_interval);
+                receive_41_output_number = 0;
+                metro_10_on = 0;
+                metro_10_interval = 500;
+                metro_10_interval_setter(metro_10_interval);
+                random_06_limit = 5000;
+                random_06_limit_setter(random_06_limit);
+                random_06_seed = 0;
+                numberobj_11_value = 0;
+                numberobj_11_value_setter(numberobj_11_value);
+                _currentTime = 0;
+                audioProcessSampleCount = 0;
+                sampleOffsetIntoNextAudioBuffer = 0;
+                zeroBuffer = nullptr;
+                dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
+                didAllocateSignals = 0;
+                vs = 0;
+                maxvs = 0;
+                sr = 44100;
+                invsr = 0.00002267573696;
+                lores_04_setupDone = false;
+                cycle_tilde_10_wrap = 0;
+                cycle_tilde_10_ph_currentPhase = 0;
+                cycle_tilde_10_ph_conv = 0;
+                cycle_tilde_10_setupDone = false;
+                gaintilde_19_lastValue = 0;
+                gaintilde_19_loginc = 1;
+                gaintilde_19_zval = 0;
+                gaintilde_19_ramp_d_prev = 0;
+                gaintilde_19_ramp_prev = 0;
+                gaintilde_19_ramp_index = 0;
+                gaintilde_19_ramp_increment = 0;
+                gaintilde_19_setupDone = false;
+                phasor_14_sigbuf = nullptr;
+                phasor_14_lastLockedPhase = 0;
+                phasor_14_conv = 0;
+                phasor_14_ph_currentPhase = 0;
+                phasor_14_ph_conv = 0;
+                phasor_14_setupDone = false;
+                adsr_08_phase = 3;
+                adsr_08_mspersamp = 0;
+                adsr_08_time = 0;
+                adsr_08_lastTriggerVal = 0;
+                adsr_08_amplitude = 0;
+                adsr_08_outval = 0;
+                adsr_08_startingpoint = 0;
+                adsr_08_triggerBuf = nullptr;
+                adsr_08_triggerValueBuf = nullptr;
+                adsr_08_setupDone = false;
+                toggle_07_lastValue = 0;
+                metro_09_last = -1;
+                metro_09_next = -1;
+                metro_10_last = -1;
+                metro_10_next = -1;
+                numberobj_11_currentFormat = 6;
+                numberobj_11_lastValue = 0;
+                stackprotect_count = 0;
+                _voiceIndex = 0;
+                _noteNumber = 0;
+                isMuted = 1;
+                parameterOffset = 0;
+            }
+            
+            // member variables
+            
+                number receive_39_output_number;
+                list receive_39_output_list;
+                number receive_40_output_number;
+                list receive_40_output_list;
+                number dspexpr_17_in1;
+                number dspexpr_17_in2;
+                number lores_04_cutoff;
+                number lores_04_resonance;
+                number cycle_tilde_10_frequency;
+                number cycle_tilde_10_phase_offset;
+                number gaintilde_19_input_number;
+                number gaintilde_19_value;
+                number gaintilde_19_interp;
+                number dspexpr_18_in1;
+                number dspexpr_18_in2;
+                number phasor_14_freq;
+                list message_10_set;
+                number adsr_08_trigger_number;
+                number adsr_08_attack;
+                number adsr_08_decay;
+                number adsr_08_sustain;
+                number adsr_08_release;
+                number adsr_08_legato;
+                number toggle_07_value_number;
+                number metro_09_on;
+                number metro_09_interval;
+                number receive_41_output_number;
+                list receive_41_output_list;
+                number metro_10_on;
+                number metro_10_interval;
+                number random_06_limit;
+                number random_06_seed;
+                number numberobj_11_value;
+                MillisecondTime _currentTime;
+                SampleIndex audioProcessSampleCount;
+                SampleIndex sampleOffsetIntoNextAudioBuffer;
+                signal zeroBuffer;
+                signal dummyBuffer;
+                SampleValue * signals[3];
+                bool didAllocateSignals;
+                Index vs;
+                Index maxvs;
+                number sr;
+                number invsr;
+                number lores_04_b_0;
+                number lores_04_a_1;
+                number lores_04_a_2;
+                number lores_04_x_0;
+                number lores_04_y_1;
+                number lores_04_y_2;
+                number lores_04_last_resonance;
+                number lores_04_last_frequency;
+                number lores_04_last_res_calc;
+                number lores_04_last_freq_calc;
+                bool lores_04_setupDone;
+                Float64BufferRef cycle_tilde_10_buffer;
+                long cycle_tilde_10_wrap;
+                uint32_t cycle_tilde_10_phasei;
+                SampleValue cycle_tilde_10_f2i;
+                number cycle_tilde_10_ph_currentPhase;
+                number cycle_tilde_10_ph_conv;
+                bool cycle_tilde_10_setupDone;
+                number gaintilde_19_lastValue;
+                number gaintilde_19_loginc;
+                number gaintilde_19_zval;
+                number gaintilde_19_ramp_d_prev;
+                number gaintilde_19_ramp_prev;
+                number gaintilde_19_ramp_index;
+                number gaintilde_19_ramp_increment;
+                bool gaintilde_19_setupDone;
+                signal phasor_14_sigbuf;
+                number phasor_14_lastLockedPhase;
+                number phasor_14_conv;
+                number phasor_14_ph_currentPhase;
+                number phasor_14_ph_conv;
+                bool phasor_14_setupDone;
+                Int adsr_08_phase;
+                number adsr_08_mspersamp;
+                number adsr_08_time;
+                number adsr_08_lastTriggerVal;
+                number adsr_08_amplitude;
+                number adsr_08_outval;
+                number adsr_08_startingpoint;
+                signal adsr_08_triggerBuf;
+                signal adsr_08_triggerValueBuf;
+                bool adsr_08_setupDone;
+                number toggle_07_lastValue;
+                number metro_09_last;
+                number metro_09_next;
+                number metro_10_last;
+                number metro_10_next;
+                UInt random_06_nz_state[4] = { };
+                Int numberobj_11_currentFormat;
+                number numberobj_11_lastValue;
+                number stackprotect_count;
+                Index _voiceIndex;
+                Int _noteNumber;
+                Index isMuted;
+                ParameterIndex parameterOffset;
+            
+    };
+    
+    class RNBOSubpatcher_318 : public PatcherInterfaceImpl {
+            
+            friend class RNBOSubpatcher_324;
+            friend class rnbomatic;
+            
+            public:
+            
+            RNBOSubpatcher_318()
+            {
+            }
+            
+            ~RNBOSubpatcher_318()
+            {
+            }
+            
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            }
+            
+            rnbomatic* getTopLevelPatcher() {
+                return this->getPatcher()->getTopLevelPatcher();
+            }
+            
+            void cancelClockEvents()
+            {
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index getNumMidiInputPorts() const {
+                return 0;
+            }
+            
+            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
+            
+            Index getNumMidiOutputPorts() const {
+                return 0;
+            }
+            
+            void process(
+                const SampleValue * const* inputs,
+                Index numInputs,
+                SampleValue * const* outputs,
+                Index numOutputs,
+                Index n
+            ) {
+                RNBO_UNUSED(numInputs);
+                RNBO_UNUSED(inputs);
+                this->vs = n;
+                this->updateTime(this->getEngine()->getCurrentTime());
+                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
+            
+                this->cycle_tilde_12_perform(
+                    this->cycle_tilde_12_frequency,
+                    this->cycle_tilde_12_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->dspexpr_20_perform(this->dspexpr_20_in1, this->signals[0], this->signals[1], n);
+            
+                this->cycle_tilde_11_perform(
+                    this->signals[1],
+                    this->cycle_tilde_11_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->phasor_15_perform(this->phasor_15_freq, this->signals[1], n);
+                this->dspexpr_19_perform(this->signals[0], this->signals[1], this->signals[2], n);
+                this->gaintilde_20_perform(this->signals[2], out1, n);
+                this->stackprotect_perform(n);
+                this->audioProcessSampleCount += this->vs;
+            }
+            
+            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
+                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 3; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_15_sigbuf = resizeSignal(this->phasor_15_sigbuf, this->maxvs, maxBlockSize);
+                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
+                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
+                    this->didAllocateSignals = true;
+                }
+            
+                const bool sampleRateChanged = sampleRate != this->sr;
+                const bool maxvsChanged = maxBlockSize != this->maxvs;
+                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
+            
+                if (sampleRateChanged || maxvsChanged) {
+                    this->vs = maxBlockSize;
+                    this->maxvs = maxBlockSize;
+                    this->sr = sampleRate;
+                    this->invsr = 1 / sampleRate;
+                }
+            
+                this->cycle_tilde_12_dspsetup(forceDSPSetup);
+                this->cycle_tilde_11_dspsetup(forceDSPSetup);
+                this->phasor_15_dspsetup(forceDSPSetup);
+                this->gaintilde_20_dspsetup(forceDSPSetup);
             
                 if (sampleRateChanged)
                     this->onSampleRateChanged(sampleRate);
@@ -11256,7 +19515,19 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->processOutletAtCurrentTime(sender, index, value);
             }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/aquarius/gain~_obj-9") == objectId)
+                        this->gaintilde_20_valin_set(payload);
+            
+                    break;
+                    }
+                }
+            }
             
             void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
             
@@ -11264,7 +19535,18 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/aquarius/gain~_obj-9"):
+                    {
+                    return "constellation[1]/aquarius/gain~_obj-9";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
                 }
             
                 return nullptr;
@@ -11285,14 +19567,29 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void fillDataRef(DataRefIndex , DataRef& ) {}
             
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_11_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_11_bufferUpdated();
+                    this->cycle_tilde_12_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_12_bufferUpdated();
+                }
+            }
             
             void initialize() {
                 this->assign_defaults();
                 this->setState();
+                this->cycle_tilde_11_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                this->cycle_tilde_12_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
             }
             
             protected:
+            
+            void gaintilde_20_valin_set(number v) {
+                this->gaintilde_20_value_set(v);
+            }
             
             number msToSamps(MillisecondTime ms, number sampleRate) {
                 return ms * sampleRate * 0.001;
@@ -11322,7 +19619,9 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 return 1;
             }
             
-            void initializeObjects() {}
+            void initializeObjects() {
+                this->gaintilde_20_init();
+            }
             
             void sendOutlet(OutletIndex index, ParameterValue value) {
                 this->getEngine()->sendOutlet(this, index, value);
@@ -11330,14 +19629,186 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void startup() {}
             
-            void allocateDataRefs() {}
+            void allocateDataRefs() {
+                this->cycle_tilde_11_buffer->requestSize(16384, 1);
+                this->cycle_tilde_11_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_12_buffer->requestSize(16384, 1);
+                this->cycle_tilde_12_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_11_buffer = this->cycle_tilde_11_buffer->allocateIfNeeded();
+                this->cycle_tilde_12_buffer = this->cycle_tilde_12_buffer->allocateIfNeeded();
+            }
             
-            void intnum_tilde_03_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
+            void dspexpr_20_in1_set(number v) {
+                this->dspexpr_20_in1 = v;
+            }
+            
+            void receive_43_output_number_set(number v) {
+                this->receive_43_output_number = v;
+                this->dspexpr_20_in1_set(v);
+            }
+            
+            void gaintilde_20_outval_set(number ) {}
+            
+            void gaintilde_20_value_set(number v) {
+                this->gaintilde_20_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/aquarius/gain~_obj-9"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_20_outval_set(value);
+            }
+            
+            void gaintilde_20_input_number_set(number v) {
+                this->gaintilde_20_input_number = v;
+            
+                this->gaintilde_20_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void floatnum_02_out_set(number v) {
+                this->gaintilde_20_input_number_set(v);
+            }
+            
+            void floatnum_02_input_number_set(number v) {
+                this->floatnum_02_input_number = v;
+                this->floatnum_02_stored = v;
+                this->floatnum_02_out_set(v);
+            }
+            
+            void receive_42_output_number_set(number v) {
+                this->receive_42_output_number = v;
+                this->floatnum_02_input_number_set(v);
+            }
+            
+            void cycle_tilde_12_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                RNBO_UNUSED(frequency);
+                auto __cycle_tilde_12_f2i = this->cycle_tilde_12_f2i;
+                auto __cycle_tilde_12_buffer = this->cycle_tilde_12_buffer;
+                auto __cycle_tilde_12_phasei = this->cycle_tilde_12_phasei;
                 Index i;
             
                 for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_12_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_12_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_12_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(2 * __cycle_tilde_12_f2i));
+                            __cycle_tilde_12_phasei = uint32_add(__cycle_tilde_12_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_12_phasei = __cycle_tilde_12_phasei;
+            }
+            
+            void dspexpr_20_perform(number in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1 * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void cycle_tilde_11_perform(
+                const Sample * frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_11_f2i = this->cycle_tilde_11_f2i;
+                auto __cycle_tilde_11_buffer = this->cycle_tilde_11_buffer;
+                auto __cycle_tilde_11_phasei = this->cycle_tilde_11_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_11_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_11_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_11_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency[(Index)i] * __cycle_tilde_11_f2i));
+                            __cycle_tilde_11_phasei = uint32_add(__cycle_tilde_11_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_11_phasei = __cycle_tilde_11_phasei;
+            }
+            
+            void phasor_15_perform(number freq, SampleValue * out, Index n) {
+                RNBO_UNUSED(freq);
+            
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_15_ph_next(1, -1);
+                    this->phasor_15_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void dspexpr_19_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_20_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_20_interp = this->gaintilde_20_interp;
+                auto __gaintilde_20_loginc = this->gaintilde_20_loginc;
+                auto __gaintilde_20_zval = this->gaintilde_20_zval;
+                auto __gaintilde_20_value = this->gaintilde_20_value;
+                number mult = (__gaintilde_20_value <= 0 ? 0. : __gaintilde_20_zval * rnbo_exp(__gaintilde_20_value * __gaintilde_20_loginc));
+                auto iv = this->mstosamps(__gaintilde_20_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_20_ramp_next(mult, iv, iv);
                 }
             }
             
@@ -11346,6 +19817,203 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 auto __stackprotect_count = this->stackprotect_count;
                 __stackprotect_count = 0;
                 this->stackprotect_count = __stackprotect_count;
+            }
+            
+            number cycle_tilde_11_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_11_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_11_ph_conv;
+            
+                if (this->cycle_tilde_11_ph_currentPhase < 0.)
+                    this->cycle_tilde_11_ph_currentPhase = 1. + this->cycle_tilde_11_ph_currentPhase;
+            
+                if (this->cycle_tilde_11_ph_currentPhase > 1.)
+                    this->cycle_tilde_11_ph_currentPhase = this->cycle_tilde_11_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_11_ph_currentPhase;
+                this->cycle_tilde_11_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_11_ph_reset() {
+                this->cycle_tilde_11_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_11_ph_dspsetup() {
+                this->cycle_tilde_11_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_11_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_11_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_11_phasei = 0;
+                this->cycle_tilde_11_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_11_wrap = (long)(this->cycle_tilde_11_buffer->getSize()) - 1;
+                this->cycle_tilde_11_setupDone = true;
+                this->cycle_tilde_11_ph_dspsetup();
+            }
+            
+            void cycle_tilde_11_bufferUpdated() {
+                this->cycle_tilde_11_wrap = (long)(this->cycle_tilde_11_buffer->getSize()) - 1;
+            }
+            
+            number gaintilde_20_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_20_ramp_d_prev);
+                this->gaintilde_20_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_20_ramp_d_dspsetup() {
+                this->gaintilde_20_ramp_d_reset();
+            }
+            
+            void gaintilde_20_ramp_d_reset() {
+                this->gaintilde_20_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_20_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_20_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_20_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_20_ramp_index = _up;
+                        this->gaintilde_20_ramp_increment = (x - this->gaintilde_20_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_20_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_20_ramp_index = _down;
+                        this->gaintilde_20_ramp_increment = (x - this->gaintilde_20_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_20_ramp_index > 0) {
+                    this->gaintilde_20_ramp_prev += this->gaintilde_20_ramp_increment;
+                    this->gaintilde_20_ramp_index -= 1;
+                } else {
+                    this->gaintilde_20_ramp_prev = x;
+                }
+            
+                return this->gaintilde_20_ramp_prev;
+            }
+            
+            void gaintilde_20_ramp_reset() {
+                this->gaintilde_20_ramp_prev = 0;
+                this->gaintilde_20_ramp_index = 0;
+                this->gaintilde_20_ramp_increment = 0;
+                this->gaintilde_20_ramp_d_reset();
+            }
+            
+            void gaintilde_20_init() {
+                this->gaintilde_20_loginc = rnbo_log(1.072);
+                this->gaintilde_20_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_20_loginc));
+            }
+            
+            void gaintilde_20_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_20_value;
+            }
+            
+            void gaintilde_20_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_20_value_set(preset["value"]);
+            }
+            
+            void gaintilde_20_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_20_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_20_setupDone = true;
+                this->gaintilde_20_ramp_d_dspsetup();
+            }
+            
+            number cycle_tilde_12_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_12_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_12_ph_conv;
+            
+                if (this->cycle_tilde_12_ph_currentPhase < 0.)
+                    this->cycle_tilde_12_ph_currentPhase = 1. + this->cycle_tilde_12_ph_currentPhase;
+            
+                if (this->cycle_tilde_12_ph_currentPhase > 1.)
+                    this->cycle_tilde_12_ph_currentPhase = this->cycle_tilde_12_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_12_ph_currentPhase;
+                this->cycle_tilde_12_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_12_ph_reset() {
+                this->cycle_tilde_12_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_12_ph_dspsetup() {
+                this->cycle_tilde_12_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_12_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_12_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_12_phasei = 0;
+                this->cycle_tilde_12_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_12_wrap = (long)(this->cycle_tilde_12_buffer->getSize()) - 1;
+                this->cycle_tilde_12_setupDone = true;
+                this->cycle_tilde_12_ph_dspsetup();
+            }
+            
+            void cycle_tilde_12_bufferUpdated() {
+                this->cycle_tilde_12_wrap = (long)(this->cycle_tilde_12_buffer->getSize()) - 1;
+            }
+            
+            number phasor_15_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                RNBO_UNUSED(freq);
+                number pincr = 1 * this->phasor_15_ph_conv;
+            
+                if (this->phasor_15_ph_currentPhase < 0.)
+                    this->phasor_15_ph_currentPhase = 1. + this->phasor_15_ph_currentPhase;
+            
+                if (this->phasor_15_ph_currentPhase > 1.)
+                    this->phasor_15_ph_currentPhase = this->phasor_15_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_15_ph_currentPhase;
+                this->phasor_15_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_15_ph_reset() {
+                this->phasor_15_ph_currentPhase = 0;
+            }
+            
+            void phasor_15_ph_dspsetup() {
+                this->phasor_15_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_15_dspsetup(bool force) {
+                if ((bool)(this->phasor_15_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_15_conv = (number)1 / this->samplerate();
+                this->phasor_15_setupDone = true;
+                this->phasor_15_ph_dspsetup();
             }
             
             bool stackprotect_check() {
@@ -11372,17 +20040,58 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void assign_defaults()
             {
-                intnum_tilde_03_value = 0;
+                receive_42_output_number = 0;
+                floatnum_02_input_number = 0;
+                floatnum_02_value = 0;
+                cycle_tilde_11_frequency = 0;
+                cycle_tilde_11_phase_offset = 0;
+                receive_43_output_number = 0;
+                dspexpr_19_in1 = 0;
+                dspexpr_19_in2 = 0;
+                dspexpr_20_in1 = 0;
+                dspexpr_20_in2 = 0;
+                gaintilde_20_input_number = 0;
+                gaintilde_20_value = 0;
+                gaintilde_20_interp = 10;
+                cycle_tilde_12_frequency = 2;
+                cycle_tilde_12_phase_offset = 0;
+                phasor_15_freq = 1;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
                 zeroBuffer = nullptr;
                 dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
                 didAllocateSignals = 0;
                 vs = 0;
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
+                floatnum_02_stored = -10;
+                cycle_tilde_11_wrap = 0;
+                cycle_tilde_11_ph_currentPhase = 0;
+                cycle_tilde_11_ph_conv = 0;
+                cycle_tilde_11_setupDone = false;
+                gaintilde_20_lastValue = 0;
+                gaintilde_20_loginc = 1;
+                gaintilde_20_zval = 0;
+                gaintilde_20_ramp_d_prev = 0;
+                gaintilde_20_ramp_prev = 0;
+                gaintilde_20_ramp_index = 0;
+                gaintilde_20_ramp_increment = 0;
+                gaintilde_20_setupDone = false;
+                cycle_tilde_12_wrap = 0;
+                cycle_tilde_12_ph_currentPhase = 0;
+                cycle_tilde_12_ph_conv = 0;
+                cycle_tilde_12_setupDone = false;
+                phasor_15_sigbuf = nullptr;
+                phasor_15_lastLockedPhase = 0;
+                phasor_15_conv = 0;
+                phasor_15_ph_currentPhase = 0;
+                phasor_15_ph_conv = 0;
+                phasor_15_setupDone = false;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -11392,17 +20101,64 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             // member variables
             
-                number intnum_tilde_03_value;
+                number receive_42_output_number;
+                list receive_42_output_list;
+                number floatnum_02_input_number;
+                number floatnum_02_value;
+                number cycle_tilde_11_frequency;
+                number cycle_tilde_11_phase_offset;
+                number receive_43_output_number;
+                list receive_43_output_list;
+                number dspexpr_19_in1;
+                number dspexpr_19_in2;
+                number dspexpr_20_in1;
+                number dspexpr_20_in2;
+                number gaintilde_20_input_number;
+                number gaintilde_20_value;
+                number gaintilde_20_interp;
+                number cycle_tilde_12_frequency;
+                number cycle_tilde_12_phase_offset;
+                number phasor_15_freq;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
                 signal zeroBuffer;
                 signal dummyBuffer;
+                SampleValue * signals[3];
                 bool didAllocateSignals;
                 Index vs;
                 Index maxvs;
                 number sr;
                 number invsr;
+                number floatnum_02_stored;
+                Float64BufferRef cycle_tilde_11_buffer;
+                long cycle_tilde_11_wrap;
+                uint32_t cycle_tilde_11_phasei;
+                SampleValue cycle_tilde_11_f2i;
+                number cycle_tilde_11_ph_currentPhase;
+                number cycle_tilde_11_ph_conv;
+                bool cycle_tilde_11_setupDone;
+                number gaintilde_20_lastValue;
+                number gaintilde_20_loginc;
+                number gaintilde_20_zval;
+                number gaintilde_20_ramp_d_prev;
+                number gaintilde_20_ramp_prev;
+                number gaintilde_20_ramp_index;
+                number gaintilde_20_ramp_increment;
+                bool gaintilde_20_setupDone;
+                Float64BufferRef cycle_tilde_12_buffer;
+                long cycle_tilde_12_wrap;
+                uint32_t cycle_tilde_12_phasei;
+                SampleValue cycle_tilde_12_f2i;
+                number cycle_tilde_12_ph_currentPhase;
+                number cycle_tilde_12_ph_conv;
+                bool cycle_tilde_12_setupDone;
+                signal phasor_15_sigbuf;
+                number phasor_15_lastLockedPhase;
+                number phasor_15_conv;
+                number phasor_15_ph_currentPhase;
+                number phasor_15_ph_conv;
+                bool phasor_15_setupDone;
                 number stackprotect_count;
                 Index _voiceIndex;
                 Int _noteNumber;
@@ -11411,23 +20167,23 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_247 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_319 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_256;
+            friend class RNBOSubpatcher_324;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_247()
+            RNBOSubpatcher_319()
             {
             }
             
-            ~RNBOSubpatcher_247()
+            ~RNBOSubpatcher_319()
             {
             }
             
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -11436,6 +20192,45 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void cancelClockEvents()
             {
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            number samplerate() {
+                return this->sr;
             }
             
             Index getNumMidiInputPorts() const {
@@ -11460,13 +20255,21 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->vs = n;
                 this->updateTime(this->getEngine()->getCurrentTime());
                 SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_04_perform(this->intnum_tilde_04_value, out1, n);
+                this->phasor_16_perform(this->phasor_16_freq, this->signals[0], n);
+                this->gaintilde_21_perform(this->signals[0], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
             }
             
             void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
                 if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 1; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->phasor_16_sigbuf = resizeSignal(this->phasor_16_sigbuf, this->maxvs, maxBlockSize);
                     this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
                     this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
                     this->didAllocateSignals = true;
@@ -11483,7 +20286,8 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->invsr = 1 / sampleRate;
                 }
             
-                RNBO_UNUSED(forceDSPSetup);
+                this->phasor_16_dspsetup(forceDSPSetup);
+                this->gaintilde_21_dspsetup(forceDSPSetup);
             
                 if (sampleRateChanged)
                     this->onSampleRateChanged(sampleRate);
@@ -11658,7 +20462,19 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->processOutletAtCurrentTime(sender, index, value);
             }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/leo/gain~_obj-5") == objectId)
+                        this->gaintilde_21_valin_set(payload);
+            
+                    break;
+                    }
+                }
+            }
             
             void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
             
@@ -11666,7 +20482,18 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/leo/gain~_obj-5"):
+                    {
+                    return "constellation[1]/leo/gain~_obj-5";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
                 }
             
                 return nullptr;
@@ -11696,6 +20523,10 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             protected:
             
+            void gaintilde_21_valin_set(number v) {
+                this->gaintilde_21_value_set(v);
+            }
+            
             number msToSamps(MillisecondTime ms, number sampleRate) {
                 return ms * sampleRate * 0.001;
             }
@@ -11724,7 +20555,9 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 return 1;
             }
             
-            void initializeObjects() {}
+            void initializeObjects() {
+                this->gaintilde_21_init();
+            }
             
             void sendOutlet(OutletIndex index, ParameterValue value) {
                 this->getEngine()->sendOutlet(this, index, value);
@@ -11734,12 +20567,72 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void allocateDataRefs() {}
             
-            void intnum_tilde_04_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
-                Index i;
+            void phasor_16_freq_set(number v) {
+                this->phasor_16_freq = v;
+            }
             
-                for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
+            void receive_45_output_number_set(number v) {
+                this->receive_45_output_number = v;
+                this->phasor_16_freq_set(v);
+            }
+            
+            void gaintilde_21_outval_set(number ) {}
+            
+            void gaintilde_21_value_set(number v) {
+                this->gaintilde_21_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/leo/gain~_obj-5"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_21_outval_set(value);
+            }
+            
+            void gaintilde_21_input_number_set(number v) {
+                this->gaintilde_21_input_number = v;
+            
+                this->gaintilde_21_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_39_out1_set(number v) {
+                this->expr_39_out1 = v;
+                this->gaintilde_21_input_number_set(this->expr_39_out1);
+            }
+            
+            void expr_39_in1_set(number in1) {
+                this->expr_39_in1 = in1;
+                this->expr_39_out1_set(this->expr_39_in1 - this->expr_39_in2);//#map:constellation[1]/leo/-_obj-7:1
+            }
+            
+            void receive_44_output_number_set(number v) {
+                this->receive_44_output_number = v;
+                this->expr_39_in1_set(v);
+            }
+            
+            void phasor_16_perform(number freq, SampleValue * out, Index n) {
+                for (Index i = 0; i < n; i++) {
+                    out[(Index)i] = this->phasor_16_ph_next(freq, -1);
+                    this->phasor_16_sigbuf[(Index)i] = -1;
+                }
+            }
+            
+            void gaintilde_21_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_21_interp = this->gaintilde_21_interp;
+                auto __gaintilde_21_loginc = this->gaintilde_21_loginc;
+                auto __gaintilde_21_zval = this->gaintilde_21_zval;
+                auto __gaintilde_21_value = this->gaintilde_21_value;
+                number mult = (__gaintilde_21_value <= 0 ? 0. : __gaintilde_21_zval * rnbo_exp(__gaintilde_21_value * __gaintilde_21_loginc));
+                auto iv = this->mstosamps(__gaintilde_21_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_21_ramp_next(mult, iv, iv);
                 }
             }
             
@@ -11748,6 +20641,114 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 auto __stackprotect_count = this->stackprotect_count;
                 __stackprotect_count = 0;
                 this->stackprotect_count = __stackprotect_count;
+            }
+            
+            number gaintilde_21_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_21_ramp_d_prev);
+                this->gaintilde_21_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_21_ramp_d_dspsetup() {
+                this->gaintilde_21_ramp_d_reset();
+            }
+            
+            void gaintilde_21_ramp_d_reset() {
+                this->gaintilde_21_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_21_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_21_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_21_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_21_ramp_index = _up;
+                        this->gaintilde_21_ramp_increment = (x - this->gaintilde_21_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_21_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_21_ramp_index = _down;
+                        this->gaintilde_21_ramp_increment = (x - this->gaintilde_21_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_21_ramp_index > 0) {
+                    this->gaintilde_21_ramp_prev += this->gaintilde_21_ramp_increment;
+                    this->gaintilde_21_ramp_index -= 1;
+                } else {
+                    this->gaintilde_21_ramp_prev = x;
+                }
+            
+                return this->gaintilde_21_ramp_prev;
+            }
+            
+            void gaintilde_21_ramp_reset() {
+                this->gaintilde_21_ramp_prev = 0;
+                this->gaintilde_21_ramp_index = 0;
+                this->gaintilde_21_ramp_increment = 0;
+                this->gaintilde_21_ramp_d_reset();
+            }
+            
+            void gaintilde_21_init() {
+                this->gaintilde_21_loginc = rnbo_log(1.072);
+                this->gaintilde_21_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_21_loginc));
+            }
+            
+            void gaintilde_21_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_21_value;
+            }
+            
+            void gaintilde_21_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_21_value_set(preset["value"]);
+            }
+            
+            void gaintilde_21_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_21_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_21_setupDone = true;
+                this->gaintilde_21_ramp_d_dspsetup();
+            }
+            
+            number phasor_16_ph_next(number freq, number reset) {
+                RNBO_UNUSED(reset);
+                number pincr = freq * this->phasor_16_ph_conv;
+            
+                if (this->phasor_16_ph_currentPhase < 0.)
+                    this->phasor_16_ph_currentPhase = 1. + this->phasor_16_ph_currentPhase;
+            
+                if (this->phasor_16_ph_currentPhase > 1.)
+                    this->phasor_16_ph_currentPhase = this->phasor_16_ph_currentPhase - 1.;
+            
+                number tmp = this->phasor_16_ph_currentPhase;
+                this->phasor_16_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void phasor_16_ph_reset() {
+                this->phasor_16_ph_currentPhase = 0;
+            }
+            
+            void phasor_16_ph_dspsetup() {
+                this->phasor_16_ph_conv = (number)1 / this->sr;
+            }
+            
+            void phasor_16_dspsetup(bool force) {
+                if ((bool)(this->phasor_16_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->phasor_16_conv = (number)1 / this->samplerate();
+                this->phasor_16_setupDone = true;
+                this->phasor_16_ph_dspsetup();
             }
             
             bool stackprotect_check() {
@@ -11774,17 +20775,40 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void assign_defaults()
             {
-                intnum_tilde_04_value = 0;
+                receive_44_output_number = 0;
+                expr_39_in1 = 0;
+                expr_39_in2 = 40;
+                expr_39_out1 = 0;
+                receive_45_output_number = 0;
+                gaintilde_21_input_number = 0;
+                gaintilde_21_value = 0;
+                gaintilde_21_interp = 10;
+                phasor_16_freq = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
                 zeroBuffer = nullptr;
                 dummyBuffer = nullptr;
+                signals[0] = nullptr;
                 didAllocateSignals = 0;
                 vs = 0;
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
+                gaintilde_21_lastValue = 0;
+                gaintilde_21_loginc = 1;
+                gaintilde_21_zval = 0;
+                gaintilde_21_ramp_d_prev = 0;
+                gaintilde_21_ramp_prev = 0;
+                gaintilde_21_ramp_index = 0;
+                gaintilde_21_ramp_increment = 0;
+                gaintilde_21_setupDone = false;
+                phasor_16_sigbuf = nullptr;
+                phasor_16_lastLockedPhase = 0;
+                phasor_16_conv = 0;
+                phasor_16_ph_currentPhase = 0;
+                phasor_16_ph_conv = 0;
+                phasor_16_setupDone = false;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -11794,17 +20818,42 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             // member variables
             
-                number intnum_tilde_04_value;
+                number receive_44_output_number;
+                list receive_44_output_list;
+                number expr_39_in1;
+                number expr_39_in2;
+                number expr_39_out1;
+                number receive_45_output_number;
+                list receive_45_output_list;
+                number gaintilde_21_input_number;
+                number gaintilde_21_value;
+                number gaintilde_21_interp;
+                number phasor_16_freq;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
                 signal zeroBuffer;
                 signal dummyBuffer;
+                SampleValue * signals[1];
                 bool didAllocateSignals;
                 Index vs;
                 Index maxvs;
                 number sr;
                 number invsr;
+                number gaintilde_21_lastValue;
+                number gaintilde_21_loginc;
+                number gaintilde_21_zval;
+                number gaintilde_21_ramp_d_prev;
+                number gaintilde_21_ramp_prev;
+                number gaintilde_21_ramp_index;
+                number gaintilde_21_ramp_increment;
+                bool gaintilde_21_setupDone;
+                signal phasor_16_sigbuf;
+                number phasor_16_lastLockedPhase;
+                number phasor_16_conv;
+                number phasor_16_ph_currentPhase;
+                number phasor_16_ph_conv;
+                bool phasor_16_setupDone;
                 number stackprotect_count;
                 Index _voiceIndex;
                 Int _noteNumber;
@@ -11813,23 +20862,23 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_248 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_320 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_256;
+            friend class RNBOSubpatcher_324;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_248()
+            RNBOSubpatcher_320()
             {
             }
             
-            ~RNBOSubpatcher_248()
+            ~RNBOSubpatcher_320()
             {
             }
             
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -11838,6 +20887,45 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void cancelClockEvents()
             {
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
             }
             
             Index getNumMidiInputPorts() const {
@@ -11862,13 +20950,46 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->vs = n;
                 this->updateTime(this->getEngine()->getCurrentTime());
                 SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_05_perform(this->intnum_tilde_05_value, out1, n);
+            
+                this->cycle_tilde_13_perform(
+                    this->cycle_tilde_13_frequency,
+                    this->cycle_tilde_13_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->cycle_tilde_14_perform(
+                    this->cycle_tilde_14_frequency,
+                    this->cycle_tilde_14_phase_offset,
+                    this->signals[1],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->cycle_tilde_15_perform(
+                    this->cycle_tilde_15_frequency,
+                    this->cycle_tilde_15_phase_offset,
+                    this->signals[2],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->signaladder_10_perform(this->signals[0], this->signals[1], this->signals[1], n);
+                this->dspexpr_21_perform(this->signals[1], this->signals[2], this->signals[3], n);
+                this->gaintilde_22_perform(this->signals[3], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
             }
             
             void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
                 if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 4; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
                     this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
                     this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
                     this->didAllocateSignals = true;
@@ -11885,7 +21006,10 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->invsr = 1 / sampleRate;
                 }
             
-                RNBO_UNUSED(forceDSPSetup);
+                this->cycle_tilde_13_dspsetup(forceDSPSetup);
+                this->cycle_tilde_14_dspsetup(forceDSPSetup);
+                this->cycle_tilde_15_dspsetup(forceDSPSetup);
+                this->gaintilde_22_dspsetup(forceDSPSetup);
             
                 if (sampleRateChanged)
                     this->onSampleRateChanged(sampleRate);
@@ -12060,7 +21184,19 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->processOutletAtCurrentTime(sender, index, value);
             }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
+            
+                switch (tag) {
+                case TAG("valin"):
+                    {
+                    if (TAG("constellation[1]/pisces/gain~_obj-5") == objectId)
+                        this->gaintilde_22_valin_set(payload);
+            
+                    break;
+                    }
+                }
+            }
             
             void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
             
@@ -12068,7 +21204,18 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/pisces/gain~_obj-5"):
+                    {
+                    return "constellation[1]/pisces/gain~_obj-5";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
                 }
             
                 return nullptr;
@@ -12089,14 +21236,32 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void fillDataRef(DataRefIndex , DataRef& ) {}
             
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_13_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_13_bufferUpdated();
+                    this->cycle_tilde_14_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_14_bufferUpdated();
+                    this->cycle_tilde_15_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_15_bufferUpdated();
+                }
+            }
             
             void initialize() {
                 this->assign_defaults();
                 this->setState();
+                this->cycle_tilde_13_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                this->cycle_tilde_14_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                this->cycle_tilde_15_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
             }
             
             protected:
+            
+            void gaintilde_22_valin_set(number v) {
+                this->gaintilde_22_value_set(v);
+            }
             
             number msToSamps(MillisecondTime ms, number sampleRate) {
                 return ms * sampleRate * 0.001;
@@ -12126,7 +21291,9 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 return 1;
             }
             
-            void initializeObjects() {}
+            void initializeObjects() {
+                this->gaintilde_22_init();
+            }
             
             void sendOutlet(OutletIndex index, ParameterValue value) {
                 this->getEngine()->sendOutlet(this, index, value);
@@ -12134,14 +21301,243 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void startup() {}
             
-            void allocateDataRefs() {}
+            void allocateDataRefs() {
+                this->cycle_tilde_13_buffer->requestSize(16384, 1);
+                this->cycle_tilde_13_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_14_buffer->requestSize(16384, 1);
+                this->cycle_tilde_14_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_15_buffer->requestSize(16384, 1);
+                this->cycle_tilde_15_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_13_buffer = this->cycle_tilde_13_buffer->allocateIfNeeded();
+                this->cycle_tilde_14_buffer = this->cycle_tilde_14_buffer->allocateIfNeeded();
+                this->cycle_tilde_15_buffer = this->cycle_tilde_15_buffer->allocateIfNeeded();
+            }
             
-            void intnum_tilde_05_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
+            void cycle_tilde_14_frequency_set(number v) {
+                this->cycle_tilde_14_frequency = v;
+            }
+            
+            void expr_41_out1_set(number v) {
+                this->expr_41_out1 = v;
+                this->cycle_tilde_14_frequency_set(this->expr_41_out1);
+            }
+            
+            void expr_41_in1_set(number in1) {
+                this->expr_41_in1 = in1;
+                this->expr_41_out1_set(this->expr_41_in1 * this->expr_41_in2);//#map:constellation[1]/pisces/*_obj-7:1
+            }
+            
+            void cycle_tilde_13_frequency_set(number v) {
+                this->cycle_tilde_13_frequency = v;
+            }
+            
+            void receive_47_output_number_set(number v) {
+                this->receive_47_output_number = v;
+                this->expr_41_in1_set(v);
+                this->cycle_tilde_13_frequency_set(v);
+            }
+            
+            void gaintilde_22_outval_set(number ) {}
+            
+            void gaintilde_22_value_set(number v) {
+                this->gaintilde_22_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/pisces/gain~_obj-5"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_22_outval_set(value);
+            }
+            
+            void gaintilde_22_input_number_set(number v) {
+                this->gaintilde_22_input_number = v;
+            
+                this->gaintilde_22_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_40_out1_set(number v) {
+                this->expr_40_out1 = v;
+                this->gaintilde_22_input_number_set(this->expr_40_out1);
+            }
+            
+            void expr_40_in1_set(number in1) {
+                this->expr_40_in1 = in1;
+                this->expr_40_out1_set(this->expr_40_in1 - this->expr_40_in2);//#map:constellation[1]/pisces/-_obj-4:1
+            }
+            
+            void receive_46_output_number_set(number v) {
+                this->receive_46_output_number = v;
+                this->expr_40_in1_set(v);
+            }
+            
+            void cycle_tilde_13_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_13_f2i = this->cycle_tilde_13_f2i;
+                auto __cycle_tilde_13_buffer = this->cycle_tilde_13_buffer;
+                auto __cycle_tilde_13_phasei = this->cycle_tilde_13_phasei;
                 Index i;
             
                 for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_13_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_13_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_13_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency * __cycle_tilde_13_f2i));
+                            __cycle_tilde_13_phasei = uint32_add(__cycle_tilde_13_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_13_phasei = __cycle_tilde_13_phasei;
+            }
+            
+            void cycle_tilde_14_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_14_f2i = this->cycle_tilde_14_f2i;
+                auto __cycle_tilde_14_buffer = this->cycle_tilde_14_buffer;
+                auto __cycle_tilde_14_phasei = this->cycle_tilde_14_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_14_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_14_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_14_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency * __cycle_tilde_14_f2i));
+                            __cycle_tilde_14_phasei = uint32_add(__cycle_tilde_14_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_14_phasei = __cycle_tilde_14_phasei;
+            }
+            
+            void cycle_tilde_15_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                RNBO_UNUSED(frequency);
+                auto __cycle_tilde_15_f2i = this->cycle_tilde_15_f2i;
+                auto __cycle_tilde_15_buffer = this->cycle_tilde_15_buffer;
+                auto __cycle_tilde_15_phasei = this->cycle_tilde_15_phasei;
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_15_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_15_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_15_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(0.1 * __cycle_tilde_15_f2i));
+                            __cycle_tilde_15_phasei = uint32_add(__cycle_tilde_15_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_15_phasei = __cycle_tilde_15_phasei;
+            }
+            
+            void signaladder_10_perform(
+                const SampleValue * in1,
+                const SampleValue * in2,
+                SampleValue * out,
+                Index n
+            ) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out[(Index)i] = in1[(Index)i] + in2[(Index)i];
+                }
+            }
+            
+            void dspexpr_21_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_22_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_22_interp = this->gaintilde_22_interp;
+                auto __gaintilde_22_loginc = this->gaintilde_22_loginc;
+                auto __gaintilde_22_zval = this->gaintilde_22_zval;
+                auto __gaintilde_22_value = this->gaintilde_22_value;
+                number mult = (__gaintilde_22_value <= 0 ? 0. : __gaintilde_22_zval * rnbo_exp(__gaintilde_22_value * __gaintilde_22_loginc));
+                auto iv = this->mstosamps(__gaintilde_22_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_22_ramp_next(mult, iv, iv);
                 }
             }
             
@@ -12150,6 +21546,214 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 auto __stackprotect_count = this->stackprotect_count;
                 __stackprotect_count = 0;
                 this->stackprotect_count = __stackprotect_count;
+            }
+            
+            number cycle_tilde_13_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_13_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_13_ph_conv;
+            
+                if (this->cycle_tilde_13_ph_currentPhase < 0.)
+                    this->cycle_tilde_13_ph_currentPhase = 1. + this->cycle_tilde_13_ph_currentPhase;
+            
+                if (this->cycle_tilde_13_ph_currentPhase > 1.)
+                    this->cycle_tilde_13_ph_currentPhase = this->cycle_tilde_13_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_13_ph_currentPhase;
+                this->cycle_tilde_13_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_13_ph_reset() {
+                this->cycle_tilde_13_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_13_ph_dspsetup() {
+                this->cycle_tilde_13_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_13_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_13_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_13_phasei = 0;
+                this->cycle_tilde_13_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_13_wrap = (long)(this->cycle_tilde_13_buffer->getSize()) - 1;
+                this->cycle_tilde_13_setupDone = true;
+                this->cycle_tilde_13_ph_dspsetup();
+            }
+            
+            void cycle_tilde_13_bufferUpdated() {
+                this->cycle_tilde_13_wrap = (long)(this->cycle_tilde_13_buffer->getSize()) - 1;
+            }
+            
+            number gaintilde_22_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_22_ramp_d_prev);
+                this->gaintilde_22_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_22_ramp_d_dspsetup() {
+                this->gaintilde_22_ramp_d_reset();
+            }
+            
+            void gaintilde_22_ramp_d_reset() {
+                this->gaintilde_22_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_22_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_22_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_22_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_22_ramp_index = _up;
+                        this->gaintilde_22_ramp_increment = (x - this->gaintilde_22_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_22_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_22_ramp_index = _down;
+                        this->gaintilde_22_ramp_increment = (x - this->gaintilde_22_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_22_ramp_index > 0) {
+                    this->gaintilde_22_ramp_prev += this->gaintilde_22_ramp_increment;
+                    this->gaintilde_22_ramp_index -= 1;
+                } else {
+                    this->gaintilde_22_ramp_prev = x;
+                }
+            
+                return this->gaintilde_22_ramp_prev;
+            }
+            
+            void gaintilde_22_ramp_reset() {
+                this->gaintilde_22_ramp_prev = 0;
+                this->gaintilde_22_ramp_index = 0;
+                this->gaintilde_22_ramp_increment = 0;
+                this->gaintilde_22_ramp_d_reset();
+            }
+            
+            void gaintilde_22_init() {
+                this->gaintilde_22_loginc = rnbo_log(1.072);
+                this->gaintilde_22_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_22_loginc));
+            }
+            
+            void gaintilde_22_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_22_value;
+            }
+            
+            void gaintilde_22_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_22_value_set(preset["value"]);
+            }
+            
+            void gaintilde_22_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_22_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_22_setupDone = true;
+                this->gaintilde_22_ramp_d_dspsetup();
+            }
+            
+            number cycle_tilde_14_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_14_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_14_ph_conv;
+            
+                if (this->cycle_tilde_14_ph_currentPhase < 0.)
+                    this->cycle_tilde_14_ph_currentPhase = 1. + this->cycle_tilde_14_ph_currentPhase;
+            
+                if (this->cycle_tilde_14_ph_currentPhase > 1.)
+                    this->cycle_tilde_14_ph_currentPhase = this->cycle_tilde_14_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_14_ph_currentPhase;
+                this->cycle_tilde_14_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_14_ph_reset() {
+                this->cycle_tilde_14_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_14_ph_dspsetup() {
+                this->cycle_tilde_14_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_14_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_14_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_14_phasei = 0;
+                this->cycle_tilde_14_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_14_wrap = (long)(this->cycle_tilde_14_buffer->getSize()) - 1;
+                this->cycle_tilde_14_setupDone = true;
+                this->cycle_tilde_14_ph_dspsetup();
+            }
+            
+            void cycle_tilde_14_bufferUpdated() {
+                this->cycle_tilde_14_wrap = (long)(this->cycle_tilde_14_buffer->getSize()) - 1;
+            }
+            
+            number cycle_tilde_15_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_15_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_15_ph_conv;
+            
+                if (this->cycle_tilde_15_ph_currentPhase < 0.)
+                    this->cycle_tilde_15_ph_currentPhase = 1. + this->cycle_tilde_15_ph_currentPhase;
+            
+                if (this->cycle_tilde_15_ph_currentPhase > 1.)
+                    this->cycle_tilde_15_ph_currentPhase = this->cycle_tilde_15_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_15_ph_currentPhase;
+                this->cycle_tilde_15_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_15_ph_reset() {
+                this->cycle_tilde_15_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_15_ph_dspsetup() {
+                this->cycle_tilde_15_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_15_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_15_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_15_phasei = 0;
+                this->cycle_tilde_15_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_15_wrap = (long)(this->cycle_tilde_15_buffer->getSize()) - 1;
+                this->cycle_tilde_15_setupDone = true;
+                this->cycle_tilde_15_ph_dspsetup();
+            }
+            
+            void cycle_tilde_15_bufferUpdated() {
+                this->cycle_tilde_15_wrap = (long)(this->cycle_tilde_15_buffer->getSize()) - 1;
             }
             
             bool stackprotect_check() {
@@ -12176,17 +21780,59 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void assign_defaults()
             {
-                intnum_tilde_05_value = 0;
+                receive_46_output_number = 0;
+                expr_40_in1 = 0;
+                expr_40_in2 = 10;
+                expr_40_out1 = 0;
+                cycle_tilde_13_frequency = 0;
+                cycle_tilde_13_phase_offset = 0;
+                receive_47_output_number = 0;
+                dspexpr_21_in1 = 0;
+                dspexpr_21_in2 = 0;
+                gaintilde_22_input_number = 0;
+                gaintilde_22_value = 0;
+                gaintilde_22_interp = 10;
+                cycle_tilde_14_frequency = 0;
+                cycle_tilde_14_phase_offset = 0;
+                expr_41_in1 = 0;
+                expr_41_in2 = 1.189207;
+                expr_41_out1 = 0;
+                cycle_tilde_15_frequency = 0.1;
+                cycle_tilde_15_phase_offset = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
                 zeroBuffer = nullptr;
                 dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
+                signals[3] = nullptr;
                 didAllocateSignals = 0;
                 vs = 0;
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
+                cycle_tilde_13_wrap = 0;
+                cycle_tilde_13_ph_currentPhase = 0;
+                cycle_tilde_13_ph_conv = 0;
+                cycle_tilde_13_setupDone = false;
+                gaintilde_22_lastValue = 0;
+                gaintilde_22_loginc = 1;
+                gaintilde_22_zval = 0;
+                gaintilde_22_ramp_d_prev = 0;
+                gaintilde_22_ramp_prev = 0;
+                gaintilde_22_ramp_index = 0;
+                gaintilde_22_ramp_increment = 0;
+                gaintilde_22_setupDone = false;
+                cycle_tilde_14_wrap = 0;
+                cycle_tilde_14_ph_currentPhase = 0;
+                cycle_tilde_14_ph_conv = 0;
+                cycle_tilde_14_setupDone = false;
+                cycle_tilde_15_wrap = 0;
+                cycle_tilde_15_ph_currentPhase = 0;
+                cycle_tilde_15_ph_conv = 0;
+                cycle_tilde_15_setupDone = false;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -12196,17 +21842,67 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             // member variables
             
-                number intnum_tilde_05_value;
+                number receive_46_output_number;
+                list receive_46_output_list;
+                number expr_40_in1;
+                number expr_40_in2;
+                number expr_40_out1;
+                number cycle_tilde_13_frequency;
+                number cycle_tilde_13_phase_offset;
+                number receive_47_output_number;
+                list receive_47_output_list;
+                number dspexpr_21_in1;
+                number dspexpr_21_in2;
+                number gaintilde_22_input_number;
+                number gaintilde_22_value;
+                number gaintilde_22_interp;
+                number cycle_tilde_14_frequency;
+                number cycle_tilde_14_phase_offset;
+                number expr_41_in1;
+                number expr_41_in2;
+                number expr_41_out1;
+                number cycle_tilde_15_frequency;
+                number cycle_tilde_15_phase_offset;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
                 signal zeroBuffer;
                 signal dummyBuffer;
+                SampleValue * signals[4];
                 bool didAllocateSignals;
                 Index vs;
                 Index maxvs;
                 number sr;
                 number invsr;
+                Float64BufferRef cycle_tilde_13_buffer;
+                long cycle_tilde_13_wrap;
+                uint32_t cycle_tilde_13_phasei;
+                SampleValue cycle_tilde_13_f2i;
+                number cycle_tilde_13_ph_currentPhase;
+                number cycle_tilde_13_ph_conv;
+                bool cycle_tilde_13_setupDone;
+                number gaintilde_22_lastValue;
+                number gaintilde_22_loginc;
+                number gaintilde_22_zval;
+                number gaintilde_22_ramp_d_prev;
+                number gaintilde_22_ramp_prev;
+                number gaintilde_22_ramp_index;
+                number gaintilde_22_ramp_increment;
+                bool gaintilde_22_setupDone;
+                Float64BufferRef cycle_tilde_14_buffer;
+                long cycle_tilde_14_wrap;
+                uint32_t cycle_tilde_14_phasei;
+                SampleValue cycle_tilde_14_f2i;
+                number cycle_tilde_14_ph_currentPhase;
+                number cycle_tilde_14_ph_conv;
+                bool cycle_tilde_14_setupDone;
+                Float64BufferRef cycle_tilde_15_buffer;
+                long cycle_tilde_15_wrap;
+                uint32_t cycle_tilde_15_phasei;
+                SampleValue cycle_tilde_15_f2i;
+                number cycle_tilde_15_ph_currentPhase;
+                number cycle_tilde_15_ph_conv;
+                bool cycle_tilde_15_setupDone;
                 number stackprotect_count;
                 Index _voiceIndex;
                 Int _noteNumber;
@@ -12215,23 +21911,23 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_249 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_321 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_256;
+            friend class RNBOSubpatcher_324;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_249()
+            RNBOSubpatcher_321()
             {
             }
             
-            ~RNBOSubpatcher_249()
+            ~RNBOSubpatcher_321()
             {
             }
             
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
+            virtual RNBOSubpatcher_324* getPatcher() const {
+                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -12240,6 +21936,55 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void cancelClockEvents()
             {
+                getEngine()->flushClockEvents(this, 1935387534, false);
+                getEngine()->flushClockEvents(this, -1468824490, false);
+            }
+            
+            number samplerate() {
+                return this->sr;
+            }
+            
+            inline number safediv(number num, number denom) {
+                return (denom == 0.0 ? 0.0 : num / denom);
+            }
+            
+            number safepow(number base, number exponent) {
+                return fixnan(rnbo_pow(base, exponent));
+            }
+            
+            number scale(
+                number x,
+                number lowin,
+                number hiin,
+                number lowout,
+                number highout,
+                number pow
+            ) {
+                auto inscale = this->safediv(1., hiin - lowin);
+                number outdiff = highout - lowout;
+                number value = (x - lowin) * inscale;
+            
+                if (pow != 1) {
+                    if (value > 0)
+                        value = this->safepow(value, pow);
+                    else
+                        value = -this->safepow(-value, pow);
+                }
+            
+                value = value * outdiff + lowout;
+                return value;
+            }
+            
+            number mstosamps(MillisecondTime ms) {
+                return ms * this->sr * 0.001;
+            }
+            
+            Index vectorsize() {
+                return this->vs;
+            }
+            
+            MillisecondTime currenttime() {
+                return this->_currentTime;
             }
             
             Index getNumMidiInputPorts() const {
@@ -12264,13 +22009,41 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->vs = n;
                 this->updateTime(this->getEngine()->getCurrentTime());
                 SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_06_perform(this->intnum_tilde_06_value, out1, n);
+            
+                this->cycle_tilde_16_perform(
+                    this->cycle_tilde_16_frequency,
+                    this->cycle_tilde_16_phase_offset,
+                    this->signals[0],
+                    this->dummyBuffer,
+                    n
+                );
+            
+                this->adsr_09_perform(
+                    this->adsr_09_attack,
+                    this->adsr_09_decay,
+                    this->adsr_09_sustain,
+                    this->adsr_09_release,
+                    this->zeroBuffer,
+                    this->signals[1],
+                    n
+                );
+            
+                this->dspexpr_22_perform(this->signals[0], this->signals[1], this->signals[2], n);
+                this->gaintilde_23_perform(this->signals[2], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
             }
             
             void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
                 if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
+                    Index i;
+            
+                    for (i = 0; i < 3; i++) {
+                        this->signals[i] = resizeSignal(this->signals[i], this->maxvs, maxBlockSize);
+                    }
+            
+                    this->adsr_09_triggerBuf = resizeSignal(this->adsr_09_triggerBuf, this->maxvs, maxBlockSize);
+                    this->adsr_09_triggerValueBuf = resizeSignal(this->adsr_09_triggerValueBuf, this->maxvs, maxBlockSize);
                     this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
                     this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
                     this->didAllocateSignals = true;
@@ -12287,7 +22060,9 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                     this->invsr = 1 / sampleRate;
                 }
             
-                RNBO_UNUSED(forceDSPSetup);
+                this->cycle_tilde_16_dspsetup(forceDSPSetup);
+                this->adsr_09_dspsetup(forceDSPSetup);
+                this->gaintilde_23_dspsetup(forceDSPSetup);
             
                 if (sampleRateChanged)
                     this->onSampleRateChanged(sampleRate);
@@ -12330,9 +22105,15 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void processTempoEvent(MillisecondTime , Tempo ) {}
             
-            void processTransportEvent(MillisecondTime , TransportState ) {}
+            void processTransportEvent(MillisecondTime time, TransportState state) {
+                this->updateTime(time);
+                this->metro_11_onTransportChanged(state);
+            }
             
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
+            void processBeatTimeEvent(MillisecondTime time, BeatTime beattime) {
+                this->updateTime(time);
+                this->metro_11_onBeatTimeChanged(beattime);
+            }
             
             void onSampleRateChanged(double ) {}
             
@@ -12448,410 +22229,25 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
             }
             
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
-            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
-            
-            void processOutletEvent(
-                EngineLink* sender,
-                OutletIndex index,
-                ParameterValue value,
-                MillisecondTime time
-            ) {
-                this->updateTime(time);
-                this->processOutletAtCurrentTime(sender, index, value);
-            }
-            
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
-            
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
-            MessageTagInfo resolveTag(MessageTag tag) const {
-                switch (tag) {
-            
-                }
-            
-                return nullptr;
-            }
-            
-            DataRef* getDataRef(DataRefIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return nullptr;
-                    }
-                }
-            }
-            
-            DataRefIndex getNumDataRefs() const {
-                return 0;
-            }
-            
-            void fillDataRef(DataRefIndex , DataRef& ) {}
-            
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
-            
-            void initialize() {
-                this->assign_defaults();
-                this->setState();
-            }
-            
-            protected:
-            
-            number msToSamps(MillisecondTime ms, number sampleRate) {
-                return ms * sampleRate * 0.001;
-            }
-            
-            MillisecondTime sampsToMs(SampleIndex samps) {
-                return samps * (this->invsr * 1000);
-            }
-            
-            Index getMaxBlockSize() const {
-                return this->maxvs;
-            }
-            
-            number getSampleRate() const {
-                return this->sr;
-            }
-            
-            bool hasFixedVectorSize() const {
-                return false;
-            }
-            
-            Index getNumInputChannels() const {
-                return 0;
-            }
-            
-            Index getNumOutputChannels() const {
-                return 1;
-            }
-            
-            void initializeObjects() {}
-            
-            void sendOutlet(OutletIndex index, ParameterValue value) {
-                this->getEngine()->sendOutlet(this, index, value);
-            }
-            
-            void startup() {}
-            
-            void allocateDataRefs() {}
-            
-            void intnum_tilde_06_perform(number value, SampleValue * out1, Index n) {
+            void processClockEvent(MillisecondTime time, ClockId index, bool hasValue, ParameterValue value) {
                 RNBO_UNUSED(value);
-                Index i;
+                RNBO_UNUSED(hasValue);
+                this->updateTime(time);
             
-                for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
-                }
-            }
-            
-            void stackprotect_perform(Index n) {
-                RNBO_UNUSED(n);
-                auto __stackprotect_count = this->stackprotect_count;
-                __stackprotect_count = 0;
-                this->stackprotect_count = __stackprotect_count;
-            }
-            
-            bool stackprotect_check() {
-                this->stackprotect_count++;
-            
-                if (this->stackprotect_count > 128) {
-                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
-                    return true;
-                }
-            
-                return false;
-            }
-            
-            void updateTime(MillisecondTime time) {
-                this->_currentTime = time;
-                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
-            
-                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
-                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
-            
-                if (this->sampleOffsetIntoNextAudioBuffer < 0)
-                    this->sampleOffsetIntoNextAudioBuffer = 0;
-            }
-            
-            void assign_defaults()
-            {
-                intnum_tilde_06_value = 0;
-                _currentTime = 0;
-                audioProcessSampleCount = 0;
-                sampleOffsetIntoNextAudioBuffer = 0;
-                zeroBuffer = nullptr;
-                dummyBuffer = nullptr;
-                didAllocateSignals = 0;
-                vs = 0;
-                maxvs = 0;
-                sr = 44100;
-                invsr = 0.00002267573696;
-                stackprotect_count = 0;
-                _voiceIndex = 0;
-                _noteNumber = 0;
-                isMuted = 1;
-                parameterOffset = 0;
-            }
-            
-            // member variables
-            
-                number intnum_tilde_06_value;
-                MillisecondTime _currentTime;
-                SampleIndex audioProcessSampleCount;
-                SampleIndex sampleOffsetIntoNextAudioBuffer;
-                signal zeroBuffer;
-                signal dummyBuffer;
-                bool didAllocateSignals;
-                Index vs;
-                Index maxvs;
-                number sr;
-                number invsr;
-                number stackprotect_count;
-                Index _voiceIndex;
-                Int _noteNumber;
-                Index isMuted;
-                ParameterIndex parameterOffset;
-            
-    };
-    
-    class RNBOSubpatcher_250 : public PatcherInterfaceImpl {
-            
-            friend class RNBOSubpatcher_256;
-            friend class rnbomatic;
-            
-            public:
-            
-            RNBOSubpatcher_250()
-            {
-            }
-            
-            ~RNBOSubpatcher_250()
-            {
-            }
-            
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
-            }
-            
-            rnbomatic* getTopLevelPatcher() {
-                return this->getPatcher()->getTopLevelPatcher();
-            }
-            
-            void cancelClockEvents()
-            {
-            }
-            
-            Index getNumMidiInputPorts() const {
-                return 0;
-            }
-            
-            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
-            
-            Index getNumMidiOutputPorts() const {
-                return 0;
-            }
-            
-            void process(
-                const SampleValue * const* inputs,
-                Index numInputs,
-                SampleValue * const* outputs,
-                Index numOutputs,
-                Index n
-            ) {
-                RNBO_UNUSED(numInputs);
-                RNBO_UNUSED(inputs);
-                this->vs = n;
-                this->updateTime(this->getEngine()->getCurrentTime());
-                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_07_perform(this->intnum_tilde_07_value, out1, n);
-                this->stackprotect_perform(n);
-                this->audioProcessSampleCount += this->vs;
-            }
-            
-            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
-                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
-                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
-                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
-                    this->didAllocateSignals = true;
-                }
-            
-                const bool sampleRateChanged = sampleRate != this->sr;
-                const bool maxvsChanged = maxBlockSize != this->maxvs;
-                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
-            
-                if (sampleRateChanged || maxvsChanged) {
-                    this->vs = maxBlockSize;
-                    this->maxvs = maxBlockSize;
-                    this->sr = sampleRate;
-                    this->invsr = 1 / sampleRate;
-                }
-            
-                RNBO_UNUSED(forceDSPSetup);
-            
-                if (sampleRateChanged)
-                    this->onSampleRateChanged(sampleRate);
-            }
-            
-            void setProbingTarget(MessageTag id) {
-                switch (id) {
-                default:
+                switch (index) {
+                case 1935387534:
                     {
-                    this->setProbingIndex(-1);
+                    this->metro_11_tick_bang();
+                    break;
+                    }
+                case -1468824490:
+                    {
+                    this->adsr_09_mute_bang();
                     break;
                     }
                 }
             }
             
-            void setProbingIndex(ProbingIndex ) {}
-            
-            Index getProbingChannels(MessageTag outletId) const {
-                RNBO_UNUSED(outletId);
-                return 0;
-            }
-            
-            Index getIsMuted()  {
-                return this->isMuted;
-            }
-            
-            void setIsMuted(Index v)  {
-                this->isMuted = v;
-            }
-            
-            Index getPatcherSerial() const {
-                return 0;
-            }
-            
-            void getState(PatcherStateInterface& ) {}
-            
-            void setState() {}
-            
-            void getPreset(PatcherStateInterface& ) {}
-            
-            void processTempoEvent(MillisecondTime , Tempo ) {}
-            
-            void processTransportEvent(MillisecondTime , TransportState ) {}
-            
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
-            
-            void onSampleRateChanged(double ) {}
-            
-            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
-            
-            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
-            
-            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValue(index, value, time);
-            }
-            
-            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
-                this->setParameterValue(index, this->getParameterValue(index), time);
-            }
-            
-            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValueNormalized(index, value, time);
-            }
-            
-            ParameterValue getParameterValue(ParameterIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return 0;
-                    }
-                }
-            }
-            
-            ParameterIndex getNumSignalInParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumSignalOutParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumParameters() const {
-                return 0;
-            }
-            
-            ConstCharPointer getParameterName(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            ConstCharPointer getParameterId(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
-            
-            void sendParameter(ParameterIndex index, bool ignoreValue) {
-                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
-            }
-            
-            void setParameterOffset(ParameterIndex offset) {
-                this->parameterOffset = offset;
-            }
-            
-            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
-                if (steps == 1) {
-                    if (normalizedValue > 0) {
-                        normalizedValue = 1.;
-                    }
-                } else {
-                    ParameterValue oneStep = (number)1. / (steps - 1);
-                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
-                    normalizedValue = numberOfSteps * oneStep;
-                }
-            
-                return normalizedValue;
-            }
-            
-            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
-            
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            void scheduleParamInit(ParameterIndex index, Index order) {
-                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
-            }
-            
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
             void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
             
             void processOutletEvent(
@@ -12864,1221 +22260,112 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 this->processOutletAtCurrentTime(sender, index, value);
             }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
+            void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time, number payload) {
+                this->updateTime(time);
             
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
-            MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
-                }
-            
-                return nullptr;
-            }
-            
-            DataRef* getDataRef(DataRefIndex index)  {
-                switch (index) {
-                default:
+                case TAG("valin"):
                     {
-                    return nullptr;
+                    if (TAG("constellation[1]/virgo/gain~_obj-3") == objectId)
+                        this->gaintilde_23_valin_set(payload);
+            
+                    if (TAG("constellation[1]/virgo/toggle_obj-10") == objectId)
+                        this->toggle_08_valin_set(payload);
+            
+                    break;
                     }
-                }
-            }
-            
-            DataRefIndex getNumDataRefs() const {
-                return 0;
-            }
-            
-            void fillDataRef(DataRefIndex , DataRef& ) {}
-            
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
-            
-            void initialize() {
-                this->assign_defaults();
-                this->setState();
-            }
-            
-            protected:
-            
-            number msToSamps(MillisecondTime ms, number sampleRate) {
-                return ms * sampleRate * 0.001;
-            }
-            
-            MillisecondTime sampsToMs(SampleIndex samps) {
-                return samps * (this->invsr * 1000);
-            }
-            
-            Index getMaxBlockSize() const {
-                return this->maxvs;
-            }
-            
-            number getSampleRate() const {
-                return this->sr;
-            }
-            
-            bool hasFixedVectorSize() const {
-                return false;
-            }
-            
-            Index getNumInputChannels() const {
-                return 0;
-            }
-            
-            Index getNumOutputChannels() const {
-                return 1;
-            }
-            
-            void initializeObjects() {}
-            
-            void sendOutlet(OutletIndex index, ParameterValue value) {
-                this->getEngine()->sendOutlet(this, index, value);
-            }
-            
-            void startup() {}
-            
-            void allocateDataRefs() {}
-            
-            void intnum_tilde_07_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
-                Index i;
-            
-                for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
-                }
-            }
-            
-            void stackprotect_perform(Index n) {
-                RNBO_UNUSED(n);
-                auto __stackprotect_count = this->stackprotect_count;
-                __stackprotect_count = 0;
-                this->stackprotect_count = __stackprotect_count;
-            }
-            
-            bool stackprotect_check() {
-                this->stackprotect_count++;
-            
-                if (this->stackprotect_count > 128) {
-                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
-                    return true;
-                }
-            
-                return false;
-            }
-            
-            void updateTime(MillisecondTime time) {
-                this->_currentTime = time;
-                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
-            
-                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
-                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
-            
-                if (this->sampleOffsetIntoNextAudioBuffer < 0)
-                    this->sampleOffsetIntoNextAudioBuffer = 0;
-            }
-            
-            void assign_defaults()
-            {
-                intnum_tilde_07_value = 0;
-                _currentTime = 0;
-                audioProcessSampleCount = 0;
-                sampleOffsetIntoNextAudioBuffer = 0;
-                zeroBuffer = nullptr;
-                dummyBuffer = nullptr;
-                didAllocateSignals = 0;
-                vs = 0;
-                maxvs = 0;
-                sr = 44100;
-                invsr = 0.00002267573696;
-                stackprotect_count = 0;
-                _voiceIndex = 0;
-                _noteNumber = 0;
-                isMuted = 1;
-                parameterOffset = 0;
-            }
-            
-            // member variables
-            
-                number intnum_tilde_07_value;
-                MillisecondTime _currentTime;
-                SampleIndex audioProcessSampleCount;
-                SampleIndex sampleOffsetIntoNextAudioBuffer;
-                signal zeroBuffer;
-                signal dummyBuffer;
-                bool didAllocateSignals;
-                Index vs;
-                Index maxvs;
-                number sr;
-                number invsr;
-                number stackprotect_count;
-                Index _voiceIndex;
-                Int _noteNumber;
-                Index isMuted;
-                ParameterIndex parameterOffset;
-            
-    };
-    
-    class RNBOSubpatcher_251 : public PatcherInterfaceImpl {
-            
-            friend class RNBOSubpatcher_256;
-            friend class rnbomatic;
-            
-            public:
-            
-            RNBOSubpatcher_251()
-            {
-            }
-            
-            ~RNBOSubpatcher_251()
-            {
-            }
-            
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
-            }
-            
-            rnbomatic* getTopLevelPatcher() {
-                return this->getPatcher()->getTopLevelPatcher();
-            }
-            
-            void cancelClockEvents()
-            {
-            }
-            
-            Index getNumMidiInputPorts() const {
-                return 0;
-            }
-            
-            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
-            
-            Index getNumMidiOutputPorts() const {
-                return 0;
-            }
-            
-            void process(
-                const SampleValue * const* inputs,
-                Index numInputs,
-                SampleValue * const* outputs,
-                Index numOutputs,
-                Index n
-            ) {
-                RNBO_UNUSED(numInputs);
-                RNBO_UNUSED(inputs);
-                this->vs = n;
-                this->updateTime(this->getEngine()->getCurrentTime());
-                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_08_perform(this->intnum_tilde_08_value, out1, n);
-                this->stackprotect_perform(n);
-                this->audioProcessSampleCount += this->vs;
-            }
-            
-            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
-                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
-                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
-                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
-                    this->didAllocateSignals = true;
-                }
-            
-                const bool sampleRateChanged = sampleRate != this->sr;
-                const bool maxvsChanged = maxBlockSize != this->maxvs;
-                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
-            
-                if (sampleRateChanged || maxvsChanged) {
-                    this->vs = maxBlockSize;
-                    this->maxvs = maxBlockSize;
-                    this->sr = sampleRate;
-                    this->invsr = 1 / sampleRate;
-                }
-            
-                RNBO_UNUSED(forceDSPSetup);
-            
-                if (sampleRateChanged)
-                    this->onSampleRateChanged(sampleRate);
-            }
-            
-            void setProbingTarget(MessageTag id) {
-                switch (id) {
-                default:
+                case TAG("listin"):
                     {
-                    this->setProbingIndex(-1);
+                    if (TAG("constellation[1]/virgo/message_obj-15") == objectId)
+                        this->message_11_listin_number_set(payload);
+            
                     break;
                     }
                 }
             }
             
-            void setProbingIndex(ProbingIndex ) {}
-            
-            Index getProbingChannels(MessageTag outletId) const {
-                RNBO_UNUSED(outletId);
-                return 0;
-            }
-            
-            Index getIsMuted()  {
-                return this->isMuted;
-            }
-            
-            void setIsMuted(Index v)  {
-                this->isMuted = v;
-            }
-            
-            Index getPatcherSerial() const {
-                return 0;
-            }
-            
-            void getState(PatcherStateInterface& ) {}
-            
-            void setState() {}
-            
-            void getPreset(PatcherStateInterface& ) {}
-            
-            void processTempoEvent(MillisecondTime , Tempo ) {}
-            
-            void processTransportEvent(MillisecondTime , TransportState ) {}
-            
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
-            
-            void onSampleRateChanged(double ) {}
-            
-            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
-            
-            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
-            
-            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValue(index, value, time);
-            }
-            
-            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
-                this->setParameterValue(index, this->getParameterValue(index), time);
-            }
-            
-            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValueNormalized(index, value, time);
-            }
-            
-            ParameterValue getParameterValue(ParameterIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return 0;
-                    }
-                }
-            }
-            
-            ParameterIndex getNumSignalInParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumSignalOutParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumParameters() const {
-                return 0;
-            }
-            
-            ConstCharPointer getParameterName(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            ConstCharPointer getParameterId(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
-            
-            void sendParameter(ParameterIndex index, bool ignoreValue) {
-                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
-            }
-            
-            void setParameterOffset(ParameterIndex offset) {
-                this->parameterOffset = offset;
-            }
-            
-            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
-                if (steps == 1) {
-                    if (normalizedValue > 0) {
-                        normalizedValue = 1.;
-                    }
-                } else {
-                    ParameterValue oneStep = (number)1. / (steps - 1);
-                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
-                    normalizedValue = numberOfSteps * oneStep;
-                }
-            
-                return normalizedValue;
-            }
-            
-            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
-            
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            void scheduleParamInit(ParameterIndex index, Index order) {
-                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
-            }
-            
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
-            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
-            
-            void processOutletEvent(
-                EngineLink* sender,
-                OutletIndex index,
-                ParameterValue value,
-                MillisecondTime time
+            void processListMessage(
+                MessageTag tag,
+                MessageTag objectId,
+                MillisecondTime time,
+                const list& payload
             ) {
                 this->updateTime(time);
-                this->processOutletAtCurrentTime(sender, index, value);
-            }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
-            
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
-            MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
-                }
-            
-                return nullptr;
-            }
-            
-            DataRef* getDataRef(DataRefIndex index)  {
-                switch (index) {
-                default:
+                case TAG("listin"):
                     {
-                    return nullptr;
-                    }
-                }
-            }
+                    if (TAG("constellation[1]/virgo/message_obj-15") == objectId)
+                        this->message_11_listin_list_set(payload);
             
-            DataRefIndex getNumDataRefs() const {
-                return 0;
-            }
-            
-            void fillDataRef(DataRefIndex , DataRef& ) {}
-            
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
-            
-            void initialize() {
-                this->assign_defaults();
-                this->setState();
-            }
-            
-            protected:
-            
-            number msToSamps(MillisecondTime ms, number sampleRate) {
-                return ms * sampleRate * 0.001;
-            }
-            
-            MillisecondTime sampsToMs(SampleIndex samps) {
-                return samps * (this->invsr * 1000);
-            }
-            
-            Index getMaxBlockSize() const {
-                return this->maxvs;
-            }
-            
-            number getSampleRate() const {
-                return this->sr;
-            }
-            
-            bool hasFixedVectorSize() const {
-                return false;
-            }
-            
-            Index getNumInputChannels() const {
-                return 0;
-            }
-            
-            Index getNumOutputChannels() const {
-                return 1;
-            }
-            
-            void initializeObjects() {}
-            
-            void sendOutlet(OutletIndex index, ParameterValue value) {
-                this->getEngine()->sendOutlet(this, index, value);
-            }
-            
-            void startup() {}
-            
-            void allocateDataRefs() {}
-            
-            void intnum_tilde_08_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
-                Index i;
-            
-                for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
-                }
-            }
-            
-            void stackprotect_perform(Index n) {
-                RNBO_UNUSED(n);
-                auto __stackprotect_count = this->stackprotect_count;
-                __stackprotect_count = 0;
-                this->stackprotect_count = __stackprotect_count;
-            }
-            
-            bool stackprotect_check() {
-                this->stackprotect_count++;
-            
-                if (this->stackprotect_count > 128) {
-                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
-                    return true;
-                }
-            
-                return false;
-            }
-            
-            void updateTime(MillisecondTime time) {
-                this->_currentTime = time;
-                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
-            
-                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
-                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
-            
-                if (this->sampleOffsetIntoNextAudioBuffer < 0)
-                    this->sampleOffsetIntoNextAudioBuffer = 0;
-            }
-            
-            void assign_defaults()
-            {
-                intnum_tilde_08_value = 0;
-                _currentTime = 0;
-                audioProcessSampleCount = 0;
-                sampleOffsetIntoNextAudioBuffer = 0;
-                zeroBuffer = nullptr;
-                dummyBuffer = nullptr;
-                didAllocateSignals = 0;
-                vs = 0;
-                maxvs = 0;
-                sr = 44100;
-                invsr = 0.00002267573696;
-                stackprotect_count = 0;
-                _voiceIndex = 0;
-                _noteNumber = 0;
-                isMuted = 1;
-                parameterOffset = 0;
-            }
-            
-            // member variables
-            
-                number intnum_tilde_08_value;
-                MillisecondTime _currentTime;
-                SampleIndex audioProcessSampleCount;
-                SampleIndex sampleOffsetIntoNextAudioBuffer;
-                signal zeroBuffer;
-                signal dummyBuffer;
-                bool didAllocateSignals;
-                Index vs;
-                Index maxvs;
-                number sr;
-                number invsr;
-                number stackprotect_count;
-                Index _voiceIndex;
-                Int _noteNumber;
-                Index isMuted;
-                ParameterIndex parameterOffset;
-            
-    };
-    
-    class RNBOSubpatcher_252 : public PatcherInterfaceImpl {
-            
-            friend class RNBOSubpatcher_256;
-            friend class rnbomatic;
-            
-            public:
-            
-            RNBOSubpatcher_252()
-            {
-            }
-            
-            ~RNBOSubpatcher_252()
-            {
-            }
-            
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
-            }
-            
-            rnbomatic* getTopLevelPatcher() {
-                return this->getPatcher()->getTopLevelPatcher();
-            }
-            
-            void cancelClockEvents()
-            {
-            }
-            
-            Index getNumMidiInputPorts() const {
-                return 0;
-            }
-            
-            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
-            
-            Index getNumMidiOutputPorts() const {
-                return 0;
-            }
-            
-            void process(
-                const SampleValue * const* inputs,
-                Index numInputs,
-                SampleValue * const* outputs,
-                Index numOutputs,
-                Index n
-            ) {
-                RNBO_UNUSED(numInputs);
-                RNBO_UNUSED(inputs);
-                this->vs = n;
-                this->updateTime(this->getEngine()->getCurrentTime());
-                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_09_perform(this->intnum_tilde_09_value, out1, n);
-                this->stackprotect_perform(n);
-                this->audioProcessSampleCount += this->vs;
-            }
-            
-            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
-                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
-                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
-                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
-                    this->didAllocateSignals = true;
-                }
-            
-                const bool sampleRateChanged = sampleRate != this->sr;
-                const bool maxvsChanged = maxBlockSize != this->maxvs;
-                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
-            
-                if (sampleRateChanged || maxvsChanged) {
-                    this->vs = maxBlockSize;
-                    this->maxvs = maxBlockSize;
-                    this->sr = sampleRate;
-                    this->invsr = 1 / sampleRate;
-                }
-            
-                RNBO_UNUSED(forceDSPSetup);
-            
-                if (sampleRateChanged)
-                    this->onSampleRateChanged(sampleRate);
-            }
-            
-            void setProbingTarget(MessageTag id) {
-                switch (id) {
-                default:
-                    {
-                    this->setProbingIndex(-1);
                     break;
                     }
                 }
             }
             
-            void setProbingIndex(ProbingIndex ) {}
-            
-            Index getProbingChannels(MessageTag outletId) const {
-                RNBO_UNUSED(outletId);
-                return 0;
-            }
-            
-            Index getIsMuted()  {
-                return this->isMuted;
-            }
-            
-            void setIsMuted(Index v)  {
-                this->isMuted = v;
-            }
-            
-            Index getPatcherSerial() const {
-                return 0;
-            }
-            
-            void getState(PatcherStateInterface& ) {}
-            
-            void setState() {}
-            
-            void getPreset(PatcherStateInterface& ) {}
-            
-            void processTempoEvent(MillisecondTime , Tempo ) {}
-            
-            void processTransportEvent(MillisecondTime , TransportState ) {}
-            
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
-            
-            void onSampleRateChanged(double ) {}
-            
-            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
-            
-            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
-            
-            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValue(index, value, time);
-            }
-            
-            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
-                this->setParameterValue(index, this->getParameterValue(index), time);
-            }
-            
-            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValueNormalized(index, value, time);
-            }
-            
-            ParameterValue getParameterValue(ParameterIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return 0;
-                    }
-                }
-            }
-            
-            ParameterIndex getNumSignalInParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumSignalOutParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumParameters() const {
-                return 0;
-            }
-            
-            ConstCharPointer getParameterName(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            ConstCharPointer getParameterId(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
-            
-            void sendParameter(ParameterIndex index, bool ignoreValue) {
-                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
-            }
-            
-            void setParameterOffset(ParameterIndex offset) {
-                this->parameterOffset = offset;
-            }
-            
-            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
-                if (steps == 1) {
-                    if (normalizedValue > 0) {
-                        normalizedValue = 1.;
-                    }
-                } else {
-                    ParameterValue oneStep = (number)1. / (steps - 1);
-                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
-                    normalizedValue = numberOfSteps * oneStep;
-                }
-            
-                return normalizedValue;
-            }
-            
-            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
-            
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            void scheduleParamInit(ParameterIndex index, Index order) {
-                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
-            }
-            
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
-            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
-            
-            void processOutletEvent(
-                EngineLink* sender,
-                OutletIndex index,
-                ParameterValue value,
-                MillisecondTime time
-            ) {
+            void processBangMessage(MessageTag tag, MessageTag objectId, MillisecondTime time) {
                 this->updateTime(time);
-                this->processOutletAtCurrentTime(sender, index, value);
-            }
             
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
-            
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
-            MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
-                }
-            
-                return nullptr;
-            }
-            
-            DataRef* getDataRef(DataRefIndex index)  {
-                switch (index) {
-                default:
+                case TAG("listin"):
                     {
-                    return nullptr;
+                    if (TAG("constellation[1]/virgo/message_obj-15") == objectId)
+                        this->message_11_listin_bang_bang();
+            
+                    break;
                     }
-                }
-            }
-            
-            DataRefIndex getNumDataRefs() const {
-                return 0;
-            }
-            
-            void fillDataRef(DataRefIndex , DataRef& ) {}
-            
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
-            
-            void initialize() {
-                this->assign_defaults();
-                this->setState();
-            }
-            
-            protected:
-            
-            number msToSamps(MillisecondTime ms, number sampleRate) {
-                return ms * sampleRate * 0.001;
-            }
-            
-            MillisecondTime sampsToMs(SampleIndex samps) {
-                return samps * (this->invsr * 1000);
-            }
-            
-            Index getMaxBlockSize() const {
-                return this->maxvs;
-            }
-            
-            number getSampleRate() const {
-                return this->sr;
-            }
-            
-            bool hasFixedVectorSize() const {
-                return false;
-            }
-            
-            Index getNumInputChannels() const {
-                return 0;
-            }
-            
-            Index getNumOutputChannels() const {
-                return 1;
-            }
-            
-            void initializeObjects() {}
-            
-            void sendOutlet(OutletIndex index, ParameterValue value) {
-                this->getEngine()->sendOutlet(this, index, value);
-            }
-            
-            void startup() {}
-            
-            void allocateDataRefs() {}
-            
-            void intnum_tilde_09_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
-                Index i;
-            
-                for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
-                }
-            }
-            
-            void stackprotect_perform(Index n) {
-                RNBO_UNUSED(n);
-                auto __stackprotect_count = this->stackprotect_count;
-                __stackprotect_count = 0;
-                this->stackprotect_count = __stackprotect_count;
-            }
-            
-            bool stackprotect_check() {
-                this->stackprotect_count++;
-            
-                if (this->stackprotect_count > 128) {
-                    console->log("STACK OVERFLOW DETECTED - stopped processing branch !");
-                    return true;
-                }
-            
-                return false;
-            }
-            
-            void updateTime(MillisecondTime time) {
-                this->_currentTime = time;
-                this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(rnbo_fround(this->msToSamps(time - this->getEngine()->getCurrentTime(), this->sr)));
-            
-                if (this->sampleOffsetIntoNextAudioBuffer >= (SampleIndex)(this->vs))
-                    this->sampleOffsetIntoNextAudioBuffer = (SampleIndex)(this->vs) - 1;
-            
-                if (this->sampleOffsetIntoNextAudioBuffer < 0)
-                    this->sampleOffsetIntoNextAudioBuffer = 0;
-            }
-            
-            void assign_defaults()
-            {
-                intnum_tilde_09_value = 0;
-                _currentTime = 0;
-                audioProcessSampleCount = 0;
-                sampleOffsetIntoNextAudioBuffer = 0;
-                zeroBuffer = nullptr;
-                dummyBuffer = nullptr;
-                didAllocateSignals = 0;
-                vs = 0;
-                maxvs = 0;
-                sr = 44100;
-                invsr = 0.00002267573696;
-                stackprotect_count = 0;
-                _voiceIndex = 0;
-                _noteNumber = 0;
-                isMuted = 1;
-                parameterOffset = 0;
-            }
-            
-            // member variables
-            
-                number intnum_tilde_09_value;
-                MillisecondTime _currentTime;
-                SampleIndex audioProcessSampleCount;
-                SampleIndex sampleOffsetIntoNextAudioBuffer;
-                signal zeroBuffer;
-                signal dummyBuffer;
-                bool didAllocateSignals;
-                Index vs;
-                Index maxvs;
-                number sr;
-                number invsr;
-                number stackprotect_count;
-                Index _voiceIndex;
-                Int _noteNumber;
-                Index isMuted;
-                ParameterIndex parameterOffset;
-            
-    };
-    
-    class RNBOSubpatcher_253 : public PatcherInterfaceImpl {
-            
-            friend class RNBOSubpatcher_256;
-            friend class rnbomatic;
-            
-            public:
-            
-            RNBOSubpatcher_253()
-            {
-            }
-            
-            ~RNBOSubpatcher_253()
-            {
-            }
-            
-            virtual RNBOSubpatcher_256* getPatcher() const {
-                return static_cast<RNBOSubpatcher_256 *>(_parentPatcher);
-            }
-            
-            rnbomatic* getTopLevelPatcher() {
-                return this->getPatcher()->getTopLevelPatcher();
-            }
-            
-            void cancelClockEvents()
-            {
-            }
-            
-            Index getNumMidiInputPorts() const {
-                return 0;
-            }
-            
-            void processMidiEvent(MillisecondTime , int , ConstByteArray , Index ) {}
-            
-            Index getNumMidiOutputPorts() const {
-                return 0;
-            }
-            
-            void process(
-                const SampleValue * const* inputs,
-                Index numInputs,
-                SampleValue * const* outputs,
-                Index numOutputs,
-                Index n
-            ) {
-                RNBO_UNUSED(numInputs);
-                RNBO_UNUSED(inputs);
-                this->vs = n;
-                this->updateTime(this->getEngine()->getCurrentTime());
-                SampleValue * out1 = (numOutputs >= 1 && outputs[0] ? outputs[0] : this->dummyBuffer);
-                this->intnum_tilde_10_perform(this->intnum_tilde_10_value, out1, n);
-                this->stackprotect_perform(n);
-                this->audioProcessSampleCount += this->vs;
-            }
-            
-            void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
-                if (this->maxvs < maxBlockSize || !this->didAllocateSignals) {
-                    this->zeroBuffer = resizeSignal(this->zeroBuffer, this->maxvs, maxBlockSize);
-                    this->dummyBuffer = resizeSignal(this->dummyBuffer, this->maxvs, maxBlockSize);
-                    this->didAllocateSignals = true;
-                }
-            
-                const bool sampleRateChanged = sampleRate != this->sr;
-                const bool maxvsChanged = maxBlockSize != this->maxvs;
-                const bool forceDSPSetup = sampleRateChanged || maxvsChanged || force;
-            
-                if (sampleRateChanged || maxvsChanged) {
-                    this->vs = maxBlockSize;
-                    this->maxvs = maxBlockSize;
-                    this->sr = sampleRate;
-                    this->invsr = 1 / sampleRate;
-                }
-            
-                RNBO_UNUSED(forceDSPSetup);
-            
-                if (sampleRateChanged)
-                    this->onSampleRateChanged(sampleRate);
-            }
-            
-            void setProbingTarget(MessageTag id) {
-                switch (id) {
-                default:
+                case TAG("bangin"):
                     {
-                    this->setProbingIndex(-1);
+                    if (TAG("constellation[1]/virgo/button_obj-13") == objectId)
+                        this->button_11_bangin_bang();
+            
                     break;
                     }
                 }
             }
             
-            void setProbingIndex(ProbingIndex ) {}
-            
-            Index getProbingChannels(MessageTag outletId) const {
-                RNBO_UNUSED(outletId);
-                return 0;
-            }
-            
-            Index getIsMuted()  {
-                return this->isMuted;
-            }
-            
-            void setIsMuted(Index v)  {
-                this->isMuted = v;
-            }
-            
-            Index getPatcherSerial() const {
-                return 0;
-            }
-            
-            void getState(PatcherStateInterface& ) {}
-            
-            void setState() {}
-            
-            void getPreset(PatcherStateInterface& ) {}
-            
-            void processTempoEvent(MillisecondTime , Tempo ) {}
-            
-            void processTransportEvent(MillisecondTime , TransportState ) {}
-            
-            void processBeatTimeEvent(MillisecondTime , BeatTime ) {}
-            
-            void onSampleRateChanged(double ) {}
-            
-            void processTimeSignatureEvent(MillisecondTime , int , int ) {}
-            
-            void setParameterValue(ParameterIndex , ParameterValue , MillisecondTime ) {}
-            
-            void processParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValue(index, value, time);
-            }
-            
-            void processParameterBangEvent(ParameterIndex index, MillisecondTime time) {
-                this->setParameterValue(index, this->getParameterValue(index), time);
-            }
-            
-            void processNormalizedParameterEvent(ParameterIndex index, ParameterValue value, MillisecondTime time) {
-                this->setParameterValueNormalized(index, value, time);
-            }
-            
-            ParameterValue getParameterValue(ParameterIndex index)  {
-                switch (index) {
-                default:
-                    {
-                    return 0;
-                    }
-                }
-            }
-            
-            ParameterIndex getNumSignalInParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumSignalOutParameters() const {
-                return 0;
-            }
-            
-            ParameterIndex getNumParameters() const {
-                return 0;
-            }
-            
-            ConstCharPointer getParameterName(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            ConstCharPointer getParameterId(ParameterIndex index) const {
-                switch (index) {
-                default:
-                    {
-                    return "bogus";
-                    }
-                }
-            }
-            
-            void getParameterInfo(ParameterIndex , ParameterInfo * ) const {}
-            
-            void sendParameter(ParameterIndex index, bool ignoreValue) {
-                this->getPatcher()->sendParameter(index + this->parameterOffset, ignoreValue);
-            }
-            
-            void setParameterOffset(ParameterIndex offset) {
-                this->parameterOffset = offset;
-            }
-            
-            ParameterValue applyStepsToNormalizedParameterValue(ParameterValue normalizedValue, int steps) const {
-                if (steps == 1) {
-                    if (normalizedValue > 0) {
-                        normalizedValue = 1.;
-                    }
-                } else {
-                    ParameterValue oneStep = (number)1. / (steps - 1);
-                    ParameterValue numberOfSteps = rnbo_fround(normalizedValue / oneStep * 1 / (number)1) * (number)1;
-                    normalizedValue = numberOfSteps * oneStep;
-                }
-            
-                return normalizedValue;
-            }
-            
-            ParameterValue convertToNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue convertFromNormalizedParameterValue(ParameterIndex index, ParameterValue value) const {
-                value = (value < 0 ? 0 : (value > 1 ? 1 : value));
-            
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            ParameterValue constrainParameterValue(ParameterIndex index, ParameterValue value) const {
-                switch (index) {
-                default:
-                    {
-                    return value;
-                    }
-                }
-            }
-            
-            void scheduleParamInit(ParameterIndex index, Index order) {
-                this->getPatcher()->scheduleParamInit(index + this->parameterOffset, order);
-            }
-            
-            void processClockEvent(MillisecondTime , ClockId , bool , ParameterValue ) {}
-            
-            void processOutletAtCurrentTime(EngineLink* , OutletIndex , ParameterValue ) {}
-            
-            void processOutletEvent(
-                EngineLink* sender,
-                OutletIndex index,
-                ParameterValue value,
-                MillisecondTime time
-            ) {
-                this->updateTime(time);
-                this->processOutletAtCurrentTime(sender, index, value);
-            }
-            
-            void processNumMessage(MessageTag , MessageTag , MillisecondTime , number ) {}
-            
-            void processListMessage(MessageTag , MessageTag , MillisecondTime , const list& ) {}
-            
-            void processBangMessage(MessageTag , MessageTag , MillisecondTime ) {}
-            
             MessageTagInfo resolveTag(MessageTag tag) const {
                 switch (tag) {
-            
+                case TAG("valout"):
+                    {
+                    return "valout";
+                    }
+                case TAG("constellation[1]/virgo/gain~_obj-3"):
+                    {
+                    return "constellation[1]/virgo/gain~_obj-3";
+                    }
+                case TAG("listout"):
+                    {
+                    return "listout";
+                    }
+                case TAG("constellation[1]/virgo/message_obj-15"):
+                    {
+                    return "constellation[1]/virgo/message_obj-15";
+                    }
+                case TAG("bangout"):
+                    {
+                    return "bangout";
+                    }
+                case TAG("constellation[1]/virgo/button_obj-13"):
+                    {
+                    return "constellation[1]/virgo/button_obj-13";
+                    }
+                case TAG("constellation[1]/virgo/toggle_obj-10"):
+                    {
+                    return "constellation[1]/virgo/toggle_obj-10";
+                    }
+                case TAG("valin"):
+                    {
+                    return "valin";
+                    }
+                case TAG("listin"):
+                    {
+                    return "listin";
+                    }
+                case TAG("bangin"):
+                    {
+                    return "bangin";
+                    }
                 }
             
                 return nullptr;
@@ -14099,14 +22386,62 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void fillDataRef(DataRefIndex , DataRef& ) {}
             
-            void processDataViewUpdate(DataRefIndex , MillisecondTime ) {}
+            void processDataViewUpdate(DataRefIndex index, MillisecondTime time) {
+                this->updateTime(time);
+            
+                if (index == 0) {
+                    this->cycle_tilde_16_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
+                    this->cycle_tilde_16_bufferUpdated();
+                }
+            }
             
             void initialize() {
                 this->assign_defaults();
                 this->setState();
+                this->cycle_tilde_16_buffer = new Float64Buffer(this->getPatcher()->getPatcher()->RNBODefaultSinus);
             }
             
             protected:
+            
+            void gaintilde_23_valin_set(number v) {
+                this->gaintilde_23_value_set(v);
+            }
+            
+            void message_11_listin_list_set(const list& v) {
+                this->message_11_set_set(v);
+            }
+            
+            void message_11_listin_number_set(number v) {
+                this->message_11_set_set(v);
+            }
+            
+            void message_11_listin_bang_bang() {
+                this->message_11_trigger_bang();
+            }
+            
+            void button_11_bangin_bang() {
+                this->button_11_bangval_bang();
+            }
+            
+            void metro_11_tick_bang() {
+                this->metro_11_tickout_bang();
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(this->metro_11_on)) {
+                    this->metro_11_last = this->currenttime();
+            
+                    {
+                        this->metro_11_next = this->metro_11_last + this->metro_11_interval;
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, this->metro_11_interval + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_08_valin_set(number v) {
+                this->toggle_08_value_number_set(v);
+            }
+            
+            void adsr_09_mute_bang() {}
             
             number msToSamps(MillisecondTime ms, number sampleRate) {
                 return ms * sampleRate * 0.001;
@@ -14136,22 +22471,344 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 return 1;
             }
             
-            void initializeObjects() {}
+            void initializeObjects() {
+                this->gaintilde_23_init();
+                this->message_11_init();
+            }
             
             void sendOutlet(OutletIndex index, ParameterValue value) {
                 this->getEngine()->sendOutlet(this, index, value);
             }
             
-            void startup() {}
+            void startup() {
+                this->updateTime(this->getEngine()->getCurrentTime());
             
-            void allocateDataRefs() {}
+                if ((bool)(this->metro_11_on))
+                    this->metro_11_on_set(1);
+            }
             
-            void intnum_tilde_10_perform(number value, SampleValue * out1, Index n) {
-                RNBO_UNUSED(value);
+            void allocateDataRefs() {
+                this->cycle_tilde_16_buffer->requestSize(16384, 1);
+                this->cycle_tilde_16_buffer->setSampleRate(this->sr);
+                this->cycle_tilde_16_buffer = this->cycle_tilde_16_buffer->allocateIfNeeded();
+            }
+            
+            void metro_11_on_set(number v) {
+                this->metro_11_on = v;
+                this->getEngine()->flushClockEvents(this, 1935387534, false);;
+            
+                if ((bool)(v)) {
+                    {
+                        this->getEngine()->scheduleClockEvent(this, 1935387534, 0 + this->_currentTime);;
+                    }
+                }
+            }
+            
+            void toggle_08_output_set(number v) {
+                this->metro_11_on_set(v);
+            }
+            
+            void toggle_08_value_number_set(number v) {
+                this->toggle_08_value_number_setter(v);
+                v = this->toggle_08_value_number;
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/virgo/toggle_obj-10"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->toggle_08_output_set(v);
+            }
+            
+            void receive_50_output_number_set(number v) {
+                this->receive_50_output_number = v;
+                this->toggle_08_value_number_set(v);
+            }
+            
+            void cycle_tilde_16_frequency_set(number v) {
+                this->cycle_tilde_16_frequency = v;
+            }
+            
+            void expr_43_out1_set(number v) {
+                this->expr_43_out1 = v;
+                this->cycle_tilde_16_frequency_set(this->expr_43_out1);
+            }
+            
+            void expr_43_in1_set(number in1) {
+                this->expr_43_in1 = in1;
+                this->expr_43_out1_set(this->expr_43_in1 * this->expr_43_in2);//#map:constellation[1]/virgo/*_obj-17:1
+            }
+            
+            void receive_49_output_number_set(number v) {
+                this->receive_49_output_number = v;
+                this->expr_43_in1_set(v);
+            }
+            
+            void gaintilde_23_outval_set(number ) {}
+            
+            void gaintilde_23_value_set(number v) {
+                this->gaintilde_23_value = v;
+                number value;
+                value = this->scale(v, 0, 157, 0, 158 - 1, 1);
+            
+                this->getEngine()->sendNumMessage(
+                    TAG("valout"),
+                    TAG("constellation[1]/virgo/gain~_obj-3"),
+                    v,
+                    this->_currentTime
+                );
+            
+                this->gaintilde_23_outval_set(value);
+            }
+            
+            void gaintilde_23_input_number_set(number v) {
+                this->gaintilde_23_input_number = v;
+            
+                this->gaintilde_23_value_set(
+                    this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
+                );
+            }
+            
+            void expr_42_out1_set(number v) {
+                this->expr_42_out1 = v;
+                this->gaintilde_23_input_number_set(this->expr_42_out1);
+            }
+            
+            void expr_42_in1_set(number in1) {
+                this->expr_42_in1 = in1;
+                this->expr_42_out1_set(this->expr_42_in1 - this->expr_42_in2);//#map:constellation[1]/virgo/-_obj-5:1
+            }
+            
+            void receive_48_output_number_set(number v) {
+                this->receive_48_output_number = v;
+                this->expr_42_in1_set(v);
+            }
+            
+            void message_11_set_set(const list& v) {
+                this->message_11_set = jsCreateListCopy(v);
+            
+                this->getEngine()->sendListMessage(
+                    TAG("listout"),
+                    TAG("constellation[1]/virgo/message_obj-15"),
+                    v,
+                    this->_currentTime
+                );
+            }
+            
+            void adsr_09_trigger_number_set(number v) {
+                this->adsr_09_trigger_number = v;
+            
+                if (v != 0)
+                    this->adsr_09_triggerBuf[(Index)this->sampleOffsetIntoNextAudioBuffer] = 1;
+            
+                for (number i = this->sampleOffsetIntoNextAudioBuffer; i < this->vectorsize(); i++) {
+                    this->adsr_09_triggerValueBuf[(Index)i] = v;
+                }
+            }
+            
+            void message_11_out_set(const list& v) {
+                {
+                    number converted = (v->length > 0 ? v[0] : 0);
+                    this->adsr_09_trigger_number_set(converted);
+                }
+            }
+            
+            void message_11_trigger_bang() {
+                this->message_11_out_set(this->message_11_set);
+            }
+            
+            void button_11_output_bang() {
+                this->message_11_trigger_bang();
+            }
+            
+            void button_11_bangval_bang() {
+                this->getEngine()->sendBangMessage(
+                    TAG("bangout"),
+                    TAG("constellation[1]/virgo/button_obj-13"),
+                    this->_currentTime
+                );;
+            
+                this->button_11_output_bang();
+            }
+            
+            void metro_11_tickout_bang() {
+                this->button_11_bangval_bang();
+            }
+            
+            void cycle_tilde_16_perform(
+                number frequency,
+                number phase_offset,
+                SampleValue * out1,
+                SampleValue * out2,
+                Index n
+            ) {
+                RNBO_UNUSED(phase_offset);
+                auto __cycle_tilde_16_f2i = this->cycle_tilde_16_f2i;
+                auto __cycle_tilde_16_buffer = this->cycle_tilde_16_buffer;
+                auto __cycle_tilde_16_phasei = this->cycle_tilde_16_phasei;
                 Index i;
             
                 for (i = 0; i < n; i++) {
-                    out1[(Index)i] = trunc(0);
+                    {
+                        uint32_t uint_phase;
+            
+                        {
+                            {
+                                uint_phase = __cycle_tilde_16_phasei;
+                            }
+                        }
+            
+                        uint32_t idx = (uint32_t)(uint32_rshift(uint_phase, 18));
+                        number frac = ((BinOpInt)((BinOpInt)uint_phase & (BinOpInt)262143)) * 3.81471181759574e-6;
+                        number y0 = __cycle_tilde_16_buffer[(Index)idx];
+                        number y1 = __cycle_tilde_16_buffer[(Index)((BinOpInt)(idx + 1) & (BinOpInt)16383)];
+                        number y = y0 + frac * (y1 - y0);
+            
+                        {
+                            uint32_t pincr = (uint32_t)(uint32_trunc(frequency * __cycle_tilde_16_f2i));
+                            __cycle_tilde_16_phasei = uint32_add(__cycle_tilde_16_phasei, pincr);
+                        }
+            
+                        out1[(Index)i] = y;
+                        out2[(Index)i] = uint_phase * 0.232830643653869629e-9;
+                        continue;
+                    }
+                }
+            
+                this->cycle_tilde_16_phasei = __cycle_tilde_16_phasei;
+            }
+            
+            void adsr_09_perform(
+                number attack,
+                number decay,
+                number sustain,
+                number release,
+                const SampleValue * trigger_signal,
+                SampleValue * out,
+                Index n
+            ) {
+                RNBO_UNUSED(trigger_signal);
+                RNBO_UNUSED(release);
+                RNBO_UNUSED(sustain);
+                RNBO_UNUSED(decay);
+                RNBO_UNUSED(attack);
+                auto __adsr_09_trigger_number = this->adsr_09_trigger_number;
+                auto __adsr_09_time = this->adsr_09_time;
+                auto __adsr_09_amplitude = this->adsr_09_amplitude;
+                auto __adsr_09_outval = this->adsr_09_outval;
+                auto __adsr_09_startingpoint = this->adsr_09_startingpoint;
+                auto __adsr_09_phase = this->adsr_09_phase;
+                auto __adsr_09_legato = this->adsr_09_legato;
+                auto __adsr_09_lastTriggerVal = this->adsr_09_lastTriggerVal;
+                auto __adsr_09_mspersamp = this->adsr_09_mspersamp;
+                bool bangMute = false;
+            
+                for (Index i = 0; i < n; i++) {
+                    number clampedattack = (500 > __adsr_09_mspersamp ? 500 : __adsr_09_mspersamp);
+                    number clampeddecay = (500 > __adsr_09_mspersamp ? 500 : __adsr_09_mspersamp);
+                    number clampedrelease = (500 > __adsr_09_mspersamp ? 500 : __adsr_09_mspersamp);
+                    number currentTriggerVal = this->adsr_09_triggerValueBuf[(Index)i];
+            
+                    if ((__adsr_09_lastTriggerVal == 0.0 && currentTriggerVal != 0.0) || this->adsr_09_triggerBuf[(Index)i] == 1) {
+                        if ((bool)(__adsr_09_legato)) {
+                            if (__adsr_09_phase != 0) {
+                                __adsr_09_startingpoint = __adsr_09_outval;
+                            } else {
+                                __adsr_09_startingpoint = 0;
+                            }
+                        } else {
+                            __adsr_09_startingpoint = 0;
+                        }
+            
+                        __adsr_09_amplitude = currentTriggerVal;
+                        __adsr_09_phase = 1;
+                        __adsr_09_time = 0.0;
+                        bangMute = false;
+                    } else if (__adsr_09_lastTriggerVal != 0.0 && currentTriggerVal == 0.0) {
+                        if (__adsr_09_phase != 4 && __adsr_09_phase != 0) {
+                            __adsr_09_phase = 4;
+                            __adsr_09_amplitude = __adsr_09_outval;
+                            __adsr_09_time = 0.0;
+                        }
+                    }
+            
+                    __adsr_09_time += __adsr_09_mspersamp;
+            
+                    if (__adsr_09_phase == 0) {
+                        __adsr_09_outval = 0;
+                    } else if (__adsr_09_phase == 1) {
+                        if (__adsr_09_time > clampedattack) {
+                            __adsr_09_time -= clampedattack;
+                            __adsr_09_phase = 2;
+                            __adsr_09_outval = __adsr_09_amplitude;
+                        } else {
+                            __adsr_09_outval = (__adsr_09_amplitude - __adsr_09_startingpoint) * __adsr_09_time / clampedattack + __adsr_09_startingpoint;
+                        }
+                    } else if (__adsr_09_phase == 2) {
+                        if (__adsr_09_time > clampeddecay) {
+                            __adsr_09_time -= clampeddecay;
+                            __adsr_09_phase = 3;
+                            __adsr_09_outval = __adsr_09_amplitude * 0;
+                        } else {
+                            __adsr_09_outval = __adsr_09_amplitude * 0 + (__adsr_09_amplitude - __adsr_09_amplitude * 0) * (1. - __adsr_09_time / clampeddecay);
+                        }
+                    } else if (__adsr_09_phase == 3) {
+                        __adsr_09_outval = __adsr_09_amplitude * 0;
+                    } else if (__adsr_09_phase == 4) {
+                        if (__adsr_09_time > clampedrelease) {
+                            __adsr_09_time = 0;
+                            __adsr_09_phase = 0;
+                            __adsr_09_outval = 0;
+                            __adsr_09_amplitude = 0;
+                            bangMute = true;
+                        } else {
+                            __adsr_09_outval = __adsr_09_amplitude * (1.0 - __adsr_09_time / clampedrelease);
+                        }
+                    }
+            
+                    out[(Index)i] = __adsr_09_outval;
+                    this->adsr_09_triggerBuf[(Index)i] = 0;
+                    this->adsr_09_triggerValueBuf[(Index)i] = __adsr_09_trigger_number;
+                    __adsr_09_lastTriggerVal = currentTriggerVal;
+                }
+            
+                if ((bool)(bangMute)) {
+                    this->getEngine()->scheduleClockEventWithValue(
+                        this,
+                        -1468824490,
+                        this->sampsToMs((SampleIndex)(this->vs)) + this->_currentTime,
+                        0
+                    );;
+                }
+            
+                this->adsr_09_lastTriggerVal = __adsr_09_lastTriggerVal;
+                this->adsr_09_phase = __adsr_09_phase;
+                this->adsr_09_startingpoint = __adsr_09_startingpoint;
+                this->adsr_09_outval = __adsr_09_outval;
+                this->adsr_09_amplitude = __adsr_09_amplitude;
+                this->adsr_09_time = __adsr_09_time;
+            }
+            
+            void dspexpr_22_perform(const Sample * in1, const Sample * in2, SampleValue * out1, Index n) {
+                Index i;
+            
+                for (i = 0; i < n; i++) {
+                    out1[(Index)i] = in1[(Index)i] * in2[(Index)i];//#map:_###_obj_###_:1
+                }
+            }
+            
+            void gaintilde_23_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+                auto __gaintilde_23_interp = this->gaintilde_23_interp;
+                auto __gaintilde_23_loginc = this->gaintilde_23_loginc;
+                auto __gaintilde_23_zval = this->gaintilde_23_zval;
+                auto __gaintilde_23_value = this->gaintilde_23_value;
+                number mult = (__gaintilde_23_value <= 0 ? 0. : __gaintilde_23_zval * rnbo_exp(__gaintilde_23_value * __gaintilde_23_loginc));
+                auto iv = this->mstosamps(__gaintilde_23_interp);
+            
+                for (Index i = 0; i < n; i++) {
+                    output[(Index)i] = input_signal[(Index)i] * this->gaintilde_23_ramp_next(mult, iv, iv);
                 }
             }
             
@@ -14160,6 +22817,161 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
                 auto __stackprotect_count = this->stackprotect_count;
                 __stackprotect_count = 0;
                 this->stackprotect_count = __stackprotect_count;
+            }
+            
+            void metro_11_interval_setter(number v) {
+                this->metro_11_interval = (v > 0 ? v : 0);
+            }
+            
+            void toggle_08_value_number_setter(number v) {
+                this->toggle_08_value_number = (v != 0 ? 1 : 0);
+            }
+            
+            number cycle_tilde_16_ph_next(number freq, number reset) {
+                {
+                    {
+                        if (reset >= 0.)
+                            this->cycle_tilde_16_ph_currentPhase = reset;
+                    }
+                }
+            
+                number pincr = freq * this->cycle_tilde_16_ph_conv;
+            
+                if (this->cycle_tilde_16_ph_currentPhase < 0.)
+                    this->cycle_tilde_16_ph_currentPhase = 1. + this->cycle_tilde_16_ph_currentPhase;
+            
+                if (this->cycle_tilde_16_ph_currentPhase > 1.)
+                    this->cycle_tilde_16_ph_currentPhase = this->cycle_tilde_16_ph_currentPhase - 1.;
+            
+                number tmp = this->cycle_tilde_16_ph_currentPhase;
+                this->cycle_tilde_16_ph_currentPhase += pincr;
+                return tmp;
+            }
+            
+            void cycle_tilde_16_ph_reset() {
+                this->cycle_tilde_16_ph_currentPhase = 0;
+            }
+            
+            void cycle_tilde_16_ph_dspsetup() {
+                this->cycle_tilde_16_ph_conv = (number)1 / this->sr;
+            }
+            
+            void cycle_tilde_16_dspsetup(bool force) {
+                if ((bool)(this->cycle_tilde_16_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->cycle_tilde_16_phasei = 0;
+                this->cycle_tilde_16_f2i = (number)4294967296 / this->samplerate();
+                this->cycle_tilde_16_wrap = (long)(this->cycle_tilde_16_buffer->getSize()) - 1;
+                this->cycle_tilde_16_setupDone = true;
+                this->cycle_tilde_16_ph_dspsetup();
+            }
+            
+            void cycle_tilde_16_bufferUpdated() {
+                this->cycle_tilde_16_wrap = (long)(this->cycle_tilde_16_buffer->getSize()) - 1;
+            }
+            
+            number gaintilde_23_ramp_d_next(number x) {
+                number temp = (number)(x - this->gaintilde_23_ramp_d_prev);
+                this->gaintilde_23_ramp_d_prev = x;
+                return temp;
+            }
+            
+            void gaintilde_23_ramp_d_dspsetup() {
+                this->gaintilde_23_ramp_d_reset();
+            }
+            
+            void gaintilde_23_ramp_d_reset() {
+                this->gaintilde_23_ramp_d_prev = 0;
+            }
+            
+            number gaintilde_23_ramp_next(number x, number up, number down) {
+                if (this->gaintilde_23_ramp_d_next(x) != 0.) {
+                    if (x > this->gaintilde_23_ramp_prev) {
+                        number _up = up;
+            
+                        if (_up < 1)
+                            _up = 1;
+            
+                        this->gaintilde_23_ramp_index = _up;
+                        this->gaintilde_23_ramp_increment = (x - this->gaintilde_23_ramp_prev) / _up;
+                    } else if (x < this->gaintilde_23_ramp_prev) {
+                        number _down = down;
+            
+                        if (_down < 1)
+                            _down = 1;
+            
+                        this->gaintilde_23_ramp_index = _down;
+                        this->gaintilde_23_ramp_increment = (x - this->gaintilde_23_ramp_prev) / _down;
+                    }
+                }
+            
+                if (this->gaintilde_23_ramp_index > 0) {
+                    this->gaintilde_23_ramp_prev += this->gaintilde_23_ramp_increment;
+                    this->gaintilde_23_ramp_index -= 1;
+                } else {
+                    this->gaintilde_23_ramp_prev = x;
+                }
+            
+                return this->gaintilde_23_ramp_prev;
+            }
+            
+            void gaintilde_23_ramp_reset() {
+                this->gaintilde_23_ramp_prev = 0;
+                this->gaintilde_23_ramp_index = 0;
+                this->gaintilde_23_ramp_increment = 0;
+                this->gaintilde_23_ramp_d_reset();
+            }
+            
+            void gaintilde_23_init() {
+                this->gaintilde_23_loginc = rnbo_log(1.072);
+                this->gaintilde_23_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_23_loginc));
+            }
+            
+            void gaintilde_23_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->gaintilde_23_value;
+            }
+            
+            void gaintilde_23_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->gaintilde_23_value_set(preset["value"]);
+            }
+            
+            void gaintilde_23_dspsetup(bool force) {
+                if ((bool)(this->gaintilde_23_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->gaintilde_23_setupDone = true;
+                this->gaintilde_23_ramp_d_dspsetup();
+            }
+            
+            void message_11_init() {
+                this->message_11_set_set({1});
+            }
+            
+            void adsr_09_dspsetup(bool force) {
+                if ((bool)(this->adsr_09_setupDone) && (bool)(!(bool)(force)))
+                    return;
+            
+                this->adsr_09_mspersamp = (number)1000 / this->sr;
+                this->adsr_09_setupDone = true;
+            }
+            
+            void metro_11_onTransportChanged(number ) {}
+            
+            void metro_11_onBeatTimeChanged(number ) {}
+            
+            void toggle_08_getPresetValue(PatcherStateInterface& preset) {
+                preset["value"] = this->toggle_08_value_number;
+            }
+            
+            void toggle_08_setPresetValue(PatcherStateInterface& preset) {
+                if ((bool)(stateIsEmpty(preset)))
+                    return;
+            
+                this->toggle_08_value_number_set(preset["value"]);
             }
             
             bool stackprotect_check() {
@@ -14186,17 +22998,71 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             void assign_defaults()
             {
-                intnum_tilde_10_value = 0;
+                receive_48_output_number = 0;
+                expr_42_in1 = 0;
+                expr_42_in2 = 20;
+                expr_42_out1 = 0;
+                receive_49_output_number = 0;
+                cycle_tilde_16_frequency = 0;
+                cycle_tilde_16_phase_offset = 0;
+                expr_43_in1 = 0;
+                expr_43_in2 = 2;
+                expr_43_out1 = 0;
+                gaintilde_23_input_number = 0;
+                gaintilde_23_value = 0;
+                gaintilde_23_interp = 10;
+                dspexpr_22_in1 = 0;
+                dspexpr_22_in2 = 0;
+                adsr_09_trigger_number = 0;
+                adsr_09_attack = 500;
+                adsr_09_decay = 500;
+                adsr_09_sustain = 0;
+                adsr_09_release = 500;
+                adsr_09_legato = 0;
+                metro_11_on = 0;
+                metro_11_interval = 1000;
+                metro_11_interval_setter(metro_11_interval);
+                toggle_08_value_number = 0;
+                toggle_08_value_number_setter(toggle_08_value_number);
+                receive_50_output_number = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
                 zeroBuffer = nullptr;
                 dummyBuffer = nullptr;
+                signals[0] = nullptr;
+                signals[1] = nullptr;
+                signals[2] = nullptr;
                 didAllocateSignals = 0;
                 vs = 0;
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
+                cycle_tilde_16_wrap = 0;
+                cycle_tilde_16_ph_currentPhase = 0;
+                cycle_tilde_16_ph_conv = 0;
+                cycle_tilde_16_setupDone = false;
+                gaintilde_23_lastValue = 0;
+                gaintilde_23_loginc = 1;
+                gaintilde_23_zval = 0;
+                gaintilde_23_ramp_d_prev = 0;
+                gaintilde_23_ramp_prev = 0;
+                gaintilde_23_ramp_index = 0;
+                gaintilde_23_ramp_increment = 0;
+                gaintilde_23_setupDone = false;
+                adsr_09_phase = 3;
+                adsr_09_mspersamp = 0;
+                adsr_09_time = 0;
+                adsr_09_lastTriggerVal = 0;
+                adsr_09_amplitude = 0;
+                adsr_09_outval = 0;
+                adsr_09_startingpoint = 0;
+                adsr_09_triggerBuf = nullptr;
+                adsr_09_triggerValueBuf = nullptr;
+                adsr_09_setupDone = false;
+                metro_11_last = -1;
+                metro_11_next = -1;
+                toggle_08_lastValue = 0;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -14206,17 +23072,74 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
             // member variables
             
-                number intnum_tilde_10_value;
+                number receive_48_output_number;
+                list receive_48_output_list;
+                number expr_42_in1;
+                number expr_42_in2;
+                number expr_42_out1;
+                number receive_49_output_number;
+                list receive_49_output_list;
+                number cycle_tilde_16_frequency;
+                number cycle_tilde_16_phase_offset;
+                number expr_43_in1;
+                number expr_43_in2;
+                number expr_43_out1;
+                number gaintilde_23_input_number;
+                number gaintilde_23_value;
+                number gaintilde_23_interp;
+                number dspexpr_22_in1;
+                number dspexpr_22_in2;
+                list message_11_set;
+                number adsr_09_trigger_number;
+                number adsr_09_attack;
+                number adsr_09_decay;
+                number adsr_09_sustain;
+                number adsr_09_release;
+                number adsr_09_legato;
+                number metro_11_on;
+                number metro_11_interval;
+                number toggle_08_value_number;
+                number receive_50_output_number;
+                list receive_50_output_list;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
                 signal zeroBuffer;
                 signal dummyBuffer;
+                SampleValue * signals[3];
                 bool didAllocateSignals;
                 Index vs;
                 Index maxvs;
                 number sr;
                 number invsr;
+                Float64BufferRef cycle_tilde_16_buffer;
+                long cycle_tilde_16_wrap;
+                uint32_t cycle_tilde_16_phasei;
+                SampleValue cycle_tilde_16_f2i;
+                number cycle_tilde_16_ph_currentPhase;
+                number cycle_tilde_16_ph_conv;
+                bool cycle_tilde_16_setupDone;
+                number gaintilde_23_lastValue;
+                number gaintilde_23_loginc;
+                number gaintilde_23_zval;
+                number gaintilde_23_ramp_d_prev;
+                number gaintilde_23_ramp_prev;
+                number gaintilde_23_ramp_index;
+                number gaintilde_23_ramp_increment;
+                bool gaintilde_23_setupDone;
+                Int adsr_09_phase;
+                number adsr_09_mspersamp;
+                number adsr_09_time;
+                number adsr_09_lastTriggerVal;
+                number adsr_09_amplitude;
+                number adsr_09_outval;
+                number adsr_09_startingpoint;
+                signal adsr_09_triggerBuf;
+                signal adsr_09_triggerValueBuf;
+                bool adsr_09_setupDone;
+                number metro_11_last;
+                number metro_11_next;
+                number toggle_08_lastValue;
                 number stackprotect_count;
                 Index _voiceIndex;
                 Int _noteNumber;
@@ -14225,11 +23148,11 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
             
     };
     
-    RNBOSubpatcher_256()
+    RNBOSubpatcher_324()
     {
     }
     
-    ~RNBOSubpatcher_256()
+    ~RNBOSubpatcher_324()
     {
         delete this->p_02;
         delete this->p_03;
@@ -14388,51 +23311,51 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
     void getState(PatcherStateInterface& ) {}
     
     void setState() {
-        this->p_02 = new RNBOSubpatcher_242();
+        this->p_02 = new RNBOSubpatcher_310();
         this->p_02->setEngineAndPatcher(this->getEngine(), this);
         this->p_02->initialize();
         this->p_02->setParameterOffset(this->getParameterOffset(this->p_02));
-        this->p_03 = new RNBOSubpatcher_243();
+        this->p_03 = new RNBOSubpatcher_311();
         this->p_03->setEngineAndPatcher(this->getEngine(), this);
         this->p_03->initialize();
         this->p_03->setParameterOffset(this->getParameterOffset(this->p_03));
-        this->p_04 = new RNBOSubpatcher_244();
+        this->p_04 = new RNBOSubpatcher_312();
         this->p_04->setEngineAndPatcher(this->getEngine(), this);
         this->p_04->initialize();
         this->p_04->setParameterOffset(this->getParameterOffset(this->p_04));
-        this->p_05 = new RNBOSubpatcher_245();
+        this->p_05 = new RNBOSubpatcher_313();
         this->p_05->setEngineAndPatcher(this->getEngine(), this);
         this->p_05->initialize();
         this->p_05->setParameterOffset(this->getParameterOffset(this->p_05));
-        this->p_06 = new RNBOSubpatcher_246();
+        this->p_06 = new RNBOSubpatcher_314();
         this->p_06->setEngineAndPatcher(this->getEngine(), this);
         this->p_06->initialize();
         this->p_06->setParameterOffset(this->getParameterOffset(this->p_06));
-        this->p_07 = new RNBOSubpatcher_247();
+        this->p_07 = new RNBOSubpatcher_315();
         this->p_07->setEngineAndPatcher(this->getEngine(), this);
         this->p_07->initialize();
         this->p_07->setParameterOffset(this->getParameterOffset(this->p_07));
-        this->p_08 = new RNBOSubpatcher_248();
+        this->p_08 = new RNBOSubpatcher_316();
         this->p_08->setEngineAndPatcher(this->getEngine(), this);
         this->p_08->initialize();
         this->p_08->setParameterOffset(this->getParameterOffset(this->p_08));
-        this->p_09 = new RNBOSubpatcher_249();
+        this->p_09 = new RNBOSubpatcher_317();
         this->p_09->setEngineAndPatcher(this->getEngine(), this);
         this->p_09->initialize();
         this->p_09->setParameterOffset(this->getParameterOffset(this->p_09));
-        this->p_10 = new RNBOSubpatcher_250();
+        this->p_10 = new RNBOSubpatcher_318();
         this->p_10->setEngineAndPatcher(this->getEngine(), this);
         this->p_10->initialize();
         this->p_10->setParameterOffset(this->getParameterOffset(this->p_10));
-        this->p_11 = new RNBOSubpatcher_251();
+        this->p_11 = new RNBOSubpatcher_319();
         this->p_11->setEngineAndPatcher(this->getEngine(), this);
         this->p_11->initialize();
         this->p_11->setParameterOffset(this->getParameterOffset(this->p_11));
-        this->p_12 = new RNBOSubpatcher_252();
+        this->p_12 = new RNBOSubpatcher_320();
         this->p_12->setEngineAndPatcher(this->getEngine(), this);
         this->p_12->initialize();
         this->p_12->setParameterOffset(this->getParameterOffset(this->p_12));
-        this->p_13 = new RNBOSubpatcher_253();
+        this->p_13 = new RNBOSubpatcher_321();
         this->p_13->setEngineAndPatcher(this->getEngine(), this);
         this->p_13->initialize();
         this->p_13->setParameterOffset(this->getParameterOffset(this->p_13));
@@ -15421,33 +24344,165 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
         this->p_13->allocateDataRefs();
     }
     
+    void p_02_target_t_number_set(number v) {
+        this->p_02->updateTime(this->_currentTime);
+        this->p_02->receive_21_output_number_set(v);
+        this->p_02->updateTime(this->_currentTime);
+        this->p_02->receive_23_output_number_set(v);
+    }
+    
     void p_03_target_t_number_set(number v) {
         this->p_03->updateTime(this->_currentTime);
-        this->p_03->receive_22_output_number_set(v);
+        this->p_03->receive_26_output_number_set(v);
+    }
+    
+    void p_05_target_t_number_set(number v) {
+        this->p_05->updateTime(this->_currentTime);
+        this->p_05->receive_30_output_number_set(v);
+    }
+    
+    void p_06_target_t_number_set(number v) {
+        this->p_06->updateTime(this->_currentTime);
+        this->p_06->receive_33_output_number_set(v);
+    }
+    
+    void p_09_target_t_number_set(number v) {
+        this->p_09->updateTime(this->_currentTime);
+        this->p_09->receive_41_output_number_set(v);
+    }
+    
+    void p_13_target_t_number_set(number v) {
+        this->p_13->updateTime(this->_currentTime);
+        this->p_13->receive_50_output_number_set(v);
+    }
+    
+    void p_02_target_freq_number_set(number v) {
+        this->p_02->updateTime(this->_currentTime);
+        this->p_02->receive_22_output_number_set(v);
     }
     
     void p_03_target_freq_number_set(number v) {
         this->p_03->updateTime(this->_currentTime);
-        this->p_03->receive_20_output_number_set(v);
+        this->p_03->receive_24_output_number_set(v);
+    }
+    
+    void p_04_target_freq_number_set(number v) {
+        this->p_04->updateTime(this->_currentTime);
+        this->p_04->receive_28_output_number_set(v);
     }
     
     void p_05_target_freq_number_set(number v) {
         this->p_05->updateTime(this->_currentTime);
-        this->p_05->receive_23_output_number_set(v);
+        this->p_05->receive_29_output_number_set(v);
+    }
+    
+    void p_06_target_freq_number_set(number v) {
+        this->p_06->updateTime(this->_currentTime);
+        this->p_06->receive_34_output_number_set(v);
+    }
+    
+    void p_07_target_freq_number_set(number v) {
+        this->p_07->updateTime(this->_currentTime);
+        this->p_07->receive_35_output_number_set(v);
+    }
+    
+    void p_08_target_freq_number_set(number v) {
+        this->p_08->updateTime(this->_currentTime);
+        this->p_08->receive_38_output_number_set(v);
+    }
+    
+    void p_09_target_freq_number_set(number v) {
+        this->p_09->updateTime(this->_currentTime);
+        this->p_09->receive_40_output_number_set(v);
+    }
+    
+    void p_10_target_freq_number_set(number v) {
+        this->p_10->updateTime(this->_currentTime);
+        this->p_10->receive_43_output_number_set(v);
+    }
+    
+    void p_11_target_freq_number_set(number v) {
+        this->p_11->updateTime(this->_currentTime);
+        this->p_11->receive_45_output_number_set(v);
+    }
+    
+    void p_12_target_freq_number_set(number v) {
+        this->p_12->updateTime(this->_currentTime);
+        this->p_12->receive_47_output_number_set(v);
+    }
+    
+    void p_13_target_freq_number_set(number v) {
+        this->p_13->updateTime(this->_currentTime);
+        this->p_13->receive_49_output_number_set(v);
     }
     
     void selector_01_onoff_set(number v) {
         this->selector_01_onoff = v;
     }
     
-    void receive_24_output_number_set(number v) {
-        this->receive_24_output_number = v;
+    void receive_51_output_number_set(number v) {
+        this->receive_51_output_number = v;
         this->selector_01_onoff_set(v);
+    }
+    
+    void p_02_target_power_number_set(number v) {
+        this->p_02->updateTime(this->_currentTime);
+        this->p_02->receive_20_output_number_set(v);
     }
     
     void p_03_target_power_number_set(number v) {
         this->p_03->updateTime(this->_currentTime);
-        this->p_03->receive_21_output_number_set(v);
+        this->p_03->receive_25_output_number_set(v);
+    }
+    
+    void p_04_target_power_number_set(number v) {
+        this->p_04->updateTime(this->_currentTime);
+        this->p_04->receive_27_output_number_set(v);
+    }
+    
+    void p_05_target_power_number_set(number v) {
+        this->p_05->updateTime(this->_currentTime);
+        this->p_05->receive_31_output_number_set(v);
+    }
+    
+    void p_06_target_power_number_set(number v) {
+        this->p_06->updateTime(this->_currentTime);
+        this->p_06->receive_32_output_number_set(v);
+    }
+    
+    void p_07_target_power_number_set(number v) {
+        this->p_07->updateTime(this->_currentTime);
+        this->p_07->receive_36_output_number_set(v);
+    }
+    
+    void p_08_target_power_number_set(number v) {
+        this->p_08->updateTime(this->_currentTime);
+        this->p_08->receive_37_output_number_set(v);
+    }
+    
+    void p_09_target_power_number_set(number v) {
+        this->p_09->updateTime(this->_currentTime);
+        this->p_09->receive_39_output_number_set(v);
+    }
+    
+    void p_10_target_power_number_set(number v) {
+        this->p_10->updateTime(this->_currentTime);
+        this->p_10->receive_42_output_number_set(v);
+    }
+    
+    void p_11_target_power_number_set(number v) {
+        this->p_11->updateTime(this->_currentTime);
+        this->p_11->receive_44_output_number_set(v);
+    }
+    
+    void p_12_target_power_number_set(number v) {
+        this->p_12->updateTime(this->_currentTime);
+        this->p_12->receive_46_output_number_set(v);
+    }
+    
+    void p_13_target_power_number_set(number v) {
+        this->p_13->updateTime(this->_currentTime);
+        this->p_13->receive_48_output_number_set(v);
     }
     
     void p_02_perform(SampleValue * out1, Index n) {
@@ -15618,7 +24673,7 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
         p_03_target = 0;
         p_04_target = 0;
         p_05_target = 0;
-        receive_24_output_number = 0;
+        receive_51_output_number = 0;
         p_06_target = 0;
         p_07_target = 0;
         selector_01_onoff = 1;
@@ -15663,8 +24718,8 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
         number p_03_target;
         number p_04_target;
         number p_05_target;
-        number receive_24_output_number;
-        list receive_24_output_list;
+        number receive_51_output_number;
+        list receive_51_output_list;
         number p_06_target;
         number p_07_target;
         number selector_01_onoff;
@@ -15690,18 +24745,18 @@ class RNBOSubpatcher_256 : public PatcherInterfaceImpl {
         Int _noteNumber;
         Index isMuted;
         ParameterIndex parameterOffset;
-        RNBOSubpatcher_242* p_02;
-        RNBOSubpatcher_243* p_03;
-        RNBOSubpatcher_244* p_04;
-        RNBOSubpatcher_245* p_05;
-        RNBOSubpatcher_246* p_06;
-        RNBOSubpatcher_247* p_07;
-        RNBOSubpatcher_248* p_08;
-        RNBOSubpatcher_249* p_09;
-        RNBOSubpatcher_250* p_10;
-        RNBOSubpatcher_251* p_11;
-        RNBOSubpatcher_252* p_12;
-        RNBOSubpatcher_253* p_13;
+        RNBOSubpatcher_310* p_02;
+        RNBOSubpatcher_311* p_03;
+        RNBOSubpatcher_312* p_04;
+        RNBOSubpatcher_313* p_05;
+        RNBOSubpatcher_314* p_06;
+        RNBOSubpatcher_315* p_07;
+        RNBOSubpatcher_316* p_08;
+        RNBOSubpatcher_317* p_09;
+        RNBOSubpatcher_318* p_10;
+        RNBOSubpatcher_319* p_11;
+        RNBOSubpatcher_320* p_12;
+        RNBOSubpatcher_321* p_13;
     
 };
 
@@ -15844,7 +24899,7 @@ void process(
     this->p_15_perform(this->signals[1], n);
     this->p_16_perform(this->signals[2], n);
     this->signaladder_01_perform(this->signals[2], this->signals[1], this->signals[0], this->signals[0], n);
-    this->gaintilde_13_perform(this->signals[0], this->signals[3], n);
+    this->gaintilde_24_perform(this->signals[0], this->signals[3], n);
     this->limi_03_perform(this->signals[3], out1, n);
     this->stackprotect_perform(n);
     this->globaltransport_advance();
@@ -15877,7 +24932,7 @@ void prepareToProcess(number sampleRate, Index maxBlockSize, bool force) {
         this->invsr = 1 / sampleRate;
     }
 
-    this->gaintilde_13_dspsetup(forceDSPSetup);
+    this->gaintilde_24_dspsetup(forceDSPSetup);
     this->limi_03_dspsetup(forceDSPSetup);
     this->globaltransport_dspsetup(forceDSPSetup);
     this->p_14->prepareToProcess(sampleRate, maxBlockSize, force);
@@ -15974,15 +25029,15 @@ Index getPatcherSerial() const {
 void getState(PatcherStateInterface& ) {}
 
 void setState() {
-    this->p_14 = new RNBOSubpatcher_254();
+    this->p_14 = new RNBOSubpatcher_322();
     this->p_14->setEngineAndPatcher(this->getEngine(), this);
     this->p_14->initialize();
     this->p_14->setParameterOffset(this->getParameterOffset(this->p_14));
-    this->p_15 = new RNBOSubpatcher_255();
+    this->p_15 = new RNBOSubpatcher_323();
     this->p_15->setEngineAndPatcher(this->getEngine(), this);
     this->p_15->initialize();
     this->p_15->setParameterOffset(this->getParameterOffset(this->p_15));
-    this->p_16 = new RNBOSubpatcher_256();
+    this->p_16 = new RNBOSubpatcher_324();
     this->p_16->setEngineAndPatcher(this->getEngine(), this);
     this->p_16->initialize();
     this->p_16->setParameterOffset(this->getParameterOffset(this->p_16));
@@ -16682,14 +25737,14 @@ void processNumMessage(MessageTag tag, MessageTag objectId, MillisecondTime time
     case TAG("listin"):
         {
         if (TAG("message_obj-26") == objectId)
-            this->message_07_listin_number_set(payload);
+            this->message_12_listin_number_set(payload);
 
         break;
         }
     case TAG("valin"):
         {
         if (TAG("gain~_obj-18") == objectId)
-            this->gaintilde_13_valin_set(payload);
+            this->gaintilde_24_valin_set(payload);
 
         break;
         }
@@ -16712,7 +25767,7 @@ void processListMessage(
     case TAG("listin"):
         {
         if (TAG("message_obj-26") == objectId)
-            this->message_07_listin_list_set(payload);
+            this->message_12_listin_list_set(payload);
 
         break;
         }
@@ -16730,7 +25785,7 @@ void processBangMessage(MessageTag tag, MessageTag objectId, MillisecondTime tim
     case TAG("listin"):
         {
         if (TAG("message_obj-26") == objectId)
-            this->message_07_listin_bang_bang();
+            this->message_12_listin_bang_bang();
 
         break;
         }
@@ -16879,20 +25934,20 @@ void param_07_value_set(number v) {
     this->send_07_input_number_set(v);
 }
 
-void message_07_listin_list_set(const list& v) {
-    this->message_07_set_set(v);
+void message_12_listin_list_set(const list& v) {
+    this->message_12_set_set(v);
 }
 
-void message_07_listin_number_set(number v) {
-    this->message_07_set_set(v);
+void message_12_listin_number_set(number v) {
+    this->message_12_set_set(v);
 }
 
-void message_07_listin_bang_bang() {
-    this->message_07_trigger_bang();
+void message_12_listin_bang_bang() {
+    this->message_12_trigger_bang();
 }
 
-void gaintilde_13_valin_set(number v) {
-    this->gaintilde_13_value_set(v);
+void gaintilde_24_valin_set(number v) {
+    this->gaintilde_24_value_set(v);
 }
 
 number msToSamps(MillisecondTime ms, number sampleRate) {
@@ -16937,8 +25992,8 @@ void allocateDataRefs() {
 }
 
 void initializeObjects() {
-    this->message_07_init();
-    this->gaintilde_13_init();
+    this->message_12_init();
+    this->gaintilde_24_init();
     this->p_14->initializeObjects();
     this->p_15->initializeObjects();
     this->p_16->initializeObjects();
@@ -16986,38 +26041,38 @@ static number param_02_value_constrain(number v) {
     return v;
 }
 
-void gaintilde_13_outval_set(number ) {}
+void gaintilde_24_outval_set(number ) {}
 
-void gaintilde_13_value_set(number v) {
-    this->gaintilde_13_value = v;
+void gaintilde_24_value_set(number v) {
+    this->gaintilde_24_value = v;
     number value;
     value = this->scale(v, 0, 157, 0, 158 - 1, 1);
     this->getEngine()->sendNumMessage(TAG("valout"), TAG("gain~_obj-18"), v, this->_currentTime);
-    this->gaintilde_13_outval_set(value);
+    this->gaintilde_24_outval_set(value);
 }
 
-void gaintilde_13_input_number_set(number v) {
-    this->gaintilde_13_input_number = v;
+void gaintilde_24_input_number_set(number v) {
+    this->gaintilde_24_input_number = v;
 
-    this->gaintilde_13_value_set(
+    this->gaintilde_24_value_set(
         this->scale((v > 158 - 1 ? 158 - 1 : (v < 0 ? 0 : v)), 0, 158 - 1, 0, 157, 1)
     );
 }
 
-void message_07_out_set(const list& v) {
+void message_12_out_set(const list& v) {
     {
         number converted = (v->length > 0 ? v[0] : 0);
-        this->gaintilde_13_input_number_set(converted);
+        this->gaintilde_24_input_number_set(converted);
     }
 }
 
-void message_07_trigger_bang() {
-    this->message_07_out_set(this->message_07_set);
+void message_12_trigger_bang() {
+    this->message_12_out_set(this->message_12_set);
 }
 
-void receive_25_output_number_set(number v) {
-    this->receive_25_output_number = v;
-    this->message_07_trigger_bang();
+void receive_52_output_number_set(number v) {
+    this->receive_52_output_number = v;
+    this->message_12_trigger_bang();
 }
 
 void p_14_target_t_number_set(number v) {
@@ -17027,12 +26082,22 @@ void p_14_target_t_number_set(number v) {
 
 void p_16_target_t_number_set(number v) {
     this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_02_target_t_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
     this->p_16->p_03_target_t_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_05_target_t_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_06_target_t_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_09_target_t_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_13_target_t_number_set(v);
 }
 
 void send_02_input_number_set(number v) {
     this->send_02_input_number = v;
-    this->receive_25_output_number_set(v);
+    this->receive_52_output_number_set(v);
     this->p_14_target_t_number_set(v);
     this->p_16_target_t_number_set(v);
 }
@@ -17079,9 +26144,29 @@ void p_15_target_freq_number_set(number v) {
 
 void p_16_target_freq_number_set(number v) {
     this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_02_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
     this->p_16->p_03_target_freq_number_set(v);
     this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_04_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
     this->p_16->p_05_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_06_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_07_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_08_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_09_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_10_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_11_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_12_target_freq_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_13_target_freq_number_set(v);
 }
 
 void send_04_input_number_set(number v) {
@@ -17098,7 +26183,7 @@ static number param_05_value_constrain(number v) {
 
 void p_16_target_constellation_number_set(number v) {
     this->p_16->updateTime(this->_currentTime);
-    this->p_16->receive_24_output_number_set(v);
+    this->p_16->receive_51_output_number_set(v);
 }
 
 void send_05_input_number_set(number v) {
@@ -17148,7 +26233,29 @@ void p_15_target_power_number_set(number v) {
 
 void p_16_target_power_number_set(number v) {
     this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_02_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
     this->p_16->p_03_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_04_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_05_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_06_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_07_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_08_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_09_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_10_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_11_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_12_target_power_number_set(v);
+    this->p_16->updateTime(this->_currentTime);
+    this->p_16->p_13_target_power_number_set(v);
 }
 
 void send_07_input_number_set(number v) {
@@ -17158,13 +26265,13 @@ void send_07_input_number_set(number v) {
     this->p_16_target_power_number_set(v);
 }
 
-void message_07_set_set(const list& v) {
-    this->message_07_set = jsCreateListCopy(v);
+void message_12_set_set(const list& v) {
+    this->message_12_set = jsCreateListCopy(v);
     this->getEngine()->sendListMessage(TAG("listout"), TAG("message_obj-26"), v, this->_currentTime);
 }
 
 void p_15_source_t_number_set(number v) {
-    this->receive_25_output_number_set(v);
+    this->receive_52_output_number_set(v);
     this->p_14_target_t_number_set(v);
     this->p_16_target_t_number_set(v);
 }
@@ -17204,16 +26311,16 @@ void signaladder_01_perform(
     }
 }
 
-void gaintilde_13_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
-    auto __gaintilde_13_interp = this->gaintilde_13_interp;
-    auto __gaintilde_13_loginc = this->gaintilde_13_loginc;
-    auto __gaintilde_13_zval = this->gaintilde_13_zval;
-    auto __gaintilde_13_value = this->gaintilde_13_value;
-    number mult = (__gaintilde_13_value <= 0 ? 0. : __gaintilde_13_zval * rnbo_exp(__gaintilde_13_value * __gaintilde_13_loginc));
-    auto iv = this->mstosamps(__gaintilde_13_interp);
+void gaintilde_24_perform(const SampleValue * input_signal, SampleValue * output, Index n) {
+    auto __gaintilde_24_interp = this->gaintilde_24_interp;
+    auto __gaintilde_24_loginc = this->gaintilde_24_loginc;
+    auto __gaintilde_24_zval = this->gaintilde_24_zval;
+    auto __gaintilde_24_value = this->gaintilde_24_value;
+    number mult = (__gaintilde_24_value <= 0 ? 0. : __gaintilde_24_zval * rnbo_exp(__gaintilde_24_value * __gaintilde_24_loginc));
+    auto iv = this->mstosamps(__gaintilde_24_interp);
 
     for (Index i = 0; i < n; i++) {
-        output[(Index)i] = input_signal[(Index)i] * this->gaintilde_13_ramp_next(mult, iv, iv);
+        output[(Index)i] = input_signal[(Index)i] * this->gaintilde_24_ramp_next(mult, iv, iv);
     }
 }
 
@@ -17338,84 +26445,84 @@ void limi_03_threshold_setter(number v) {
     this->limi_03_threshold = rnbo_pow(10., v * 0.05);
 }
 
-void message_07_init() {
-    this->message_07_set_set({100});
+void message_12_init() {
+    this->message_12_set_set({100});
 }
 
-number gaintilde_13_ramp_d_next(number x) {
-    number temp = (number)(x - this->gaintilde_13_ramp_d_prev);
-    this->gaintilde_13_ramp_d_prev = x;
+number gaintilde_24_ramp_d_next(number x) {
+    number temp = (number)(x - this->gaintilde_24_ramp_d_prev);
+    this->gaintilde_24_ramp_d_prev = x;
     return temp;
 }
 
-void gaintilde_13_ramp_d_dspsetup() {
-    this->gaintilde_13_ramp_d_reset();
+void gaintilde_24_ramp_d_dspsetup() {
+    this->gaintilde_24_ramp_d_reset();
 }
 
-void gaintilde_13_ramp_d_reset() {
-    this->gaintilde_13_ramp_d_prev = 0;
+void gaintilde_24_ramp_d_reset() {
+    this->gaintilde_24_ramp_d_prev = 0;
 }
 
-number gaintilde_13_ramp_next(number x, number up, number down) {
-    if (this->gaintilde_13_ramp_d_next(x) != 0.) {
-        if (x > this->gaintilde_13_ramp_prev) {
+number gaintilde_24_ramp_next(number x, number up, number down) {
+    if (this->gaintilde_24_ramp_d_next(x) != 0.) {
+        if (x > this->gaintilde_24_ramp_prev) {
             number _up = up;
 
             if (_up < 1)
                 _up = 1;
 
-            this->gaintilde_13_ramp_index = _up;
-            this->gaintilde_13_ramp_increment = (x - this->gaintilde_13_ramp_prev) / _up;
-        } else if (x < this->gaintilde_13_ramp_prev) {
+            this->gaintilde_24_ramp_index = _up;
+            this->gaintilde_24_ramp_increment = (x - this->gaintilde_24_ramp_prev) / _up;
+        } else if (x < this->gaintilde_24_ramp_prev) {
             number _down = down;
 
             if (_down < 1)
                 _down = 1;
 
-            this->gaintilde_13_ramp_index = _down;
-            this->gaintilde_13_ramp_increment = (x - this->gaintilde_13_ramp_prev) / _down;
+            this->gaintilde_24_ramp_index = _down;
+            this->gaintilde_24_ramp_increment = (x - this->gaintilde_24_ramp_prev) / _down;
         }
     }
 
-    if (this->gaintilde_13_ramp_index > 0) {
-        this->gaintilde_13_ramp_prev += this->gaintilde_13_ramp_increment;
-        this->gaintilde_13_ramp_index -= 1;
+    if (this->gaintilde_24_ramp_index > 0) {
+        this->gaintilde_24_ramp_prev += this->gaintilde_24_ramp_increment;
+        this->gaintilde_24_ramp_index -= 1;
     } else {
-        this->gaintilde_13_ramp_prev = x;
+        this->gaintilde_24_ramp_prev = x;
     }
 
-    return this->gaintilde_13_ramp_prev;
+    return this->gaintilde_24_ramp_prev;
 }
 
-void gaintilde_13_ramp_reset() {
-    this->gaintilde_13_ramp_prev = 0;
-    this->gaintilde_13_ramp_index = 0;
-    this->gaintilde_13_ramp_increment = 0;
-    this->gaintilde_13_ramp_d_reset();
+void gaintilde_24_ramp_reset() {
+    this->gaintilde_24_ramp_prev = 0;
+    this->gaintilde_24_ramp_index = 0;
+    this->gaintilde_24_ramp_increment = 0;
+    this->gaintilde_24_ramp_d_reset();
 }
 
-void gaintilde_13_init() {
-    this->gaintilde_13_loginc = rnbo_log(1.072);
-    this->gaintilde_13_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_13_loginc));
+void gaintilde_24_init() {
+    this->gaintilde_24_loginc = rnbo_log(1.072);
+    this->gaintilde_24_zval = 7.943 * rnbo_exp(-((158 - 1) * this->gaintilde_24_loginc));
 }
 
-void gaintilde_13_getPresetValue(PatcherStateInterface& preset) {
-    preset["value"] = this->gaintilde_13_value;
+void gaintilde_24_getPresetValue(PatcherStateInterface& preset) {
+    preset["value"] = this->gaintilde_24_value;
 }
 
-void gaintilde_13_setPresetValue(PatcherStateInterface& preset) {
+void gaintilde_24_setPresetValue(PatcherStateInterface& preset) {
     if ((bool)(stateIsEmpty(preset)))
         return;
 
-    this->gaintilde_13_value_set(preset["value"]);
+    this->gaintilde_24_value_set(preset["value"]);
 }
 
-void gaintilde_13_dspsetup(bool force) {
-    if ((bool)(this->gaintilde_13_setupDone) && (bool)(!(bool)(force)))
+void gaintilde_24_dspsetup(bool force) {
+    if ((bool)(this->gaintilde_24_setupDone) && (bool)(!(bool)(force)))
         return;
 
-    this->gaintilde_13_setupDone = true;
-    this->gaintilde_13_ramp_d_dspsetup();
+    this->gaintilde_24_setupDone = true;
+    this->gaintilde_24_ramp_d_dspsetup();
 }
 
 void param_02_getPresetValue(PatcherStateInterface& preset) {
@@ -17772,11 +26879,11 @@ void updateTime(MillisecondTime time) {
 
 void assign_defaults()
 {
-    receive_25_output_number = 0;
+    receive_52_output_number = 0;
     p_14_target = 0;
-    gaintilde_13_input_number = 0;
-    gaintilde_13_value = 0;
-    gaintilde_13_interp = 10;
+    gaintilde_24_input_number = 0;
+    gaintilde_24_value = 0;
+    gaintilde_24_interp = 10;
     param_02_value = 0;
     p_15_target = 0;
     send_02_input_number = 0;
@@ -17816,14 +26923,14 @@ void assign_defaults()
     maxvs = 0;
     sr = 44100;
     invsr = 0.00002267573696;
-    gaintilde_13_lastValue = 0;
-    gaintilde_13_loginc = 1;
-    gaintilde_13_zval = 0;
-    gaintilde_13_ramp_d_prev = 0;
-    gaintilde_13_ramp_prev = 0;
-    gaintilde_13_ramp_index = 0;
-    gaintilde_13_ramp_increment = 0;
-    gaintilde_13_setupDone = false;
+    gaintilde_24_lastValue = 0;
+    gaintilde_24_loginc = 1;
+    gaintilde_24_zval = 0;
+    gaintilde_24_ramp_d_prev = 0;
+    gaintilde_24_ramp_prev = 0;
+    gaintilde_24_ramp_index = 0;
+    gaintilde_24_ramp_increment = 0;
+    gaintilde_24_setupDone = false;
     param_02_lastValue = 0;
     param_03_lastValue = 0;
     limi_03_last = 0;
@@ -17855,13 +26962,13 @@ void assign_defaults()
 
 // member variables
 
-    number receive_25_output_number;
-    list receive_25_output_list;
-    list message_07_set;
+    number receive_52_output_number;
+    list receive_52_output_list;
+    list message_12_set;
     number p_14_target;
-    number gaintilde_13_input_number;
-    number gaintilde_13_value;
-    number gaintilde_13_interp;
+    number gaintilde_24_input_number;
+    number gaintilde_24_value;
+    number gaintilde_24_interp;
     number param_02_value;
     number p_15_target;
     number send_02_input_number;
@@ -17900,14 +27007,14 @@ void assign_defaults()
     Index maxvs;
     number sr;
     number invsr;
-    number gaintilde_13_lastValue;
-    number gaintilde_13_loginc;
-    number gaintilde_13_zval;
-    number gaintilde_13_ramp_d_prev;
-    number gaintilde_13_ramp_prev;
-    number gaintilde_13_ramp_index;
-    number gaintilde_13_ramp_increment;
-    bool gaintilde_13_setupDone;
+    number gaintilde_24_lastValue;
+    number gaintilde_24_loginc;
+    number gaintilde_24_zval;
+    number gaintilde_24_ramp_d_prev;
+    number gaintilde_24_ramp_prev;
+    number gaintilde_24_ramp_index;
+    number gaintilde_24_ramp_increment;
+    bool gaintilde_24_setupDone;
     number param_02_lastValue;
     number param_03_lastValue;
     SampleValue limi_03_lookaheadBuffers[1][512] = { };
@@ -17940,9 +27047,9 @@ void assign_defaults()
     Index isMuted;
     indexlist paramInitIndices;
     indexlist paramInitOrder;
-    RNBOSubpatcher_254* p_14;
-    RNBOSubpatcher_255* p_15;
-    RNBOSubpatcher_256* p_16;
+    RNBOSubpatcher_322* p_14;
+    RNBOSubpatcher_323* p_15;
+    RNBOSubpatcher_324* p_16;
 
 };
 
