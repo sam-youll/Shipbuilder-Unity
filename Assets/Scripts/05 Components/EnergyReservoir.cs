@@ -331,7 +331,7 @@ public class EnergyReservoir : MonoBehaviour
             var remainder = energyCells[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount;
             Destroy(energyCells[type][^1]);
             energyCells[type].RemoveAt(energyCells[type].Count - 1);
-            if (energyCells.Count == 0) break;
+            if (energyCells[type].Count == 0) break;
             energyCells[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount = remainder;
         }
         // Debug.Log($"There is now {energy[type].Count-1 + energy[type][^1].transform.Find("Fill").GetComponent<Image>().fillAmount} {type} energy.");
