@@ -77,6 +77,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform escapeModuleCounterParent;
     [SerializeField] private TextMeshProUGUI scrapCounter;
     
+    [Header("Constellation Tracker")]
+    [SerializeField] private GameObject constellationTracker;
+    [SerializeField] private Image constellationIcon;
+    [SerializeField] private TextMeshProUGUI constellationTrackerLabel;
+    
     [Header("Quest Log Components")] 
     [SerializeField] private GameObject questLog;
     [SerializeField] private TextMeshProUGUI questLogText;
@@ -110,6 +115,8 @@ public class UIManager : MonoBehaviour
         InitTooltip();
         
         EventBus.Instance.playerScrapValueChanged.AddListener(OnPlayerScrapValueChanged);
+        EventBus.Instance.constellationAdvanced.AddListener(OnConstellationAdvanced);
+        OnConstellationAdvanced();
         OnPlayerScrapValueChanged();
 
 
@@ -717,6 +724,15 @@ public class UIManager : MonoBehaviour
     {
         InventoryManager.Instance.creativeMode = true;
         InventoryManager.Instance.LoadCreativeModeModules();
+    }
+
+    private void OnConstellationAdvanced()
+    {
+        var constellationName = Enum.GetName(typeof(GameStateManager.Constellation),
+            GameStateManager.Instance.currentConstellation);
+        Debug.Log(constellationName);
+        constellationIcon.sprite = Resources.Load<Sprite>("Sprites/" + constellationName);
+        constellationTrackerLabel.text = constellationName;
     }
     
     #endregion

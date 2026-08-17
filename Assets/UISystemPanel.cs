@@ -79,6 +79,8 @@ public class UISystemPanel : MonoBehaviour
 
     private void OnWeaponFired(Weapon weapon)
     {
+        if (!gameObject.activeSelf) return;
+        
         if (weapon == systemReferenced)
         {
             StopAllCoroutines();
