@@ -381,10 +381,16 @@ public class UIManager : MonoBehaviour
         {
             target = cursor.heldObject;
         }
+        else if (DidIHitAnythingClickable(out var result))
+        {
+            target = result;
+        }
+        /*
         else
         {
             target = HoverList().Find(x => x.gameObject != null && x.gameObject.TryGetComponent(out ITooltipInfo _));
         }
+        */
         
         if (target != null)
         {
@@ -469,7 +475,7 @@ public class UIManager : MonoBehaviour
         {
             case GameCursor.State.Point:
                 // if hit(s), switch to open hand
-                if (DidIHitAnythingClickable())
+                if (DidIHitAnythingClickable(out _))
                 {
                     cursor.SetState(GameCursor.State.Open);
                 }
@@ -481,7 +487,7 @@ public class UIManager : MonoBehaviour
                 break;
             case GameCursor.State.Open:
                 // if no hits, return to default
-                if (!DidIHitAnythingClickable())
+                if (!DidIHitAnythingClickable(out _))
                 {
                     cursor.SetState(GameCursor.State.Point);
                 }
@@ -489,7 +495,10 @@ public class UIManager : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     cursor.SetState(GameCursor.State.Close);
-                    cursor.heldObject = TopRaycastResult().gameObject;
+                    if (DidIHitAnythingClickable(out var result))
+                    {
+                        cursor.heldObject = result;
+                    }
                 }
                 // if panning
                 if (panning)
@@ -510,9 +519,12 @@ public class UIManager : MonoBehaviour
                 }
                 else if (cursor.heldObject != null && cursor.heldObject.TryGetComponent(out Jack jack))
                 {
-                    if (HoverList().Count > 0 && TopRaycastResult().TryGetComponent(out Wire wire))
+                    if (HoverList().Count > 0 && DidIHitAnythingClickable(out var result))
                     {
-                        cursor.heldObject = wire.gameObject;
+                        if (result.TryGetComponent(out Wire wire))
+                        {
+                            cursor.heldObject = wire.gameObject;
+                        }
                     }
                 }
                 // if not panning anymore
@@ -591,7 +603,7 @@ public class UIManager : MonoBehaviour
     {
         return hoverList;
     }
-    private List<GameObject> hoverList = new();
+    [ShowInInspector] private List<GameObject> hoverList = new();
     private void UpdateHoverList()
     {
         var results = new List<GameObject>();
@@ -635,7 +647,7 @@ public class UIManager : MonoBehaviour
         results = canvasRaycast;
         return canvasRaycast.Count > 0;
     }
-    private List<RaycastResult> canvasRaycast = new();
+    [ShowInInspector] private List<RaycastResult> canvasRaycast = new();
     private void UpdateCanvasRaycast()
     {
         var results = new List<RaycastResult>();
@@ -658,6 +670,9 @@ public class UIManager : MonoBehaviour
             canvas.GetComponent<GraphicRaycaster>().Raycast(pointerEvent, canvasResults);
             foreach (var result in canvasResults)
             {
+                results.Add(result);
+                continue;
+                
                 // TODO: check if result is interactable
                 if (result.gameObject.TryGetComponent(out Selectable _))
                 {
@@ -677,9 +692,33 @@ public class UIManager : MonoBehaviour
         canvasRaycast = results;
     }
 
-    private bool DidIHitAnythingClickable()
+    private bool DidIHitAnythingClickable(out GameObject hit)
     {
-        return CanvasRaycast(out _) || HoverList().Count > 0;
+        if (TopRaycastResult() != null)
+        {
+            var result = TopRaycastResult();
+            if (result.TryGetComponent(out Collider2D _))
+            {
+                hit = result;
+                return true;
+            }
+            else if (result.TryGetComponent(out UIBehaviour ui))
+            {
+                if (ui is Selectable _)
+                {
+                    hit = result;
+                    return true;
+                }
+                else if (result.GetComponentInParent<Selectable>() != null)
+                {
+                    hit = result.GetComponentInParent<Selectable>().gameObject;
+                    return true;
+                }
+            }
+        }
+
+        hit = null;
+        return false;
     }
 
     private bool AmIOnlyHittingShipCanvas()
