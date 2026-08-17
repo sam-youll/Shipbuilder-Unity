@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec593b57273a81f4192006f47ceb121a, type: 3}
+  m_Name: Reach Eurydice
+  m_EditorClassIdentifier: 
+  questName: Reach Eurydice
+  questSteps:
+  - stepName: aries
+    objectiveText: advance through aries
+    dependencies: []
+  - stepName: taurus
+    objectiveText: advance through taurus
+    dependencies:
+    - aries
+  - stepName: gemini
+    objectiveText: advance through gemini
+    dependencies:
+    - aries
+    - taurus
+  - stepName: cancer
+    objectiveText: advance through cancer
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+  - stepName: leo
+    objectiveText: advance through leo
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+  - stepName: virgo
+    objectiveText: advance through virgo
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+  - stepName: libra
+    objectiveText: advance through virgo
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+  - stepName: scorpio
+    objectiveText: advance through scorpio
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+    - libra
+  - stepName: sagittarius
+    objectiveText: advance through sagittarius
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+    - libra
+    - scorpio
+  - stepName: capricorn
+    objectiveText: advance through capricorn
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+    - libra
+    - scorpio
+    - sagittarius
+  - stepName: aquarius
+    objectiveText: advance through aquarius
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+    - libra
+    - scorpio
+    - sagittarius
+    - capricorn
+  - stepName: pisces
+    objectiveText: advance through pisces
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+    - libra
+    - scorpio
+    - sagittarius
+    - capricorn
+    - aquarius
+  - stepName: boss
+    objectiveText: defeat the S.H.I.E.L.D. boss guarding Eurydice
+    dependencies:
+    - aries
+    - taurus
+    - gemini
+    - cancer
+    - leo
+    - virgo
+    - libra
+    - scorpio
+    - sagittarius
+    - capricorn
+    - aquarius
+    - pisces

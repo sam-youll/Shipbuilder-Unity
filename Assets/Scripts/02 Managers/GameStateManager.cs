@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using TMPro;
@@ -73,20 +74,20 @@ public class GameStateManager : MonoBehaviour
     
     public List<ConstellationInfo> constellationScrobjects = new List<ConstellationInfo>();
     
-    public Dictionary<Constellation, int> ConstellationInfos = new Dictionary<Constellation, int>()
+    public Dictionary<Constellation, string> ConstellationStrings = new Dictionary<Constellation, string>()
     {
-        {Constellation.Aries, 0},
-        {Constellation.Taurus, 1},
-        {Constellation.Gemini, 2},
-        {Constellation.Cancer, 3},
-        {Constellation.Leo, 4},
-        {Constellation.Virgo, 5},
-        {Constellation.Libra, 6},
-        {Constellation.Scorpio, 7},
-        {Constellation.Sagittarius, 8},
-        {Constellation.Capricorn, 9},
-        {Constellation.Aquarius, 10},
-        {Constellation.Pisces, 11},
+        {Constellation.Aries, "aries"},
+        {Constellation.Taurus, "taurus"},
+        {Constellation.Gemini, "gemini"},
+        {Constellation.Cancer, "cancer"},
+        {Constellation.Leo, "leo"},
+        {Constellation.Virgo, "virgo"},
+        {Constellation.Libra, "libra"},
+        {Constellation.Scorpio, "scorpio"},
+        {Constellation.Sagittarius, "sagittarius"},
+        {Constellation.Capricorn, "capricorn"},
+        {Constellation.Aquarius, "aquarius"},
+        {Constellation.Pisces, "pisces"},
     };
 
     public ConstellationInfo constellationInfo;
@@ -114,12 +115,25 @@ public class GameStateManager : MonoBehaviour
         currentNode = Node.Base;
         currentConstellation = Constellation.Aries;
         currentStage = Stage.Testing;
-        constellationInfo = constellationScrobjects[ConstellationInfos[currentConstellation]];
+        constellationInfo = constellationScrobjects[(int)currentConstellation];
         
         EventBus.Instance.playerDefeated.AddListener(OnPlayerDefeated);
         EventBus.Instance.leftShop.AddListener(OnPlayerLeftShop);
         EventBus.Instance.constellationAdvanced.AddListener(OnConstellationAdvanced);
         EventBus.Instance.constellationReset.AddListener(OnConstellationReset);
+        
+        //quest listeners
+        EventBus.Instance.powerPlaced.AddListener(() => OnQuestStepCompleted("powerModule"));
+        EventBus.Instance.converterPlaced.AddListener(() => OnQuestStepCompleted("converterModule"));
+        EventBus.Instance.reactorModulesConnected.AddListener(() => OnQuestStepCompleted("connectReactorModules"));
+        EventBus.Instance.weaponPowered.AddListener(() => OnQuestStepCompleted("powerWeapon"));
+        EventBus.Instance.clockPlaced.AddListener(() => OnQuestStepCompleted("clockModule"));
+        EventBus.Instance.sourcePlaced.AddListener(() => OnQuestStepCompleted("sourceModule"));
+        EventBus.Instance.weaponModulesConnected.AddListener(() => OnQuestStepCompleted("connectModules"));
+        EventBus.Instance.weaponReady.AddListener(() => OnQuestStepCompleted("connectWeapon"));
+        EventBus.Instance.combatStarted.AddListener(() => OnQuestStepCompleted("startCombat"));
+        
+        EventBus.Instance.constellationAdvanced.AddListener(() => OnQuestStepCompleted(ConstellationStrings[currentConstellation]));
         
         SceneManager.sceneLoaded += DeduplicateCameras;
         
@@ -186,14 +200,17 @@ public class GameStateManager : MonoBehaviour
 
     private void OnConstellationAdvanced()
     {
-        currentConstellation += 1;
-        constellationInfo = constellationScrobjects[ConstellationInfos[currentConstellation]];
+        currentConstellation++;
+        constellationInfo = constellationScrobjects[(int)currentConstellation];
         Debug.Log("current constellation: " + currentConstellation);
+        
+        
     }
 
     private void OnConstellationReset()
     {
         currentConstellation = Constellation.Aries;
-        constellationInfo = constellationScrobjects[ConstellationInfos[currentConstellation]];
+        constellationInfo = constellationScrobjects[(int)currentConstellation];
+        
     }
 }

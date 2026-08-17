@@ -108,6 +108,14 @@ public class EventBus : MonoBehaviour
 
     // quests yipe
     public UnityEvent<string> questStepCompleted;
+    public UnityEvent powerPlaced;
+    public UnityEvent converterPlaced;
+    public UnityEvent reactorModulesConnected;
+    public UnityEvent weaponPowered;
+    public UnityEvent clockPlaced;
+    public UnityEvent sourcePlaced;
+    public UnityEvent weaponModulesConnected;
+    public UnityEvent weaponReady;
     
     private void OnValidate()
     {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Name, objectives, and other data required for a quest.
@@ -12,6 +13,8 @@ public class QuestData : ScriptableObject
 
     // list of all steps in this quest
     public List<QuestStep> questSteps;
+
+    
 
     // returns true if exists
     public bool TryGetQuestStep(string qName, out QuestStep questStep)

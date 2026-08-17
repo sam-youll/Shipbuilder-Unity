@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec593b57273a81f4192006f47ceb121a, type: 3}
+  m_Name: Prepare For Battle
+  m_EditorClassIdentifier: 
+  questName: Prepare For Battle
+  questSteps:
+  - stepName: clockModule
+    objectiveText: place a clock module from your inventory into Weapon 1
+    dependencies: []
+  - stepName: sourceModule
+    objectiveText: place source module from your inventory into Weapon 1
+    dependencies:
+    - clockModule
+  - stepName: connectModules
+    objectiveText: plug your clock module into your source module
+    dependencies:
+    - clockModule
+    - sourceModule
+  - stepName: connectWeapon
+    objectiveText: plug your source module into Weapon 1's patch end
+    dependencies:
+    - clockModule
+    - sourceModule
+    - connectModules
+  - stepName: startCombat
+    objectiveText: press start combat
+    dependencies:
+    - clockModule
+    - sourceModule
+    - connectModules
+    - connectWeapon
