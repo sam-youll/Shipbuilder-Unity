@@ -130,7 +130,6 @@ public class GameStateManager : MonoBehaviour
         
         EventBus.Instance.modulePlaced.AddListener((x, y) => OnQuestStepCompleted(modulePlacedTypeCheck(x, y)));
         EventBus.Instance.wireConnected.AddListener((x, y) => OnQuestStepCompleted(modulesConnectedCheck(x, y)));
-        EventBus.Instance.constellationAdvanced.AddListener(() => OnQuestStepCompleted(ConstellationStrings[currentConstellation]));
         
         SceneManager.sceneLoaded += DeduplicateCameras;
         
@@ -229,19 +228,48 @@ public class GameStateManager : MonoBehaviour
                 stepsCompleted.Add(stepName);
             }
         }
+        
+        QuestCompleteCheck();
 
         UIManager.Instance.UpdateQuestLog(activeQuests, stepsCompleted);
+    }
+
+    private void QuestCompleteCheck()
+    {
+        var indicesToRemove = new List<int>();
+        for (var i = 0; i < activeQuests.Count; i++)
+        {
+            var quest = activeQuests[i];
+            var complete = true;
+            foreach (var step in quest.questSteps)
+            {
+                if (!stepsCompleted.Contains(step.stepName)) complete = false;
+            }
+
+            if (complete)
+            {
+                indicesToRemove.Add(i);
+            }
+        }
+
+        if (indicesToRemove.Count > 0)
+        {
+            foreach (var i in indicesToRemove)
+            {
+                activeQuests.RemoveAt(i);
+            }
+        }
     }
     
     #endregion
 
     private void OnConstellationAdvanced()
     {
+        OnQuestStepCompleted(ConstellationStrings[currentConstellation]);
+        
         currentConstellation++;
         constellationInfo = constellationScrobjects[(int)currentConstellation];
         Debug.Log("current constellation: " + currentConstellation);
-        
-        
     }
 
     private void OnConstellationReset()
