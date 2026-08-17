@@ -119,7 +119,7 @@ public static class Common
             { "hullDamage", 0 }, // Multiplier for damage to hull. (Damage mult is equal to 1 + sum, which is then used as a coefficient for damage).
             { "systemDamage", 0 }, // Multiplier for damage to systems. Bonus system damage almost always means less hull damage, and vice versa.
             { "heat", 0 }, // The amount of heat generated on trigger. This should roughly correlate to power draw.
-            { "accuracy", 0 }, // Multiplier for chance to hit (1 + sum). 
+            { "accuracy", 1 }, // Multiplier for chance to hit (1 + sum). 
             { "soundType", 0 }
         };
 
