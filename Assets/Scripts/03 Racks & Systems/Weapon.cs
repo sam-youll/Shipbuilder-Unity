@@ -323,6 +323,8 @@ public class Weapon : ModuleRack, ITooltipInfo
         }
 
         targetReservoir.AddEnergy(newEnergy);
+
+        EventBus.Instance.weaponPowered.Invoke();
     }
 
     public void Fire()
@@ -386,10 +388,16 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public override bool CompletePatch()
     {
-        return base.CompletePatch() &&
-               ActivePatch().TrueForAll(x => x is IWeaponModule or SecondaryModule or TriggerModule) &&
-               ActivePatch().Exists(x => x is ClockModule) &&
-               ActivePatch().Exists(x => x is SourceModule);
+        if (base.CompletePatch() &&
+            ActivePatch().TrueForAll(x => x is IWeaponModule or SecondaryModule or TriggerModule) &&
+            ActivePatch().Exists(x => x is ClockModule) &&
+            ActivePatch().Exists(x => x is SourceModule))
+        {
+            EventBus.Instance.weaponModulesConnected.Invoke();
+            return true;
+        }
+
+        return false;
     }
 
     private List<Module> EnergyPatch()

@@ -330,6 +330,7 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
                 }
                 
                 connected.Invoke();
+                EventBus.Instance.wireConnected.Invoke(previousModule, nextModule);
                 EventBus.Instance.updateJackValidity.Invoke(this);
             }
             else

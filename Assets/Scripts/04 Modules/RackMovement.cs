@@ -253,6 +253,8 @@ public class RackMovement : MonoBehaviour
                 
                 lastValidPos = transform.position;
                 lastParent = transform.parent;
+                
+                EventBus.Instance.modulePlaced.Invoke(GetComponent<Module>(), rack);
             }
         }
 

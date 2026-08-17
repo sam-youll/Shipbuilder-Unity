@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour
@@ -123,16 +124,12 @@ public class GameStateManager : MonoBehaviour
         EventBus.Instance.constellationReset.AddListener(OnConstellationReset);
         
         //quest listeners
-        EventBus.Instance.powerPlaced.AddListener(() => OnQuestStepCompleted("powerModule"));
-        EventBus.Instance.converterPlaced.AddListener(() => OnQuestStepCompleted("converterModule"));
-        EventBus.Instance.reactorModulesConnected.AddListener(() => OnQuestStepCompleted("connectReactorModules"));
         EventBus.Instance.weaponPowered.AddListener(() => OnQuestStepCompleted("powerWeapon"));
-        EventBus.Instance.clockPlaced.AddListener(() => OnQuestStepCompleted("clockModule"));
-        EventBus.Instance.sourcePlaced.AddListener(() => OnQuestStepCompleted("sourceModule"));
-        EventBus.Instance.weaponModulesConnected.AddListener(() => OnQuestStepCompleted("connectModules"));
         EventBus.Instance.weaponReady.AddListener(() => OnQuestStepCompleted("connectWeapon"));
         EventBus.Instance.combatStarted.AddListener(() => OnQuestStepCompleted("startCombat"));
         
+        EventBus.Instance.modulePlaced.AddListener((x, y) => OnQuestStepCompleted(modulePlacedTypeCheck(x, y)));
+        EventBus.Instance.wireConnected.AddListener((x, y) => OnQuestStepCompleted(modulesConnectedCheck(x, y)));
         EventBus.Instance.constellationAdvanced.AddListener(() => OnQuestStepCompleted(ConstellationStrings[currentConstellation]));
         
         SceneManager.sceneLoaded += DeduplicateCameras;
@@ -142,6 +139,46 @@ public class GameStateManager : MonoBehaviour
         UIManager.Instance.UpdateQuestLog(activeQuests, stepsCompleted);
     }
 
+    private readonly Func<Module, ModuleRack, string> modulePlacedTypeCheck = (mod, rack) =>
+    {
+        if (mod is PowerModule && rack is Reactor)
+        {
+            return "powerModule";
+        }
+        if (mod is ConverterModule && rack is Reactor)
+        {
+            return "converterModule";
+        }
+        if (mod is ClockModule && rack is Weapon)
+        {
+            return "clockModule";
+        }
+        if (mod is SourceModule && rack is Weapon)
+        {
+            return "sourceModule";
+        }
+
+        return "";
+    };
+
+    private readonly Func<GameObject, GameObject, string> modulesConnectedCheck = (prev, next) =>
+    {
+        if (prev.TryGetComponent(out Module prevMod))
+        {
+            if (next.TryGetComponent(out Module nextMod))
+            {
+                if (prevMod is PowerModule && nextMod is ConverterModule) return "connectReactorModules";
+                if (prevMod is ClockModule && nextMod is SourceModule) return "connectModules";
+            }
+            else if (next.TryGetComponent(out ModuleRack rack))
+            {
+                if (prevMod is SourceModule && rack is Weapon) return "connectWeapon";
+            }
+        }
+
+        return "";
+    };
+        
     private void DeduplicateCameras(Scene scene, LoadSceneMode mode)
     {
         var cameras = FindObjectsByType<Camera>(FindObjectsSortMode.None);
