@@ -606,7 +606,9 @@ public class UIManager : MonoBehaviour
     [ShowInInspector] private List<GameObject> hoverList = new();
     private void UpdateHoverList()
     {
-        var results = new List<GameObject>();
+        var resultsLayer1 = new List<GameObject>();
+        var resultsLayer2 = new List<GameObject>();
+        var resultsLayer3 = new List<GameObject>();
         CanvasRaycast(out var canvasResults);
         foreach (var hit in canvasResults)
         {
@@ -616,27 +618,60 @@ public class UIManager : MonoBehaviour
             // {
             //     results.Add(hit.gameObject);
             // }
-            results.Add(hit.gameObject);
+            if (hit.gameObject.GetComponentInParent<Canvas>().sortingOrder == -1)
+            {
+                resultsLayer1.Add(hit.gameObject);
+            }
+            else if (hit.gameObject.GetComponentInParent<Canvas>().sortingOrder == 1)
+            {
+                resultsLayer2.Add(hit.gameObject);
+            }
         }
         var physCastResults = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         foreach (var hit in physCastResults)
         {
-            if (canvasResults.Exists(x => x.gameObject.GetComponentInParent<Canvas>() == screenCanvas))
-            {
-                break;
-            }
+            // if (canvasResults.Exists(x => x.gameObject.GetComponentInParent<Canvas>() == screenCanvas))
+            // {
+            //     break;
+            // }
             // results.Add(hit.collider.gameObject);
             if (hit.collider.gameObject.TryGetComponent(out ISelectable _))
             {
-                results.Add(hit.collider.gameObject);
+                if (hit.collider.gameObject.GetComponentInParent<Canvas>() == null)
+                {
+                    resultsLayer3.Add(hit.collider.gameObject);
+                }
+                else if (hit.collider.gameObject.GetComponentInParent<Canvas>().sortingOrder == -1)
+                {
+                    resultsLayer1.Add(hit.collider.gameObject);
+                }
+                else if (hit.collider.gameObject.GetComponentInParent<Canvas>().sortingOrder == 1)
+                {
+                    resultsLayer2.Add(hit.collider.gameObject);
+                }
             }
             else if (hit.collider.gameObject.TryGetComponent(out ModuleRack _))
             {
-                results.Add(hit.collider.gameObject);
+                if (hit.collider.gameObject.GetComponentInParent<Canvas>() == null)
+                {
+                    resultsLayer3.Add(hit.collider.gameObject);
+                }
+                else if (hit.collider.gameObject.GetComponentInParent<Canvas>().sortingOrder == -1)
+                {
+                    resultsLayer1.Add(hit.collider.gameObject);
+                }
+                else if (hit.collider.gameObject.GetComponentInParent<Canvas>().sortingOrder == 1)
+                {
+                    resultsLayer2.Add(hit.collider.gameObject);
+                }
             }
         }
-        results.Sort((a, b) => a.transform.position.z > b.transform.position.z ? 1 : -1);
-        results.Sort((a, b) => a.GetComponentInParent<Canvas>() != null && b.GetComponentInParent<Canvas>() != null && a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);
+        resultsLayer1.Sort((a, b) => a.transform.position.z > b.transform.position.z ? 1 : -1);
+        resultsLayer2.Sort((a, b) => a.transform.position.z > b.transform.position.z ? 1 : -1);
+        var results = resultsLayer3;
+        resultsLayer2.ForEach(x => results.Add(x));
+        resultsLayer1.ForEach(x => results.Add(x));
+        // results.Sort((a, b) => a.GetComponentInParent<Canvas>() != null && b.GetComponentInParent<Canvas>() != null && a.GetComponentInParent<Canvas>().sortingOrder < b.GetComponentInParent<Canvas>().sortingOrder ? 1 : -1);
         raycastResults = new();
         results.ForEach(x => raycastResults.Add(x.gameObject));
         hoverList = results;

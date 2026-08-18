@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using SaintsField;
 using UnityEngine;
 
 #region Dictionary serialization bullshit
@@ -13,10 +16,10 @@ using UnityEngine;
 
 public class Subpatch : Module
 {
+    public string myDescription;
     public List<ModuleOutputsPair> subpatchDict = new();
     private List<GameObject> wires = new();
-    private SecondaryModule.ActiveState activeState;
-   
+    
     void CompileSubpatch()
     {
         Debug.Log("Compiling subpatch.");
@@ -156,6 +159,11 @@ public class Subpatch : Module
 
     public override string Description()
     {
+        return myDescription;
+    }
+
+    public override string Info()
+    {
         var desc = "This subpatch contains:\n";
         
         foreach (var mod in subpatchDict)
@@ -176,11 +184,6 @@ public class Subpatch : Module
         }
 
         return desc;
-    }
-
-    public override string Info()
-    {
-        throw new System.NotImplementedException();
     }
 
     public override void Trigger()
@@ -206,6 +209,33 @@ public class Subpatch : Module
 
     public override Dictionary<Common.SoundType, float> EnergyCost()
     {
-        throw new System.NotImplementedException();
+        var cost = new Dictionary<Common.SoundType, float>
+        {
+            { Common.SoundType.Pure, energyNoneCost },
+            { Common.SoundType.Izki, energyIzkiCost },
+            { Common.SoundType.Aubo, energyAuboCost },
+            { Common.SoundType.Dwth, energyDwthCost }
+        };
+        foreach (var pair in subpatchDict)
+        {
+            foreach (var type in pair.module.GetComponent<Module>().EnergyCost())
+            {
+                cost[type.Key] += type.Value;
+            }
+        }
+
+        return cost;
+    }
+
+    public override Dictionary<Common.SoundType, float> ChangeEnergyCost(Dictionary<Common.SoundType, float> input)
+    {
+        foreach (var pair in subpatchDict)
+        {
+            foreach (var type in pair.module.GetComponent<Module>().EnergyCost())
+            {
+                input[type.Key] += type.Value;
+            }
+        }
+        return input;
     }
 }

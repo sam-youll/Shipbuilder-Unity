@@ -1378,12 +1378,11 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
 
     public virtual Dictionary<Common.SoundType, float> ChangeEnergyCost(Dictionary<Common.SoundType, float> input)
     {
-        return new Dictionary<Common.SoundType, float>
-        {
-            { Common.SoundType.Pure, energyNoneCost },
-            { Common.SoundType.Izki, energyIzkiCost },
-            { Common.SoundType.Aubo, energyAuboCost },
-            { Common.SoundType.Dwth, energyDwthCost }
-        };
+        input[Common.SoundType.Pure] += energyNoneCost;
+        input[Common.SoundType.Izki] += energyIzkiCost;
+        input[Common.SoundType.Aubo] += energyAuboCost;
+        input[Common.SoundType.Dwth] += energyDwthCost;
+
+        return input;
     }
 }
