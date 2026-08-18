@@ -342,25 +342,32 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         #endregion
         
         #region Visuals
-        // flip texture as needed to maintain appearance of being lit from above
-        if (lineRenderer.GetPosition(points - 1).x < lineRenderer.GetPosition(0).x)
+        
+        if (!invisible)
         {
-            lineRenderer.material.mainTexture = baseTexture;
-        }
-        else
-        {
-            lineRenderer.material.mainTexture = flippedTexture;
+            // flip texture as needed to maintain appearance of being lit from above
+            if (lineRenderer.GetPosition(points - 1).x < lineRenderer.GetPosition(0).x)
+            {
+                lineRenderer.material.mainTexture = baseTexture;
+            }
+            else
+            {
+                lineRenderer.material.mainTexture = flippedTexture;
+            }
+
+            // scrolling texture
+            var lrMov = lineRenderer.material.mainTextureOffset;
+            lrMov.x -= Time.deltaTime * 2f;
+            if (lrMov.x < 0)
+            {
+                lrMov.x += 1;
+            }
+
+            lineRenderer.material.mainTextureOffset = lrMov;
+            lineRenderer.colorGradient = ColorGradient(color,
+                grabbed ? (grabStartPos - mousePos).magnitude / grabBreakDistance : 0, grabbed || overWire);
         }
         
-        // scrolling texture
-        var lrMov = lineRenderer.material.mainTextureOffset;
-        lrMov.x -= Time.deltaTime * 2f;
-        if (lrMov.x < 0)
-        {
-            lrMov.x += 1;
-        }
-        lineRenderer.material.mainTextureOffset = lrMov;
-        lineRenderer.colorGradient = ColorGradient(color, grabbed ? (grabStartPos -  mousePos).magnitude / grabBreakDistance : 0, grabbed || overWire);
         #endregion
     }
 

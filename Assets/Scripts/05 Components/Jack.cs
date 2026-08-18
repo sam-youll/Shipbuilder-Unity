@@ -74,6 +74,11 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
         if (Parent().TryGetComponent(out Module module))
         {
             SpawnWire(module);
+
+            if (module is Subpatch subpatch)
+            {
+                subpatch.OnJackClick();
+            }
         }
         else if (Parent().TryGetComponent(out Weapon weapon))
         {

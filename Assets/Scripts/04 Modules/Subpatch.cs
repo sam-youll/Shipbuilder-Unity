@@ -194,10 +194,8 @@ public class Subpatch : Module
         subpatchDict[0].module.GetComponent<Module>().Trigger();
     }
 
-    protected override void OnJackClick(GameObject jack)
+    public void OnJackClick()
     {
-        base.OnJackClick(jack);
-        
         // We want CompileSubpatch to be triggered when the child wire is connected to its output.
         // Doing it sooner means the last module in the subpatch doesn't know what it's output is.
         foreach (var wire in childWires)

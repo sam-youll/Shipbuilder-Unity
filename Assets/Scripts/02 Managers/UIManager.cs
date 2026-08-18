@@ -804,7 +804,7 @@ public class UIManager : MonoBehaviour
     {
         var constellationName = Enum.GetName(typeof(GameStateManager.Constellation),
             GameStateManager.Instance.currentConstellation);
-        Debug.Log(constellationName);
+        // Debug.Log(constellationName);
         constellationIcon.sprite = Resources.Load<Sprite>("Sprites/" + constellationName);
         constellationTrackerLabel.text = constellationName;
     }
