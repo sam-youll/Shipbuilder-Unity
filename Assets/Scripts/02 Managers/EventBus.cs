@@ -69,6 +69,7 @@ public class EventBus : MonoBehaviour
     public UnityEvent enemyInitialized;
     public UnityEvent constellationAdvanced;
     public UnityEvent constellationReset;
+    public UnityEvent runComplete;
     
     // in combat events
     public UnityEvent enemyShieldBroken;
