@@ -108,6 +108,7 @@ public class GameStateManager : MonoBehaviour
         PallasQuest // TODO: add the ones that actually exist, delete the ones that don't
     }
 
+
     public void Start()
     {
         //Dummy gamestates, should add and test complexity and how to set moving forward.
@@ -271,6 +272,10 @@ public class GameStateManager : MonoBehaviour
         OnQuestStepCompleted(ConstellationStrings[currentConstellation]);
         
         currentConstellation++;
+        if ((int)currentConstellation > ConstellationStrings.Count)
+        {
+            EventBus.Instance.runComplete.Invoke();
+        }
         constellationInfo = constellationScrobjects[(int)currentConstellation];
         Debug.Log("current constellation: " + currentConstellation);
     }
@@ -281,4 +286,5 @@ public class GameStateManager : MonoBehaviour
         constellationInfo = constellationScrobjects[(int)currentConstellation];
         
     }
+    
 }

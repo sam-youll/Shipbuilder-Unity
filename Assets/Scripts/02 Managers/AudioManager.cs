@@ -49,6 +49,11 @@ public class AudioManager: MonoBehaviour
     public EventReference sfx_paperRef;
     public EventReference sfx_stormRef;
     public EventReference sfx_explosionRef;
+    public EventReference sfx_win;
+    public EventReference sfx_loss;
+    public EventReference sfx_escape;
+    public EventReference sfx_end;
+    
     //ui
     [Header("UI References")]
     public EventReference ui_pickupRef;
@@ -174,6 +179,12 @@ public class AudioManager: MonoBehaviour
         decay = noteLength * decayRatio;
         release = noteLength * releaseRatio;
         // UnityEngine.Debug.Log("note length: " + noteLength + "attack: " + attack + "decay: " + decay + "release" + release);
+        
+        //sfx calls 
+        EventBus.Instance.enemyDefeated.AddListener(PlayWinSound);
+        EventBus.Instance.playerDefeated.AddListener(PlayLossSound);
+        EventBus.Instance.playerEscaped.AddListener(PlayEscapeSound);
+        EventBus.Instance.runComplete.AddListener(PlayEndSound);
 
     }
 
@@ -333,6 +344,30 @@ public class AudioManager: MonoBehaviour
     {
         FMODUnity.RuntimeManager.PlayOneShot(ui_chime);
     }
+
+    public void PlayWinSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_win);
+        Debug.Log("playing win sound");
+    }
+
+    public void PlayLossSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_loss);
+        Debug.Log("playing loss sound");
+    }
+
+    public void PlayEscapeSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_escape);
+        Debug.Log("playing escape sound");
+    }
+
+    public void PlayEndSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot(sfx_end);
+    }
+    
     #endregion
     
     bool IsPlaying(FMOD.Studio.EventInstance instance) {

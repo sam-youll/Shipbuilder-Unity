@@ -63,7 +63,11 @@
 			<destination>{6bb05af3-cb5f-4c42-aae9-b1b5f34452d7}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{c8ee3bbe-5095-423b-a2de-de13d6a3f450}" />
+	<object class="EventAutomatableProperties" id="{c8ee3bbe-5095-423b-a2de-de13d6a3f450}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{3784f133-7764-46cf-b683-0edcbcb3b807}" />
 	<object class="GroupTrack" id="{ea465dad-3217-4061-999a-c298d2973c69}">
 		<relationship name="automationTracks">
@@ -242,7 +246,7 @@
 			<value>-3.5</value>
 		</property>
 		<property name="highGain">
-			<value>-2</value>
+			<value>-3.5</value>
 		</property>
 		<property name="lowCrossover">
 			<value>240</value>
