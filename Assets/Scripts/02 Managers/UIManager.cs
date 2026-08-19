@@ -780,6 +780,11 @@ public class UIManager : MonoBehaviour
                     hit = result.GetComponentInParent<Selectable>().gameObject;
                     return true;
                 }
+                else if (result.CompareTag("Selectable"))
+                {
+                    hit = result;
+                    return true;
+                }
             }
         }
 
