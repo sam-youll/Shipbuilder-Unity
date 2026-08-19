@@ -30,12 +30,12 @@ public class ShopSlot : MonoBehaviour
         label.text = $"{saleItem.name}\n({scrapPrice} scrap)";
     }
 
-    private void OnShopSlotPurchased(GameObject shopSlotObj)
+    private void OnShopSlotPurchased()
     {
-        if (shopSlotObj == gameObject && InventoryManager.Instance.scrap >= scrapPrice)
-        {
-            Destroy(saleItem);
-            scrapPrice = 0;
-        }
+        // if (shopSlotObj == gameObject && InventoryManager.Instance.scrap >= scrapPrice)
+        // {
+        //     Destroy(saleItem);
+        //     scrapPrice = 0;
+        // }
     }
 }
