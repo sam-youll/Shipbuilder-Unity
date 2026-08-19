@@ -85,6 +85,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image constellationIcon;
     [SerializeField] private TextMeshProUGUI constellationTrackerLabel;
     
+    [Header("Communicator Components")]
+    [SerializeField] private GameObject communicator;
+    [SerializeField] private TextMeshProUGUI communicatorText;
+    [SerializeField] private Vector3 communicatorOutPos;
+    [SerializeField] private Vector3 communicatorStowedPos;
+    [ShowInInspector] private bool communicatorOut;
+    
     [Header("Quest Log Components")] 
     [SerializeField] private GameObject questLog;
     [SerializeField] private TextMeshProUGUI questLogText;
@@ -202,6 +209,24 @@ public class UIManager : MonoBehaviour
         StartCoroutine(ShowHideQuestLogCoroutine());
     }
 
+    public void ShowHideCommunicator()
+    {
+        StopAllCoroutines();
+        StartCoroutine(ShowHideCommunicatorCoroutine());
+    }
+
+    private IEnumerator ShowHideCommunicatorCoroutine()
+    {
+        var targetPos = !communicatorOut ? communicatorOutPos : communicatorStowedPos;
+        communicatorOut = !communicatorOut;
+
+        while (communicator.transform.position != targetPos)
+        {
+            communicator.transform.localPosition = Vector3.Lerp(communicator.transform.localPosition, targetPos, screenMoveSpeed * Time.deltaTime);
+            
+            yield return null;
+        }
+    }
     private IEnumerator ShowHideScreenCoroutine()
     {
         var targetPos = !mfdScreenUpDown ? mfdScreenUpPos : mfdScreenDownPos;
