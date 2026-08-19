@@ -4391,7 +4391,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5375068827681992072}
   - component: {fileID: 9134171275853594580}
-  - component: {fileID: 7842226740367071778}
   - component: {fileID: 2679999889390278833}
   - component: {fileID: 6744885073147216273}
   - component: {fileID: 6662405530401665448}
@@ -4553,42 +4552,6 @@ MonoBehaviour:
     outputIndices: 03000000
   - module: {fileID: 4841171225493376041}
     outputIndices: 
---- !u!114 &7842226740367071778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6824367413581922228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb3456a3f591cf54c837024d9c46ba3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snapSquare: {fileID: 0}
-  myModuleRack: {fileID: 0}
-  dragHeight: 1
-  canGoInInventory: 1
-  isInInventory: 0
-  lastParent: {fileID: 0}
-  bodyClick:
-    m_PersistentCalls:
-      m_Calls: []
-  jackClick:
-    m_PersistentCalls:
-      m_Calls: []
-  inventoryEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  inventoryExit:
-    m_PersistentCalls:
-      m_Calls: []
-  oddSizeX: 1
-  oddSizeY: 1
-  collisionResults: []
-  destroyed:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &2679999889390278833
 MonoBehaviour:
   m_ObjectHideFlags: 0

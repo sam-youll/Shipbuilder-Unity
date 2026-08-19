@@ -1450,7 +1450,6 @@ GameObject:
   - component: {fileID: 3123191779541862166}
   - component: {fileID: 2237377107255989578}
   - component: {fileID: 944336818380730556}
-  - component: {fileID: 5856767987464407225}
   - component: {fileID: 3407840582159882203}
   - component: {fileID: 6645631609160411715}
   m_Layer: 7
@@ -1505,9 +1504,8 @@ Transform:
   - {fileID: 1704342123538244262}
   - {fileID: 4755422537975811673}
   - {fileID: 7765671229442159218}
-  - {fileID: 9038069476029845566}
   - {fileID: 4865982000342732847}
-  - {fileID: 8748792766576513222}
+  - {fileID: 9038069476029845566}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2237377107255989578
@@ -1622,56 +1620,14 @@ MonoBehaviour:
   myDescription: Arpeggiates from a random note
   subpatchDict:
   - module: {fileID: 1703908334947308166}
-    outputIndices: 0100000006000000
+    outputIndices: 0100000003000000
   - module: {fileID: 8895242155109070107}
     outputIndices: 02000000
-  - module: {fileID: 0}
+  - module: {fileID: 4415561016298801868}
     outputIndices: 03000000
   - module: {fileID: 5740379127956184609}
-    outputIndices: 05000000050000000500000004000000
-  - module: {fileID: 0}
-    outputIndices: 05000000
-  - module: {fileID: 4415561016298801868}
-    outputIndices: 06000000
-  - module: {fileID: 0}
-    outputIndices: 
+    outputIndices: 00000000
 --- !u!114 &944336818380730556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4574211363400635690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb3456a3f591cf54c837024d9c46ba3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snapSquare: {fileID: 8900928707869540644}
-  myModuleRack: {fileID: 0}
-  dragHeight: 1
-  canGoInInventory: 1
-  isInInventory: 0
-  lastParent: {fileID: 0}
-  bodyClick:
-    m_PersistentCalls:
-      m_Calls: []
-  jackClick:
-    m_PersistentCalls:
-      m_Calls: []
-  inventoryEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  inventoryExit:
-    m_PersistentCalls:
-      m_Calls: []
-  oddSizeX: 1
-  oddSizeY: 1
-  collisionResults: []
-  destroyed:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &5856767987464407225
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2750,100 +2706,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &5656240987230395758
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8748792766576513222}
-  - component: {fileID: 7101011410446749472}
-  m_Layer: 0
-  m_Name: Random Module
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8748792766576513222
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5656240987230395758}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.26071417, y: -0.5414832, z: -0.019052183}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3123191779541862166}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7101011410446749472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5656240987230395758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9a6e97e68608ea42be9306b9bb14e7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dimensions: {x: 3, y: 3}
-  moduleShapeSerialized:
-  - x: 0
-    y: 0
-    element: 0
-  - x: 0
-    y: 1
-    element: 0
-  - x: 0
-    y: 2
-    element: 0
-  - x: 1
-    y: 0
-    element: 0
-  - x: 1
-    y: 1
-    element: 0
-  - x: 1
-    y: 2
-    element: 0
-  - x: 2
-    y: 0
-    element: 0
-  - x: 2
-    y: 1
-    element: 0
-  - x: 2
-    y: 2
-    element: 0
-  edgeStyle: 2
-  edgeColor: 0
-  darkTheme: 0
-  leyLines: 0
-  labelText: 
-  overlayImage: {fileID: 0}
-  screen: {fileID: 0}
-  inputJacks: []
-  outputJacks: []
-  parentWires: []
-  childWires: []
-  price: 0
-  heat: 0
-  energyNoneCost: 0
-  energyIzkiCost: 0
-  energyAuboCost: 0
-  energyDwthCost: 0
-  icon: {fileID: 0}
-  activeState: 0
-  myInputIndex: 0
-  randomNumber: 0
 --- !u!1 &5740379127956184609
 GameObject:
   m_ObjectHideFlags: 0
@@ -2853,9 +2715,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9038069476029845566}
-  - component: {fileID: 1380787867047524251}
+  - component: {fileID: 1465492217087220641}
   m_Layer: 0
-  m_Name: Switch Module
+  m_Name: Pitch Module
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2876,7 +2738,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3123191779541862166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1380787867047524251
+--- !u!114 &1465492217087220641
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2885,7 +2747,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5740379127956184609}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dada59f5af3c59b499e33cb05730f229, type: 3}
+  m_Script: {fileID: 11500000, guid: 954acac486ef3c24899ca251118a9205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dimensions: {x: 3, y: 3}
@@ -2934,8 +2796,15 @@ MonoBehaviour:
   energyIzkiCost: 0
   energyAuboCost: 0
   energyDwthCost: 0
-  icon: {fileID: 0}
-  currentIndex: 0
+  icon: {fileID: 21300000, guid: dc10b4e5b1884704ebd40e0fe646dee5, type: 3}
+  izki: 0
+  aubo: 0
+  dwth: 0
+  hysh: 0
+  pitch: 0
+  seekReactor: 0
+  seekWeapon: 0
+  seekAux: 0
 --- !u!1 &5915397027701252132
 GameObject:
   m_ObjectHideFlags: 0
