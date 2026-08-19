@@ -190,7 +190,8 @@ public class AudioManager: MonoBehaviour
 
     private void Update()
     {
-        // Debug.Log($"weaponsEventInstances.Count: {weaponsEventInstances.Count}\npatchInstances.Length: {patchInstances.Length}");
+        Debug.Log($"weaponsEventInstances.Count: {weaponsEventInstances.Count}\npatchInstances.Length: {patchInstances.Length}");
+        Debug.Log($"{weaponsEventInstances[0].isValid()}");
     }
 
     #region SetParams

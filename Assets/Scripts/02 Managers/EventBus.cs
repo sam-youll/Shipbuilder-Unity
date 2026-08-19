@@ -80,7 +80,7 @@ public class EventBus : MonoBehaviour
     public UnityEvent playerHullDamaged;
     
     // shop events
-    public UnityEvent<GameObject> shopSlotPurchased;
+    public UnityEvent shopSlotPurchased;
     public UnityEvent shopRefreshed;
     public UnityEvent leftShop;
     

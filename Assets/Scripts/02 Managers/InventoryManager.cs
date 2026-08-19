@@ -54,8 +54,6 @@ public class InventoryManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
-        EventBus.Instance.shopSlotPurchased.AddListener(OnShopSlotPurchased);
-
         scrap = 20;
     }
     
@@ -608,11 +606,6 @@ public class InventoryManager : MonoBehaviour
         ToggleActive();
     }
 
-    private void OnShopSlotPurchased(GameObject shopSlotObj)
-    {
-        
-    }
-
     public bool ShopSlotPurchase(GameObject shopSlotObj)
     {
         if (shopSlotObj.TryGetComponent(out ShopSlotPanel shopSlot))
@@ -626,6 +619,7 @@ public class InventoryManager : MonoBehaviour
             newMod.transform.localScale = Vector3.one;
             SendToInventory(newMod);
             DisplayManager.Instance.Log($"Purchased {shopSlot.itemForSale.name}!");
+            EventBus.Instance.shopSlotPurchased.Invoke();
             return true;
         }
 
