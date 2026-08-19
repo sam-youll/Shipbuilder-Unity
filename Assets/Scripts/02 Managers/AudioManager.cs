@@ -348,16 +348,19 @@ public class AudioManager: MonoBehaviour
     public void PlayWinSound()
     {
         FMODUnity.RuntimeManager.PlayOneShot(sfx_win);
+        Debug.Log("playing win sound");
     }
 
     public void PlayLossSound()
     {
         FMODUnity.RuntimeManager.PlayOneShot(sfx_loss);
+        Debug.Log("playing loss sound");
     }
 
     public void PlayEscapeSound()
     {
         FMODUnity.RuntimeManager.PlayOneShot(sfx_escape);
+        Debug.Log("playing escape sound");
     }
 
     public void PlayEndSound()

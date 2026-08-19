@@ -221,6 +221,12 @@ MonoBehaviour:
   constellationAdvanced:
     m_PersistentCalls:
       m_Calls: []
+  constellationReset:
+    m_PersistentCalls:
+      m_Calls: []
+  runComplete:
+    m_PersistentCalls:
+      m_Calls: []
   enemyShieldBroken:
     m_PersistentCalls:
       m_Calls: []
@@ -294,6 +300,27 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   gameExit:
+    m_PersistentCalls:
+      m_Calls: []
+  questStepCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  reactorModulesConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  weaponPowered:
+    m_PersistentCalls:
+      m_Calls: []
+  weaponModulesConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  weaponReady:
+    m_PersistentCalls:
+      m_Calls: []
+  modulePlaced:
+    m_PersistentCalls:
+      m_Calls: []
+  wireConnected:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &4294989349421859828
@@ -377,11 +404,39 @@ MonoBehaviour:
     Path: event:/SFX/sfx_storm
   sfx_explosionRef:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1923899115
+      Data2: 1275676235
+      Data3: 928344223
+      Data4: -1352423755
+    Path: event:/SFX/sfx_explosion
+  sfx_win:
+    Guid:
+      Data1: 1945111723
+      Data2: 1262777376
+      Data3: 476659090
+      Data4: 981076256
+    Path: event:/SFX/sfx_win
+  sfx_loss:
+    Guid:
+      Data1: 919432277
+      Data2: 1155388369
+      Data3: 1533096634
+      Data4: 1570051983
+    Path: event:/SFX/sfx_loss
+  sfx_escape:
+    Guid:
+      Data1: 1061749054
+      Data2: 1165847606
+      Data3: -1217077825
+      Data4: -19383194
+    Path: event:/SFX/sfx_escape
+  sfx_end:
+    Guid:
+      Data1: 1979390754
+      Data2: 1085242196
+      Data3: 105627557
+      Data4: -1872069477
+    Path: event:/SFX/sfx_end
   ui_pickupRef:
     Guid:
       Data1: -1047205009
@@ -405,11 +460,11 @@ MonoBehaviour:
     Path: event:/UI/ui_dialogue
   ui_chime:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1647483203
+      Data2: 1316796965
+      Data3: 1915232922
+      Data4: 1990356551
+    Path: event:/UI/ui_chime
   enemySongRef:
     Guid:
       Data1: 0
@@ -609,6 +664,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e9d0bc36e2823e84f9a8c80bef6bf41b, type: 2}
   - {fileID: 11400000, guid: 3e9438d4e4285394b9f00d1ccfa45618, type: 2}
   constellationInfo: {fileID: 11400000, guid: 2876505de17977146a3e279eb512eee9, type: 2}
+  activeQuests: []
+  stepsCompleted: []
 --- !u!1 &7333241537564771104
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,10 +845,12 @@ MonoBehaviour:
   primaryModulesLabel: {fileID: 0}
   secondaryModulesLabel: {fileID: 0}
   accessoryModulesLabel: {fileID: 0}
+  subpatchesLabel: {fileID: 0}
   triggerModules: []
   primaryModules: []
   secondaryModules: []
   accessoryModules: []
+  subpatches: []
   pauseMenu: {fileID: 0}
   shopMenu: {fileID: 0}
 --- !u!1001 &2890274147819624919
