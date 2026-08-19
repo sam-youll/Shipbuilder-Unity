@@ -1613,6 +1613,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 761739523004088736, guid: 58646d3420b343a499a4720194421f55, type: 3}
   m_PrefabInstance: {fileID: 5149475181162269704}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6005882052509141396 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1454576381239068060, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 5149475181162269704}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6783881367434699791 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1824991723555137543, guid: 58646d3420b343a499a4720194421f55, type: 3}
@@ -1640,12 +1645,14 @@ MonoBehaviour:
   health: 0
   transformControlSwitch: {fileID: 8683058828883948127}
   transformControls: {fileID: 4467253177925504247}
+  transformControlPanel: {fileID: 6005882052509141396}
   energyReservoir: {fileID: 5162733588611720247}
   heat: 0
   warming: 0
   warmup: 0
   stunTimer: 0
   firing: 0
+  baseCoolingRate: 0.1
   overheated: 0
   heatOverlay: {fileID: 1594934561466341940}
   testFireSwitch: {fileID: 4993142893982661844}

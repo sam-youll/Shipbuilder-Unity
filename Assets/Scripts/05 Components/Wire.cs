@@ -404,7 +404,7 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
 
     private void UpdatePoints(Vector3 force, Vector3 startPos, Vector3 endPos, bool draggingStart, bool draggingEnd, float stress)
     {
-        var zOffset = 1f;
+        var zOffset = 3f;
         force *= 1 - stress;
         // calculate points
         Vector3[] targetPositions = new Vector3[points];

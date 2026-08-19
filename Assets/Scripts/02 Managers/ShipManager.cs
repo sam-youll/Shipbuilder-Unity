@@ -612,6 +612,12 @@ public class ShipManager : MonoBehaviour
         
         InventoryManager.Instance.scrap -= hullRepairCost;
         player.currentHull = PlayerMaxHull();
+
+        foreach (var weapon in player.weapons)
+        {
+            weapon.health = weapon.maxHealth;
+        }
+        player.reactor.health = player.reactor.maxHealth;
     }
 
     public void HealPlayerToFull()

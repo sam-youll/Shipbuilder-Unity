@@ -32,6 +32,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Properties")] 
     public Rect cameraBounds;
+    public float cameraMinSize = 1.4375f;
+    public float cameraMaxSize = 12.4375f;
+    
     [SerializeField] private bool showBounds;
     
     [Header("Canvases")]
@@ -121,6 +124,9 @@ public class UIManager : MonoBehaviour
 
 
         UpdateEscapeModuleCounter();
+
+        ShowHideQuestLog();
+        
     }
 
     private void Update()
@@ -455,7 +461,7 @@ public class UIManager : MonoBehaviour
         {
             var mousePosBeforeZoom = cam.ScreenToWorldPoint(Input.mousePosition);
             
-            cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1.4375f, 16.4375f);
+            cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, cameraMinSize, cameraMaxSize);
 
             var mousePosAfterZoom = cam.ScreenToWorldPoint(Input.mousePosition);
             

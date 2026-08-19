@@ -34,10 +34,12 @@ public class InventoryManager : MonoBehaviour
     public GameObject primaryModulesLabel;
     public GameObject secondaryModulesLabel;
     public GameObject accessoryModulesLabel;
+    public GameObject subpatchesLabel;
     public List<GameObject> triggerModules = new();
     public List<GameObject> primaryModules = new();
     public List<GameObject> secondaryModules = new();
     public List<GameObject> accessoryModules = new();
+    public List<GameObject> subpatches = new();
 
     public GameObject pauseMenu;
     public GameObject shopMenu;
@@ -177,6 +179,21 @@ public class InventoryManager : MonoBehaviour
             accessoryModules[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
         }
 
+        for (int i = 0; i < subpatches.Count; i++)
+        {
+            DestroyImmediate(subpatches[i]);
+        }
+        subpatches = new();
+        subpatches = Resources.LoadAll<GameObject>("Prefabs/Modules/Subpatches").ToList();
+        for (var i = 0; i < subpatches.Count; i++)
+        {
+            subpatches[i] = Instantiate(subpatches[i]);
+            subpatches[i].SetActive(gameObject.activeSelf);
+            subpatches[i].transform.SetParent(subpatchesLabel.transform);
+            subpatches[i].name = subpatches[i].name.Replace("(Clone)", "");
+            subpatches[i].GetComponent<Module>().SetRenderers(SpriteMaskInteraction.VisibleInsideMask, 1);
+        }
+
         foreach (var module in triggerModules)
         {
             SetToRenderInsideMask(module, true);
@@ -190,6 +207,10 @@ public class InventoryManager : MonoBehaviour
             SetToRenderInsideMask(module, true);
         }
         foreach (var module in accessoryModules)
+        {
+            SetToRenderInsideMask(module, true);
+        }
+        foreach (var module in subpatches)
         {
             SetToRenderInsideMask(module, true);
         }
@@ -343,7 +364,20 @@ public class InventoryManager : MonoBehaviour
         var accessoryPos = accessoryModulesLabel.transform.position;
         accessoryPos.x -= accessoryModulesLabel.GetComponent<RectTransform>().rect.width;
         ArrangeModulesOfType(accessoryModules, accessoryPos);
-        
+        if (accessoryModules.Count > 0)
+        {
+            subpatchesLabel.transform.position = new Vector3(accessoryModulesLabel.transform.position.x,
+                accessoryModules[^1].transform.position.y - 1 -
+                accessoryModules[^1].GetComponent<Module>().dimensions.y * .5f, 0);
+        }
+        else
+        {
+            subpatchesLabel.transform.position = new Vector3(accessoryModulesLabel.transform.position.x,
+                accessoryModulesLabel.transform.position.y - 1, 0);
+        }
+        var subpatchPos = subpatchesLabel.transform.position;
+        subpatchPos.x -= subpatchesLabel.GetComponent<RectTransform>().rect.width;
+        ArrangeModulesOfType(subpatches, subpatchPos);
         
         var tPos = triggerModulesLabel.transform.localPosition;
         tPos.z = 0;
@@ -360,6 +394,10 @@ public class InventoryManager : MonoBehaviour
         var aPos = accessoryModulesLabel.transform.localPosition;
         aPos.z = 0;
         accessoryModulesLabel.transform.localPosition = aPos;
+        
+        var subPos = subpatchesLabel.transform.localPosition;
+        subPos.z = 0;
+        subpatchesLabel.transform.localPosition = subPos;
     }
 
     public void ArrangeModulesOfType(List<GameObject> modulesInInventory, Vector3 headerPos)
@@ -497,6 +535,11 @@ public class InventoryManager : MonoBehaviour
             accessoryModules.Add(moduleObj);
             moduleObj.transform.SetParent(accessoryModulesLabel.transform);
         }
+        else if (module is Subpatch)
+        {
+            subpatches.Add(moduleObj);
+            moduleObj.transform.SetParent(subpatchesLabel.transform);
+        }
         
         transform.localPosition = Vector3.zero;
         moduleMov.isInInventory = true;
@@ -529,6 +572,10 @@ public class InventoryManager : MonoBehaviour
             {
                 accessoryModules[accessoryModules.FindIndex(x => x == module)] = replacement;
             }
+            else if (module.GetComponent<Module>() is Subpatch)
+            {
+                subpatches[subpatches.FindIndex(x => x == module)] = replacement;
+            }
         }
         else
         {
@@ -547,6 +594,10 @@ public class InventoryManager : MonoBehaviour
             else if (module.GetComponent<Module>() is AccessoryModule)
             {
                 accessoryModules.Remove(module);
+            }
+            else if (module.GetComponent<Module>() is Subpatch)
+            {
+                subpatches.Remove(module);
             }
         }
         

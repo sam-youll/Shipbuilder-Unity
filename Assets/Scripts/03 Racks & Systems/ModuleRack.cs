@@ -21,6 +21,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public float health;
     public SwitchComponent transformControlSwitch;
     public GameObject transformControls;
+    public GameObject transformControlPanel;
     private Vector2 handleDragOffset;
     
     // ENERGY
@@ -48,6 +49,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         if (!enemySystem)
         {
             transformControls.SetActive(transformControlSwitch.on);
+            transformControlPanel.SetActive(InventoryManager.Instance.creativeMode);
 
             if (transformControls.activeSelf)
             {

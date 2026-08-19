@@ -35,6 +35,25 @@ public class ConverterModule : PrimaryModule, IReactorModule
         }
         return info;
     }
+    
+    public override bool Warning(out string message)
+    {
+        var warn = base.Warning(out message);
+        var rack = GetComponentInParent<ModuleRack>();
+        if (rack != null)
+        {
+            if (rack is Reactor)
+            {
+                if (warn)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        message += "This module will not convert power at maximum efficiency unless placed in reactor.\n";
+        return true;
+    }
 
     public List<KeyValuePair<Common.SoundType, float>> ConversionRatios()
     {
@@ -63,6 +82,12 @@ public class ConverterModule : PrimaryModule, IReactorModule
     public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
     {
         var conversionAmount = Mathf.Min(energyLimit, energy[Common.SoundType.Pure]);
+        
+        var rack = GetComponentInParent<ModuleRack>();
+        if (rack == null || rack is not Reactor)
+        {
+            conversionAmount *= .25f;
+        }
 
         energy[Common.SoundType.Pure] -= conversionAmount;
 

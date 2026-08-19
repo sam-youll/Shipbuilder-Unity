@@ -39,3 +39,11 @@ MonoBehaviour:
     - sourceModule
     - connectModules
     - connectWeapon
+  - stepName: winCombat
+    objectiveText: win the battle
+    dependencies:
+    - startCombat
+  - stepName: purchaseShop
+    objectiveText: open the shop and buy something
+    dependencies:
+    - winCombat

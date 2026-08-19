@@ -23,9 +23,36 @@ public class PowerModule : PrimaryModule, IReactorModule
         return $"Currently generating {power} untyped energy per second.";
     }
 
+    public override bool Warning(out string message)
+    {
+        var warn = base.Warning(out message);
+        var rack = GetComponentInParent<ModuleRack>();
+        if (rack != null)
+        {
+            if (rack is Reactor)
+            {
+                if (warn)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        message += "This module will not generate power at maximum efficiency unless placed in reactor.\n";
+        return true;
+    }
+
     public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
     {
-        energy[Common.SoundType.Pure] += power;
+        var rack = GetComponentInParent<ModuleRack>();
+        if (rack == null || rack is not Reactor)
+        {
+            energy[Common.SoundType.Pure] += .25f * power;
+        }
+        else
+        {
+            energy[Common.SoundType.Pure] += power;
+        }
         return energy;
     }
 
