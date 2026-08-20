@@ -185,6 +185,9 @@ public class AudioManager: MonoBehaviour
         EventBus.Instance.playerDefeated.AddListener(PlayLossSound);
         EventBus.Instance.playerEscaped.AddListener(PlayEscapeSound);
         EventBus.Instance.runComplete.AddListener(PlayEndSound);
+        
+        
+        EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
 
     }
 
@@ -229,6 +232,20 @@ public class AudioManager: MonoBehaviour
         StartCoroutine(PlayNoteCoroutine(weapon, weapon.MusicParams()));
     }
 
+    private void OnEnemyDefeated()
+    {
+        return;
+        for (var i = weapons.Count; i > 0; i--)
+        {
+            var weapon = weapons[i];
+            if (weapon.enemySystem)
+            {
+                DestroyImmediate(weapon);
+            }
+            weapons.RemoveAt(i);
+        }
+    }
+
     private IEnumerator PlayNoteCoroutine(Weapon weapon, Dictionary<string, float> noteInfo)
     {
         var started = false;
@@ -241,6 +258,13 @@ public class AudioManager: MonoBehaviour
             {
                 if (weapon == weapons[i])
                 {
+                    weaponIndex = i;
+                    break;
+                }
+
+                if (weapons[i] == null && weapon.enemySystem)
+                {
+                    weapons[i] = weapon;
                     weaponIndex = i;
                     break;
                 }
