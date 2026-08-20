@@ -376,7 +376,31 @@ public class UIManager : MonoBehaviour
         for (var i = 0; i < 8; i++)
         {
             var newShopSlot = Instantiate(shopSlotPrefab, shopSlotGrid.transform);
-            newShopSlot.GetComponent<ShopSlotPanel>().Setup(modulesList[Random.Range(0, modulesList.Length)]);
+            GameObject moduleToLoad = null;
+            if (i == 0)
+            {
+                var powerMods = Array.FindAll(modulesList, x => x.TryGetComponent(out PowerModule _));
+                moduleToLoad = powerMods[Random.Range(0, powerMods.Length)];
+            }
+            else if (i == 1)
+            {
+                moduleToLoad = Array.Find(modulesList, x => x.TryGetComponent(out ClockModule _));
+            }
+            else if (i is 2)
+            {
+                var converterMods = Array.FindAll(modulesList, x => x.TryGetComponent(out ConverterModule _));
+                moduleToLoad = converterMods[Random.Range(0, converterMods.Length)];
+            }
+            else if (i is 3)
+            {
+                var catMods = Array.FindAll(modulesList, x => x.TryGetComponent(out CatalystModule _));
+                moduleToLoad = catMods[Random.Range(0, catMods.Length)];
+            }
+            else
+            {
+                moduleToLoad = modulesList[Random.Range(0, modulesList.Length)];
+            }
+            newShopSlot.GetComponent<ShopSlotPanel>().Setup(moduleToLoad);
         }
     }
 
