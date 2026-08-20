@@ -413,6 +413,7 @@ public class ShipManager : MonoBehaviour
 
         if (Random.value < 1 - weaponStats.Stats["accuracy"])
         {
+            DisplayManager.Instance.Log("Miss!");
             return;
         }
         
@@ -569,6 +570,7 @@ public class ShipManager : MonoBehaviour
             EventBus.Instance.systemHit.Invoke(systemTarget);
         }
         
+        DisplayManager.Instance.Log($"{Math.Truncate(systemDamage)} dealt to {target.name}'s systems. {Math.Truncate(hullDamage)} damage dealt to hull.");
         
         // Debug.Log($"{target.name} was hit for {damage} damage. Hull is now {target.hull}.");
         
@@ -593,6 +595,9 @@ public class ShipManager : MonoBehaviour
                 var escMod = player.reactor.ModulesOnRack().Find(x => x is EscapeModule);
                 Destroy(escMod.gameObject);
                 EventBus.Instance.playerEscaped.Invoke();
+                InventoryManager.Instance.scrap += 15;
+                EventBus.Instance.playerScrapValueChanged.Invoke();
+                
                 return;
             }
             EventBus.Instance.playerDefeated.Invoke();

@@ -45,7 +45,12 @@ public class PowerModule : PrimaryModule, IReactorModule
     public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
     {
         var rack = GetComponentInParent<ModuleRack>();
-        if (rack == null || rack is not Reactor)
+        if (rack == null || rack.stunTimer > 0)
+        {
+            return energy;
+        }
+        
+        if (rack is not Reactor)
         {
             energy[Common.SoundType.Pure] += .25f * power;
         }

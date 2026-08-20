@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DelayModule : PrimaryModule, IWeaponModule
+public class RepeaterModule : PrimaryModule, IWeaponModule
 {
     public float taps;
     public float damage = 2;
@@ -10,12 +10,12 @@ public class DelayModule : PrimaryModule, IWeaponModule
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override string Description()
     {
-        return "Adds delay, causing the weapon to fire twice (deals more damage).";
+        return $"Adds a second, weaker shot to the weapon's trigger, increasing overall damage by {damage}.";
     }
 
     public override string Info()
     {
-        return $"Currently delaying by {delayTime} milliseconds.";
+        return $"Audible delay is {delayTime} milliseconds.";
     }
 
     public override void Trigger(float value, int inputIndex)

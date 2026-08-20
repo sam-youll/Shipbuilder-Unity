@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DisplayManager : MonoBehaviour
@@ -17,16 +18,20 @@ public class DisplayManager : MonoBehaviour
         }
     }
 
+    public TextMeshProUGUI displayLogText;
+    
     public List<string> log { get; private set; } = new();
 
     public void Log(string text)
     {
         log.Add(text);
-        if (log.Count > 6)
+        if (log.Count > 256)
         {
             log.RemoveAt(0);
         }
 
         EventBus.Instance.displayLogUpdated.Invoke();
+        
+        displayLogText.text = string.Join("\n", log.ToArray());
     }
 }

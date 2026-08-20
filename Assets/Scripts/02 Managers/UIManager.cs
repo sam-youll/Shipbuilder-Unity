@@ -164,6 +164,7 @@ public class UIManager : MonoBehaviour
             newIcon.transform.SetParent(escapeModuleCounterParent.transform);
             newIcon.GetComponent<Image>().sprite = escapeModuleIcon;
             newIcon.GetComponent<Image>().preserveAspect = true;
+            newIcon.GetComponent<Image>().color = new Color(.7372f, .8666f, .5764f);
             newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(escapeModuleIcon.texture.width*2/32f, escapeModuleIcon.texture.height*2/32f);
             return;
         }

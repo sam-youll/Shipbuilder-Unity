@@ -27,11 +27,14 @@ public class HarmonicModule : PrimaryModule, IWeaponModule
 
     public override string Description()
     {
-        return "Adds harmonics.";
+        return "Adds harmonics to the projectile, increasing damage and adding on-hit effects.";
     }
 
     public override string Info()
     {
+        var info = "";
+        if (stun > 0) info += $"Projectiles stun the enemy system they hit for {stun}s.\n";
+        if (siphon > 0) info += $"Projectiles siphon energy from the enemy.\n";
         return $"Current harmonic profile is {profile}.";
     }
 

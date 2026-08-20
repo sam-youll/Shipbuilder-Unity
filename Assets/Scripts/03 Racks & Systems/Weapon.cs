@@ -17,7 +17,6 @@ public class Weapon : ModuleRack, ITooltipInfo
     public float heat;
     public bool warming = false;
     public float warmup = 0;
-    public float stunTimer;
     public bool firing;
     [ShowInInspector, SaintsDictionary] public Dictionary<string, float> baseWeaponStats = new(Common.BaseWeaponStats().Stats.ToDictionary(x => x.Key, x => x.Value));
     [ShowInInspector, SaintsDictionary] public Dictionary<Common.SoundType, float> baseEnergyCost = new(Common.EmptyEnergyCost());
@@ -108,7 +107,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         foreach (var module in ActivePatch())
         {
             if (module is ClockModule) hasClock = true;
-            if (module is SourceModule) hasSource = true;
+            if (module is CatalystModule) hasSource = true;
             if (module is INeedEnergy eMod)
             {
                 energyNeeds = eMod.ChangeEnergyCost(energyNeeds);
@@ -299,6 +298,7 @@ public class Weapon : ModuleRack, ITooltipInfo
                 Random.Range(0, 8));
             // Debug.Log($"pitch is {myPitch}");
             enemydict["pitch"] = myPitch;
+            enemydict["source"] = Random.Range(0, 4);
             return enemydict;
         }
         
@@ -398,6 +398,11 @@ public class Weapon : ModuleRack, ITooltipInfo
             return;
         }
 
+        if (enemySystem && Random.value < .25f)
+        {
+            return;
+        }
+
         if (!energyReservoir.TrySpendEnergy(EnergyCost()))
         {
             // Debug.Log($"{name} didn't have enough energy to fire.");
@@ -407,7 +412,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         heat += WeaponStats().Stats["heat"];
         Debug.Log(heat);
         
-        DisplayManager.Instance.Log("Fired " + name);
+        if (CombatManager.Instance.state == CombatManager.State.inCombat) DisplayManager.Instance.Log("Fired " + name);
         
         // calculate hit/miss + damage
         if (CombatManager.Instance.state == CombatManager.State.inCombat)
@@ -430,7 +435,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         if (base.CompletePatch() &&
             ActivePatch().TrueForAll(x => x is IWeaponModule or SecondaryModule or TriggerModule) &&
             ActivePatch().Exists(x => x is ClockModule) &&
-            ActivePatch().Exists(x => x is SourceModule))
+            ActivePatch().Exists(x => x is CatalystModule))
         {
             EventBus.Instance.weaponModulesConnected.Invoke();
             return true;

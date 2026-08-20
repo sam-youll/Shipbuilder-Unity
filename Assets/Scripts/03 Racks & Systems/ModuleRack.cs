@@ -23,6 +23,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public GameObject transformControls;
     public GameObject transformControlPanel;
     private Vector2 handleDragOffset;
+    public float stunTimer;
     
     // ENERGY
     public EnergyReservoir energyReservoir;
@@ -43,7 +44,8 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         
         slowTimer -= Time.deltaTime;
         slowTimer = Mathf.Max(0, slowTimer);
-        
+        stunTimer -= Time.deltaTime;
+        stunTimer = Mathf.Max(0, stunTimer);
         
         // transform controls
         if (!enemySystem)
@@ -320,7 +322,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     
     public virtual void Stun(float time)
     {
-        
+        stunTimer += time;
     }
 
     protected float slowTimer;

@@ -22,12 +22,12 @@ MonoBehaviour:
     dependencies:
     - powerModule
   - stepName: connectReactorModules
-    objectiveText: plug the power module into the converter module
+    objectiveText: 'plug the power module [OUT] into the converter module [TRIG]'
     dependencies:
     - powerModule
     - converterModule
   - stepName: powerWeapon
-    objectiveText: plug the converter module into Weapon 1's energy reservoir
+    objectiveText: 'plug the converter module [OUT] into Weapon 1''s [ENERGY IN]'
     dependencies:
     - powerModule
     - converterModule

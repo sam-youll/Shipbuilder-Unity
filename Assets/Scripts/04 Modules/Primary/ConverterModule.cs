@@ -11,7 +11,7 @@ public class ConverterModule : PrimaryModule, IReactorModule
     
     public override string Description()
     {
-        return "Converts untyped energy to typed energy, though not with perfect efficiency.";
+        return "Converts untyped energy to typed energy.";
     }
 
     public override string Info()
@@ -84,11 +84,13 @@ public class ConverterModule : PrimaryModule, IReactorModule
         var conversionAmount = Mathf.Min(energyLimit, energy[Common.SoundType.Pure]);
         
         var rack = GetComponentInParent<ModuleRack>();
-        if (rack == null || rack is not Reactor)
+        if (rack == null || rack.stunTimer > 0)
         {
-            conversionAmount *= .25f;
+            return energy;
         }
 
+        if (rack is not Reactor) conversionAmount *= .25f;
+        
         energy[Common.SoundType.Pure] -= conversionAmount;
 
         foreach (var kvp in ConversionRatios())

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
+public class ShaperModule : PrimaryModule, ITooltipInfo, IWeaponModule
 {
     // TODO: add weapon stats
     public float systemDamageMult;
@@ -13,14 +13,19 @@ public class EnvelopeModule : PrimaryModule, ITooltipInfo, IWeaponModule
 
     public override string Description()
     {
-        return "Shapes the attack, decay, and release of the note. Envelope also affects damage multipliers vs systems/hulls.";
+        return "Shapes the weapon's projectile, adding damage mult to ship hull and/or systems.";
     }
 
     public override string Info()
     {
-        return $"Attack: {attack}\n" +
-               $"Decay: {decay}\n" +
-               $"Release: {release}";
+        var info = "";
+        if (systemDamageMult > 0) info += $"System Damage Mult: +{systemDamageMult}x\n";
+        if (hullDamageMult > 0) info +=  $"Hull Damage Mult: +{hullDamageMult}x\n";
+        info += "Note Envelope:\n" +
+                $"Attack: {attack}\n" +
+                $"Decay: {decay}\n" +
+                $"Release: {release}";
+        return info;
     }
     
     public override void Trigger(float value, int inputIndex)

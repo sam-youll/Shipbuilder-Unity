@@ -159,7 +159,7 @@ public class Subpatch : Module
 
     public override string Description()
     {
-        return myDescription;
+        return "An assembly of modules in one shape.\n" + myDescription;
     }
 
     public override string Info()

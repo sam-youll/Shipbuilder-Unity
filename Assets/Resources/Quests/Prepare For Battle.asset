@@ -18,22 +18,22 @@ MonoBehaviour:
     objectiveText: place a clock module from your inventory into Weapon 1
     dependencies: []
   - stepName: sourceModule
-    objectiveText: place source module from your inventory into Weapon 1
+    objectiveText: place catalyst module from your inventory into Weapon 1
     dependencies:
     - clockModule
   - stepName: connectModules
-    objectiveText: plug your clock module into your source module
+    objectiveText: 'plug your clock module [OUT] into your catalyst module [TRIG]'
     dependencies:
     - clockModule
     - sourceModule
   - stepName: connectWeapon
-    objectiveText: plug your source module into Weapon 1's patch end
+    objectiveText: 'plug your catalyst module [OUT] into Weapon 1''s [PATCH END]'
     dependencies:
     - clockModule
     - sourceModule
     - connectModules
   - stepName: startCombat
-    objectiveText: press start combat
+    objectiveText: press Start Combat
     dependencies:
     - clockModule
     - sourceModule

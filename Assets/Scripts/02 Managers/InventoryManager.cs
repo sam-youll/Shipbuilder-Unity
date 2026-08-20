@@ -264,11 +264,11 @@ public class InventoryManager : MonoBehaviour
 
     private void AddStartingModules()
     {
-        var newClock = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Trigger Modules/Clock Module"), triggerModulesLabel.transform, true);
+        var newClock = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Trigger Modules/Clock Module Quarter Note"), triggerModulesLabel.transform, true);
         newClock.SetActive(gameObject.activeSelf);
         newClock.name = newClock.name.Replace("(Clone)", "");
         SendToInventory(newClock);
-        var newSource = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Source Module (Saw)"), primaryModulesLabel.transform, true);
+        var newSource = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Catalyst Module (Saw)"), primaryModulesLabel.transform, true);
         newSource.SetActive(gameObject.activeSelf);
         newSource.name = newSource.name.Replace("(Clone)", "");
         SendToInventory(newSource);

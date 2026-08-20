@@ -156,7 +156,7 @@ public class GameStateManager : MonoBehaviour
         {
             return "clockModule";
         }
-        if (mod is SourceModule && rack is Weapon)
+        if (mod is CatalystModule && rack is Weapon)
         {
             return "sourceModule";
         }
@@ -171,11 +171,11 @@ public class GameStateManager : MonoBehaviour
             if (next.TryGetComponent(out Module nextMod))
             {
                 if (prevMod is PowerModule && nextMod is ConverterModule) return "connectReactorModules";
-                if (prevMod is ClockModule && nextMod is SourceModule) return "connectModules";
+                if (prevMod is ClockModule && nextMod is CatalystModule) return "connectModules";
             }
             else if (next.TryGetComponent(out ModuleRack rack))
             {
-                if (prevMod is SourceModule && rack is Weapon) return "connectWeapon";
+                if (prevMod is CatalystModule && rack is Weapon) return "connectWeapon";
             }
         }
 

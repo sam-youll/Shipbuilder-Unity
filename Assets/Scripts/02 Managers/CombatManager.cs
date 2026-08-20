@@ -231,6 +231,7 @@ public class CombatManager : MonoBehaviour
     {
         state = State.outOfCombat;
         DisplayManager.Instance.Log("Player escaped!");
+        DisplayManager.Instance.Log("Received 10 scrap from spent escape module.");
         EventBus.Instance.constellationAdvanced.Invoke();
         ShipManager.Instance.HealPlayerToFull();
         fightLevel++;

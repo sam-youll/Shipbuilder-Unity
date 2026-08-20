@@ -18,6 +18,7 @@ public class UISystemPanel : MonoBehaviour
 
     private Color defaultColor = new(0.7803922f, 0.8862746f, 0.6705883f);
     private Color overheatedCol = new Color(1, .5f, .2f);
+    private Color stunColor = new Color(1, 1, .1f);
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void Setup(ModuleRack system)
@@ -66,6 +67,30 @@ public class UISystemPanel : MonoBehaviour
                     SetColor(overheatedCol);
                 }
                 else if (GetComponentInChildren<Image>().color == overheatedCol && !weapon.overheated)
+                {
+                    SetColor(defaultColor);
+                }
+            }
+
+            if (systemReferenced.stunTimer > 0)
+            {
+                SetColor(stunColor);
+            }
+            else
+            {
+                if (systemReferenced is Weapon w)
+                {
+                    heatBar.fillAmount = Mathf.Clamp01(w.heat);
+                    if (w.overheated && GetComponentInChildren<Image>().color != overheatedCol)
+                    {
+                        SetColor(overheatedCol);
+                    }
+                    else if (GetComponentInChildren<Image>().color == overheatedCol && !w.overheated)
+                    {
+                        SetColor(defaultColor);
+                    }
+                }
+                else
                 {
                     SetColor(defaultColor);
                 }

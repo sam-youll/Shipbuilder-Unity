@@ -10,12 +10,16 @@ public class PitchModule : PrimaryModule, IWeaponModule
 
     public override string Description()
     {
-        return "Sets pitch based on the received value, quantized to the current scale.";
+        return "Angles the projectile, changing the audible pitch and increasing likelihood to hit specific enemy systems.";
     }
 
     public override string Info()
     {
-        return $"Current pitch is {pitch}.";
+        var info = "";
+        if (seekReactor > 0) info += $"Projectiles are {seekReactor:P0} more likely to hit the enemy's reactor.\n";
+        if (seekWeapon > 0) info += $"Projectiles are {seekWeapon:P0} more likely to hit one of the enemy's weapons.\n";
+        info += $"Audible pitch is {pitch}.";
+        return info;
     }
 
     public override void Trigger(float value, int inputIndex)

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SourceModule : PrimaryModule, IWeaponModule
+public class CatalystModule : PrimaryModule, IWeaponModule
 {
     public enum Waveform
     {
@@ -35,12 +35,13 @@ public class SourceModule : PrimaryModule, IWeaponModule
 
     public override string Description()
     {
-        return "Creates the base waveform, affecting the damage amount and type of the weapon's projectiles.";
+        return "Generates the base projectile for the weapon when triggered.";
     }
 
     public override string Info()
     {
-        return $"Current waveform is {waveform}.";
+        return $"Projectile deals {damage} base damage.\n" + 
+               $"Current waveform is {waveform}.";
     }
 
     protected override void Start()
