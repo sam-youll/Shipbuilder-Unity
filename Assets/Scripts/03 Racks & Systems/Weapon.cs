@@ -32,31 +32,70 @@ public class Weapon : ModuleRack, ITooltipInfo
 
     public override string Description()
     {
-        return "Fires projectiles, playing a note with each one. " +
-               "Musical parameters and combat stats are determined by the modules in the connected patch.";
+        return "One of the ship's weapon bays. Inactive until a functioning weapon patch is set up.";
     }
 
     public override string Info()
     {
-        var info = base.Info();
-        
-        info += "Weapon Stats:\n";
-        foreach (var kvp in WeaponStats().Stats)
+        // how much damage?
+        // how often?
+
+        if (!CompletePatch())
         {
-            if (kvp.Key == "bulletType")
-            {
-                info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
-            }
-            else if (kvp.Key == "soundType")
-            {
-                info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
-            }
-            else
-            {
-                info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
-            }
+            return "This weapon is inactive.";
         }
-        info += "Cooling at a rate of " + CoolingRate() + " per second\n";
+        
+        var info = "Weapon Stats:\n";
+        var stats = WeaponStats().Stats;
+        info += $"Fires for {stats["damage"]} damage every ";
+        var cMod = ModulesOnRack().Find(mod => mod is ClockModule) as ClockModule;
+        var tempo = GameStateManager.Instance.constellationInfo.tempo / 120;
+        switch (cMod.Subdivision)
+        {
+            case 0:
+                info += $"1/16 note. ({1/16f * tempo}s)";
+                break;
+            case 1:
+                info += $"1/8 note. ({1/8f * tempo}s)";
+                break;
+            case 2:
+                info += $"1/4 note. ({1/4f * tempo}s)";
+                break;
+            case 3:
+                info += $"1/2 note. ({1/2f * tempo}s)";
+                break;
+            case 4:
+                info += $"whole note. ({tempo}s)";
+                break;
+            case 5:
+                info += $"bar.";
+                break;
+        }
+
+        info += "\n";
+
+        info += $"Generates {stats["heat"]:P0} heat per trigger.\n";
+        info += $"Weapon cools by {CoolingRate():P0} /s\n";
+        info += $"Accuracy: {stats["accuracy"]:P0}\n";
+        if (stats["hullDamage"] > 0) info += $"Hull Damage Mult: {1 + stats["hullDamage"]}x\n";
+        if (stats["systemDamage"] > 0) info += $"System Damage Mult: {1 + stats["systemDamage"]}x\n";
+        // foreach (var kvp in stats)
+        // {
+        //     if (kvp.Key == "damage") continue;
+        //     if (kvp.Key == "bulletType")
+        //     {
+        //         info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
+        //     }
+        //     else if (kvp.Key == "soundType")
+        //     {
+        //         info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
+        //     }
+        //     else
+        //     {
+        //         info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
+        //     }
+        // }
+        // info += "Cooling at a rate of " + CoolingRate() + " per second\n";
         return info;
     }
 

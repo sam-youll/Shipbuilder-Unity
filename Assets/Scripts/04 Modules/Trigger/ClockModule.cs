@@ -7,7 +7,7 @@ public class ClockModule : TriggerModule
     [FormerlySerializedAs("frequency")] [SerializeField]
     int subdivision = 2;
 
-    public int Frequency
+    public int Subdivision
     {
         get => subdivision;
         set
@@ -26,25 +26,26 @@ public class ClockModule : TriggerModule
     public override string Info()
     {
         var info = "Triggers every ";
+        var tempo = GameStateManager.Instance.constellationInfo.tempo / 120;
         switch (subdivision)
         {
             case 0:
-                info += "sixteenth note.";
+                info += $"1/16 note. ({1/16f * tempo}s)";
                 break;
             case 1:
-                info += "eighth note.";
+                info += $"1/8 note. ({1/8f * tempo}s)";
                 break;
             case 2:
-                info += "quarter note.";
+                info += $"1/4 note. ({1/4f * tempo}s)";
                 break;
             case 3:
-                info += "half note.";
+                info += $"1/2 note. ({1/2f * tempo}s)";
                 break;
             case 4:
-                info += "whole note.";
+                info += $"whole note. ({tempo}s)";
                 break;
             case 5:
-                info += "bar.";
+                info += $"bar.";
                 break;
         }
 

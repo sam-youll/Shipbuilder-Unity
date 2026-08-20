@@ -623,5 +623,11 @@ public class ShipManager : MonoBehaviour
     public void HealPlayerToFull()
     {
         player.currentHull = PlayerMaxHull();
+        
+        foreach (var weapon in player.weapons)
+        {
+            weapon.health = weapon.maxHealth;
+        }
+        player.reactor.health = player.reactor.maxHealth;
     }
 }

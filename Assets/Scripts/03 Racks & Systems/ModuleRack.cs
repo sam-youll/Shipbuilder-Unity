@@ -254,34 +254,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
 
     public abstract string Description();
 
-    public virtual string Info()
-    {
-        var info = CompletePatch() ? "Complete patch\n" : "Patch is incomplete\n";
-
-        info += "~~~\n";
-
-        // if (this is Reactor reactor)
-        // {
-        //     info += "Weapon Stats:\n";
-        //     foreach (var kvp in reactor.ReactorStats())
-        //     {
-        //         if (kvp.Key == "bulletType")
-        //         {
-        //             info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.BulletType), (int)kvp.Value) + "\n";
-        //         }
-        //         else if (kvp.Key == "soundType")
-        //         {
-        //             info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + Enum.GetName(typeof(Common.SoundType), (int)kvp.Value) + "\n";
-        //         }
-        //         else
-        //         {
-        //             info += Funcs.ConvertCamelCase(kvp.Key.ToString()) + ": " + kvp.Value + "\n";
-        //         }
-        //     }
-        // }
-    
-        return info;
-    }
+    public abstract string Info();
 
     public abstract bool Warning(out string message);
 

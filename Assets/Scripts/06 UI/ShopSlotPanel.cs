@@ -1,8 +1,9 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShopSlotPanel : MonoBehaviour
+public class ShopSlotPanel : MonoBehaviour, ITooltipInfo
 {
     public Sprite defaultIcon;
     private Color defaultColor = new(0.7803922f, 0.8862746f, 0.6705883f);
@@ -15,6 +16,11 @@ public class ShopSlotPanel : MonoBehaviour
     public TextMeshProUGUI descriptionLabel;
     public TextMeshProUGUI costLabel;
     public GridLayoutGroup moduleLayoutIcon;
+
+    private void Start()
+    {
+        name = name.Replace("(Clone)", "");
+    }
 
     public void Setup(GameObject module)
     {
@@ -84,5 +90,25 @@ public class ShopSlotPanel : MonoBehaviour
         itemForSale = null;
         
         costLabel.text = "Cost: ???";
+    }
+
+    public string Description()
+    {
+        if (itemForSale == null) return "";
+        
+        return "For sale: " + itemForSale.name + "\n" + itemForSale.GetComponent<ITooltipInfo>().Description();
+    }
+
+    public string Info()
+    {
+        if (itemForSale == null) return "";
+        
+        return itemForSale.GetComponent<ITooltipInfo>().Info();
+    }
+
+    public bool Warning(out string message)
+    {
+        message = "";
+        return false;
     }
 }

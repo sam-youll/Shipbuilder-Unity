@@ -130,10 +130,8 @@ public class UIManager : MonoBehaviour
         OnPlayerScrapValueChanged();
 
 
-        UpdateEscapeModuleCounter();
 
         ShowHideQuestLog();
-        
     }
 
     private void Update()
@@ -783,6 +781,13 @@ public class UIManager : MonoBehaviour
                 else if (result.CompareTag("Selectable"))
                 {
                     hit = result;
+                    return true;
+                }
+                if (result.name == "bg")
+                {
+                    hit = HoverList().Find(x => x.CompareTag("Selectable"));
+                    if (hit == null) return false;
+                    if (hit.name == "Item Panel") hit = hit.transform.parent.gameObject;
                     return true;
                 }
             }

@@ -10,8 +10,13 @@ public class Reactor : ModuleRack, ITooltipInfo
 {
     public override string Description()
     {
-        return "Controls energy generation, as well as affecting " +
-               "harmonic and rhythmic properties of the overall composition.";
+        return "Allows reactor modules to function at full capacity.";
+    }
+
+    public override string Info()
+    {
+        var info = "Total power generation possible:\n" + "- " + TotalPowerGenerated() + " /second\n";
+        return info;
     }
 
     public override bool Warning(out string message)
