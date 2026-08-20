@@ -75,17 +75,17 @@ namespace RNBO {
 class rnbomatic : public PatcherInterfaceImpl {
 public:
 
-class RNBOSubpatcher_322 : public PatcherInterfaceImpl {
+class RNBOSubpatcher_190 : public PatcherInterfaceImpl {
     
     friend class rnbomatic;
     
     public:
     
-    RNBOSubpatcher_322()
+    RNBOSubpatcher_190()
     {
     }
     
-    ~RNBOSubpatcher_322()
+    ~RNBOSubpatcher_190()
     {
     }
     
@@ -4085,29 +4085,29 @@ class RNBOSubpatcher_322 : public PatcherInterfaceImpl {
     
 };
 
-class RNBOSubpatcher_323 : public PatcherInterfaceImpl {
+class RNBOSubpatcher_191 : public PatcherInterfaceImpl {
     
     friend class rnbomatic;
     
     public:
     
-    class RNBOSubpatcher_309 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_177 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_323;
+            friend class RNBOSubpatcher_191;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_309()
+            RNBOSubpatcher_177()
             {
             }
             
-            ~RNBOSubpatcher_309()
+            ~RNBOSubpatcher_177()
             {
             }
             
-            virtual RNBOSubpatcher_323* getPatcher() const {
-                return static_cast<RNBOSubpatcher_323 *>(_parentPatcher);
+            virtual RNBOSubpatcher_191* getPatcher() const {
+                return static_cast<RNBOSubpatcher_191 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -7750,11 +7750,11 @@ class RNBOSubpatcher_323 : public PatcherInterfaceImpl {
             
     };
     
-    RNBOSubpatcher_323()
+    RNBOSubpatcher_191()
     {
     }
     
-    ~RNBOSubpatcher_323()
+    ~RNBOSubpatcher_191()
     {
         delete this->p_01;
     }
@@ -7855,7 +7855,7 @@ class RNBOSubpatcher_323 : public PatcherInterfaceImpl {
     void getState(PatcherStateInterface& ) {}
     
     void setState() {
-        this->p_01 = new RNBOSubpatcher_309();
+        this->p_01 = new RNBOSubpatcher_177();
         this->p_01->setEngineAndPatcher(this->getEngine(), this);
         this->p_01->initialize();
         this->p_01->setParameterOffset(this->getParameterOffset(this->p_01));
@@ -8282,33 +8282,33 @@ class RNBOSubpatcher_323 : public PatcherInterfaceImpl {
         Int _noteNumber;
         Index isMuted;
         ParameterIndex parameterOffset;
-        RNBOSubpatcher_309* p_01;
+        RNBOSubpatcher_177* p_01;
     
 };
 
-class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
+class RNBOSubpatcher_192 : public PatcherInterfaceImpl {
     
     friend class rnbomatic;
     
     public:
     
-    class RNBOSubpatcher_310 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_178 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_310()
+            RNBOSubpatcher_178()
             {
             }
             
-            ~RNBOSubpatcher_310()
+            ~RNBOSubpatcher_178()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -10098,23 +10098,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_311 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_179 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_311()
+            RNBOSubpatcher_179()
             {
             }
             
-            ~RNBOSubpatcher_311()
+            ~RNBOSubpatcher_179()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -11271,23 +11271,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_312 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_180 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_312()
+            RNBOSubpatcher_180()
             {
             }
             
-            ~RNBOSubpatcher_312()
+            ~RNBOSubpatcher_180()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -12053,23 +12053,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_313 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_181 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_313()
+            RNBOSubpatcher_181()
             {
             }
             
-            ~RNBOSubpatcher_313()
+            ~RNBOSubpatcher_181()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -13283,23 +13283,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_314 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_182 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_314()
+            RNBOSubpatcher_182()
             {
             }
             
-            ~RNBOSubpatcher_314()
+            ~RNBOSubpatcher_182()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -14510,23 +14510,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_315 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_183 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_315()
+            RNBOSubpatcher_183()
             {
             }
             
-            ~RNBOSubpatcher_315()
+            ~RNBOSubpatcher_183()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -15144,7 +15144,10 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
             void expr_34_in1_set(number in1) {
                 this->expr_34_in1 = in1;
-                this->expr_34_out1_set(this->expr_34_in1 * this->expr_34_in2);//#map:constellation[1]/gemini/*_obj-3:1
+            
+                this->expr_34_out1_set(
+                    (this->expr_34_in2 == 0 ? 0 : (this->expr_34_in2 == 0. ? 0. : this->expr_34_in1 / this->expr_34_in2))
+                );//#map:constellation[1]/gemini//_obj-3:1
             }
             
             void receive_35_output_number_set(number v) {
@@ -15202,20 +15205,20 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 );
             }
             
-            void floatnum_01_out_set(number v) {
-                this->gaintilde_17_input_number_set(v);
-                this->gaintilde_16_input_number_set(v);
+            void expr_37_out1_set(number v) {
+                this->expr_37_out1 = v;
+                this->gaintilde_17_input_number_set(this->expr_37_out1);
+                this->gaintilde_16_input_number_set(this->expr_37_out1);
             }
             
-            void floatnum_01_input_number_set(number v) {
-                this->floatnum_01_input_number = v;
-                this->floatnum_01_stored = v;
-                this->floatnum_01_out_set(v);
+            void expr_37_in1_set(number in1) {
+                this->expr_37_in1 = in1;
+                this->expr_37_out1_set(this->expr_37_in1 - this->expr_37_in2);//#map:constellation[1]/gemini/-_obj-17:1
             }
             
             void receive_36_output_number_set(number v) {
                 this->receive_36_output_number = v;
-                this->floatnum_01_input_number_set(v);
+                this->expr_37_in1_set(v);
             }
             
             void phasor_09_perform(number freq, SampleValue * out, Index n) {
@@ -16458,9 +16461,10 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 delaytilde_04_delay = 0;
                 cycle_tilde_08_frequency = 0.01;
                 cycle_tilde_08_phase_offset = 0;
-                floatnum_01_input_number = 0;
-                floatnum_01_value = 0;
                 receive_36_output_number = 0;
+                expr_37_in1 = 0;
+                expr_37_in2 = 20;
+                expr_37_out1 = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
                 sampleOffsetIntoNextAudioBuffer = 0;
@@ -16550,7 +16554,6 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 cycle_tilde_08_ph_currentPhase = 0;
                 cycle_tilde_08_ph_conv = 0;
                 cycle_tilde_08_setupDone = false;
-                floatnum_01_stored = -50;
                 stackprotect_count = 0;
                 _voiceIndex = 0;
                 _noteNumber = 0;
@@ -16607,10 +16610,11 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 number delaytilde_04_delay;
                 number cycle_tilde_08_frequency;
                 number cycle_tilde_08_phase_offset;
-                number floatnum_01_input_number;
-                number floatnum_01_value;
                 number receive_36_output_number;
                 list receive_36_output_list;
+                number expr_37_in1;
+                number expr_37_in2;
+                number expr_37_out1;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
                 SampleIndex sampleOffsetIntoNextAudioBuffer;
@@ -16720,7 +16724,6 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 number cycle_tilde_08_ph_currentPhase;
                 number cycle_tilde_08_ph_conv;
                 bool cycle_tilde_08_setupDone;
-                number floatnum_01_stored;
                 number stackprotect_count;
                 DataRef delaytilde_03_del_bufferobj;
                 DataRef delaytilde_04_del_bufferobj;
@@ -16731,23 +16734,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_316 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_184 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_316()
+            RNBOSubpatcher_184()
             {
             }
             
-            ~RNBOSubpatcher_316()
+            ~RNBOSubpatcher_184()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -17158,14 +17161,14 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 this->phasor_13_freq = v;
             }
             
-            void expr_38_out1_set(number v) {
-                this->expr_38_out1 = v;
-                this->phasor_13_freq_set(this->expr_38_out1);
+            void expr_39_out1_set(number v) {
+                this->expr_39_out1 = v;
+                this->phasor_13_freq_set(this->expr_39_out1);
             }
             
-            void expr_38_in1_set(number in1) {
-                this->expr_38_in1 = in1;
-                this->expr_38_out1_set(this->expr_38_in1 * this->expr_38_in2);//#map:constellation[1]/capricorn/*_obj-16:1
+            void expr_39_in1_set(number in1) {
+                this->expr_39_in1 = in1;
+                this->expr_39_out1_set(this->expr_39_in1 * this->expr_39_in2);//#map:constellation[1]/capricorn/*_obj-16:1
             }
             
             void cycle_tilde_09_frequency_set(number v) {
@@ -17174,7 +17177,7 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
             void receive_38_output_number_set(number v) {
                 this->receive_38_output_number = v;
-                this->expr_38_in1_set(v);
+                this->expr_39_in1_set(v);
                 this->cycle_tilde_09_frequency_set(v);
             }
             
@@ -17203,19 +17206,19 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 );
             }
             
-            void expr_37_out1_set(number v) {
-                this->expr_37_out1 = v;
-                this->gaintilde_18_input_number_set(this->expr_37_out1);
+            void expr_38_out1_set(number v) {
+                this->expr_38_out1 = v;
+                this->gaintilde_18_input_number_set(this->expr_38_out1);
             }
             
-            void expr_37_in1_set(number in1) {
-                this->expr_37_in1 = in1;
-                this->expr_37_out1_set(this->expr_37_in1 - this->expr_37_in2);//#map:constellation[1]/capricorn/-_obj-18:1
+            void expr_38_in1_set(number in1) {
+                this->expr_38_in1 = in1;
+                this->expr_38_out1_set(this->expr_38_in1 - this->expr_38_in2);//#map:constellation[1]/capricorn/-_obj-18:1
             }
             
             void receive_37_output_number_set(number v) {
                 this->receive_37_output_number = v;
-                this->expr_37_in1_set(v);
+                this->expr_38_in1_set(v);
             }
             
             void cycle_tilde_09_perform(
@@ -17478,18 +17481,18 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             void assign_defaults()
             {
                 receive_37_output_number = 0;
-                expr_37_in1 = 0;
-                expr_37_in2 = 20;
-                expr_37_out1 = 0;
+                expr_38_in1 = 0;
+                expr_38_in2 = 20;
+                expr_38_out1 = 0;
                 cycle_tilde_09_frequency = 0;
                 cycle_tilde_09_phase_offset = 0;
                 receive_38_output_number = 0;
                 gaintilde_18_input_number = 0;
                 gaintilde_18_value = 0;
                 gaintilde_18_interp = 10;
-                expr_38_in1 = 0;
-                expr_38_in2 = 1.498307;
-                expr_38_out1 = 0;
+                expr_39_in1 = 0;
+                expr_39_in2 = 1.498307;
+                expr_39_out1 = 0;
                 phasor_13_freq = 0;
                 _currentTime = 0;
                 audioProcessSampleCount = 0;
@@ -17532,9 +17535,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
                 number receive_37_output_number;
                 list receive_37_output_list;
-                number expr_37_in1;
-                number expr_37_in2;
-                number expr_37_out1;
+                number expr_38_in1;
+                number expr_38_in2;
+                number expr_38_out1;
                 number cycle_tilde_09_frequency;
                 number cycle_tilde_09_phase_offset;
                 number receive_38_output_number;
@@ -17542,9 +17545,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 number gaintilde_18_input_number;
                 number gaintilde_18_value;
                 number gaintilde_18_interp;
-                number expr_38_in1;
-                number expr_38_in2;
-                number expr_38_out1;
+                number expr_39_in1;
+                number expr_39_in2;
+                number expr_39_out1;
                 number phasor_13_freq;
                 MillisecondTime _currentTime;
                 SampleIndex audioProcessSampleCount;
@@ -17586,23 +17589,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_317 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_185 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_317()
+            RNBOSubpatcher_185()
             {
             }
             
-            ~RNBOSubpatcher_317()
+            ~RNBOSubpatcher_185()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -19198,23 +19201,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_318 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_186 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_318()
+            RNBOSubpatcher_186()
             {
             }
             
-            ~RNBOSubpatcher_318()
+            ~RNBOSubpatcher_186()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -19672,19 +19675,19 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 );
             }
             
-            void floatnum_02_out_set(number v) {
+            void floatnum_01_out_set(number v) {
                 this->gaintilde_20_input_number_set(v);
             }
             
-            void floatnum_02_input_number_set(number v) {
-                this->floatnum_02_input_number = v;
-                this->floatnum_02_stored = v;
-                this->floatnum_02_out_set(v);
+            void floatnum_01_input_number_set(number v) {
+                this->floatnum_01_input_number = v;
+                this->floatnum_01_stored = v;
+                this->floatnum_01_out_set(v);
             }
             
             void receive_42_output_number_set(number v) {
                 this->receive_42_output_number = v;
-                this->floatnum_02_input_number_set(v);
+                this->floatnum_01_input_number_set(v);
             }
             
             void cycle_tilde_12_perform(
@@ -20041,8 +20044,8 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             void assign_defaults()
             {
                 receive_42_output_number = 0;
-                floatnum_02_input_number = 0;
-                floatnum_02_value = 0;
+                floatnum_01_input_number = 0;
+                floatnum_01_value = 0;
                 cycle_tilde_11_frequency = 0;
                 cycle_tilde_11_phase_offset = 0;
                 receive_43_output_number = 0;
@@ -20069,7 +20072,7 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 maxvs = 0;
                 sr = 44100;
                 invsr = 0.00002267573696;
-                floatnum_02_stored = -10;
+                floatnum_01_stored = -10;
                 cycle_tilde_11_wrap = 0;
                 cycle_tilde_11_ph_currentPhase = 0;
                 cycle_tilde_11_ph_conv = 0;
@@ -20103,8 +20106,8 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
                 number receive_42_output_number;
                 list receive_42_output_list;
-                number floatnum_02_input_number;
-                number floatnum_02_value;
+                number floatnum_01_input_number;
+                number floatnum_01_value;
                 number cycle_tilde_11_frequency;
                 number cycle_tilde_11_phase_offset;
                 number receive_43_output_number;
@@ -20130,7 +20133,7 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 Index maxvs;
                 number sr;
                 number invsr;
-                number floatnum_02_stored;
+                number floatnum_01_stored;
                 Float64BufferRef cycle_tilde_11_buffer;
                 long cycle_tilde_11_wrap;
                 uint32_t cycle_tilde_11_phasei;
@@ -20167,23 +20170,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_319 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_187 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_319()
+            RNBOSubpatcher_187()
             {
             }
             
-            ~RNBOSubpatcher_319()
+            ~RNBOSubpatcher_187()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -20601,19 +20604,19 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 );
             }
             
-            void expr_39_out1_set(number v) {
-                this->expr_39_out1 = v;
-                this->gaintilde_21_input_number_set(this->expr_39_out1);
+            void expr_40_out1_set(number v) {
+                this->expr_40_out1 = v;
+                this->gaintilde_21_input_number_set(this->expr_40_out1);
             }
             
-            void expr_39_in1_set(number in1) {
-                this->expr_39_in1 = in1;
-                this->expr_39_out1_set(this->expr_39_in1 - this->expr_39_in2);//#map:constellation[1]/leo/-_obj-7:1
+            void expr_40_in1_set(number in1) {
+                this->expr_40_in1 = in1;
+                this->expr_40_out1_set(this->expr_40_in1 - this->expr_40_in2);//#map:constellation[1]/leo/-_obj-7:1
             }
             
             void receive_44_output_number_set(number v) {
                 this->receive_44_output_number = v;
-                this->expr_39_in1_set(v);
+                this->expr_40_in1_set(v);
             }
             
             void phasor_16_perform(number freq, SampleValue * out, Index n) {
@@ -20776,9 +20779,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             void assign_defaults()
             {
                 receive_44_output_number = 0;
-                expr_39_in1 = 0;
-                expr_39_in2 = 40;
-                expr_39_out1 = 0;
+                expr_40_in1 = 0;
+                expr_40_in2 = 40;
+                expr_40_out1 = 0;
                 receive_45_output_number = 0;
                 gaintilde_21_input_number = 0;
                 gaintilde_21_value = 0;
@@ -20820,9 +20823,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
                 number receive_44_output_number;
                 list receive_44_output_list;
-                number expr_39_in1;
-                number expr_39_in2;
-                number expr_39_out1;
+                number expr_40_in1;
+                number expr_40_in2;
+                number expr_40_out1;
                 number receive_45_output_number;
                 list receive_45_output_list;
                 number gaintilde_21_input_number;
@@ -20862,23 +20865,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_320 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_188 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_320()
+            RNBOSubpatcher_188()
             {
             }
             
-            ~RNBOSubpatcher_320()
+            ~RNBOSubpatcher_188()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -20975,8 +20978,8 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                     n
                 );
             
-                this->signaladder_10_perform(this->signals[0], this->signals[1], this->signals[1], n);
-                this->dspexpr_21_perform(this->signals[1], this->signals[2], this->signals[3], n);
+                this->signaladder_10_perform(this->signals[1], this->signals[0], this->signals[0], n);
+                this->dspexpr_21_perform(this->signals[0], this->signals[2], this->signals[3], n);
                 this->gaintilde_22_perform(this->signals[3], out1, n);
                 this->stackprotect_perform(n);
                 this->audioProcessSampleCount += this->vs;
@@ -21317,14 +21320,14 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 this->cycle_tilde_14_frequency = v;
             }
             
-            void expr_41_out1_set(number v) {
-                this->expr_41_out1 = v;
-                this->cycle_tilde_14_frequency_set(this->expr_41_out1);
+            void expr_42_out1_set(number v) {
+                this->expr_42_out1 = v;
+                this->cycle_tilde_14_frequency_set(this->expr_42_out1);
             }
             
-            void expr_41_in1_set(number in1) {
-                this->expr_41_in1 = in1;
-                this->expr_41_out1_set(this->expr_41_in1 * this->expr_41_in2);//#map:constellation[1]/pisces/*_obj-7:1
+            void expr_42_in1_set(number in1) {
+                this->expr_42_in1 = in1;
+                this->expr_42_out1_set(this->expr_42_in1 * this->expr_42_in2);//#map:constellation[1]/pisces/*_obj-7:1
             }
             
             void cycle_tilde_13_frequency_set(number v) {
@@ -21333,7 +21336,7 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
             void receive_47_output_number_set(number v) {
                 this->receive_47_output_number = v;
-                this->expr_41_in1_set(v);
+                this->expr_42_in1_set(v);
                 this->cycle_tilde_13_frequency_set(v);
             }
             
@@ -21362,19 +21365,19 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 );
             }
             
-            void expr_40_out1_set(number v) {
-                this->expr_40_out1 = v;
-                this->gaintilde_22_input_number_set(this->expr_40_out1);
+            void expr_41_out1_set(number v) {
+                this->expr_41_out1 = v;
+                this->gaintilde_22_input_number_set(this->expr_41_out1);
             }
             
-            void expr_40_in1_set(number in1) {
-                this->expr_40_in1 = in1;
-                this->expr_40_out1_set(this->expr_40_in1 - this->expr_40_in2);//#map:constellation[1]/pisces/-_obj-4:1
+            void expr_41_in1_set(number in1) {
+                this->expr_41_in1 = in1;
+                this->expr_41_out1_set(this->expr_41_in1 - this->expr_41_in2);//#map:constellation[1]/pisces/-_obj-4:1
             }
             
             void receive_46_output_number_set(number v) {
                 this->receive_46_output_number = v;
-                this->expr_40_in1_set(v);
+                this->expr_41_in1_set(v);
             }
             
             void cycle_tilde_13_perform(
@@ -21781,9 +21784,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             void assign_defaults()
             {
                 receive_46_output_number = 0;
-                expr_40_in1 = 0;
-                expr_40_in2 = 10;
-                expr_40_out1 = 0;
+                expr_41_in1 = 0;
+                expr_41_in2 = 10;
+                expr_41_out1 = 0;
                 cycle_tilde_13_frequency = 0;
                 cycle_tilde_13_phase_offset = 0;
                 receive_47_output_number = 0;
@@ -21794,9 +21797,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 gaintilde_22_interp = 10;
                 cycle_tilde_14_frequency = 0;
                 cycle_tilde_14_phase_offset = 0;
-                expr_41_in1 = 0;
-                expr_41_in2 = 1.189207;
-                expr_41_out1 = 0;
+                expr_42_in1 = 0;
+                expr_42_in2 = 1.189207;
+                expr_42_out1 = 0;
                 cycle_tilde_15_frequency = 0.1;
                 cycle_tilde_15_phase_offset = 0;
                 _currentTime = 0;
@@ -21844,9 +21847,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
                 number receive_46_output_number;
                 list receive_46_output_list;
-                number expr_40_in1;
-                number expr_40_in2;
-                number expr_40_out1;
+                number expr_41_in1;
+                number expr_41_in2;
+                number expr_41_out1;
                 number cycle_tilde_13_frequency;
                 number cycle_tilde_13_phase_offset;
                 number receive_47_output_number;
@@ -21858,9 +21861,9 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 number gaintilde_22_interp;
                 number cycle_tilde_14_frequency;
                 number cycle_tilde_14_phase_offset;
-                number expr_41_in1;
-                number expr_41_in2;
-                number expr_41_out1;
+                number expr_42_in1;
+                number expr_42_in2;
+                number expr_42_out1;
                 number cycle_tilde_15_frequency;
                 number cycle_tilde_15_phase_offset;
                 MillisecondTime _currentTime;
@@ -21911,23 +21914,23 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    class RNBOSubpatcher_321 : public PatcherInterfaceImpl {
+    class RNBOSubpatcher_189 : public PatcherInterfaceImpl {
             
-            friend class RNBOSubpatcher_324;
+            friend class RNBOSubpatcher_192;
             friend class rnbomatic;
             
             public:
             
-            RNBOSubpatcher_321()
+            RNBOSubpatcher_189()
             {
             }
             
-            ~RNBOSubpatcher_321()
+            ~RNBOSubpatcher_189()
             {
             }
             
-            virtual RNBOSubpatcher_324* getPatcher() const {
-                return static_cast<RNBOSubpatcher_324 *>(_parentPatcher);
+            virtual RNBOSubpatcher_192* getPatcher() const {
+                return static_cast<RNBOSubpatcher_192 *>(_parentPatcher);
             }
             
             rnbomatic* getTopLevelPatcher() {
@@ -22531,19 +22534,19 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 this->cycle_tilde_16_frequency = v;
             }
             
-            void expr_43_out1_set(number v) {
-                this->expr_43_out1 = v;
-                this->cycle_tilde_16_frequency_set(this->expr_43_out1);
+            void expr_44_out1_set(number v) {
+                this->expr_44_out1 = v;
+                this->cycle_tilde_16_frequency_set(this->expr_44_out1);
             }
             
-            void expr_43_in1_set(number in1) {
-                this->expr_43_in1 = in1;
-                this->expr_43_out1_set(this->expr_43_in1 * this->expr_43_in2);//#map:constellation[1]/virgo/*_obj-17:1
+            void expr_44_in1_set(number in1) {
+                this->expr_44_in1 = in1;
+                this->expr_44_out1_set(this->expr_44_in1 * this->expr_44_in2);//#map:constellation[1]/virgo/*_obj-17:1
             }
             
             void receive_49_output_number_set(number v) {
                 this->receive_49_output_number = v;
-                this->expr_43_in1_set(v);
+                this->expr_44_in1_set(v);
             }
             
             void gaintilde_23_outval_set(number ) {}
@@ -22571,19 +22574,19 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
                 );
             }
             
-            void expr_42_out1_set(number v) {
-                this->expr_42_out1 = v;
-                this->gaintilde_23_input_number_set(this->expr_42_out1);
+            void expr_43_out1_set(number v) {
+                this->expr_43_out1 = v;
+                this->gaintilde_23_input_number_set(this->expr_43_out1);
             }
             
-            void expr_42_in1_set(number in1) {
-                this->expr_42_in1 = in1;
-                this->expr_42_out1_set(this->expr_42_in1 - this->expr_42_in2);//#map:constellation[1]/virgo/-_obj-5:1
+            void expr_43_in1_set(number in1) {
+                this->expr_43_in1 = in1;
+                this->expr_43_out1_set(this->expr_43_in1 - this->expr_43_in2);//#map:constellation[1]/virgo/-_obj-5:1
             }
             
             void receive_48_output_number_set(number v) {
                 this->receive_48_output_number = v;
-                this->expr_42_in1_set(v);
+                this->expr_43_in1_set(v);
             }
             
             void message_11_set_set(const list& v) {
@@ -22999,15 +23002,15 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             void assign_defaults()
             {
                 receive_48_output_number = 0;
-                expr_42_in1 = 0;
-                expr_42_in2 = 20;
-                expr_42_out1 = 0;
+                expr_43_in1 = 0;
+                expr_43_in2 = 20;
+                expr_43_out1 = 0;
                 receive_49_output_number = 0;
                 cycle_tilde_16_frequency = 0;
                 cycle_tilde_16_phase_offset = 0;
-                expr_43_in1 = 0;
-                expr_43_in2 = 2;
-                expr_43_out1 = 0;
+                expr_44_in1 = 0;
+                expr_44_in2 = 2;
+                expr_44_out1 = 0;
                 gaintilde_23_input_number = 0;
                 gaintilde_23_value = 0;
                 gaintilde_23_interp = 10;
@@ -23074,16 +23077,16 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
                 number receive_48_output_number;
                 list receive_48_output_list;
-                number expr_42_in1;
-                number expr_42_in2;
-                number expr_42_out1;
+                number expr_43_in1;
+                number expr_43_in2;
+                number expr_43_out1;
                 number receive_49_output_number;
                 list receive_49_output_list;
                 number cycle_tilde_16_frequency;
                 number cycle_tilde_16_phase_offset;
-                number expr_43_in1;
-                number expr_43_in2;
-                number expr_43_out1;
+                number expr_44_in1;
+                number expr_44_in2;
+                number expr_44_out1;
                 number gaintilde_23_input_number;
                 number gaintilde_23_value;
                 number gaintilde_23_interp;
@@ -23148,11 +23151,11 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
             
     };
     
-    RNBOSubpatcher_324()
+    RNBOSubpatcher_192()
     {
     }
     
-    ~RNBOSubpatcher_324()
+    ~RNBOSubpatcher_192()
     {
         delete this->p_02;
         delete this->p_03;
@@ -23311,51 +23314,51 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
     void getState(PatcherStateInterface& ) {}
     
     void setState() {
-        this->p_02 = new RNBOSubpatcher_310();
+        this->p_02 = new RNBOSubpatcher_178();
         this->p_02->setEngineAndPatcher(this->getEngine(), this);
         this->p_02->initialize();
         this->p_02->setParameterOffset(this->getParameterOffset(this->p_02));
-        this->p_03 = new RNBOSubpatcher_311();
+        this->p_03 = new RNBOSubpatcher_179();
         this->p_03->setEngineAndPatcher(this->getEngine(), this);
         this->p_03->initialize();
         this->p_03->setParameterOffset(this->getParameterOffset(this->p_03));
-        this->p_04 = new RNBOSubpatcher_312();
+        this->p_04 = new RNBOSubpatcher_180();
         this->p_04->setEngineAndPatcher(this->getEngine(), this);
         this->p_04->initialize();
         this->p_04->setParameterOffset(this->getParameterOffset(this->p_04));
-        this->p_05 = new RNBOSubpatcher_313();
+        this->p_05 = new RNBOSubpatcher_181();
         this->p_05->setEngineAndPatcher(this->getEngine(), this);
         this->p_05->initialize();
         this->p_05->setParameterOffset(this->getParameterOffset(this->p_05));
-        this->p_06 = new RNBOSubpatcher_314();
+        this->p_06 = new RNBOSubpatcher_182();
         this->p_06->setEngineAndPatcher(this->getEngine(), this);
         this->p_06->initialize();
         this->p_06->setParameterOffset(this->getParameterOffset(this->p_06));
-        this->p_07 = new RNBOSubpatcher_315();
+        this->p_07 = new RNBOSubpatcher_183();
         this->p_07->setEngineAndPatcher(this->getEngine(), this);
         this->p_07->initialize();
         this->p_07->setParameterOffset(this->getParameterOffset(this->p_07));
-        this->p_08 = new RNBOSubpatcher_316();
+        this->p_08 = new RNBOSubpatcher_184();
         this->p_08->setEngineAndPatcher(this->getEngine(), this);
         this->p_08->initialize();
         this->p_08->setParameterOffset(this->getParameterOffset(this->p_08));
-        this->p_09 = new RNBOSubpatcher_317();
+        this->p_09 = new RNBOSubpatcher_185();
         this->p_09->setEngineAndPatcher(this->getEngine(), this);
         this->p_09->initialize();
         this->p_09->setParameterOffset(this->getParameterOffset(this->p_09));
-        this->p_10 = new RNBOSubpatcher_318();
+        this->p_10 = new RNBOSubpatcher_186();
         this->p_10->setEngineAndPatcher(this->getEngine(), this);
         this->p_10->initialize();
         this->p_10->setParameterOffset(this->getParameterOffset(this->p_10));
-        this->p_11 = new RNBOSubpatcher_319();
+        this->p_11 = new RNBOSubpatcher_187();
         this->p_11->setEngineAndPatcher(this->getEngine(), this);
         this->p_11->initialize();
         this->p_11->setParameterOffset(this->getParameterOffset(this->p_11));
-        this->p_12 = new RNBOSubpatcher_320();
+        this->p_12 = new RNBOSubpatcher_188();
         this->p_12->setEngineAndPatcher(this->getEngine(), this);
         this->p_12->initialize();
         this->p_12->setParameterOffset(this->getParameterOffset(this->p_12));
-        this->p_13 = new RNBOSubpatcher_321();
+        this->p_13 = new RNBOSubpatcher_189();
         this->p_13->setEngineAndPatcher(this->getEngine(), this);
         this->p_13->initialize();
         this->p_13->setParameterOffset(this->getParameterOffset(this->p_13));
@@ -24745,18 +24748,18 @@ class RNBOSubpatcher_324 : public PatcherInterfaceImpl {
         Int _noteNumber;
         Index isMuted;
         ParameterIndex parameterOffset;
-        RNBOSubpatcher_310* p_02;
-        RNBOSubpatcher_311* p_03;
-        RNBOSubpatcher_312* p_04;
-        RNBOSubpatcher_313* p_05;
-        RNBOSubpatcher_314* p_06;
-        RNBOSubpatcher_315* p_07;
-        RNBOSubpatcher_316* p_08;
-        RNBOSubpatcher_317* p_09;
-        RNBOSubpatcher_318* p_10;
-        RNBOSubpatcher_319* p_11;
-        RNBOSubpatcher_320* p_12;
-        RNBOSubpatcher_321* p_13;
+        RNBOSubpatcher_178* p_02;
+        RNBOSubpatcher_179* p_03;
+        RNBOSubpatcher_180* p_04;
+        RNBOSubpatcher_181* p_05;
+        RNBOSubpatcher_182* p_06;
+        RNBOSubpatcher_183* p_07;
+        RNBOSubpatcher_184* p_08;
+        RNBOSubpatcher_185* p_09;
+        RNBOSubpatcher_186* p_10;
+        RNBOSubpatcher_187* p_11;
+        RNBOSubpatcher_188* p_12;
+        RNBOSubpatcher_189* p_13;
     
 };
 
@@ -25029,15 +25032,15 @@ Index getPatcherSerial() const {
 void getState(PatcherStateInterface& ) {}
 
 void setState() {
-    this->p_14 = new RNBOSubpatcher_322();
+    this->p_14 = new RNBOSubpatcher_190();
     this->p_14->setEngineAndPatcher(this->getEngine(), this);
     this->p_14->initialize();
     this->p_14->setParameterOffset(this->getParameterOffset(this->p_14));
-    this->p_15 = new RNBOSubpatcher_323();
+    this->p_15 = new RNBOSubpatcher_191();
     this->p_15->setEngineAndPatcher(this->getEngine(), this);
     this->p_15->initialize();
     this->p_15->setParameterOffset(this->getParameterOffset(this->p_15));
-    this->p_16 = new RNBOSubpatcher_324();
+    this->p_16 = new RNBOSubpatcher_192();
     this->p_16->setEngineAndPatcher(this->getEngine(), this);
     this->p_16->initialize();
     this->p_16->setParameterOffset(this->getParameterOffset(this->p_16));
@@ -27047,9 +27050,9 @@ void assign_defaults()
     Index isMuted;
     indexlist paramInitIndices;
     indexlist paramInitOrder;
-    RNBOSubpatcher_322* p_14;
-    RNBOSubpatcher_323* p_15;
-    RNBOSubpatcher_324* p_16;
+    RNBOSubpatcher_190* p_14;
+    RNBOSubpatcher_191* p_15;
+    RNBOSubpatcher_192* p_16;
 
 };
 

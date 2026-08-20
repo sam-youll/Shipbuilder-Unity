@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 4,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -488,13 +488,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "rnbo",
-						"rect" : [ 34.0, 76.0, 973.0, 653.0 ],
+						"rect" : [ 134.0, 134.0, 973.0, 653.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -544,20 +544,20 @@
 									"patching_rect" : [ 1017.5, 206.0, 154.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 1,
@@ -965,7 +965,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 4,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1316,12 +1316,12 @@
 									"patching_rect" : [ 1025.0, 249.0, 37.0, 23.0 ],
 									"rnbo_classname" : "p",
 									"rnbo_extra_attributes" : 									{
+										"args" : [  ],
 										"polyphony" : -1.0,
 										"receivemode" : "local",
-										"args" : [  ],
+										"notecontroller" : 0,
 										"voicecontrol" : "simple",
-										"exposevoiceparams" : 0,
-										"notecontroller" : 0
+										"exposevoiceparams" : 0
 									}
 ,
 									"rnbo_serial" : 1,
@@ -1709,20 +1709,20 @@
 									"patching_rect" : [ 1526.6875, 857.8125, 190.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 2,
@@ -2142,20 +2142,20 @@
 									"patching_rect" : [ 1526.6875, 779.6875, 169.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 3,
@@ -2575,20 +2575,20 @@
 									"patching_rect" : [ 1526.6875, 689.0625, 183.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 4,
@@ -3008,20 +3008,20 @@
 									"patching_rect" : [ 1526.6875, 603.125, 185.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 5,
@@ -3483,20 +3483,20 @@
 									"patching_rect" : [ 2718.75, 351.5625, 188.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 6,
@@ -3902,20 +3902,20 @@
 									"patching_rect" : [ 2735.9375, 154.6875, 181.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 7,
@@ -4321,20 +4321,20 @@
 									"patching_rect" : [ 2743.75, 262.5, 163.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 8,
@@ -4740,20 +4740,20 @@
 									"patching_rect" : [ 2735.9375, 60.9375, 151.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 9,
@@ -5187,20 +5187,20 @@
 									"patching_rect" : [ 2310.9375, 339.0625, 193.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 10,
@@ -5606,20 +5606,20 @@
 									"patching_rect" : [ 2092.1875, 339.0625, 186.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 11,
@@ -6039,20 +6039,20 @@
 									"patching_rect" : [ 2510.0, 17.0, 185.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 12,
@@ -6472,20 +6472,20 @@
 									"patching_rect" : [ 2513.0, 138.0, 179.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 13,
@@ -6905,23 +6905,23 @@
 									"patching_rect" : [ 1404.6875, 20.3125, 167.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
-									"rnbo_serial" : 24,
+									"rnbo_serial" : 14,
 									"rnbo_uniqueid" : "source",
 									"rnboinfo" : 									{
 										"needsInstanceInfo" : 1,
@@ -7338,20 +7338,20 @@
 									"patching_rect" : [ 2282.8125, 440.625, 185.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 15,
@@ -7771,20 +7771,20 @@
 									"patching_rect" : [ 2071.875, 445.3125, 178.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 16,
@@ -8204,20 +8204,20 @@
 									"patching_rect" : [ 1868.75, 295.3125, 192.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 17,
@@ -8637,20 +8637,20 @@
 									"patching_rect" : [ 1868.75, 207.8125, 211.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 18,
@@ -9070,20 +9070,20 @@
 									"patching_rect" : [ 1860.9375, 117.1875, 157.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 19,
@@ -9503,20 +9503,20 @@
 									"patching_rect" : [ 1598.4375, 284.375, 184.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 20,
@@ -9922,20 +9922,20 @@
 									"patching_rect" : [ 1598.4375, 207.8125, 204.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 21,
@@ -10355,20 +10355,20 @@
 									"patching_rect" : [ 1598.4375, 117.1875, 150.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 22,
@@ -10802,20 +10802,20 @@
 									"patching_rect" : [ 1598.4375, 26.5625, 179.0, 23.0 ],
 									"rnbo_classname" : "param",
 									"rnbo_extra_attributes" : 									{
-										"exponent" : 1.0,
-										"meta" : "",
-										"enum" : "",
 										"displayname" : "",
-										"unit" : "",
-										"fromnormalized" : "",
+										"tonormalized" : "",
+										"meta" : "",
+										"exponent" : 1.0,
+										"enum" : "",
 										"displayorder" : "-",
+										"unit" : "",
 										"preset" : 1,
 										"order" : "0",
-										"tonormalized" : "",
 										"value" : 0.0,
-										"steps" : 0.0,
 										"ctlin" : 0.0,
-										"sendinit" : 1
+										"fromnormalized" : "",
+										"sendinit" : 1,
+										"steps" : 0.0
 									}
 ,
 									"rnbo_serial" : 23,
@@ -11234,7 +11234,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 4,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -11547,7 +11547,7 @@
 														"appversion" : 														{
 															"major" : 8,
 															"minor" : 6,
-															"revision" : 4,
+															"revision" : 5,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
@@ -11750,7 +11750,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -11971,12 +11971,12 @@
 																	"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 1,
@@ -12249,7 +12249,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -12448,12 +12448,12 @@
 																	"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 2,
@@ -12726,7 +12726,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -12882,9 +12882,9 @@
 																					"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																					"rnbo_classname" : "cycle~",
 																					"rnbo_extra_attributes" : 																					{
-																						"buffername" : "RNBODefaultSinus",
+																						"interp" : "linear",
 																						"index" : "freq",
-																						"interp" : "linear"
+																						"buffername" : "RNBODefaultSinus"
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -12927,12 +12927,12 @@
 																	"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 3,
@@ -13363,12 +13363,12 @@
 													"patching_rect" : [ 671.0, 419.0, 69.0, 23.0 ],
 													"rnbo_classname" : "p",
 													"rnbo_extra_attributes" : 													{
+														"args" : [  ],
 														"polyphony" : -1.0,
 														"receivemode" : "local",
-														"args" : [  ],
+														"notecontroller" : 0,
 														"voicecontrol" : "simple",
-														"exposevoiceparams" : 0,
-														"notecontroller" : 0
+														"exposevoiceparams" : 0
 													}
 ,
 													"rnbo_serial" : 1,
@@ -13948,7 +13948,7 @@
 														"appversion" : 														{
 															"major" : 8,
 															"minor" : 6,
-															"revision" : 4,
+															"revision" : 5,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
@@ -14166,7 +14166,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -14213,7 +14213,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -14451,7 +14451,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -14498,7 +14498,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -14716,7 +14716,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -14937,12 +14937,12 @@
 																																	"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -15215,7 +15215,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -15414,12 +15414,12 @@
 																																	"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 2,
@@ -15692,7 +15692,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -15848,9 +15848,9 @@
 																																					"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																					"rnbo_classname" : "cycle~",
 																																					"rnbo_extra_attributes" : 																																					{
-																																						"buffername" : "RNBODefaultSinus",
+																																						"interp" : "linear",
 																																						"index" : "freq",
-																																						"interp" : "linear"
+																																						"buffername" : "RNBODefaultSinus"
 																																					}
 ,
 																																					"rnbo_serial" : 1,
@@ -15893,12 +15893,12 @@
 																																	"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 3,
@@ -16313,12 +16313,12 @@
 																													"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -16714,12 +16714,12 @@
 																									"patching_rect" : [ 185.0, 100.0, 59.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -17152,12 +17152,12 @@
 																					"patching_rect" : [ 335.0, 189.0, 40.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -17688,12 +17688,12 @@
 																	"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 1,
@@ -17966,7 +17966,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -18013,7 +18013,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -18251,7 +18251,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -18298,7 +18298,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -18516,7 +18516,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -18737,12 +18737,12 @@
 																																	"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -19015,7 +19015,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -19214,12 +19214,12 @@
 																																	"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 2,
@@ -19492,7 +19492,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -19648,9 +19648,9 @@
 																																					"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																					"rnbo_classname" : "cycle~",
 																																					"rnbo_extra_attributes" : 																																					{
-																																						"buffername" : "RNBODefaultSinus",
+																																						"interp" : "linear",
 																																						"index" : "freq",
-																																						"interp" : "linear"
+																																						"buffername" : "RNBODefaultSinus"
 																																					}
 ,
 																																					"rnbo_serial" : 1,
@@ -19693,12 +19693,12 @@
 																																	"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 3,
@@ -20113,12 +20113,12 @@
 																													"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -20514,12 +20514,12 @@
 																									"patching_rect" : [ 185.0, 100.0, 59.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -20952,12 +20952,12 @@
 																					"patching_rect" : [ 335.0, 189.0, 40.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -21466,12 +21466,12 @@
 																	"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 2,
@@ -21744,7 +21744,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -21791,7 +21791,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -22029,7 +22029,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -22076,7 +22076,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -22294,7 +22294,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -22515,12 +22515,12 @@
 																																	"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -22793,7 +22793,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -22992,12 +22992,12 @@
 																																	"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 2,
@@ -23270,7 +23270,7 @@
 																																		"appversion" : 																																		{
 																																			"major" : 8,
 																																			"minor" : 6,
-																																			"revision" : 4,
+																																			"revision" : 5,
 																																			"architecture" : "x64",
 																																			"modernui" : 1
 																																		}
@@ -23426,9 +23426,9 @@
 																																					"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																					"rnbo_classname" : "cycle~",
 																																					"rnbo_extra_attributes" : 																																					{
-																																						"buffername" : "RNBODefaultSinus",
+																																						"interp" : "linear",
 																																						"index" : "freq",
-																																						"interp" : "linear"
+																																						"buffername" : "RNBODefaultSinus"
 																																					}
 ,
 																																					"rnbo_serial" : 1,
@@ -23471,12 +23471,12 @@
 																																	"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																																	"rnbo_classname" : "p",
 																																	"rnbo_extra_attributes" : 																																	{
+																																		"args" : [  ],
 																																		"polyphony" : -1.0,
 																																		"receivemode" : "local",
-																																		"args" : [  ],
+																																		"notecontroller" : 0,
 																																		"voicecontrol" : "simple",
-																																		"exposevoiceparams" : 0,
-																																		"notecontroller" : 0
+																																		"exposevoiceparams" : 0
 																																	}
 ,
 																																	"rnbo_serial" : 3,
@@ -23891,12 +23891,12 @@
 																													"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -24292,12 +24292,12 @@
 																									"patching_rect" : [ 185.0, 100.0, 59.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -24730,12 +24730,12 @@
 																					"patching_rect" : [ 335.0, 189.0, 40.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -25201,9 +25201,9 @@
 																					"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																					"rnbo_classname" : "cycle~",
 																					"rnbo_extra_attributes" : 																					{
-																						"buffername" : "RNBODefaultSinus",
+																						"interp" : "linear",
 																						"index" : "freq",
-																						"interp" : "linear"
+																						"buffername" : "RNBODefaultSinus"
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -25246,12 +25246,12 @@
 																	"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 3,
@@ -25666,12 +25666,12 @@
 													"patching_rect" : [ 685.0, 196.0, 69.0, 23.0 ],
 													"rnbo_classname" : "p",
 													"rnbo_extra_attributes" : 													{
+														"args" : [  ],
 														"polyphony" : -1.0,
 														"receivemode" : "local",
-														"args" : [  ],
+														"notecontroller" : 0,
 														"voicecontrol" : "simple",
-														"exposevoiceparams" : 0,
-														"notecontroller" : 0
+														"exposevoiceparams" : 0
 													}
 ,
 													"rnbo_serial" : 2,
@@ -26241,12 +26241,12 @@
 									"patching_rect" : [ 957.0, 168.0, 63.0, 23.0 ],
 									"rnbo_classname" : "p",
 									"rnbo_extra_attributes" : 									{
+										"args" : [  ],
 										"polyphony" : -1.0,
 										"receivemode" : "local",
-										"args" : [  ],
+										"notecontroller" : 0,
 										"voicecontrol" : "simple",
-										"exposevoiceparams" : 0,
-										"notecontroller" : 0
+										"exposevoiceparams" : 0
 									}
 ,
 									"rnbo_serial" : 2,
@@ -26588,7 +26588,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 4,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -26635,7 +26635,7 @@
 														"appversion" : 														{
 															"major" : 8,
 															"minor" : 6,
-															"revision" : 4,
+															"revision" : 5,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
@@ -26672,225 +26672,6 @@
 														"title" : "noise",
 														"boxes" : [ 															{
 																"box" : 																{
-																	"id" : "obj-10",
-																	"maxclass" : "newobj",
-																	"numinlets" : 1,
-																	"numoutlets" : 1,
-																	"outlettype" : [ "signal" ],
-																	"patching_rect" : [ 279.0, 304.0, 34.0, 23.0 ],
-																	"rnbo_classname" : "limi~",
-																	"rnbo_extra_attributes" : 																	{
-																		"channels" : 1.0,
-																		"buffersize" : 512.0,
-																		"mode" : "exponential"
-																	}
-,
-																	"rnbo_serial" : 1,
-																	"rnbo_uniqueid" : "limi~_obj-10",
-																	"rnboinfo" : 																	{
-																		"needsInstanceInfo" : 1,
-																		"argnames" : 																		{
-																			"input1" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Input",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 0,
-																				"attachable" : 0,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"inlet" : 1,
-																				"type" : "signal"
-																			}
-,
-																			"output1" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Filtered output",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 0,
-																				"attachable" : 0,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"outlet" : 1,
-																				"type" : "signal"
-																			}
-,
-																			"bypass" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Bypass",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "0"
-																			}
-,
-																			"dcblock" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "DC block",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "0"
-																			}
-,
-																			"lookahead" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Lookahead",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "100"
-																			}
-,
-																			"preamp" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Preamp",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "0"
-																			}
-,
-																			"postamp" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "postamp",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "0"
-																			}
-,
-																			"threshold" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Threshold",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "0"
-																			}
-,
-																			"release" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Release",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "1000"
-																			}
-,
-																			"clear" : 																			{
-																				"attrOrProp" : 1,
-																				"digest" : "Clear",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"attachable" : 1,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "bang"
-																			}
-,
-																			"channels" : 																			{
-																				"attrOrProp" : 2,
-																				"digest" : "Channels",
-																				"defaultarg" : 1,
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 0,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "1"
-																			}
-,
-																			"buffersize" : 																			{
-																				"attrOrProp" : 2,
-																				"digest" : "Buffer size",
-																				"defaultarg" : 2,
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 0,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"type" : "number",
-																				"defaultValue" : "512"
-																			}
-,
-																			"mode" : 																			{
-																				"attrOrProp" : 2,
-																				"digest" : "Mode",
-																				"isalias" : 0,
-																				"aliases" : [  ],
-																				"settable" : 1,
-																				"attachable" : 0,
-																				"isparam" : 0,
-																				"deprecated" : 0,
-																				"enum" : [ "linear", "exponential" ],
-																				"type" : "enum",
-																				"defaultValue" : "exponential"
-																			}
-
-																		}
-,
-																		"inputs" : [ 																			{
-																				"name" : "input1",
-																				"type" : "signal",
-																				"digest" : "Input",
-																				"hot" : 1,
-																				"docked" : 0
-																			}
- ],
-																		"outputs" : [ 																			{
-																				"name" : "output1",
-																				"type" : "signal",
-																				"digest" : "Filtered output",
-																				"docked" : 0
-																			}
- ],
-																		"helpname" : "limi~",
-																		"aliasOf" : "limi~",
-																		"classname" : "limi~",
-																		"operator" : 0,
-																		"versionId" : -112350452,
-																		"changesPatcherIO" : 0
-																	}
-,
-																	"text" : "limi~"
-																}
-
-															}
-, 															{
-																"box" : 																{
 																	"id" : "obj-8",
 																	"maxclass" : "newobj",
 																	"numinlets" : 3,
@@ -26898,9 +26679,9 @@
 																	"outlettype" : [ "signal" ],
 																	"patching_rect" : [ 279.0, 224.0, 86.0, 23.0 ],
 																	"rnbo_classname" : "reson~",
-																	"rnbo_serial" : 10,
+																	"rnbo_serial" : 3,
 																	"rnbo_uniqueid" : "reson~_obj-8",
-																	"text" : "reson~ 500 20"
+																	"text" : "reson~ 500 10"
 																}
 
 															}
@@ -26913,7 +26694,7 @@
 																	"outlettype" : [ "" ],
 																	"patching_rect" : [ 317.0, 112.0, 42.0, 23.0 ],
 																	"rnbo_classname" : "r",
-																	"rnbo_serial" : 2,
+																	"rnbo_serial" : 1,
 																	"rnbo_uniqueid" : "r_obj-7",
 																	"text" : "r pitch"
 																}
@@ -26932,7 +26713,7 @@
 																		"comment" : ""
 																	}
 ,
-																	"rnbo_serial" : 2,
+																	"rnbo_serial" : 1,
 																	"rnbo_uniqueid" : "out~_obj-2",
 																	"rnboinfo" : 																	{
 																		"needsInstanceInfo" : 1,
@@ -27033,13 +26814,6 @@
  ],
 														"lines" : [ 															{
 																"patchline" : 																{
-																	"destination" : [ "obj-2", 0 ],
-																	"source" : [ "obj-10", 0 ]
-																}
-
-															}
-, 															{
-																"patchline" : 																{
 																	"destination" : [ "obj-8", 0 ],
 																	"source" : [ "obj-5", 0 ]
 																}
@@ -27054,7 +26828,7 @@
 															}
 , 															{
 																"patchline" : 																{
-																	"destination" : [ "obj-10", 0 ],
+																	"destination" : [ "obj-2", 0 ],
 																	"source" : [ "obj-8", 0 ]
 																}
 
@@ -27078,15 +26852,15 @@
 													"patching_rect" : [ 206.0, 120.0, 46.0, 23.0 ],
 													"rnbo_classname" : "p",
 													"rnbo_extra_attributes" : 													{
+														"args" : [  ],
 														"polyphony" : -1.0,
 														"receivemode" : "local",
-														"args" : [  ],
+														"notecontroller" : 0,
 														"voicecontrol" : "simple",
-														"exposevoiceparams" : 0,
-														"notecontroller" : 0
+														"exposevoiceparams" : 0
 													}
 ,
-													"rnbo_serial" : 4,
+													"rnbo_serial" : 1,
 													"rnbo_uniqueid" : "noise",
 													"rnboinfo" : 													{
 														"needsInstanceInfo" : 1,
@@ -27632,7 +27406,7 @@
 													"outlettype" : [ "signal" ],
 													"patching_rect" : [ 50.0, 190.0, 71.5, 23.0 ],
 													"rnbo_classname" : "selector~",
-													"rnbo_serial" : 2,
+													"rnbo_serial" : 1,
 													"rnbo_uniqueid" : "selector~_obj-6",
 													"rnboinfo" : 													{
 														"needsInstanceInfo" : 1,
@@ -27809,7 +27583,7 @@
 														"appversion" : 														{
 															"major" : 8,
 															"minor" : 6,
-															"revision" : 4,
+															"revision" : 5,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
@@ -27856,7 +27630,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -28102,7 +27876,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -28149,7 +27923,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -28367,7 +28141,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -28588,12 +28362,12 @@
 																													"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -28866,7 +28640,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -29065,12 +28839,12 @@
 																													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 2,
@@ -29343,7 +29117,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -29499,9 +29273,9 @@
 																																	"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																	"rnbo_classname" : "cycle~",
 																																	"rnbo_extra_attributes" : 																																	{
-																																		"buffername" : "RNBODefaultSinus",
+																																		"interp" : "linear",
 																																		"index" : "freq",
-																																		"interp" : "linear"
+																																		"buffername" : "RNBODefaultSinus"
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -29544,12 +29318,12 @@
 																													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 3,
@@ -29964,12 +29738,12 @@
 																									"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -30365,12 +30139,12 @@
 																					"patching_rect" : [ 605.0, 472.0, 59.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -30830,7 +30604,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -30877,7 +30651,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -31095,7 +30869,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -31316,12 +31090,12 @@
 																													"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -31594,7 +31368,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -31793,12 +31567,12 @@
 																													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 2,
@@ -32071,7 +31845,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -32227,9 +32001,9 @@
 																																	"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																	"rnbo_classname" : "cycle~",
 																																	"rnbo_extra_attributes" : 																																	{
-																																		"buffername" : "RNBODefaultSinus",
+																																		"interp" : "linear",
 																																		"index" : "freq",
-																																		"interp" : "linear"
+																																		"buffername" : "RNBODefaultSinus"
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -32272,12 +32046,12 @@
 																													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 3,
@@ -32692,12 +32466,12 @@
 																									"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -33093,12 +32867,12 @@
 																					"patching_rect" : [ 570.0, 324.0, 59.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 2,
@@ -33600,12 +33374,12 @@
 																	"patching_rect" : [ 333.5, 223.0, 40.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 1,
@@ -34136,15 +33910,15 @@
 													"patching_rect" : [ 143.0, 95.0, 58.0, 23.0 ],
 													"rnbo_classname" : "p",
 													"rnbo_extra_attributes" : 													{
+														"args" : [  ],
 														"polyphony" : -1.0,
 														"receivemode" : "local",
-														"args" : [  ],
+														"notecontroller" : 0,
 														"voicecontrol" : "simple",
-														"exposevoiceparams" : 0,
-														"notecontroller" : 0
+														"exposevoiceparams" : 0
 													}
 ,
-													"rnbo_serial" : 1,
+													"rnbo_serial" : 2,
 													"rnbo_uniqueid" : "triangle",
 													"rnboinfo" : 													{
 														"needsInstanceInfo" : 1,
@@ -34373,7 +34147,7 @@
 														"appversion" : 														{
 															"major" : 8,
 															"minor" : 6,
-															"revision" : 4,
+															"revision" : 5,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
@@ -34420,7 +34194,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -34666,7 +34440,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -34713,7 +34487,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -34931,7 +34705,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -35152,12 +34926,12 @@
 																													"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -35430,7 +35204,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -35629,12 +35403,12 @@
 																													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 2,
@@ -35907,7 +35681,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -36063,9 +35837,9 @@
 																																	"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																	"rnbo_classname" : "cycle~",
 																																	"rnbo_extra_attributes" : 																																	{
-																																		"buffername" : "RNBODefaultSinus",
+																																		"interp" : "linear",
 																																		"index" : "freq",
-																																		"interp" : "linear"
+																																		"buffername" : "RNBODefaultSinus"
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -36108,12 +35882,12 @@
 																													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 3,
@@ -36528,12 +36302,12 @@
 																									"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -36929,12 +36703,12 @@
 																					"patching_rect" : [ 605.0, 472.0, 59.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -37394,7 +37168,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -37441,7 +37215,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -37659,7 +37433,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -37880,12 +37654,12 @@
 																													"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -38158,7 +37932,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -38357,12 +38131,12 @@
 																													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 2,
@@ -38635,7 +38409,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -38791,9 +38565,9 @@
 																																	"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																	"rnbo_classname" : "cycle~",
 																																	"rnbo_extra_attributes" : 																																	{
-																																		"buffername" : "RNBODefaultSinus",
+																																		"interp" : "linear",
 																																		"index" : "freq",
-																																		"interp" : "linear"
+																																		"buffername" : "RNBODefaultSinus"
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -38836,12 +38610,12 @@
 																													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 3,
@@ -39256,12 +39030,12 @@
 																									"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -39657,12 +39431,12 @@
 																					"patching_rect" : [ 570.0, 324.0, 59.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 2,
@@ -40164,12 +39938,12 @@
 																	"patching_rect" : [ 268.0, 223.0, 40.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 1,
@@ -40678,15 +40452,15 @@
 													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 													"rnbo_classname" : "p",
 													"rnbo_extra_attributes" : 													{
+														"args" : [  ],
 														"polyphony" : -1.0,
 														"receivemode" : "local",
-														"args" : [  ],
+														"notecontroller" : 0,
 														"voicecontrol" : "simple",
-														"exposevoiceparams" : 0,
-														"notecontroller" : 0
+														"exposevoiceparams" : 0
 													}
 ,
-													"rnbo_serial" : 2,
+													"rnbo_serial" : 3,
 													"rnbo_uniqueid" : "phasor",
 													"rnboinfo" : 													{
 														"needsInstanceInfo" : 1,
@@ -40915,7 +40689,7 @@
 														"appversion" : 														{
 															"major" : 8,
 															"minor" : 6,
-															"revision" : 4,
+															"revision" : 5,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
@@ -40962,7 +40736,7 @@
 																		"appversion" : 																		{
 																			"major" : 8,
 																			"minor" : 6,
-																			"revision" : 4,
+																			"revision" : 5,
 																			"architecture" : "x64",
 																			"modernui" : 1
 																		}
@@ -41208,7 +40982,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -41255,7 +41029,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -41473,7 +41247,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -41694,12 +41468,12 @@
 																													"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -41972,7 +41746,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -42171,12 +41945,12 @@
 																													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 2,
@@ -42449,7 +42223,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -42605,9 +42379,9 @@
 																																	"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																	"rnbo_classname" : "cycle~",
 																																	"rnbo_extra_attributes" : 																																	{
-																																		"buffername" : "RNBODefaultSinus",
+																																		"interp" : "linear",
 																																		"index" : "freq",
-																																		"interp" : "linear"
+																																		"buffername" : "RNBODefaultSinus"
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -42650,12 +42424,12 @@
 																													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 3,
@@ -43070,12 +42844,12 @@
 																									"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -43471,12 +43245,12 @@
 																					"patching_rect" : [ 605.0, 472.0, 59.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 1,
@@ -43936,7 +43710,7 @@
 																						"appversion" : 																						{
 																							"major" : 8,
 																							"minor" : 6,
-																							"revision" : 4,
+																							"revision" : 5,
 																							"architecture" : "x64",
 																							"modernui" : 1
 																						}
@@ -43983,7 +43757,7 @@
 																										"appversion" : 																										{
 																											"major" : 8,
 																											"minor" : 6,
-																											"revision" : 4,
+																											"revision" : 5,
 																											"architecture" : "x64",
 																											"modernui" : 1
 																										}
@@ -44201,7 +43975,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -44422,12 +44196,12 @@
 																													"patching_rect" : [ 166.0, 131.0, 58.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 1,
@@ -44700,7 +44474,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -44899,12 +44673,12 @@
 																													"patching_rect" : [ 85.0, 131.0, 54.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 2,
@@ -45177,7 +44951,7 @@
 																														"appversion" : 																														{
 																															"major" : 8,
 																															"minor" : 6,
-																															"revision" : 4,
+																															"revision" : 5,
 																															"architecture" : "x64",
 																															"modernui" : 1
 																														}
@@ -45333,9 +45107,9 @@
 																																	"patching_rect" : [ 334.0, 261.0, 42.0, 23.0 ],
 																																	"rnbo_classname" : "cycle~",
 																																	"rnbo_extra_attributes" : 																																	{
-																																		"buffername" : "RNBODefaultSinus",
+																																		"interp" : "linear",
 																																		"index" : "freq",
-																																		"interp" : "linear"
+																																		"buffername" : "RNBODefaultSinus"
 																																	}
 ,
 																																	"rnbo_serial" : 1,
@@ -45378,12 +45152,12 @@
 																													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 																													"rnbo_classname" : "p",
 																													"rnbo_extra_attributes" : 																													{
+																														"args" : [  ],
 																														"polyphony" : -1.0,
 																														"receivemode" : "local",
-																														"args" : [  ],
+																														"notecontroller" : 0,
 																														"voicecontrol" : "simple",
-																														"exposevoiceparams" : 0,
-																														"notecontroller" : 0
+																														"exposevoiceparams" : 0
 																													}
 ,
 																													"rnbo_serial" : 3,
@@ -45798,12 +45572,12 @@
 																									"patching_rect" : [ 265.0, 246.0, 69.0, 23.0 ],
 																									"rnbo_classname" : "p",
 																									"rnbo_extra_attributes" : 																									{
+																										"args" : [  ],
 																										"polyphony" : -1.0,
 																										"receivemode" : "local",
-																										"args" : [  ],
+																										"notecontroller" : 0,
 																										"voicecontrol" : "simple",
-																										"exposevoiceparams" : 0,
-																										"notecontroller" : 0
+																										"exposevoiceparams" : 0
 																									}
 ,
 																									"rnbo_serial" : 1,
@@ -46199,12 +45973,12 @@
 																					"patching_rect" : [ 570.0, 324.0, 59.0, 23.0 ],
 																					"rnbo_classname" : "p",
 																					"rnbo_extra_attributes" : 																					{
+																						"args" : [  ],
 																						"polyphony" : -1.0,
 																						"receivemode" : "local",
-																						"args" : [  ],
+																						"notecontroller" : 0,
 																						"voicecontrol" : "simple",
-																						"exposevoiceparams" : 0,
-																						"notecontroller" : 0
+																						"exposevoiceparams" : 0
 																					}
 ,
 																					"rnbo_serial" : 2,
@@ -46706,12 +46480,12 @@
 																	"patching_rect" : [ 268.0, 223.0, 40.0, 23.0 ],
 																	"rnbo_classname" : "p",
 																	"rnbo_extra_attributes" : 																	{
+																		"args" : [  ],
 																		"polyphony" : -1.0,
 																		"receivemode" : "local",
-																		"args" : [  ],
+																		"notecontroller" : 0,
 																		"voicecontrol" : "simple",
-																		"exposevoiceparams" : 0,
-																		"notecontroller" : 0
+																		"exposevoiceparams" : 0
 																	}
 ,
 																	"rnbo_serial" : 1,
@@ -47177,9 +46951,9 @@
 																	"patching_rect" : [ 267.0, 273.0, 42.0, 23.0 ],
 																	"rnbo_classname" : "cycle~",
 																	"rnbo_extra_attributes" : 																	{
-																		"buffername" : "RNBODefaultSinus",
+																		"interp" : "linear",
 																		"index" : "freq",
-																		"interp" : "linear"
+																		"buffername" : "RNBODefaultSinus"
 																	}
 ,
 																	"rnbo_serial" : 1,
@@ -47222,15 +46996,15 @@
 													"patching_rect" : [ 74.0, 100.0, 33.0, 23.0 ],
 													"rnbo_classname" : "p",
 													"rnbo_extra_attributes" : 													{
+														"args" : [  ],
 														"polyphony" : -1.0,
 														"receivemode" : "local",
-														"args" : [  ],
+														"notecontroller" : 0,
 														"voicecontrol" : "simple",
-														"exposevoiceparams" : 0,
-														"notecontroller" : 0
+														"exposevoiceparams" : 0
 													}
 ,
-													"rnbo_serial" : 3,
+													"rnbo_serial" : 4,
 													"rnbo_uniqueid" : "sin",
 													"rnboinfo" : 													{
 														"needsInstanceInfo" : 1,
@@ -47748,12 +47522,12 @@
 									"patching_rect" : [ 957.0, 112.0, 69.0, 23.0 ],
 									"rnbo_classname" : "p",
 									"rnbo_extra_attributes" : 									{
+										"args" : [  ],
 										"polyphony" : -1.0,
 										"receivemode" : "local",
-										"args" : [  ],
+										"notecontroller" : 0,
 										"voicecontrol" : "simple",
-										"exposevoiceparams" : 0,
-										"notecontroller" : 0
+										"exposevoiceparams" : 0
 									}
 ,
 									"rnbo_serial" : 3,
@@ -48418,20 +48192,26 @@
 ,
 					"patching_rect" : [ 217.0, 668.0, 232.0, 22.0 ],
 					"rnboattrcache" : 					{
-						"sustain" : 						{
-							"label" : "sustain",
+						"FM2" : 						{
+							"label" : "FM2",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
 ,
-						"FMDepth" : 						{
-							"label" : "FMDepth",
+						"FMsource" : 						{
+							"label" : "FMsource",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
 ,
-						"attack" : 						{
-							"label" : "attack",
+						"adsr" : 						{
+							"label" : "adsr",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"decay" : 						{
+							"label" : "decay",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
@@ -48442,8 +48222,26 @@
 							"parsestring" : ""
 						}
 ,
-						"FM2source" : 						{
-							"label" : "FM2source",
+						"AM2freq" : 						{
+							"label" : "AM2freq",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"FMfreq" : 						{
+							"label" : "FMfreq",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"release" : 						{
+							"label" : "release",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"AM2" : 						{
+							"label" : "AM2",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
@@ -48454,14 +48252,56 @@
 							"parsestring" : ""
 						}
 ,
-						"FM2freq" : 						{
-							"label" : "FM2freq",
+						"AMsource" : 						{
+							"label" : "AMsource",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
 ,
-						"AMsource" : 						{
-							"label" : "AMsource",
+						"FM2Depth" : 						{
+							"label" : "FM2Depth",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"sustain" : 						{
+							"label" : "sustain",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"FM2source" : 						{
+							"label" : "FM2source",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"AMfreq" : 						{
+							"label" : "AMfreq",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"FM" : 						{
+							"label" : "FM",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"source" : 						{
+							"label" : "source",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"attack" : 						{
+							"label" : "attack",
+							"isEnum" : 0,
+							"parsestring" : ""
+						}
+,
+						"FMDepth" : 						{
+							"label" : "FMDepth",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
@@ -48478,80 +48318,14 @@
 							"parsestring" : ""
 						}
 ,
-						"AM2freq" : 						{
-							"label" : "AM2freq",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"AMfreq" : 						{
-							"label" : "AMfreq",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"adsr" : 						{
-							"label" : "adsr",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"source" : 						{
-							"label" : "source",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"FM2" : 						{
-							"label" : "FM2",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"FM2Depth" : 						{
-							"label" : "FM2Depth",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
 						"AMdepth" : 						{
 							"label" : "AMdepth",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
 ,
-						"FMfreq" : 						{
-							"label" : "FMfreq",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"FM" : 						{
-							"label" : "FM",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"FMsource" : 						{
-							"label" : "FMsource",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"AM2" : 						{
-							"label" : "AM2",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"decay" : 						{
-							"label" : "decay",
-							"isEnum" : 0,
-							"parsestring" : ""
-						}
-,
-						"release" : 						{
-							"label" : "release",
+						"FM2freq" : 						{
+							"label" : "FM2freq",
 							"isEnum" : 0,
 							"parsestring" : ""
 						}
@@ -48597,7 +48371,7 @@
 							}
 ,
 							"decay" : 							{
-								"value" : 573.0
+								"value" : 26.0
 							}
 ,
 							"__presetid" : "46a91b03-946d-11ef-9b03-a036bc5f97e6",
@@ -48610,11 +48384,11 @@
 							}
 ,
 							"release" : 							{
-								"value" : 62.5
+								"value" : 304.0
 							}
 ,
 							"attack" : 							{
-								"value" : 29.0
+								"value" : 26.0
 							}
 ,
 							"FMDepth" : 							{
@@ -48630,7 +48404,7 @@
 							}
 ,
 							"pitch" : 							{
-								"value" : 144.0
+								"value" : 171.0
 							}
 ,
 							"FM2" : 							{
@@ -49039,7 +48813,7 @@
 										}
 ,
 										"decay" : 										{
-											"value" : 573.0
+											"value" : 26.0
 										}
 ,
 										"__presetid" : "46a91b03-946d-11ef-9b03-a036bc5f97e6",
@@ -49052,11 +48826,11 @@
 										}
 ,
 										"release" : 										{
-											"value" : 62.5
+											"value" : 304.0
 										}
 ,
 										"attack" : 										{
-											"value" : 29.0
+											"value" : 26.0
 										}
 ,
 										"FMDepth" : 										{
@@ -49072,7 +48846,7 @@
 										}
 ,
 										"pitch" : 										{
-											"value" : 144.0
+											"value" : 171.0
 										}
 ,
 										"FM2" : 										{
