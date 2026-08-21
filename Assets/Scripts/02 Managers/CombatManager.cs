@@ -241,6 +241,7 @@ public class CombatManager : MonoBehaviour
     private void OnPlayerDefeated()
     {
         EventBus.Instance.constellationReset.Invoke();
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
     // public IEnumerator Pulsar()
