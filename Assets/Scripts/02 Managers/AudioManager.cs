@@ -23,7 +23,7 @@ public class AudioManager: MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
 
@@ -185,9 +185,6 @@ public class AudioManager: MonoBehaviour
         EventBus.Instance.playerDefeated.AddListener(PlayLossSound);
         EventBus.Instance.playerEscaped.AddListener(PlayEscapeSound);
         EventBus.Instance.runComplete.AddListener(PlayEndSound);
-        
-        
-        EventBus.Instance.enemyDefeated.AddListener(OnEnemyDefeated);
 
     }
 
@@ -230,20 +227,6 @@ public class AudioManager: MonoBehaviour
     {
         // Debug.Log("playing note");
         StartCoroutine(PlayNoteCoroutine(weapon, weapon.MusicParams()));
-    }
-
-    private void OnEnemyDefeated()
-    {
-        return;
-        for (var i = weapons.Count; i > 0; i--)
-        {
-            var weapon = weapons[i];
-            if (weapon.enemySystem)
-            {
-                DestroyImmediate(weapon);
-            }
-            weapons.RemoveAt(i);
-        }
     }
 
     private IEnumerator PlayNoteCoroutine(Weapon weapon, Dictionary<string, float> noteInfo)

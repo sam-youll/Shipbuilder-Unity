@@ -20,7 +20,7 @@ public class MapManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
 

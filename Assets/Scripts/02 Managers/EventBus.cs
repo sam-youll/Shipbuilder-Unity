@@ -41,7 +41,7 @@ public class EventBus : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
         
         SetEventLists();

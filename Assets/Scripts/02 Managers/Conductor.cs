@@ -14,7 +14,7 @@ public class Conductor : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
     

@@ -43,6 +43,8 @@ public class InventoryManager : MonoBehaviour
 
     public GameObject pauseMenu;
     public GameObject shopMenu;
+
+    private bool open;
     
     void Start()
     {
@@ -55,11 +57,13 @@ public class InventoryManager : MonoBehaviour
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         scrap = 20;
+
+        inventoryOverlay.GetComponent<RectTransform>().anchoredPosition = new Vector2(-30, 0);
     }
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Colosseum"))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             // inventoryOverlay.SetActive(!inventoryOverlay.activeSelf);
             ToggleActive();
@@ -628,16 +632,15 @@ public class InventoryManager : MonoBehaviour
 
     private void ToggleActive()
     {
+        open = !open;
         var rt = inventoryOverlay.GetComponent<RectTransform>();
-        var active = rt.anchoredPosition.x >= 0;
-
-        if (active)
+        if (open)
         {
-            rt.anchoredPosition -= new Vector2(rt.rect.width, 0);
+            rt.anchoredPosition = new Vector2(0, 0);
         }
         else
         {
-            rt.anchoredPosition += new Vector2(rt.rect.width, 0);
+            rt.anchoredPosition = new Vector2(-30, 0);
         }
     }
 }

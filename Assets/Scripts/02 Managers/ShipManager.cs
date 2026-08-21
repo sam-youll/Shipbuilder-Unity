@@ -24,7 +24,7 @@ public class ShipManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
     
@@ -89,7 +89,7 @@ public class ShipManager : MonoBehaviour
         // enemy.hull -= 1f;
     }
 
-    private bool playerShipInitialized = false;
+    // private bool playerShipInitialized = false;
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Debug.Log("OnSceneLoaded hi i'm shipmanager");
@@ -97,7 +97,7 @@ public class ShipManager : MonoBehaviour
         {
             InitPlayerShip();
             InitEnemyShip();
-            playerShipInitialized = true;
+            // playerShipInitialized = true;
         }
     }
     

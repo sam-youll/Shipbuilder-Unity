@@ -9,7 +9,7 @@ using UnityEngine.UI;
 [CustomEditor(typeof(BetterCSF))]
 public class CSFEditor : Editor
 {
-    public void OnInspectorGUI()
+    public override void OnInspectorGUI()
     {
         var csf = (BetterCSF)target;
         csf.maxWidth = EditorGUILayout.FloatField(csf.maxWidth);

@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -852,7 +852,7 @@ public class UIManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
     public void ResetScene()
@@ -864,6 +864,7 @@ public class UIManager : MonoBehaviour
     {
         InventoryManager.Instance.creativeMode = true;
         InventoryManager.Instance.LoadCreativeModeModules();
+        pauseMenu.SetActive(false);
     }
 
     private void OnConstellationAdvanced()

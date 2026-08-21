@@ -19,7 +19,7 @@ public class ReactorSounds : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
     private EventInstance reactor;

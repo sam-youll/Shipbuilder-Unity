@@ -193,7 +193,6 @@ public static class Notes
                 return AEOLIAN[interval]*root;
             case MODE.LOCRIAN:
                 return LOCRIAN[interval] * root;
-                break;
         }
 
         return root;

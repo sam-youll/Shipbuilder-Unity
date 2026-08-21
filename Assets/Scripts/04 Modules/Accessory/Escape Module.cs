@@ -26,17 +26,6 @@ public class EscapeModule : AccessoryModule, IReactorModule
         return warn;
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public Dictionary<Common.SoundType, float> ChangeEnergy(Dictionary<Common.SoundType, float> energy)
     {
         return energy;

@@ -298,7 +298,6 @@ public class Weapon : ModuleRack, ITooltipInfo
                 Random.Range(0, 8));
             // Debug.Log($"pitch is {myPitch}");
             enemydict["pitch"] = myPitch;
-            enemydict["source"] = Random.Range(0, 4);
             return enemydict;
         }
         

@@ -48,7 +48,7 @@ public class HideShopButton : Button2D
         }
     }
 
-    protected void OnMouseUp()
+    protected override void OnMouseUp()
     {
         panelColor.a = 1;
         shopMenu.GetComponent<SpriteRenderer>().color = panelColor;
