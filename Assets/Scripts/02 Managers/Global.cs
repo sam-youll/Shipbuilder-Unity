@@ -63,7 +63,7 @@ public class Global : MonoBehaviour
         // tooltip.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
         // tooltip.GetComponentInChildren<MeshRenderer>().sortingLayerName = "UI";
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
         
         EventBus.Instance.loadScene.AddListener(OnLoadScene);
         EventBus.Instance.gameExit.AddListener(OnGameExit);

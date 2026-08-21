@@ -57,7 +57,7 @@ public class UISystemPanel : MonoBehaviour
 
         if (systemReferenced != null)
         {
-            healthBar.fillAmount = Mathf.Clamp01(systemReferenced.health / systemReferenced.maxHealth);
+            healthBar.fillAmount = Mathf.Clamp01(systemReferenced.health / systemReferenced.MaxHealth());
 
             if (systemReferenced is Weapon weapon)
             {

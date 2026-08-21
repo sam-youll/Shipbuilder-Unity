@@ -61,7 +61,7 @@ public class Reactor : ModuleRack, ITooltipInfo
             // rate = 1;
         }
 
-        health = maxHealth;
+        health = MaxHealth();
     }
 
     // Update is called once per frame

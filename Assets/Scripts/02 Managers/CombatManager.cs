@@ -209,7 +209,7 @@ public class CombatManager : MonoBehaviour
     private void OnCombatStarted()
     {
         state = State.inCombat;
-
+        ShipManager.Instance.HealPlayerToFull();
     }
 
     private void OnEnemyDefeated()

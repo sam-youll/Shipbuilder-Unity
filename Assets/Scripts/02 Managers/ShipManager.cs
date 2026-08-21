@@ -75,7 +75,7 @@ public class ShipManager : MonoBehaviour
         // InitEnemyShip();
 
         // Debug.Log("hey im boutta add onsceneloaded");
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
         EventBus.Instance.newCombatEncounterStarted.AddListener(InitEnemyShip);
         EventBus.Instance.combatStarted.AddListener(InitEnemyShip);
         EventBus.Instance.playerHullRepairAttempted.AddListener(OnPlayerHullRepairAttempted);
@@ -210,7 +210,25 @@ public class ShipManager : MonoBehaviour
 
     public float PlayerMaxHull()
     {
-        return 100;
+        var armor = 0f;
+        foreach (var weapon in player.weapons)
+        {
+            foreach (var module in weapon.ModulesOnRack())
+            {
+                if (module is ArmorModule armorModule)
+                {
+                    armor += armorModule.armor;
+                }
+            }
+        }
+        foreach (var module in player.reactor.ModulesOnRack())
+        {
+            if (module is ArmorModule armorModule)
+            {
+                armor += armorModule.armor;
+            }
+        }
+        return 100 + armor;
     }
 
     public bool PlayerReadyForCombat()
@@ -315,7 +333,7 @@ public class ShipManager : MonoBehaviour
         newReactorObj.transform.SetParent(transform);
         newReactorObj.name = "Enemy Reactor";
         var newReactor = newReactorObj.AddComponent<Reactor>();
-        newReactor.health = newReactor.maxHealth;
+        newReactor.health = newReactor.MaxHealth();
         newReactor.enemySystem = true;
         enemy.reactor = newReactor;
         
@@ -620,9 +638,9 @@ public class ShipManager : MonoBehaviour
 
         foreach (var weapon in player.weapons)
         {
-            weapon.health = weapon.maxHealth;
+            weapon.health = weapon.MaxHealth();
         }
-        player.reactor.health = player.reactor.maxHealth;
+        player.reactor.health = player.reactor.MaxHealth();
     }
 
     public void HealPlayerToFull()
@@ -631,8 +649,8 @@ public class ShipManager : MonoBehaviour
         
         foreach (var weapon in player.weapons)
         {
-            weapon.health = weapon.maxHealth;
+            weapon.health = weapon.MaxHealth();
         }
-        player.reactor.health = player.reactor.maxHealth;
+        player.reactor.health = player.reactor.MaxHealth();
     }
 }

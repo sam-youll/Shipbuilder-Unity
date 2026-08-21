@@ -53,7 +53,7 @@ public class InventoryManager : MonoBehaviour
         // CreatePauseMenu();
         CreateShopMenu();
         
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         scrap = 20;

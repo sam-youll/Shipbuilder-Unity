@@ -135,7 +135,7 @@ public class GameStateManager : MonoBehaviour
         EventBus.Instance.enemyDefeated.AddListener(() => OnQuestStepCompleted("winCombat"));
         EventBus.Instance.shopSlotPurchased.AddListener(() => OnQuestStepCompleted("purchaseShop"));
         
-        SceneManager.sceneLoaded += DeduplicateCameras;
+        // SceneManager.sceneLoaded += DeduplicateCameras;
         
         EventBus.Instance.questStepCompleted.AddListener(OnQuestStepCompleted);
         

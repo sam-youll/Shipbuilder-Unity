@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShopSlotPanel : MonoBehaviour, ITooltipInfo
+public class ShopSlotPanel : MonoBehaviour, ITooltipInfo, INeedEnergy
 {
     public Sprite defaultIcon;
     private Color defaultColor = new(0.7803922f, 0.8862746f, 0.6705883f);
@@ -110,5 +111,17 @@ public class ShopSlotPanel : MonoBehaviour, ITooltipInfo
     {
         message = "";
         return false;
+    }
+
+    public Dictionary<Common.SoundType, float> ChangeEnergyCost(Dictionary<Common.SoundType, float> input)
+    {
+        if (itemForSale == null) return input;
+        
+        if (itemForSale.TryGetComponent(out INeedEnergy energyCost))
+        {
+            return energyCost.ChangeEnergyCost(input);
+        }
+
+        return input;
     }
 }

@@ -17,7 +17,7 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public Vector2Int dimensionsMax = new(50, 50);
     [OnValueChanged(nameof(SetDimensions))] public Vector2Int dimensions = new(4, 4);
     public bool enemySystem;
-    public float maxHealth = 30;
+    private float maxHealth = 30;
     public float health;
     public SwitchComponent transformControlSwitch;
     public GameObject transformControls;
@@ -373,5 +373,18 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
     public virtual void Trigger()
     {
         
+    }
+
+    public float MaxHealth()
+    {
+        var armor = 0f;
+        foreach (var module in ModulesOnRack())
+        {
+            if (module is ArmorModule armorModule)
+            {
+                armor += armorModule.armor;
+            }
+        }
+        return maxHealth + .5f * armor;
     }
 }
