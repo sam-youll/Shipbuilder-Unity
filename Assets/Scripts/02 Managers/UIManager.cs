@@ -377,24 +377,34 @@ public class UIManager : MonoBehaviour
         {
             var newShopSlot = Instantiate(shopSlotPrefab, shopSlotGrid.transform);
             GameObject moduleToLoad = null;
-            if (i == 0)
+            if (i == 0 && Random.value < .7f)
             {
                 var powerMods = Array.FindAll(modulesList, x => x.TryGetComponent(out PowerModule _));
                 moduleToLoad = powerMods[Random.Range(0, powerMods.Length)];
             }
-            else if (i == 1)
+            else if (i == 1 && Random.value < .7f)
             {
                 moduleToLoad = Array.Find(modulesList, x => x.TryGetComponent(out ClockModule _));
             }
-            else if (i is 2)
+            else if (i is 2 && Random.value < .7f)
             {
                 var converterMods = Array.FindAll(modulesList, x => x.TryGetComponent(out ConverterModule _));
                 moduleToLoad = converterMods[Random.Range(0, converterMods.Length)];
             }
-            else if (i is 3)
+            else if (i is 3 && Random.value < .7f)
             {
                 var catMods = Array.FindAll(modulesList, x => x.TryGetComponent(out CatalystModule _));
                 moduleToLoad = catMods[Random.Range(0, catMods.Length)];
+            }
+            else if (i is 4 && Random.value < .7f)
+            {
+                var ventMods = Array.FindAll(modulesList, x => x.TryGetComponent(out VentModule _));
+                moduleToLoad = ventMods[Random.Range(0, ventMods.Length)];
+            }
+            else if (i is 5 && Random.value < .7f)
+            {
+                var armorMods = Array.FindAll(modulesList, x => x.TryGetComponent(out ArmorModule _));
+                moduleToLoad = armorMods[Random.Range(0, armorMods.Length)];
             }
             else
             {
@@ -456,7 +466,7 @@ public class UIManager : MonoBehaviour
             tooltipTimer = .5f;
         }
         
-        if (tooltipTimer <= 0)
+        if (tooltipTimer <= 0 && target != null)
         {
             tooltip.gameObject.SetActive(true);
             tooltip.UpdateTooltip(target);

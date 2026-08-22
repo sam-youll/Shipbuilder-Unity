@@ -280,7 +280,7 @@ public class InventoryManager : MonoBehaviour
         newPower.SetActive(gameObject.activeSelf);
         newPower.name = newPower.name.Replace("(Clone)", "");
         SendToInventory(newPower);
-        var newConverter = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Converter Module None-Izki"), primaryModulesLabel.transform, true);
+        var newConverter = Instantiate(Resources.Load<GameObject>("Prefabs/Modules/Primary Modules/Converter Module Izki"), primaryModulesLabel.transform, true);
         newConverter.SetActive(gameObject.activeSelf);
         newConverter.name = newConverter.name.Replace("(Clone)", "");
         SendToInventory(newConverter);
@@ -634,7 +634,7 @@ public class InventoryManager : MonoBehaviour
     {
         open = !open;
         var rt = inventoryOverlay.GetComponent<RectTransform>();
-        if (open)
+        if (!open)
         {
             rt.anchoredPosition = new Vector2(0, 0);
         }

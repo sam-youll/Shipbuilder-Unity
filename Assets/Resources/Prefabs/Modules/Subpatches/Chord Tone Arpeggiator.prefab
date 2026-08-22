@@ -2556,7 +2556,7 @@ MonoBehaviour:
   dwth: 0
   hysh: 0
   pitch: 0
-  seekReactor: 0
+  seekReactor: 0.7
   seekWeapon: 0
   seekAux: 0
 --- !u!1 &3953317845397701722
@@ -4813,13 +4813,14 @@ MonoBehaviour:
   parentWires: []
   childWires: []
   price: 6
-  heat: 0.2
+  heat: 0.3
   energyNoneCost: 0
   energyIzkiCost: 0
   energyAuboCost: 0
   energyDwthCost: 0
   icon: {fileID: 0}
-  myDescription: 
+  myDescription: A subpatch tuned to the reactor and its harmonics. Projectiles seek
+    the opponent's reactor.
   subpatchDict:
   - module: {fileID: 8094824336953542715}
     outputIndices: 0100000004000000
@@ -4861,7 +4862,7 @@ MonoBehaviour:
   inventoryExit:
     m_PersistentCalls:
       m_Calls: []
-  oddSizeX: 1
+  oddSizeX: 0
   oddSizeY: 1
   collisionResults: []
   destroyed:
@@ -5133,9 +5134,9 @@ MonoBehaviour:
   childWires: []
   price: 0
   heat: 0
-  energyNoneCost: 0
+  energyNoneCost: 0.25
   energyIzkiCost: 0
-  energyAuboCost: 0
+  energyAuboCost: 0.25
   energyDwthCost: 0
   icon: {fileID: 21300000, guid: 7b01c277f6f21964bb4191886e509304, type: 3}
   izki: 0

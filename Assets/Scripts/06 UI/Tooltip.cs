@@ -46,7 +46,15 @@ public class Tooltip : MonoBehaviour
         warningLabel.text = "";
         if (target.TryGetComponent(out ITooltipInfo tooltip))
         {
-            descriptionLabel.text = tooltip.Description() + "\n~~~\n" + tooltip.Info();
+            var labelText = tooltip.Description() + "\n~~~\n" + tooltip.Info();
+            if (target.TryGetComponent(out Module mod))
+            {
+                if (mod.heat > 0)
+                {
+                    labelText += "\nGenerates " + mod.heat + " heat per trigger.";
+                }
+            }
+            descriptionLabel.text = labelText;
             
             if (tooltip.Warning(out string message))
             {

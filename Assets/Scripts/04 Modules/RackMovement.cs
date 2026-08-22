@@ -114,6 +114,8 @@ public class RackMovement : MonoBehaviour
     {
         if (UIManager.Instance.TopRaycastResult() == gameObject)
         {
+            if (isMouseDragging) DropModule();
+            UIManager.Instance.cursor.heldObject = null;
             Debug.Log($"You right clicked on {name}");
             if (InventoryManager.Instance.creativeMode)
             {

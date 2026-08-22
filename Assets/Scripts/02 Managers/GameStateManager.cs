@@ -166,6 +166,8 @@ public class GameStateManager : MonoBehaviour
 
     private readonly Func<GameObject, GameObject, string> modulesConnectedCheck = (prev, next) =>
     {
+        if (prev == null || next == null) return "";
+        
         if (prev.TryGetComponent(out Module prevMod))
         {
             if (next.TryGetComponent(out Module nextMod))

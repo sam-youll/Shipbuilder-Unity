@@ -1292,8 +1292,12 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     {
         GameObject result = null;
 
-        foreach (GameObject wire in parentWires)
+        foreach (GameObject wire in parentWires.ToList())
         {
+            if (wire == null)
+            {
+                parentWires.Remove(wire);
+            }
             if (wire.GetComponent<Wire>().previousModule != null &&
                 wire.GetComponent<Wire>().previousModule.TryGetComponent(out Module module))
             {

@@ -11,27 +11,27 @@ public class ConverterModule : PrimaryModule, IReactorModule
     
     public override string Description()
     {
-        return "Converts untyped energy to typed energy.";
+        return "Converts pure energy to typed energy.";
     }
 
     public override string Info()
     {
-        var info = $"Converts up to {energyLimit} untyped energy per second, at a ratio of:\n";
+        var info = $"Converts up to {energyLimit} pure energy per second, at a ratio of:\n";
         if (ratioNone > 0)
         {
-            info += $"{ratioNone * 100}% untyped energy.\n";
+            info += $"{ratioNone:P0} pure energy.\n";
         }
         if (ratioIzki > 0)
         {
-            info += $"{ratioIzki * 100}% izki energy.\n";
+            info += $"{ratioIzki:P0} izki energy.\n";
         }
         if (ratioAubo > 0)
         {
-            info += $"{ratioAubo * 100}% aubo energy.\n";
+            info += $"{ratioAubo:P0} aubo energy.\n";
         }
         if (ratioDwth > 0)
         {
-            info += $"{ratioDwth * 100}% dwth energy.\n";
+            info += $"{ratioDwth:P0} dwth energy.\n";
         }
         return info;
     }

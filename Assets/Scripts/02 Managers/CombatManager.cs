@@ -217,7 +217,7 @@ public class CombatManager : MonoBehaviour
         state = State.outOfCombat;
         
         DisplayManager.Instance.Log("Enemy defeated!");
-        var scrapWon = Random.Range(5, 10);
+        var scrapWon = Random.Range(15, 20);
         InventoryManager.Instance.scrap += scrapWon;
         EventBus.Instance.playerScrapValueChanged.Invoke();
         EventBus.Instance.constellationAdvanced.Invoke();
@@ -231,10 +231,10 @@ public class CombatManager : MonoBehaviour
     {
         state = State.outOfCombat;
         DisplayManager.Instance.Log("Player escaped!");
-        DisplayManager.Instance.Log("Received 10 scrap from spent escape module.");
+        DisplayManager.Instance.Log("Received 15 scrap from spent escape module.");
         EventBus.Instance.constellationAdvanced.Invoke();
         ShipManager.Instance.HealPlayerToFull();
-        fightLevel++;
+        // fightLevel++;
 
     }
 

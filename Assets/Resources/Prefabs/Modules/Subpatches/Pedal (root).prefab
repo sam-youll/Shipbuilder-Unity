@@ -1632,7 +1632,7 @@ MonoBehaviour:
   energyAuboCost: 0
   energyDwthCost: 0
   icon: {fileID: 0}
-  myDescription: 
+  myDescription: Plays the root of the current chord. Projectlies seek enemy weapons.
   subpatchDict:
   - module: {fileID: 8427881989198506683}
     outputIndices: 0100000002000000
@@ -1909,7 +1909,7 @@ MonoBehaviour:
   hysh: 0
   pitch: 0
   seekReactor: 0
-  seekWeapon: 0
+  seekWeapon: 0.75
   seekAux: 0
 --- !u!1 &4874678844244462524
 GameObject:
@@ -3582,8 +3582,8 @@ MonoBehaviour:
   childWires: []
   price: 0
   heat: 0
-  energyNoneCost: 0
-  energyIzkiCost: 0
+  energyNoneCost: 0.1
+  energyIzkiCost: 0.4
   energyAuboCost: 0
   energyDwthCost: 0
   icon: {fileID: 21300000, guid: 7b01c277f6f21964bb4191886e509304, type: 3}
