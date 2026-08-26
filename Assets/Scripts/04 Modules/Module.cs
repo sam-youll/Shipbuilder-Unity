@@ -270,7 +270,7 @@ public class ModuleInspector : Editor
         GUI.color = Color.green;
         if (GUILayout.Button("Build Module"))
         {
-            Debug.Log("clicky button");
+            // Debug.Log("clicky button");
             module.BuildModule();
             module.OnBeforeSerialize();
         }
@@ -456,7 +456,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         Undo.RecordObject(gameObject, "Build Module");
         // EditorUtility.SetDirty(gameObject);
         ClearModule();
-        Debug.Log("module cleared :)");
+        // Debug.Log("module cleared :)");
         gameObject.layer = LayerMask.NameToLayer("Rack Objects");
         
         
@@ -494,11 +494,11 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         #endregion
         
         #region Module body sprites & collision
-        Debug.Log("loading tilesheet");
+        // Debug.Log("loading tilesheet");
         var tilesheet = Resources.LoadAll<Sprite>(tilesheetPath);
         // We're using a dual-grid system here, so we're spawning
         // one extra row & column of tiles and offsetting them by .5
-        Debug.Log("placing tiles");
+        // Debug.Log("placing tiles");
         for (int x = 0; x <= dimensions.x; x++)
         {
             for (int y = 0; y <= dimensions.y; y++)
@@ -683,7 +683,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
         
         // for collision, we're adding a composite collider, so we can place
         // a box collider on each tile of the module, then combine them
-        Debug.Log("Adding Components");
+        // Debug.Log("Adding Components");
         // if (!TryGetComponent(out RectTransform rt))
         // {
         //     rt = gameObject.AddComponent<RectTransform>();
@@ -783,7 +783,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
 
                     var lineTiles = Resources.LoadAll<Sprite>("Spritesheets/leylines");
 
-                    Debug.Log($"Pathing from {start} to {end}. Dimensions: {dimensions}.");
+                    // Debug.Log($"Pathing from {start} to {end}. Dimensions: {dimensions}.");
                     
                     var path = Funcs.AStar4Dir(start, end, dimensions.y, dimensions.x, v2I => moduleShape[v2I.x, v2I.y] != ModuleComponent.Empty);
                     
@@ -1121,9 +1121,9 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     public List<GameObject> outputJacks = new();
     public List<GameObject> parentWires = new();
     public List<GameObject> childWires = new();
-    
-    [Header("Values")] 
-    [Tooltip("The amount charged for this module in the shop.")]
+
+    [Header("Values")] [Tooltip("The amount charged for this module in the shop.")]
+    public bool purchasable = true;
     public float price;
     public float heat;
     public float energyNoneCost;
@@ -1237,7 +1237,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
 
     private void OnDestroyed()
     {
-        Debug.Log("boutta die, lemme clear my wires");
+        // Debug.Log("boutta die, lemme clear my wires");
         ClearWires();
         
         Destroy(gameObject);
@@ -1347,7 +1347,7 @@ public abstract class Module : MonoBehaviour, ISerializationCallbackReceiver, IT
     {
         var shape = new bool[bounds.x, bounds.y];
         
-        Debug.Log("Generated new shape");
+        // Debug.Log("Generated new shape");
     }
 
     public virtual Dictionary<Common.SoundType, float> EnergyCost()

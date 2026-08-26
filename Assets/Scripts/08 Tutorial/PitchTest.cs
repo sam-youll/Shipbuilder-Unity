@@ -59,7 +59,7 @@ public class PitchTest : MonoBehaviour
             if (coll.gameObject == gameObject)
                 continue;
 
-            Debug.Log("collided");
+            // Debug.Log("collided");
             if (coll.gameObject == higherPitch)
             {
                 if (!isPlaying)

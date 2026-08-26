@@ -46,9 +46,10 @@ public class Weapon : ModuleRack, ITooltipInfo
         
         var info = "Weapon Stats:\n";
         var stats = WeaponStats().Stats;
-        info += $"Fires for {stats["damage"]} damage every ";
         var cMod = ModulesOnRack().Find(mod => mod is ClockModule) as ClockModule;
+        if (cMod == null) return "This weapon is inactive.";
         var tempo = GameStateManager.Instance.constellationInfo.tempo / 120;
+        info += $"Fires for {stats["damage"]} damage every ";
         switch (cMod.Subdivision)
         {
             case 0:
@@ -409,7 +410,7 @@ public class Weapon : ModuleRack, ITooltipInfo
         }
 
         heat += WeaponStats().Stats["heat"];
-        Debug.Log(heat);
+        // Debug.Log(heat);
         
         if (CombatManager.Instance.state == CombatManager.State.inCombat) DisplayManager.Instance.Log("Fired " + name);
         
@@ -462,7 +463,7 @@ public class Weapon : ModuleRack, ITooltipInfo
             if (loopCount > 299)
             {
                 parentWire.GetComponent<Wire>().DeleteSelf();
-                Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
+                // Debug.Log("Wire privileges revoked because you made an infinite loop.\n>:(");
                 break;
             }
 

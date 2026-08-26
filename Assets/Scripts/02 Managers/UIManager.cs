@@ -373,7 +373,7 @@ public class UIManager : MonoBehaviour
         }
         
         var modulesList = Resources.LoadAll<GameObject>("Prefabs/Modules");
-        for (var i = 0; i < 8; i++)
+        for (var i = 0; i < 10; i++)
         {
             var newShopSlot = Instantiate(shopSlotPrefab, shopSlotGrid.transform);
             GameObject moduleToLoad = null;
@@ -409,6 +409,10 @@ public class UIManager : MonoBehaviour
             else
             {
                 moduleToLoad = modulesList[Random.Range(0, modulesList.Length)];
+                while (!moduleToLoad.GetComponent<Module>().purchasable)
+                {
+                    moduleToLoad = modulesList[Random.Range(0, modulesList.Length)];
+                }
             }
             newShopSlot.GetComponent<ShopSlotPanel>().Setup(moduleToLoad);
         }

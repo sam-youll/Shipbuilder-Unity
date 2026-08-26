@@ -170,7 +170,7 @@ public class Knob : MonoBehaviour, ITooltipInfo
         if (!drawLRNotches)
             return;
         
-        Debug.Log("Max value changed");
+        // Debug.Log("Max value changed");
         for (int i = 0; i < notchLRs.Count; i++)
         {
             Destroy(notchLRs[i]);

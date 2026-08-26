@@ -22,7 +22,7 @@ public class Subpatch : Module
     
     void CompileSubpatch()
     {
-        Debug.Log("Compiling subpatch.");
+        // Debug.Log("Compiling subpatch.");
         
         foreach (GameObject wire in childWires)
         {
@@ -201,7 +201,7 @@ public class Subpatch : Module
         foreach (var wire in childWires)
         {
             wire.GetComponent<Wire>().connected.AddListener(CompileSubpatch);
-            Debug.Log("Added wire connection listener.");
+            // Debug.Log("Added wire connection listener.");
         }
     }
 

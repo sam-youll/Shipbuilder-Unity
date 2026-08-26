@@ -107,6 +107,8 @@ public class RackMovement : MonoBehaviour
             transform.localScale = Vector3.one;
             bodyClick.Invoke();
             dragStartPos = transform.position;
+            
+            // Debug.Log("Picked up module");
         }
     }
 
@@ -116,7 +118,8 @@ public class RackMovement : MonoBehaviour
         {
             if (isMouseDragging) DropModule();
             UIManager.Instance.cursor.heldObject = null;
-            Debug.Log($"You right clicked on {name}");
+            // Debug.Log($"You right clicked on {name}");
+            GetComponent<Module>().ClearWires();
             if (InventoryManager.Instance.creativeMode)
             {
                 destroyed.Invoke();
@@ -145,6 +148,24 @@ public class RackMovement : MonoBehaviour
             myPos.z -= 3;
         }
         transform.position = myPos;
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                transform.Rotate(Vector3.forward, 90);
+            }
+            else
+            {
+                transform.Rotate(Vector3.forward, -90);
+            }
+            Physics2D.SyncTransforms();
+            var wasX = oddSizeX;
+            var wasY = oddSizeY;
+            oddSizeX = wasY;
+            oddSizeY = wasX;
+        }
+        
         #endregion
         
         #region snap square
@@ -293,7 +314,7 @@ public class RackMovement : MonoBehaviour
         };
         filter.NoFilter();
         // check the collider for overlaps on that layer
-        snapSquare.GetComponent<Collider2D>().Overlap(snapSquare.transform.position, 0, filter, collisionResults);
+        snapSquare.GetComponent<Collider2D>().Overlap(snapSquare.transform.position, transform.rotation.eulerAngles.z, filter, collisionResults);
         // Debug.Log($"Checking if snapSquare is overlapping at {snapSquare.transform.position}.");
         foreach (var result in collisionResults)
         {

@@ -154,7 +154,7 @@ public class ReactorSounds : MonoBehaviour
         if (!started)
         {
             reactor.setParameterByName("adsr", 1);
-            Debug.Log("playing reactor bass");
+            // Debug.Log("playing reactor bass");
 
             started = true;
             yield return new WaitForSeconds(noteLength);

@@ -17,6 +17,10 @@ public class ShopSlotPanel : MonoBehaviour, ITooltipInfo, INeedEnergy
     public TextMeshProUGUI descriptionLabel;
     public TextMeshProUGUI costLabel;
     public GridLayoutGroup moduleLayoutIcon;
+    public GameObject pureEnergyCost;
+    public GameObject izkiEnergyCost;
+    public GameObject auboEnergyCost;
+    public GameObject dwthEnergyCost;
 
     private void Start()
     {
@@ -35,9 +39,72 @@ public class ShopSlotPanel : MonoBehaviour, ITooltipInfo, INeedEnergy
         itemForSale = module;
 
         nameLabel.text = module.name;
-        descriptionLabel.text = mod.GetComponent<ITooltipInfo>().Description();
+        descriptionLabel.text = mod.GetComponent<ITooltipInfo>().Description() + "\n" +
+                                mod.GetComponent<ITooltipInfo>().Info();
         
         SetLayoutIcon(mod);
+        
+        if (module.TryGetComponent(out INeedEnergy energy))
+        {
+            var energyCost = energy.ChangeEnergyCost(new Dictionary<Common.SoundType, float>(Common.EmptyEnergyCost()));
+            var energySum = 0f;
+            foreach (var kvp in energyCost)
+            {
+                energySum += kvp.Value;
+            }
+            if (energySum > 0)
+            {
+                pureEnergyCost.transform.parent.gameObject.SetActive(true);
+
+                foreach (var kvp in energyCost)
+                {
+                    if (energyCost[Common.SoundType.Pure] > 0)
+                    {
+                        pureEnergyCost.SetActive(true);
+                        pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Pure].ToString();
+                    }
+                    else
+                    {
+                        pureEnergyCost.SetActive(false);
+                    }
+                    if (energyCost[Common.SoundType.Izki] > 0)
+                    {
+                        izkiEnergyCost.SetActive(true);
+                        izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Izki].ToString();
+                    }
+                    else
+                    {
+                        izkiEnergyCost.SetActive(false);
+                    }
+                    if (energyCost[Common.SoundType.Aubo] > 0)
+                    {
+                        auboEnergyCost.SetActive(true);
+                        auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Aubo].ToString();
+                    }
+                    else
+                    {
+                        auboEnergyCost.SetActive(false);
+                    }
+                    if (energyCost[Common.SoundType.Dwth] > 0)
+                    {
+                        dwthEnergyCost.SetActive(true);
+                        dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                            energyCost[Common.SoundType.Izki].ToString();
+                    }
+                    else
+                    {
+                        dwthEnergyCost.SetActive(false);
+                    }
+                }
+            }
+            else
+            {
+                pureEnergyCost.transform.parent.gameObject.SetActive(false);
+            }
+        }
 
         costLabel.text = "Cost: " + mod.price;
     }
@@ -90,7 +157,7 @@ public class ShopSlotPanel : MonoBehaviour, ITooltipInfo, INeedEnergy
 
         itemForSale = null;
         
-        costLabel.text = "Cost: ???";
+        costLabel.text = "Scrap Cost: ???";
     }
 
     public string Description()

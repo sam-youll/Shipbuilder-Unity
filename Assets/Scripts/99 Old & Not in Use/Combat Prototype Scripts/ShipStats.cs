@@ -218,7 +218,7 @@ public class ShipStats : MonoBehaviour
         {
             if (currentSlider.GetComponent<Slider>().transform.parent.CompareTag("Player"))
             {
-                UnityEngine.Debug.Log("ship slider move");
+                // UnityEngine.Debug.Log("ship slider move");
                 //set self
                 if (currentSlider.CompareTag("ShipAttackSource"))
                 {
@@ -267,12 +267,12 @@ public class ShipStats : MonoBehaviour
         {
             if (currentSlider.GetComponent<Slider>().transform.parent.CompareTag("Enemy"))
             {
-                UnityEngine.Debug.Log("EnemySliderMove");
+                // UnityEngine.Debug.Log("EnemySliderMove");
                 //set self
                 if (currentSlider.CompareTag("EnemyAttackSource"))
                 {
                     sourceList[0] = enemyAttackSourceSlider.GetComponent<Slider>().value;
-                    UnityEngine.Debug.Log(sourceList[0]);
+                    // UnityEngine.Debug.Log(sourceList[0]);
                 }
                 if (currentSlider.CompareTag("EnemyDefenseSource"))
                 {

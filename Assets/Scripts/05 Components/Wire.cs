@@ -98,7 +98,7 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         bool overWire = false;
         if (isConnected)
         {
-            if (UIManager.Instance.RaycastResultsContains(gameObject))
+            if (UIManager.Instance.TopRaycastResult() == gameObject)
             {
                 overWire = true;
             }
@@ -107,6 +107,7 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         if (overWire && isConnected || grabbed)
         {
 
+            // Debug.Log("Grabbed wire");
             if (Input.GetMouseButtonDown(0))
             {
                 grabbed = true;
@@ -193,7 +194,7 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         else if (isConnected && Input.GetMouseButtonDown(0))
         {
             // picking up start of wire
-            if (UIManager.Instance.RaycastResultsContains(previousModuleJack))
+            if (UIManager.Instance.TopRaycastResult() == previousModuleJack)
             {
                 grabbedIndex = 0;
                 grabbed = false;
@@ -204,7 +205,7 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
                 EventBus.Instance.updateJackValidity.Invoke(this);
             }
             // picking up end of wire
-            else if (UIManager.Instance.RaycastResultsContains(nextModuleJack))
+            else if (UIManager.Instance.TopRaycastResult() == nextModuleJack)
             {
                 grabbedIndex = points - 1;
                 grabbed = false;
@@ -296,10 +297,20 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
                         {
                             if (hit.collider.gameObject == weapon.patchEndJack)
                             {
+                                if (weapon.parentWire != null)
+                                {
+                                    DeleteSelf();
+                                    return;
+                                }
                                 weapon.parentWire = gameObject;
                             }
                             else if (hit.collider.gameObject == weapon.energyInJack)
                             {
+                                if (weapon.parentEnergyWire != null)
+                                {
+                                    DeleteSelf();
+                                    return;
+                                }
                                 weapon.parentEnergyWire = gameObject;
                             }
                         }

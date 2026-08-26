@@ -642,5 +642,7 @@ public class InventoryManager : MonoBehaviour
         {
             rt.anchoredPosition = new Vector2(-30, 0);
         }
+        
+        // Debug.Log("Toggled inventory");
     }
 }

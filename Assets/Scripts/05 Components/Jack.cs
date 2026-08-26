@@ -28,6 +28,21 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
         
         EventBus.Instance.updateJackValidity.AddListener(UpdateValidity);
 
+        if (GetComponentInParent<RackMovement>() != null)
+        {
+            var rm = GetComponentInParent<RackMovement>();
+            rm.inventoryEnter.AddListener(() =>
+            {
+                valid = true;
+                UpdateHighlights();
+            });
+            rm.inventoryExit.AddListener(() =>
+            {
+                valid = true;
+                UpdateHighlights();
+            });
+        }
+        
         valid = true;
     }
 
@@ -158,7 +173,12 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
         // Debug.Log("UpdateValidity");
         if (Parent().TryGetComponent(out Module module))
         {
-            if (Parent().GetComponent<RackMovement>().isInInventory) return;
+            if (Parent().GetComponent<RackMovement>().isInInventory)
+            {
+                valid = true;
+                UpdateHighlights();
+                return;
+            }
             
             // Check if this jack already has a wire
             if (module.childWires.Count > 0)
@@ -192,15 +212,27 @@ public abstract class Jack : MonoBehaviour, ITooltipInfo, ISelectable
                 }
             }
         }
-        else if (transform.parent.TryGetComponent(out Weapon weapon))
+        else if (GetComponentInParent<Weapon>() != null)
         {
-            if (weapon.parentWire != null)
+            var weapon = GetComponentInParent<Weapon>();
+            if (gameObject == weapon.energyInJack)
             {
-                valid = false;
+                if (weapon.parentEnergyWire != null)
+                {
+                    valid = false;
+                }
+            }
+            else if (gameObject == weapon.patchEndJack)
+            {
+                if (weapon.parentWire != null)
+                {
+                    valid = false;
+                }
             }
         }
-        else if (transform.parent.TryGetComponent(out Reactor reactor))
+        else if (GetComponentInParent<Reactor>())
         {
+            var reactor = GetComponentInParent<Reactor>();
             if (reactor.parentWire != null)
             {
                 valid = false;

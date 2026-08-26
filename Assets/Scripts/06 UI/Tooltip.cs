@@ -18,6 +18,7 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI descriptionLabel;
     [FormerlySerializedAs("infoLabel")] public TextMeshProUGUI warningLabel;
     public LayoutElement layoutElement;
+    public GameObject energyCostGroup;
     public GameObject pureEnergyCost;
     public GameObject izkiEnergyCost;
     public GameObject auboEnergyCost;
@@ -41,6 +42,13 @@ public class Tooltip : MonoBehaviour
     /// <param name="target">GameObject the tooltip will display info about.</param>
     public void UpdateTooltip(GameObject target)
     {
+        if (target.TryGetComponent(out ShopSlotPanel ssp))
+        {
+            if (ssp.itemForSale != null)
+            {
+                target = ssp.itemForSale;
+            }
+        }
         nameLabel.text = target.name;
         descriptionLabel.text = "";
         warningLabel.text = "";
@@ -75,60 +83,65 @@ public class Tooltip : MonoBehaviour
             {
                 energySum += kvp.Value;
             }
+            Debug.Log(energySum);
             if (energySum > 0)
             {
-                pureEnergyCost.transform.parent.gameObject.SetActive(true);
-
-                foreach (var kvp in energyCost)
+                energyCostGroup.SetActive(true);
+                Debug.Log("Showing energy cost");
+                
+                if (energyCost[Common.SoundType.Pure] > 0)
                 {
-                    if (energyCost[Common.SoundType.Pure] > 0)
-                    {
-                        pureEnergyCost.SetActive(true);
-                        pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Pure].ToString();
-                    }
-                    else
-                    {
-                        pureEnergyCost.SetActive(false);
-                    }
-                    if (energyCost[Common.SoundType.Izki] > 0)
-                    {
-                        izkiEnergyCost.SetActive(true);
-                        izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Izki].ToString();
-                    }
-                    else
-                    {
-                        izkiEnergyCost.SetActive(false);
-                    }
-                    if (energyCost[Common.SoundType.Aubo] > 0)
-                    {
-                        auboEnergyCost.SetActive(true);
-                        auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Aubo].ToString();
-                    }
-                    else
-                    {
-                        auboEnergyCost.SetActive(false);
-                    }
-                    if (energyCost[Common.SoundType.Dwth] > 0)
-                    {
-                        dwthEnergyCost.SetActive(true);
-                        dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Izki].ToString();
-                    }
-                    else
-                    {
-                        dwthEnergyCost.SetActive(false);
-                    }
+                    pureEnergyCost.SetActive(true);
+                    pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Pure].ToString();
+                }
+                else
+                {
+                    pureEnergyCost.SetActive(false);
+                }
+                if (energyCost[Common.SoundType.Izki] > 0)
+                {
+                    izkiEnergyCost.SetActive(true);
+                    izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Izki].ToString();
+                }
+                else
+                {
+                    izkiEnergyCost.SetActive(false);
+                }
+                if (energyCost[Common.SoundType.Aubo] > 0)
+                {
+                    auboEnergyCost.SetActive(true);
+                    auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Aubo].ToString();
+                }
+                else
+                {
+                    auboEnergyCost.SetActive(false);
+                }
+                if (energyCost[Common.SoundType.Dwth] > 0)
+                {
+                    dwthEnergyCost.SetActive(true);
+                    dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Izki].ToString();
+                }
+                else
+                {
+                    dwthEnergyCost.SetActive(false);
                 }
             }
             else
             {
-                pureEnergyCost.transform.parent.gameObject.SetActive(false);
+                energyCostGroup.SetActive(false);
+                Debug.Log("Hiding energy cost");
             }
         }
-        else if (target.TryGetComponent(out Weapon weapon))
+        else
+        {
+            energyCostGroup.SetActive(false);
+        }
+        
+        if (target.TryGetComponent(out Weapon weapon))
         {
             var energySum = 0f;
             var energyCost = new Dictionary<Common.SoundType, float>(Common.EmptyEnergyCost());
@@ -139,62 +152,59 @@ public class Tooltip : MonoBehaviour
                     energyCost = eMod.ChangeEnergyCost(energyCost);
                 }
             }
+            foreach (var kvp in energyCost)
+            {
+                energySum += kvp.Value;
+            }
             if (energySum > 0)
             {
-                pureEnergyCost.transform.parent.gameObject.SetActive(true);
+                energyCostGroup.SetActive(true);
 
-                foreach (var kvp in energyCost)
+                if (energyCost[Common.SoundType.Pure] > 0)
                 {
-                    if (energyCost[Common.SoundType.Pure] > 0)
-                    {
-                        pureEnergyCost.SetActive(true);
-                        pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Pure].ToString();
-                    }
-                    else
-                    {
-                        pureEnergyCost.SetActive(false);
-                    }
-                    if (energyCost[Common.SoundType.Izki] > 0)
-                    {
-                        izkiEnergyCost.SetActive(true);
-                        izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Izki].ToString();
-                    }
-                    else
-                    {
-                        izkiEnergyCost.SetActive(false);
-                    }
-                    if (energyCost[Common.SoundType.Aubo] > 0)
-                    {
-                        auboEnergyCost.SetActive(true);
-                        auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Aubo].ToString();
-                    }
-                    else
-                    {
-                        auboEnergyCost.SetActive(false);
-                    }
-                    if (energyCost[Common.SoundType.Dwth] > 0)
-                    {
-                        dwthEnergyCost.SetActive(true);
-                        dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-                            energyCost[Common.SoundType.Izki].ToString();
-                    }
-                    else
-                    {
-                        dwthEnergyCost.SetActive(false);
-                    }
+                    pureEnergyCost.SetActive(true);
+                    pureEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Pure].ToString();
+                }
+                else
+                {
+                    pureEnergyCost.SetActive(false);
+                }
+                if (energyCost[Common.SoundType.Izki] > 0)
+                {
+                    izkiEnergyCost.SetActive(true);
+                    izkiEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Izki].ToString();
+                }
+                else
+                {
+                    izkiEnergyCost.SetActive(false);
+                }
+                if (energyCost[Common.SoundType.Aubo] > 0)
+                {
+                    auboEnergyCost.SetActive(true);
+                    auboEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Aubo].ToString();
+                }
+                else
+                {
+                    auboEnergyCost.SetActive(false);
+                }
+                if (energyCost[Common.SoundType.Dwth] > 0)
+                {
+                    dwthEnergyCost.SetActive(true);
+                    dwthEnergyCost.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        energyCost[Common.SoundType.Izki].ToString();
+                }
+                else
+                {
+                    dwthEnergyCost.SetActive(false);
                 }
             }
             else
             {
-                pureEnergyCost.transform.parent.gameObject.SetActive(false);
+                energyCostGroup.SetActive(false);
             }
-        }
-        else
-        {
-            pureEnergyCost.transform.parent.gameObject.SetActive(false);
         }
 
         // layoutElement.enabled = descriptionLabel.textBounds.size.x >= maxWidth || infoLabel.textBounds.size.x >= maxWidth;
