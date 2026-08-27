@@ -313,6 +313,7 @@ public class ShipManager : MonoBehaviour
             weapons = new List<Weapon>()
         };
         var numWeapons = Random.Range(1, 2) + Mathf.FloorToInt(CombatManager.Instance.fightLevel / 4f);
+        numWeapons = Mathf.Min(numWeapons, 5);
         if (Random.value < (float)CombatManager.Instance.fightLevel / 10) numWeapons++;
         for (var i = 0; i < numWeapons; i++)
         {

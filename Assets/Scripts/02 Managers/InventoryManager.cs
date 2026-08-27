@@ -51,7 +51,7 @@ public class InventoryManager : MonoBehaviour
         
         CreateInventoryMenu();
         // CreatePauseMenu();
-        CreateShopMenu();
+        // CreateShopMenu();
         
         // SceneManager.sceneLoaded += OnSceneLoaded;
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
@@ -91,12 +91,7 @@ public class InventoryManager : MonoBehaviour
             pos.y = Mathf.Max(0, pos.y);
             moduleContainer.transform.localPosition = pos;
         }
-
-        if (Input.GetKeyDown(KeyCode.S) && CombatManager.Instance.state == CombatManager.State.outOfCombat)
-        {
-            shopMenu.SetActive(!shopMenu.activeSelf);
-        }
-
+        
         if (CombatManager.Instance.state != CombatManager.State.outOfCombat)
         {
             shopMenu.SetActive(false);

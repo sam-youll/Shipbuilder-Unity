@@ -829,6 +829,12 @@ public class UIManager : MonoBehaviour
                     if (hit.name == "Item Panel") hit = hit.transform.parent.gameObject;
                     return true;
                 }
+
+                if (result.GetComponentInParent<ModuleRack>() != null)
+                {
+                    hit = result.GetComponentInParent<ModuleRack>().gameObject;
+                    return true;
+                }
             }
         }
 
@@ -864,6 +870,12 @@ public class UIManager : MonoBehaviour
         return true;
     }
 
+    public void WriteCommunicatorMessage(string message)
+    {
+        if (!communicatorOut) ShowHideCommunicator();
+        communicatorText.text = message;
+    }
+
     public void QuitGame()
     {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
@@ -873,6 +885,7 @@ public class UIManager : MonoBehaviour
     public void ResetScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        AudioManager.Instance.ReleaseFMODInstances();
     }
 
     public void CreativeMode()

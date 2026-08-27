@@ -1394,19 +1394,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2910305175255766567, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2910305175255766567, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2910305175255766567, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2910305175255766567, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.25
       objectReference: {fileID: 0}
     - target: {fileID: 2976830481749709849, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -1466,7 +1466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5731357367948596537, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5731357367948596537, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1474,15 +1474,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5731357367948596537, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5731357367948596537, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.3125
       objectReference: {fileID: 0}
     - target: {fileID: 5731357367948596537, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5870175271316903875, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1626,6 +1626,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7700729790775728999, guid: 58646d3420b343a499a4720194421f55, type: 3}
   m_PrefabInstance: {fileID: 5149475181162269704}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3369138820773705881 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7617567795310490769, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 5149475181162269704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4467253177925504247 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8829381270105620735, guid: 58646d3420b343a499a4720194421f55, type: 3}
@@ -1663,22 +1674,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856ccbfa061296443882cf52a7ce5485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warningIcon: {fileID: 3369138820773705881}
   coll: {fileID: 7697095704954192655}
   patchEndJack: {fileID: 3290126458930501487}
   parentWire: {fileID: 0}
   dimensionsMax: {x: 50, y: 50}
   dimensions: {x: 4, y: 4}
   enemySystem: 0
-  maxHealth: 30
   health: 0
   transformControlSwitch: {fileID: 8683058828883948127}
   transformControls: {fileID: 4467253177925504247}
   transformControlPanel: {fileID: 6005882052509141396}
+  stunTimer: 0
   energyReservoir: {fileID: 5162733588611720247}
   heat: 0
   warming: 0
   warmup: 0
-  stunTimer: 0
   firing: 0
   baseCoolingRate: 0.1
   overheated: 0

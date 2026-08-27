@@ -278,6 +278,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1435272546367024583, guid: 58646d3420b343a499a4720194421f55, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1824991723555137543, guid: 58646d3420b343a499a4720194421f55, type: 3}
       propertyPath: m_Name
       value: Reactor
@@ -594,17 +598,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6e734ce1b51e0e40a4f149f18e22494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warningIcon: {fileID: 6499959580360548367}
   coll: {fileID: 2171993857540135833}
   patchEndJack: {fileID: 0}
   parentWire: {fileID: 0}
   dimensionsMax: {x: 50, y: 50}
   dimensions: {x: 4, y: 6}
   enemySystem: 0
-  maxHealth: 30
   health: 0
   transformControlSwitch: {fileID: 897772293202782921}
   transformControls: {fileID: 5263358022436279393}
   transformControlPanel: {fileID: 2858878404769075458}
+  stunTimer: 0
   energyReservoir: {fileID: 0}
   tempoOverride: 0
   invisible: 0
@@ -641,3 +646,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8829381270105620735, guid: 58646d3420b343a499a4720194421f55, type: 3}
   m_PrefabInstance: {fileID: 3711941634815317150}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6499959580360548367 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7617567795310490769, guid: 58646d3420b343a499a4720194421f55, type: 3}
+  m_PrefabInstance: {fileID: 3711941634815317150}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

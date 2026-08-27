@@ -140,6 +140,8 @@ public class GameStateManager : MonoBehaviour
         EventBus.Instance.questStepCompleted.AddListener(OnQuestStepCompleted);
         
         UIManager.Instance.UpdateQuestLog(activeQuests, stepsCompleted);
+        
+        EventBus.Instance.runComplete.AddListener(OnRunComplete);
     }
 
     private readonly Func<Module, ModuleRack, string> modulePlacedTypeCheck = (mod, rack) =>
@@ -276,14 +278,22 @@ public class GameStateManager : MonoBehaviour
     private void OnConstellationAdvanced()
     {
         OnQuestStepCompleted(ConstellationStrings[currentConstellation]);
-        
         currentConstellation++;
-        if ((int)currentConstellation > ConstellationStrings.Count)
+        
+        if ((int)currentConstellation >= ConstellationStrings.Count)
         {
             EventBus.Instance.runComplete.Invoke();
+            currentConstellation -= ConstellationStrings.Count;
         }
+        
         constellationInfo = constellationScrobjects[(int)currentConstellation];
         Debug.Log("current constellation: " + currentConstellation);
+    }
+
+    private void OnRunComplete()
+    {
+        UIManager.Instance.WriteCommunicatorMessage("Congratulations! You've beaten the demo run. You can keep playing as long as you like," +
+                                                    "and enemies will continue to increase in difficulty.");
     }
 
     private void OnConstellationReset()

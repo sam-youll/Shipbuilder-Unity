@@ -8,7 +8,8 @@ using UnityEngine.UI;
 
 public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
 {
-    [Header("Components")]
+    [Header("Components")] 
+    [SerializeField] private Image warningIcon;
     [GetComponent] public BoxCollider2D coll;
     public GameObject patchEndJack;
     public GameObject parentWire;
@@ -46,6 +47,18 @@ public abstract class ModuleRack : MonoBehaviour, ITooltipInfo
         slowTimer = Mathf.Max(0, slowTimer);
         stunTimer -= Time.deltaTime;
         stunTimer = Mathf.Max(0, stunTimer);
+        
+        // warningIcon
+        if (!enemySystem)
+        {
+            warningIcon.gameObject.SetActive(Warning(out _));
+            if (warningIcon.gameObject.activeSelf)
+            {
+                var col = warningIcon.color;
+                col.a = Mathf.Sin(Time.time * 2) * .5f + .5f;
+                warningIcon.color = col;
+            }
+        }
         
         // transform controls
         if (!enemySystem)
