@@ -87,10 +87,10 @@ public class UIManager : MonoBehaviour
     
     [Header("Communicator Components")]
     [SerializeField] private GameObject communicator;
-    [SerializeField] private TextMeshProUGUI communicatorText;
+    [SerializeField] public TextMeshProUGUI communicatorText;
     [SerializeField] private Vector3 communicatorOutPos;
     [SerializeField] private Vector3 communicatorStowedPos;
-    [ShowInInspector] private bool communicatorOut;
+    [ShowInInspector] public bool communicatorOut;
     
     [Header("Quest Log Components")] 
     [SerializeField] private GameObject questLog;

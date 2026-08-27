@@ -198,8 +198,11 @@ public class GameStateManager : MonoBehaviour
 
     private void OnPlayerDefeated()
     {
-        SceneManager.LoadScene("MainMenu");
-        AudioManager.Instance.ReleaseFMODInstances();
+        // TODO: this is essentially duplicated in CombatManager
+        // Commenting out for now, but needs a better solution
+        
+        // SceneManager.LoadScene("MainMenu");
+        // AudioManager.Instance.ReleaseFMODInstances();
     }
 
     private void OnPlayerLeftShop()

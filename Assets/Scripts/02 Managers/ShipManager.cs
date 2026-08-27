@@ -312,7 +312,7 @@ public class ShipManager : MonoBehaviour
             shield = 10 * CombatManager.Instance.fightLevel,
             weapons = new List<Weapon>()
         };
-        var numWeapons = Random.Range(1, 2);
+        var numWeapons = Random.Range(1, 2) + Mathf.FloorToInt(CombatManager.Instance.fightLevel / 4f);
         if (Random.value < (float)CombatManager.Instance.fightLevel / 10) numWeapons++;
         for (var i = 0; i < numWeapons; i++)
         {
@@ -321,7 +321,7 @@ public class ShipManager : MonoBehaviour
             newWeapon.name = "Enemy Weapon";
             var weapon = newWeapon.AddComponent<Weapon>();
             weapon.enemySystem = true;
-            weapon.baseWeaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel));
+            weapon.baseWeaponStats = new(Common.RandomEnemyWeaponStats(CombatManager.Instance.fightLevel, numWeapons));
             weapon.warming = true; // TODO: THIS IS TEMPORARY, THE WEAPONS SHOULD NOT ALL WARMUP AT ONCE
             var er = weapon.AddComponent<EnergyReservoir>();
             weapon.energyReservoir = er;

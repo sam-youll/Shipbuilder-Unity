@@ -154,10 +154,21 @@ public class RackMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 transform.Rotate(Vector3.forward, 90);
+                
+                // the points of the line renderer get updated automatically,
+                // but the edge collider will desync if the wire is rotated
+                foreach (var wire in GetComponent<Module>().childWires)
+                {
+                    wire.transform.eulerAngles = new Vector3(0, 0, 0);
+                }
             }
             else
             {
                 transform.Rotate(Vector3.forward, -90);
+                foreach (var wire in GetComponent<Module>().childWires)
+                {
+                    wire.transform.eulerAngles = new Vector3(0, 0, 0);
+                }
             }
             Physics2D.SyncTransforms();
             var wasX = oddSizeX;

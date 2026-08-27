@@ -53,6 +53,9 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
     {
         color = Color.HSVToRGB(Random.value, .5f, 1);
         
+        // edge collider needs the transform to not be rotated in order to stay in sync with line renderer
+        transform.eulerAngles = new Vector3(0, 0, 0);
+        
         if (!invisible)
         {
             if (transform.parent.CompareTag("OutputJack"))

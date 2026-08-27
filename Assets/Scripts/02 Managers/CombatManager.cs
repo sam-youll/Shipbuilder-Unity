@@ -240,7 +240,17 @@ public class CombatManager : MonoBehaviour
 
     private void OnPlayerDefeated()
     {
+        // TODO: this is such bad practice I know I know
+        // I promise I'll move it to a function in UIManager eventually
+        
+        if (!UIManager.Instance.communicatorOut) UIManager.Instance.ShowHideCommunicator();
+        UIManager.Instance.communicatorText.text = "See you on the other side, partner...";
         EventBus.Instance.constellationReset.Invoke();
+        Invoke(nameof(QuitToMainMenu), 4f);
+    }
+
+    private void QuitToMainMenu()
+    {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 

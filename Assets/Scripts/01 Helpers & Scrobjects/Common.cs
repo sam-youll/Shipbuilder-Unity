@@ -73,14 +73,14 @@ public static class Common
         { SoundType.Hysh, 0 },
     };
     
-    public static Dictionary<string, float> RandomEnemyWeaponStats(int difficulty)
+    public static Dictionary<string, float> RandomEnemyWeaponStats(int difficulty, int numWeapons)
     {
         var dict = new Dictionary<string, float>(BaseWeaponStats().Stats);
 
-        dict["damage"] = 4 + .5f * difficulty;
-        dict["hullDamage"] = Random.value * .2f;
-        dict["systemDamage"] = .2f - dict["hullDamage"];
-        dict["heat"] = Random.value * .05f + .15f;
+        dict["damage"] = (4 + .5f * difficulty) / numWeapons;
+        dict["hullDamage"] = Random.value * .2f / numWeapons;
+        dict["systemDamage"] = (.2f - dict["hullDamage"]) / numWeapons;
+        dict["heat"] = Random.value * .05f + .1f;
         dict["accuracy"] = Random.value * .3f + .6f;
         dict["soundType"] = Random.Range(0, 4);
 
