@@ -199,6 +199,7 @@ public class GameStateManager : MonoBehaviour
     private void OnPlayerDefeated()
     {
         SceneManager.LoadScene("MainMenu");
+        AudioManager.Instance.ReleaseFMODInstances();
     }
 
     private void OnPlayerLeftShop()

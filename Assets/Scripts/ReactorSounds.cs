@@ -22,7 +22,7 @@ public class ReactorSounds : MonoBehaviour
             // DontDestroyOnLoad(this);
         }
     }
-    private EventInstance reactor;
+    public EventInstance reactor;
     
     public EventReference reactorRef;
 

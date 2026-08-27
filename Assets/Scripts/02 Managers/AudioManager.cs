@@ -83,6 +83,7 @@ public class AudioManager: MonoBehaviour
     private int mostRecent;
 
     private VCA playerVCA;
+    private VCA sfxVCA;
     private EventDescription moduleDescription;
 
     public float noteLength;
@@ -172,6 +173,7 @@ public class AudioManager: MonoBehaviour
         enemySongs.Add(test_enemySong3Ref);
 
         playerVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Player");
+        sfxVCA = FMODUnity.RuntimeManager.GetVCA("vca:/SFX");
         moduleDescription = FMODUnity.RuntimeManager.GetEventDescription("event:/Module");
 
         noteLength = 60 / Conductor.Instance.tempo;
@@ -185,6 +187,9 @@ public class AudioManager: MonoBehaviour
         EventBus.Instance.playerDefeated.AddListener(PlayLossSound);
         EventBus.Instance.playerEscaped.AddListener(PlayEscapeSound);
         EventBus.Instance.runComplete.AddListener(PlayEndSound);
+        
+        //to turn off sfx and ambience while getting gameplay footage
+        //MuteSFX();
 
     }
 
@@ -303,8 +308,22 @@ public class AudioManager: MonoBehaviour
         }
         
     }
-    
 
+    public void ReleaseFMODInstances()
+    {
+        amb_spaceInst.stop(0);
+        ReactorSounds.Instance.reactor.stop(0);
+        
+        amb_spaceInst.release();
+        ReactorSounds.Instance.reactor.release();
+
+        for (int i = 0; i < weaponsEventInstances.Count; i++)
+        {
+            weaponsEventInstances[i].stop(0);
+            weaponsEventInstances[i].release();
+        }
+        
+    }
     
 
     public void MutePlayerVolume()
@@ -315,6 +334,16 @@ public class AudioManager: MonoBehaviour
     public void UnmutePlayerVolume()
     {
         playerVCA.setVolume(1);
+    }
+
+    public void MuteSFX()
+    {
+        sfxVCA.setVolume(0);
+    }
+
+    public void UnmuteSFX()
+    {
+        sfxVCA.setVolume(1);
     }
 
     public void ResetModuleInstances()

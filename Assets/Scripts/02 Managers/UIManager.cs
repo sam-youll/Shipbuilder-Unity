@@ -867,6 +867,7 @@ public class UIManager : MonoBehaviour
     public void QuitGame()
     {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        AudioManager.Instance.ReleaseFMODInstances();
     }
 
     public void ResetScene()
