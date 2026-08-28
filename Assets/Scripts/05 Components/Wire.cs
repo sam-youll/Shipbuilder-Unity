@@ -516,7 +516,21 @@ public class Wire : MonoBehaviour, ITooltipInfo, ISelectable
         {
             if (nextModule.TryGetComponent(out ModuleRack moduleRack))
             {
-               moduleRack.parentWire = null;
+                if (moduleRack is Weapon weapon)
+                {
+                    if (nextModuleJack == weapon.energyInJack)
+                    {
+                        weapon.parentEnergyWire = null;
+                    }
+                    else if (nextModuleJack == weapon.patchEndJack)
+                    {
+                        weapon.parentWire = null;
+                    }
+                }
+                else
+                {
+                    moduleRack.parentWire = null;
+                }
             }
             else
             {
