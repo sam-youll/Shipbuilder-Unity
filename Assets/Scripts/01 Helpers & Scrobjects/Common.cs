@@ -77,7 +77,7 @@ public static class Common
     {
         var dict = new Dictionary<string, float>(BaseWeaponStats().Stats);
 
-        dict["damage"] = (4 + .5f * difficulty) / numWeapons;
+        dict["damage"] = (4 + (float)difficulty) / numWeapons;
         dict["hullDamage"] = Random.value * .2f / numWeapons;
         dict["systemDamage"] = (.2f - dict["hullDamage"]) / numWeapons;
         dict["heat"] = Random.value * .05f + .1f;

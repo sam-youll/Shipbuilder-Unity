@@ -5,6 +5,7 @@ using UnityEngine;
 using FMOD;
 using FMODUnity;
 using FMOD.Studio;
+using SaintsField;
 using Debug = UnityEngine.Debug;
 using Unity.VisualScripting;
 using UnityEngine.Rendering;
@@ -77,7 +78,6 @@ public class AudioManager: MonoBehaviour
     public List<Weapon> weapons = new();
     private List<EventInstance> weaponsEventInstances = new();
     private List<Coroutine> weaponsCoroutines = new();
-    
 
     private int pickedInstanceRef;
     private int mostRecent;
@@ -239,45 +239,46 @@ public class AudioManager: MonoBehaviour
         var started = false;
         var weaponIndex = -1;
         
-        if (!started)
+        // compare weapon against all existing weapons
+        for (int i = 0; i < weapons.Count; i++)
         {
-            // compare weapon against all existing weapons
-            for (int i = 0; i < weapons.Count; i++)
+            if (weapon == weapons[i])
             {
-                if (weapon == weapons[i])
-                {
-                    weaponIndex = i;
-                    break;
-                }
-
-                if (weapons[i] == null && weapon.enemySystem)
-                {
-                    weapons[i] = weapon;
-                    weaponIndex = i;
-                    break;
-                }
+                weaponIndex = i;
+                break;
             }
 
-            // if weapon doesn't match any existing weapons, make new weapon
-            if (weaponIndex == -1)
+            if (weapons[i] == null && weapon.enemySystem)
             {
-                Debug.Log("Added new weapon instance in audio manager");
-                weapons.Add(weapon);
-                weaponsEventInstances.Add(RuntimeManager.CreateInstance(moduleRef));
-                weaponIndex = weapons.Count - 1;
-                SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], DefaultNoteInfo());
-                weaponsEventInstances[weaponIndex].start();
+                weapons[i] = weapon;
+                weaponIndex = i;
+                break;
             }
-
-            SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], noteInfo);
-            weaponsEventInstances[weaponIndex].setParameterByName("adsr", 1);
-            
-            Debug.Log("current weapon index is " + weaponIndex);
-            
-            started = true;
-            yield return new WaitForSeconds(noteInfo["length"]);
         }
-        // Debug.Log(weaponIndex);
+
+        // if weapon doesn't match any existing weapons, make new weapon
+        if (weaponIndex == -1)
+        {
+            Debug.Log("Added new weapon instance in audio manager");
+            weapons.Add(weapon);
+            weaponsEventInstances.Add(RuntimeManager.CreateInstance(moduleRef));
+            weaponIndex = weapons.Count - 1;
+            SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], DefaultNoteInfo());
+            weaponsEventInstances[weaponIndex].start();
+        }
+
+        // set parameters of note
+        SetInstanceParametersByDict(weaponsEventInstances[weaponIndex], noteInfo);
+        
+        // start note
+        weaponsEventInstances[weaponIndex].setParameterByName("adsr", 1);
+        
+        Debug.Log("Playing note from " + weapon.name + "\n" +
+                  String.Join("\n", noteInfo));
+        
+        yield return new WaitForSeconds(noteInfo["length"]);
+        
+        // end note
         weaponsEventInstances[weaponIndex].setParameterByName("adsr", 0);
     }
 

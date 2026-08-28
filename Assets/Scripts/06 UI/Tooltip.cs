@@ -83,11 +83,11 @@ public class Tooltip : MonoBehaviour
             {
                 energySum += kvp.Value;
             }
-            Debug.Log(energySum);
+            // Debug.Log(energySum);
             if (energySum > 0)
             {
                 energyCostGroup.SetActive(true);
-                Debug.Log("Showing energy cost");
+                // Debug.Log("Showing energy cost");
                 
                 if (energyCost[Common.SoundType.Pure] > 0)
                 {
@@ -133,7 +133,7 @@ public class Tooltip : MonoBehaviour
             else
             {
                 energyCostGroup.SetActive(false);
-                Debug.Log("Hiding energy cost");
+                // Debug.Log("Hiding energy cost");
             }
         }
         else

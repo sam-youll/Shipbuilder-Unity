@@ -236,7 +236,7 @@ public class GameStateManager : MonoBehaviour
             if (quest.TryGetQuestStep(stepName, out var step) &&
                 quest.DependenciesCompleted(stepName, x => stepsCompleted.Contains(x.stepName)))
             {
-                Debug.Log("yayyy quest step completed");
+                // Debug.Log("yayyy quest step completed");
                 stepsCompleted.Add(stepName);
             }
         }

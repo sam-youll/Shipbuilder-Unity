@@ -651,6 +651,7 @@ public class ShipManager : MonoBehaviour
         foreach (var weapon in player.weapons)
         {
             weapon.health = weapon.MaxHealth();
+            weapon.heat = 0;
         }
         player.reactor.health = player.reactor.MaxHealth();
     }

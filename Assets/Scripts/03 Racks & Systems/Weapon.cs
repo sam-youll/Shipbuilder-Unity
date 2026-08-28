@@ -232,12 +232,12 @@ public class Weapon : ModuleRack, ITooltipInfo
         //     }
         // }
         
-        if (!enemySystem && firing && stunTimer <= 0)
+        if (!enemySystem && stunTimer <= 0)
         {
             heat = Mathf.Max(0, heat - HeatDissipation());
             heatOverlay.fillAmount = heat;
         }
-        else if (enemySystem && firing && stunTimer <= 0)
+        else if (enemySystem && stunTimer <= 0)
         {
             heat = Mathf.Max(0, heat - HeatDissipation());
         }

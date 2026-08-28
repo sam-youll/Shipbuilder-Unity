@@ -91,11 +91,6 @@ public class InventoryManager : MonoBehaviour
             pos.y = Mathf.Max(0, pos.y);
             moduleContainer.transform.localPosition = pos;
         }
-        
-        if (CombatManager.Instance.state != CombatManager.State.outOfCombat)
-        {
-            shopMenu.SetActive(false);
-        }
     }
 
     //TODO: why did I put this in InventoryManager???
